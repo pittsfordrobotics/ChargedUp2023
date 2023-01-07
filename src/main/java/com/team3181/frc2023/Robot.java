@@ -4,6 +4,7 @@
 
 package com.team3181.frc2023;
 
+import com.team3181.lib.drivers.LazySparkMax;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -92,6 +93,7 @@ public class Robot extends LoggedRobot {
 
     driverControllerAlert.set(!DriverStation.isJoystickConnected(0));
     operatorControllerAlert.set(!DriverStation.isJoystickConnected(1));
+    LazySparkMax.checkAlive();
     Threads.setCurrentThreadPriority(false, 10);
   }
 

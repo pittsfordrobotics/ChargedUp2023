@@ -4,11 +4,11 @@ import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
+import com.team3181.frc2023.Constants.SwerveConstants;
+import com.team3181.lib.drivers.LazySparkMax;
+import com.team3181.lib.swerve.BetterSwerveModuleState;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
-import com.team3181.frc2023.Constants.SwerveConstants;
-import com.team3181.lib.swerve.BetterSwerveModuleState;
-import com.team3181.lib.drivers.LazySparkMax;
 
 public class SwerveModuleIOSparkMax implements SwerveModuleIO {
     private final LazySparkMax driveMotor;
@@ -59,7 +59,7 @@ public class SwerveModuleIOSparkMax implements SwerveModuleIO {
     public void updateInputs(SwerveModuleIOInputs inputs) {
         inputs.drivePositionMeters = driveRelativeEncoder.getPosition();
         inputs.driveVelocityMetersPerSec = driveRelativeEncoder.getVelocity();
-        inputs.driveAppliedVolts = driveMotor.getAppliedVoltage();
+        inputs.driveAppliedVolts = driveMotor.getAppliedOutput() * driveMotor.getBusVoltage();
         inputs.driveCurrentAmps = driveMotor.getOutputCurrent();
         inputs.driveTempCelcius = driveMotor.getMotorTemperature();
 
@@ -67,7 +67,7 @@ public class SwerveModuleIOSparkMax implements SwerveModuleIO {
         inputs.steerAbsoluteVelocityRadPerSec = steerAbsoluteEncoder.getVelocity();
         inputs.steerPositionRad = steerRelativeEncoder.getPosition();
         inputs.steerVelocityRadPerSec = steerRelativeEncoder.getVelocity();
-        inputs.steerAppliedVolts = steerMotor.getAppliedVoltage();
+        inputs.steerAppliedVolts = steerMotor.getAppliedOutput() * driveMotor.getBusVoltage();
         inputs.steerCurrentAmps = steerMotor.getOutputCurrent();
         inputs.steerTempCelcius = steerMotor.getMotorTemperature();
     }
