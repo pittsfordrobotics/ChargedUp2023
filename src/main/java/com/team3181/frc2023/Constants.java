@@ -17,7 +17,6 @@ import com.team3181.lib.swerve.BetterSwerveKinematics;
 import java.util.HashMap;
 
 public final class Constants {
-    public static final double rat = 1;
     /*  ROBOT  */
     public static final class RobotConstants {
         public final static SwerveModuleIO FL_MODULE;
@@ -66,10 +65,6 @@ public final class Constants {
             SPARKMAX_HASHMAP.put(7, "Back Right Drive");
             SPARKMAX_HASHMAP.put(8, "Back Right Steer");
         }
-    }
-
-    public static final class CAN {
-
     }
 
     /*  SWERVE: ALL IN METERS  */
@@ -154,11 +149,11 @@ public final class Constants {
         public static final double ROT_P = 5;
 
 //        numbers from 1678
-        public static final double SLOW_LINEAR_VELOCITY_METERS_PER_SECOND = 1.7;
+        public static final double SLOW_LINEAR_VELOCITY_METERS_PER_SECOND = 2.0;
         public static final double SLOW_LINEAR_ACCELERATION_METERS_PER_SECOND_SQUARED = 2.0;
 
-        public static final double MAX_LINEAR_VELOCITY_METERS_PER_SECOND = 3.0;
-        public static final double MAX_LINEAR_ACCELERATION_METERS_PER_SECOND_SQUARED = 2.3;
+        public static final double MAX_LINEAR_VELOCITY_METERS_PER_SECOND = 4.0;
+        public static final double MAX_LINEAR_ACCELERATION_METERS_PER_SECOND_SQUARED = 4.0;
 
         public static final double SLOW_ANGULAR_VELOCITY_METERS_PER_SECOND = 0.8 * Math.PI;
         public static final double SLOW_ANGULAR_ACCELERATION_METERS_PER_SECOND_SQUARED = Math.pow(SLOW_ANGULAR_VELOCITY_METERS_PER_SECOND, 2);

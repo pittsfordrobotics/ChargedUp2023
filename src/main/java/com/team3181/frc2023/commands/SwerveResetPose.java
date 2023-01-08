@@ -1,19 +1,23 @@
 package com.team3181.frc2023.commands;
 
+import com.team3181.frc2023.subsystems.swerve.Swerve;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import com.team3181.frc2023.subsystems.swerve.Swerve;
 
 
 public class SwerveResetPose extends CommandBase {
     private final Swerve swerve = Swerve.getInstance();
-    private final Trajectory trajectory;
-    private final boolean reset;
+    private final Pose2d pose;
 
-    public SwerveResetPose(Trajectory trajectory, boolean reset) {
+    public SwerveResetPose(Trajectory trajectory) {
         addRequirements(this.swerve);
-        this.trajectory = trajectory;
-        this.reset = reset;
+        this.pose = trajectory.getInitialPose();
+    }
+
+    public SwerveResetPose(Pose2d pose) {
+        addRequirements(this.swerve);
+        this.pose = pose;
     }
 
     @Override
@@ -22,9 +26,7 @@ public class SwerveResetPose extends CommandBase {
 
     @Override
     public void execute() {
-        if (reset) {
-            swerve.resetPose(trajectory.getInitialPose());
-        }
+        swerve.resetPose(pose);
     }
 
     @Override

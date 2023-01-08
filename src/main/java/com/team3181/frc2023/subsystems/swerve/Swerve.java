@@ -80,13 +80,13 @@ public class Swerve extends SubsystemBase {
         gyroIO.updateInputs(gyroInputs);
         Logger.getInstance().processInputs("Gyro", gyroInputs);
 
-        poseEstimator.update(getRotation(), modulePositions);
-        lastRotation = getRotation();
+        poseEstimator.update(getRobotRelativeAngle(), modulePositions);
+        lastRotation = getRobotRelativeAngle();
 
         Logger.getInstance().recordOutput("Swerve/Pose", getPose());
         Logger.getInstance().recordOutput("Swerve/Wanted States", wantedModuleStates);
         Logger.getInstance().recordOutput("Swerve/Actual States", actualStates);
-        Logger.getInstance().recordOutput("Swerve/Robot Rotation Rad", getRotation().getRadians());
+        Logger.getInstance().recordOutput("Swerve/Robot Rotation Rad", getRobotRelativeAngle().getRadians());
         Logger.getInstance().recordOutput("Swerve/Chassis Speeds X", chassisSpeeds.vxMetersPerSecond);
         Logger.getInstance().recordOutput("Swerve/Chassis Speeds Y", chassisSpeeds.vyMetersPerSecond);
         Logger.getInstance().recordOutput("Swerve/Chassis Speeds Rot", chassisSpeeds.omegaRadiansPerSecond);
@@ -151,7 +151,7 @@ public class Swerve extends SubsystemBase {
     }
 
     public void resetPose(Pose2d pose) {
-        poseEstimator.resetPosition(getRotation(), modulePositions, pose);
+        poseEstimator.resetPosition(getRobotRelativeAngle(), modulePositions, pose);
     }
 
     public void addVisionData(Pose2d pose, double time) {
@@ -174,10 +174,17 @@ public class Swerve extends SubsystemBase {
     }
 
     /**
+     * @return field relative rotation
+     */
+    public Rotation2d getRotation() {
+        return getPose().getRotation();
+    }
+
+    /**
      * Gets the pigeon's angle
      * @return current angle; positive = clockwise
      */
-    public Rotation2d getRotation() {
+    private Rotation2d getRobotRelativeAngle() {
         if (gyroInputs.connected) {
             return Rotation2d.fromRadians(-gyroInputs.yawPositionRad);
         }
