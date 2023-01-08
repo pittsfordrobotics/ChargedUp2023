@@ -17,7 +17,6 @@ import com.team3181.lib.swerve.BetterSwerveKinematics;
 import java.util.HashMap;
 
 public final class Constants {
-    public static final double rat = 1;
     /*  ROBOT  */
     public static final class RobotConstants {
         public final static SwerveModuleIO FL_MODULE;
@@ -66,10 +65,6 @@ public final class Constants {
             SPARKMAX_HASHMAP.put(7, "Back Right Drive");
             SPARKMAX_HASHMAP.put(8, "Back Right Steer");
         }
-    }
-
-    public static final class CAN {
-
     }
 
     /*  SWERVE: ALL IN METERS  */
