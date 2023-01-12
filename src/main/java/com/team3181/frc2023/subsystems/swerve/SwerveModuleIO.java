@@ -14,8 +14,6 @@ public interface SwerveModuleIO {
 
         public double steerAbsolutePositionRad = 0.0;
         public double steerAbsoluteVelocityRadPerSec = 0.0;
-        public double steerPositionRad = 0.0;
-        public double steerVelocityRadPerSec = 0.0;
         public double steerAppliedVolts = 0.0;
         public double steerCurrentAmps = 0.0;
         public double steerTempCelcius = 0.0;

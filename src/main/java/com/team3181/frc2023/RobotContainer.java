@@ -5,6 +5,7 @@
 package com.team3181.frc2023;
 
 import com.team3181.frc2023.Constants.RobotConstants;
+import com.team3181.frc2023.commands.AutoCollectAndGo;
 import com.team3181.frc2023.commands.DropClimb;
 import com.team3181.frc2023.commands.SwerveDriveFieldXbox;
 import com.team3181.frc2023.subsystems.swerve.Swerve;
@@ -56,6 +57,7 @@ public class RobotContainer {
     autoChooser.setDefaultOption("No auto", new WaitCommand(0));
 //    autoChooser.addOption("Test", new SwervePathing(Paths., true));
     autoChooser.addOption("Drop Climb", new DropClimb(new Pose2d(new Translation2d(1.78,2.55), Rotation2d.fromDegrees(180))));
+    autoChooser.addOption("3 thing", new AutoCollectAndGo());
 
     SmartDashboard.putData("Auto Command", autoChooser);
   }

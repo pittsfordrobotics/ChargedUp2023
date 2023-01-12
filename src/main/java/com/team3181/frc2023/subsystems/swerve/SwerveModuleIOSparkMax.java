@@ -1,8 +1,10 @@
 package com.team3181.frc2023.subsystems.swerve;
 
+import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 import com.revrobotics.SparkMaxPIDController;
 import com.team3181.frc2023.Constants.SwerveConstants;
 import com.team3181.lib.drivers.LazySparkMax;
@@ -15,30 +17,37 @@ public class SwerveModuleIOSparkMax implements SwerveModuleIO {
     private final LazySparkMax steerMotor;
 
     private final RelativeEncoder driveRelativeEncoder;
-    private final RelativeEncoder steerRelativeEncoder;
-    private final RelativeEncoder steerAbsoluteEncoder;
+    private final AbsoluteEncoder steerAbsoluteEncoder;
 
     private final SparkMaxPIDController drivePID;
     private final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(SwerveConstants.MODULE_DRIVE_S, SwerveConstants.MODULE_DRIVE_V, SwerveConstants.MODULE_DRIVE_A);
     private final SparkMaxPIDController steerPID;
 
+    private final Rotation2d steerOffset;
+
     public SwerveModuleIOSparkMax(int driveID, int steerID, Rotation2d offset) {
-        driveMotor = new LazySparkMax(driveID, IdleMode.kBrake, 60);
-        steerMotor = new LazySparkMax(steerID, IdleMode.kBrake, 40);
+        driveMotor = new LazySparkMax(driveID, IdleMode.kBrake, 50);
+        steerMotor = new LazySparkMax(steerID, IdleMode.kBrake, 20);
 
         driveRelativeEncoder = driveMotor.getEncoder();
-        steerRelativeEncoder = steerMotor.getEncoder();
-        steerAbsoluteEncoder = steerMotor.getAlternateEncoder(SwerveConstants.THROUGH_BORE_COUNTS_PER_REV);
+        steerAbsoluteEncoder = steerMotor.getAbsoluteEncoder(Type.kDutyCycle);
 
+        // converts to m/s
         driveRelativeEncoder.setPositionConversionFactor(Math.PI * SwerveConstants.WHEEL_DIAMETER_METERS / SwerveConstants.DRIVE_GEAR_RATIO);
-        driveRelativeEncoder.setVelocityConversionFactor(Math.PI * SwerveConstants.WHEEL_DIAMETER_METERS / SwerveConstants.DRIVE_GEAR_RATIO / 60);
-        steerRelativeEncoder.setPositionConversionFactor(2 * Math.PI / SwerveConstants.STEER_GEAR_RATIO);
-        steerRelativeEncoder.setVelocityConversionFactor(2 * Math.PI / SwerveConstants.STEER_GEAR_RATIO / 60);
-        steerAbsoluteEncoder.setPositionConversionFactor(2 * Math.PI);
-        steerAbsoluteEncoder.setVelocityConversionFactor(2 * Math.PI / 60);
+        driveRelativeEncoder.setVelocityConversionFactor(Math.PI * SwerveConstants.WHEEL_DIAMETER_METERS / SwerveConstants.DRIVE_GEAR_RATIO / 60.0);
+
+        // converts to rad/s
+        steerAbsoluteEncoder.setPositionConversionFactor(2.0 * Math.PI);
+        steerAbsoluteEncoder.setVelocityConversionFactor(2.0 * Math.PI / 60.0);
 
         drivePID = driveMotor.getPIDController();
         steerPID = steerMotor.getPIDController();
+
+        drivePID.setFeedbackDevice(driveRelativeEncoder);
+        steerPID.setFeedbackDevice(steerAbsoluteEncoder);
+        steerPID.setPositionPIDWrappingEnabled(true);
+        steerPID.setPositionPIDWrappingMinInput(0);
+        steerPID.setPositionPIDWrappingMaxInput(2 * Math.PI);
 
         drivePID.setP(SwerveConstants.MODULE_DRIVE_P);
         drivePID.setI(SwerveConstants.MODULE_DRIVE_I);
@@ -52,7 +61,7 @@ public class SwerveModuleIOSparkMax implements SwerveModuleIO {
         driveMotor.burnFlash();
         steerMotor.burnFlash();
 
-        steerRelativeEncoder.setPosition(steerAbsoluteEncoder.getPosition() - offset.getRadians());
+        this.steerOffset = offset;
     }
 
     @Override
@@ -63,10 +72,8 @@ public class SwerveModuleIOSparkMax implements SwerveModuleIO {
         inputs.driveCurrentAmps = driveMotor.getOutputCurrent();
         inputs.driveTempCelcius = driveMotor.getMotorTemperature();
 
-        inputs.steerAbsolutePositionRad = steerAbsoluteEncoder.getPosition();
+        inputs.steerAbsolutePositionRad = steerAbsoluteEncoder.getPosition() - steerOffset.getRadians();
         inputs.steerAbsoluteVelocityRadPerSec = steerAbsoluteEncoder.getVelocity();
-        inputs.steerPositionRad = steerRelativeEncoder.getPosition();
-        inputs.steerVelocityRadPerSec = steerRelativeEncoder.getVelocity();
         inputs.steerAppliedVolts = steerMotor.getAppliedOutput() * driveMotor.getBusVoltage();
         inputs.steerCurrentAmps = steerMotor.getOutputCurrent();
         inputs.steerTempCelcius = steerMotor.getMotorTemperature();
@@ -91,7 +98,7 @@ public class SwerveModuleIOSparkMax implements SwerveModuleIO {
         else {
             drivePID.setReference(state.speedMetersPerSecond, ControlType.kVelocity, 0, feedforward.calculate(state.speedMetersPerSecond));
         }
-        steerPID.setReference(state.angle.getRadians(), ControlType.kPosition, 0, state.omegaRadPerSecond * (isOpenLoop ? SwerveConstants.MODULE_STEER_FF_OL : SwerveConstants.MODULE_STEER_FF_CL));
+        steerPID.setReference(state.angle.plus(steerOffset).getRadians(), ControlType.kPosition, 0, state.omegaRadPerSecond * (isOpenLoop ? SwerveConstants.MODULE_STEER_FF_OL : SwerveConstants.MODULE_STEER_FF_CL));
     }
 
     @Override

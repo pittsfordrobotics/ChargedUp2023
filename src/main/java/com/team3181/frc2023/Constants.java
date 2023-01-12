@@ -89,11 +89,10 @@ public final class Constants {
         public static final int CAN_BR_DRIVE = 7;
         public static final int CAN_BR_STEER = 8;
 
-        public static final int THROUGH_BORE_COUNTS_PER_REV = 8192;
-        public static final double DRIVE_GEAR_RATIO = 5.08;
+        public static final double DRIVE_GEAR_RATIO = (45.0 * 22.0) / (14.0 * 15.0);
         public static final double STEER_GEAR_RATIO = 46.2962962963;
-        public static final double X_LENGTH_METERS = Units.inchesToMeters(30);
-        public static final double Y_LENGTH_METERS = Units.inchesToMeters(30);
+        public static final double X_LENGTH_METERS = Units.inchesToMeters(28);
+        public static final double Y_LENGTH_METERS = Units.inchesToMeters(28);
         public static final double WHEEL_DIAMETER_METERS = Units.inchesToMeters(3);
 
         public static final Translation2d[] MODULE_OFFSETS = {
@@ -111,7 +110,7 @@ public final class Constants {
 
         // controlling module wheel speed
         // read this later: https://github.com/Team364/BaseFalconSwerve
-        public static final double MODULE_DRIVE_P = 0;
+        public static final double MODULE_DRIVE_P = 0.04;
         public static final double MODULE_DRIVE_I = 0;
         public static final double MODULE_DRIVE_D = 0;
 
@@ -121,7 +120,7 @@ public final class Constants {
         public static final double MODULE_DRIVE_A = 0;
 
         // controlling module position / angle
-        public static final double MODULE_STEER_P = 0.01;
+        public static final double MODULE_STEER_P = 1;
         public static final double MODULE_STEER_I = 0;
         public static final double MODULE_STEER_D = 0;
         // irl
@@ -139,7 +138,7 @@ public final class Constants {
          *   13T 	   5.08:1 	      4.46
          *   14T 	   4.71:1         4.8
          */
-        public static final double MAX_LINEAR_VELOCITY_METERS_PER_SECOND = 4.46; // 1678 ran 4.5 m/s in 2022
+        public static final double MAX_LINEAR_VELOCITY_METERS_PER_SECOND = 4.8; // 1678 ran 4.5 m/s in 2022
         public static final double MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND = 10.0; // from 1678
     }
 
