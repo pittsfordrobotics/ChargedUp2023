@@ -32,18 +32,13 @@ public class UninterruptibleScheduleCommand extends CommandBase {
 
     @Override
     public void initialize() {
-        for (Command command : m_toSchedule) { 
-            command.schedule();
+        for (Command command : m_toSchedule) {
+            command.ignoringDisable(true).withInterruptBehavior(InterruptionBehavior.kCancelIncoming).schedule();
         }
     }
 
     @Override
     public boolean isFinished() {
-        return true;
-    }
-
-    @Override
-    public boolean runsWhenDisabled() {
         return true;
     }
 }

@@ -19,7 +19,7 @@ import java.util.Collections;
  * Clone of WPI SwerveKinematics, which implements second order
  * kinematics when calculating modules states from chassis speed.
  * <p></p>
- *
+ * <p>
  * Makes use of {@link BetterSwerveModuleState} to add the angular
  * velocity that is required of the module as an output.
  */
@@ -76,14 +76,14 @@ public class BetterSwerveKinematics extends SwerveDriveKinematics {
      * <p>In the case that the desired chassis speeds are zero (i.e. the robot will be stationary),
      * the previously calculated module angle will be maintained.
      *
-     * @param chassisSpeeds The desired chassis speed.
+     * @param chassisSpeeds          The desired chassis speed.
      * @param centerOfRotationMeters The center of rotation. For example, if you set the center of
-     *     rotation at one corner of the robot and provide a chassis speed that only has a dtheta
-     *     component, the robot will rotate around that corner.
+     *                               rotation at one corner of the robot and provide a chassis speed that only has a dtheta
+     *                               component, the robot will rotate around that corner.
      * @return An array containing the module states. Use caution because these module states are not
-     *     normalized. Sometimes, a user input may cause one of the module speeds to go above the
-     *     attainable max velocity. Use the {@link #desaturateWheelSpeeds(BetterSwerveModuleState[], double)
-     *     DesaturateWheelSpeeds} function to rectify this issue.
+     * normalized. Sometimes, a user input may cause one of the module speeds to go above the
+     * attainable max velocity. Use the {@link #desaturateWheelSpeeds(BetterSwerveModuleState[], double)
+     * DesaturateWheelSpeeds} function to rectify this issue.
      */
     @SuppressWarnings("PMD.MethodReturnsInternalArray")
     public BetterSwerveModuleState[] toSwerveModuleStates(
@@ -165,10 +165,10 @@ public class BetterSwerveKinematics extends SwerveDriveKinematics {
 
             var trigThetaAngle = new SimpleMatrix(2, 2);
             trigThetaAngle.setColumn(
-                0,
-                0,
-                angle.getCos(),
-                -angle.getSin()
+                    0,
+                    0,
+                    angle.getCos(),
+                    -angle.getSin()
             );
             trigThetaAngle.setColumn(
                     1,
@@ -211,8 +211,8 @@ public class BetterSwerveKinematics extends SwerveDriveKinematics {
      * data from the real-world speed and angle of each module on the robot.
      *
      * @param wheelStates The state of the modules (as a SwerveModuleState type) as measured from
-     *     respective encoders and gyros. The order of the swerve module states should be same as
-     *     passed into the constructor of this class.
+     *                    respective encoders and gyros. The order of the swerve module states should be same as
+     *                    passed into the constructor of this class.
      * @return The resulting chassis speed.
      */
     public ChassisSpeeds toChassisSpeeds(BetterSwerveModuleState... wheelStates) {
@@ -242,8 +242,8 @@ public class BetterSwerveKinematics extends SwerveDriveKinematics {
      * data from the real-world speed and angle of each module on the robot.
      *
      * @param wheelDeltas The latest change in position of the modules (as a SwerveModulePosition
-     *     type) as measured from respective encoders and gyros. The order of the swerve module states
-     *     should be same as passed into the constructor of this class.
+     *                    type) as measured from respective encoders and gyros. The order of the swerve module states
+     *                    should be same as passed into the constructor of this class.
      * @return The resulting Twist2d.
      */
     public Twist2d toTwist2d(SwerveModulePosition... wheelDeltas) {
@@ -273,8 +273,8 @@ public class BetterSwerveKinematics extends SwerveDriveKinematics {
      * reduce all the wheel speeds to make sure that all requested module speeds are at-or-below the
      * absolute threshold, while maintaining the ratio of speeds between modules.
      *
-     * @param moduleStates Reference to array of module states. The array will be mutated with the
-     *     normalized speeds!
+     * @param moduleStates                      Reference to array of module states. The array will be mutated with the
+     *                                          normalized speeds!
      * @param attainableMaxSpeedMetersPerSecond The absolute max speed that a module can reach.
      */
     public static void desaturateWheelSpeeds(
@@ -297,14 +297,14 @@ public class BetterSwerveKinematics extends SwerveDriveKinematics {
      * reduce all the wheel speeds to make sure that all requested module speeds are at-or-below the
      * absolute threshold, while maintaining the ratio of speeds between modules.
      *
-     * @param moduleStates Reference to array of module states. The array will be mutated with the
-     *     normalized speeds!
-     * @param currentChassisSpeed The current speed of the robot
-     * @param attainableMaxModuleSpeedMetersPerSecond The absolute max speed that a module can reach
-     * @param attainableMaxTranslationalSpeedMetersPerSecond The absolute max speed that your robot
-     *     can reach while translating
+     * @param moduleStates                                    Reference to array of module states. The array will be mutated with the
+     *                                                        normalized speeds!
+     * @param currentChassisSpeed                             The current speed of the robot
+     * @param attainableMaxModuleSpeedMetersPerSecond         The absolute max speed that a module can reach
+     * @param attainableMaxTranslationalSpeedMetersPerSecond  The absolute max speed that your robot
+     *                                                        can reach while translating
      * @param attainableMaxRotationalVelocityRadiansPerSecond The absolute max speed the robot can
-     *     reach while rotating
+     *                                                        reach while rotating
      */
     public static void desaturateWheelSpeeds(
             BetterSwerveModuleState[] moduleStates,

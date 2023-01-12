@@ -94,7 +94,7 @@ public class BetterMath {
     }
 
     public static Rotation2d getShortestRotation(double currentAngle, double wantedAngle) {
-        double angle = BetterMath.clamp360(currentAngle);
+        double angle = clamp360(currentAngle);
         double minus = wantedAngle - angle;
         double plus = (360 - Math.abs(wantedAngle - angle)) * -Math.signum(minus);
         if (Math.abs(minus) <= Math.abs(plus)) {
