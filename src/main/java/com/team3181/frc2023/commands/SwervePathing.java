@@ -6,6 +6,7 @@ import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import com.team3181.frc2023.Constants.AutoConstants;
@@ -32,12 +33,14 @@ public class SwervePathing extends CommandBase {
 
     @Override
     public void initialize() {
+        // adjusts because the field is flipped instead of rotated by 180
+        PathPlannerState adjustedState = PathPlannerTrajectory.transformStateForAlliance(trajectory.getInitialState(), DriverStation.getAlliance());
         if (reset) {
-            swerve.resetPose(trajectory.getInitialHolonomicPose());
+            swerve.resetPose(adjustedState.poseMeters);
         }
         xController.reset();
         yController.reset();
-        rotController.reset(trajectory.getInitialHolonomicPose().getRotation().getRadians());
+        rotController.reset(adjustedState.holonomicRotation.getRadians());
 
         timer.reset();
         timer.start();
@@ -46,7 +49,8 @@ public class SwervePathing extends CommandBase {
     @Override
     public void execute() {
         PathPlannerState state = (PathPlannerState) trajectory.sample(timer.get());
-        ChassisSpeeds speeds = holonomicDriveController.calculate(swerve.getPose(), state, state.holonomicRotation);
+        PathPlannerState adjustedState = PathPlannerTrajectory.transformStateForAlliance(state, DriverStation.getAlliance());
+        ChassisSpeeds speeds = holonomicDriveController.calculate(swerve.getPose(), adjustedState, adjustedState.holonomicRotation);
         swerve.setChassisSpeeds(speeds, false);
     }
 
