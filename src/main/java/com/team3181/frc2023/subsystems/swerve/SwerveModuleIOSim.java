@@ -12,12 +12,16 @@ public class SwerveModuleIOSim implements SwerveModuleIO {
     private final FlywheelSim driveSim = new FlywheelSim(DCMotor.getNEO(1), SwerveConstants.DRIVE_GEAR_RATIO, 0.025);
     private final FlywheelSim steerSim = new FlywheelSim(DCMotor.getNeo550(1), SwerveConstants.STEER_GEAR_RATIO, 0.004096955);
     private final PIDController drivePID = new PIDController(10, 0, 0);
-    private final PIDController steerPosPID = new PIDController(15, 0, 0);
+    private final PIDController steerPID = new PIDController(15, 0, 0);
 
     private double steerAbsolutePositionRad = Math.random() * 2.0 * Math.PI;
     private double steerRelativePositionRad = steerAbsolutePositionRad;
     private double driveAppliedVolts = 0.0;
     private double steerAppliedVolts = 0.0;
+
+    public SwerveModuleIOSim() {
+        steerPID.enableContinuousInput(0, 2 * Math.PI);
+    }
 
     public void updateInputs(SwerveModuleIOInputs inputs) {
         driveSim.update(RobotConstants.LOOP_TIME_SECONDS);
@@ -43,8 +47,6 @@ public class SwerveModuleIOSim implements SwerveModuleIO {
 
         inputs.steerAbsolutePositionRad = steerAbsolutePositionRad;
         inputs.steerAbsoluteVelocityRadPerSec = steerSim.getAngularVelocityRadPerSec();
-        inputs.steerPositionRad = steerRelativePositionRad;
-        inputs.steerVelocityRadPerSec = steerSim.getAngularVelocityRadPerSec();
         inputs.steerAppliedVolts = steerAppliedVolts;
         inputs.steerCurrentAmps = Math.abs(steerSim.getCurrentDrawAmps());
         inputs.steerTempCelcius = 0;
@@ -72,8 +74,8 @@ public class SwerveModuleIOSim implements SwerveModuleIO {
             drivePID.setSetpoint(state.speedMetersPerSecond);
             driveSim.setInputVoltage(drivePID.calculate(driveSim.getAngularVelocityRadPerSec() * Math.PI * SwerveConstants.WHEEL_DIAMETER_METERS / SwerveConstants.DRIVE_GEAR_RATIO));
         }
-        steerPosPID.setSetpoint(state.angle.getRadians());
-        steerSim.setInputVoltage(steerPosPID.calculate(steerRelativePositionRad) + (isOpenLoop ? SwerveConstants.MODULE_STEER_FF_OL : SwerveConstants.MODULE_STEER_FF_CL) * state.omegaRadPerSecond);
+        steerPID.setSetpoint(state.angle.getRadians());
+        steerSim.setInputVoltage(steerPID.calculate(steerRelativePositionRad) + (isOpenLoop ? SwerveConstants.MODULE_STEER_FF_OL : SwerveConstants.MODULE_STEER_FF_CL) * state.omegaRadPerSecond);
     }
 
     @Override

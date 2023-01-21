@@ -7,6 +7,10 @@ import com.team3181.frc2023.Constants.AutoConstants;
 import java.util.List;
 
 public class Paths {
-    public static final PathPlannerTrajectory TEST = PathPlanner.loadPath("Test", AutoConstants.MAX_SPEED);
-    public static final List<PathPlannerTrajectory> FIVE_BALL = PathPlanner.loadPathGroup("5 Ball", AutoConstants.MAX_SPEED);
+    public static final PathPlannerTrajectory DROP_CLIMB_HIGH = PathPlanner.loadPath("Drop and Climb High", AutoConstants.MAX_SPEED);
+    public static final PathPlannerTrajectory DROP_CLIMB_LOW = PathPlanner.loadPath("Drop and Climb Low", AutoConstants.MAX_SPEED);
+
+    public static final List<PathPlannerTrajectory> PIECE_AUTO_HIGH = PathPlanner.loadPathGroup("Drop and Climb High", AutoConstants.MAX_SPEED);
+    public static final PathPlannerTrajectory PIECE_AUTO_HIGH_NOTGROUP = PathPlanner.loadPath("3 Item Auto High", AutoConstants.MAX_SPEED);
+    public static final List<PathPlannerTrajectory>  PIECE_AUTO_LOW = PathPlanner.loadPathGroup("Drop and Climb Low", AutoConstants.MAX_SPEED);
 }
