@@ -43,13 +43,13 @@ public class SwerveModuleIOSim implements SwerveModuleIO {
                 + (inputs.driveVelocityMetersPerSec * RobotConstants.LOOP_TIME_SECONDS);
         inputs.driveAppliedVolts = driveAppliedVolts;
         inputs.driveCurrentAmps = Math.abs(driveSim.getCurrentDrawAmps());
-        inputs.driveTempCelcius = 0;
+        inputs.driveTempCelsius = 0;
 
         inputs.steerAbsolutePositionRad = steerAbsolutePositionRad;
         inputs.steerAbsoluteVelocityRadPerSec = steerSim.getAngularVelocityRadPerSec();
         inputs.steerAppliedVolts = steerAppliedVolts;
         inputs.steerCurrentAmps = Math.abs(steerSim.getCurrentDrawAmps());
-        inputs.steerTempCelcius = 0;
+        inputs.steerTempCelsius = 0;
     }
 
     @Override

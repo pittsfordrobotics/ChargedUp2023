@@ -9,7 +9,9 @@ public interface GyroIO {
         public double yawPositionRad = 0.0;
         public double yawVelocityRadPerSec = 0.0;
         public double pitchPositionRad = 0.0;
+        public double pitchPositionRadPerSec = 0.0;
         public double rollPositionRad = 0.0;
+        public double rollPositionRadPerSec = 0.0;
     }
 
     default void updateInputs(GyroIOInputs inputs) {}

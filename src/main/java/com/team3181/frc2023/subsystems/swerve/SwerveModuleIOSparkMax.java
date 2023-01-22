@@ -31,6 +31,7 @@ public class SwerveModuleIOSparkMax implements SwerveModuleIO {
 
         driveRelativeEncoder = driveMotor.getEncoder();
         steerAbsoluteEncoder = steerMotor.getAbsoluteEncoder(Type.kDutyCycle);
+        steerAbsoluteEncoder.setInverted(true);
 
         // converts to m/s
         driveRelativeEncoder.setPositionConversionFactor(Math.PI * SwerveConstants.WHEEL_DIAMETER_METERS / SwerveConstants.DRIVE_GEAR_RATIO);
@@ -70,13 +71,13 @@ public class SwerveModuleIOSparkMax implements SwerveModuleIO {
         inputs.driveVelocityMetersPerSec = driveRelativeEncoder.getVelocity();
         inputs.driveAppliedVolts = driveMotor.getAppliedOutput() * driveMotor.getBusVoltage();
         inputs.driveCurrentAmps = driveMotor.getOutputCurrent();
-        inputs.driveTempCelcius = driveMotor.getMotorTemperature();
+        inputs.driveTempCelsius = driveMotor.getMotorTemperature();
 
         inputs.steerAbsolutePositionRad = steerAbsoluteEncoder.getPosition() - steerOffset.getRadians();
         inputs.steerAbsoluteVelocityRadPerSec = steerAbsoluteEncoder.getVelocity();
         inputs.steerAppliedVolts = steerMotor.getAppliedOutput() * driveMotor.getBusVoltage();
         inputs.steerCurrentAmps = steerMotor.getOutputCurrent();
-        inputs.steerTempCelcius = steerMotor.getMotorTemperature();
+        inputs.steerTempCelsius = steerMotor.getMotorTemperature();
     }
 
     @Override
