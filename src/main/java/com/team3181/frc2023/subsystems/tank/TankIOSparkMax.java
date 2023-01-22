@@ -1,11 +1,13 @@
 package com.team3181.frc2023.subsystems.tank;
 
-import com.ctre.phoenix.sensors.WPI_Pigeon2;
+import com.ctre.phoenix.sensors.Pigeon2;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.RelativeEncoder;
+import com.team3181.frc2023.Constants.SwerveConstants;
 import com.team3181.frc2023.Constants.TankConstants;
 import com.team3181.lib.drivers.LazySparkMax;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotController;
 
 public class TankIOSparkMax implements TankIO {
@@ -14,8 +16,9 @@ public class TankIOSparkMax implements TankIO {
     private final LazySparkMax rightPrimary = new LazySparkMax(TankConstants.CAN_RIGHT_LEADER, IdleMode.kBrake, 60, true);
     private final LazySparkMax rightFollower = new LazySparkMax(TankConstants.CAN_RIGHT_FOLLOWER, IdleMode.kBrake, 60, rightPrimary);
 
-    private final WPI_Pigeon2 pigeon = new WPI_Pigeon2(TankConstants.CAN_PIGEON);
-//    private final AHRS navX = new AHRS(SPI.Port.kMXP);
+    private final Pigeon2 pigeon = new Pigeon2(SwerveConstants.CAN_PIGEON);
+    private final double[] xyz = new double[3];
+    private final double[] ypr = new double[3];
 
     private final RelativeEncoder leftEncoder;
     private final RelativeEncoder rightEncoder;
@@ -30,8 +33,8 @@ public class TankIOSparkMax implements TankIO {
         rightEncoder.setVelocityConversionFactor(Math.PI * TankConstants.WHEEL_DIAMETER_METERS / TankConstants.GEAR_RATIO / 60);
 
         pigeon.configAllSettings(TankConstants.PIGEON_CONFIG);
-        pigeon.calibrate();
-        pigeon.reset();
+        pigeon.zeroGyroBiasNow();
+        pigeon.setYaw(0);
     }
 
     @Override
@@ -57,10 +60,14 @@ public class TankIOSparkMax implements TankIO {
                 rightFollower.getMotorTemperature()};
 
         inputs.gyroConnected = pigeon.getUpTime() > 0;
-        inputs.gyroYawPositionRad = Math.toRadians(pigeon.getAngle());
-        inputs.gyroYawVelocityRadPerSec = Math.toRadians(pigeon.getRate());
-        inputs.gyroPitchPositionRad = Math.toRadians(pigeon.getRoll());
-        inputs.gyroRollPositionRad = Math.toRadians(pigeon.getPitch());
+        pigeon.getRawGyro(xyz);
+        pigeon.getYawPitchRoll(ypr);
+        inputs.gyroYawPositionRad = Units.degreesToRadians(-ypr[0]); // cw+
+        inputs.gyroPitchPositionRad = Units.degreesToRadians(-ypr[1]); // up+ down-
+        inputs.gyroRollPositionRad = Units.degreesToRadians(ypr[2]); // cw+
+        inputs.gyroRollVelocityRadPerSec = Units.degreesToRadians(xyz[0]); // cw+
+        inputs.gyroPitchVelocityRadPerSec = Units.degreesToRadians(-xyz[1]); // up+ down-
+        inputs.gyroYawVelocityRadPerSec = Units.degreesToRadians(-xyz[2]); // cw+
     }
 
     @Override

@@ -2,7 +2,6 @@ package com.team3181.frc2023.subsystems.tank;
 
 import com.team3181.frc2023.Constants.RobotConstants;
 import com.team3181.frc2023.Constants.TankConstants;
-import com.team3181.frc2023.subsystems.tank.TankIO.DriveIOInputs;
 import com.team3181.lib.util.Alert;
 import com.team3181.lib.util.Alert.AlertType;
 import edu.wpi.first.math.controller.PIDController;
@@ -20,7 +19,7 @@ import org.littletonrobotics.junction.Logger;
 
 public class Tank extends SubsystemBase {
     private final TankIO io;
-    private final DriveIOInputs inputs = new DriveIOInputs();
+    private final DriveIOInputsAutoLogged inputs = new DriveIOInputsAutoLogged();
 
     private double throttle;
     private Pose2d pose = new Pose2d(0, 0, Rotation2d.fromDegrees(getAngle()));
@@ -127,7 +126,6 @@ public class Tank extends SubsystemBase {
             io.set(speeds.left, speeds.right);
         }
         else {
-//            this should behvae the same as above, but it dont!!!!
             io.set(speeds.left * throttle, speeds.right * throttle);
         }
     }

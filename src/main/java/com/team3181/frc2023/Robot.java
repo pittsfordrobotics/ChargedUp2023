@@ -41,7 +41,7 @@ public class Robot extends LoggedRobot {
     Logger logger = Logger.getInstance();
     setUseTiming(true);
     logger.recordMetadata("PIDTuner", Boolean.toString(RobotConstants.PID_TUNER_ENABLED));
-    logger.recordMetadata("Demo Mode", Boolean.toString(RobotConstants.DEMO_MODE));
+    logger.recordMetadata("Tank", Boolean.toString(RobotConstants.IS_TANK));
     logger.recordMetadata("RuntimeType", getRuntimeType().toString());
     logger.recordMetadata("ProjectName", BuildConstants.MAVEN_NAME);
     logger.recordMetadata("BuildDate", BuildConstants.BUILD_DATE);

@@ -47,6 +47,7 @@ public class TankIOSim implements TankIO {
         inputs.gyroYawVelocityRadPerSec = (inputs.gyroYawPositionRad - lastGyroPosition) / 0.02;
         inputs.gyroPitchPositionRad = 0;
         inputs.gyroRollPositionRad = 0;
+
     }
 
     @Override

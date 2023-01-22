@@ -4,7 +4,6 @@
 
 package com.team3181.frc2023;
 
-import com.team3181.frc2023.Constants.RobotConstants;
 import com.team3181.frc2023.commands.AutoCollectAndGo;
 import com.team3181.frc2023.commands.DropClimb;
 import com.team3181.frc2023.commands.SwerveDriveFieldXbox;
@@ -31,13 +30,8 @@ public class RobotContainer {
     autoConfig();
     driverDashboardSetup();
 
-    if (RobotConstants.DEMO_MODE) {
-      demoButtons();
-    }
-    else {
 //      competitionButtons();
       testButtons();
-    }
 
     Swerve.getInstance().setDefaultCommand(new SwerveDriveFieldXbox());
   }

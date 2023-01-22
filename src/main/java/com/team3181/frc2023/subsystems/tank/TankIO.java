@@ -1,12 +1,12 @@
 package com.team3181.frc2023.subsystems.tank;
 
-import org.littletonrobotics.junction.LogTable;
-import org.littletonrobotics.junction.inputs.LoggableInputs;
+import org.littletonrobotics.junction.AutoLog;
 
 /** Tank subsystem hardware interface. */
 public interface TankIO {
     /** The set of loggable inputs for the drive subsystem. */
-    class DriveIOInputs implements LoggableInputs {
+    @AutoLog
+    class DriveIOInputs {
         public double leftPositionMeters = 0.0;
         public double leftVelocityMetersPerSec = 0.0;
         public double leftAppliedVolts = 0.0;
@@ -23,47 +23,9 @@ public interface TankIO {
         public double gyroYawPositionRad = 0.0;
         public double gyroYawVelocityRadPerSec = 0.0;
         public double gyroPitchPositionRad = 0.0;
+        public double gyroPitchVelocityRadPerSec = 0.0;
         public double gyroRollPositionRad = 0.0;
-
-        public void toLog(LogTable table) {
-            table.put("LeftPositionMeters", leftPositionMeters);
-            table.put("LeftVelocityMetersPerSec", leftVelocityMetersPerSec);
-            table.put("LeftAppliedVolts", leftAppliedVolts);
-            table.put("LeftCurrentAmps", leftCurrentAmps);
-            table.put("LeftTempCelsius", leftTempCelsius);
-
-            table.put("RightPositionMeters", rightPositionMeters);
-            table.put("RightVelocityMetersPerSec", rightVelocityMetersPerSec);
-            table.put("RightAppliedVolts", rightAppliedVolts);
-            table.put("RightCurrentAmps", rightCurrentAmps);
-            table.put("RightTempCelsius", rightTempCelsius);
-
-            table.put("GyroConnected", gyroConnected);
-            table.put("GyroYawPositionRad", gyroYawPositionRad);
-            table.put("GyroYawVelocityRadPerSec", gyroYawVelocityRadPerSec);
-            table.put("GyroPitchPositionRad", gyroPitchPositionRad);
-            table.put("GyroRollPositionRad", gyroRollPositionRad);
-        }
-
-        public void fromLog(LogTable table) {
-            leftPositionMeters = table.getDouble("LeftPositionMeters", leftPositionMeters);
-            leftVelocityMetersPerSec = table.getDouble("LeftVelocityMetersPerSec", leftVelocityMetersPerSec);
-            leftAppliedVolts = table.getDouble("LeftAppliedVolts", leftAppliedVolts);
-            leftCurrentAmps = table.getDoubleArray("LeftCurrentAmps", leftCurrentAmps);
-            leftTempCelsius = table.getDoubleArray("LeftTempCelsius", leftTempCelsius);
-
-            rightPositionMeters = table.getDouble("RightPositionMeters", rightPositionMeters);
-            rightVelocityMetersPerSec = table.getDouble("RightVelocityMetersPerSec", rightVelocityMetersPerSec);
-            rightAppliedVolts = table.getDouble("RightAppliedVolts", rightAppliedVolts);
-            rightCurrentAmps = table.getDoubleArray("RightCurrentAmps", rightCurrentAmps);
-            rightTempCelsius = table.getDoubleArray("RightTempCelsius", rightTempCelsius);
-
-            gyroConnected = table.getBoolean("GyroConnected", gyroConnected);
-            gyroYawPositionRad = table.getDouble("GyroYawPositionRad", gyroYawPositionRad);
-            gyroYawVelocityRadPerSec = table.getDouble("GyroYawVelocityRadPerSec", gyroYawVelocityRadPerSec);
-            gyroPitchPositionRad = table.getDouble("GyroPitchPositionRad", gyroPitchPositionRad);
-            gyroRollPositionRad = table.getDouble("GyroRollPositionRad", gyroRollPositionRad);
-        }
+        public double gyroRollVelocityRadPerSec = 0.0;
     }
 
     /** Updates the set of loggable inputs. */

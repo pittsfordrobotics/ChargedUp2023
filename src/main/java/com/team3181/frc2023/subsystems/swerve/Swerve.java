@@ -184,7 +184,7 @@ public class Swerve extends SubsystemBase {
      */
     private Rotation2d getRobotRelativeAngle() {
         if (gyroInputs.connected) {
-            return Rotation2d.fromRadians(-gyroInputs.yawPositionRad);
+            return Rotation2d.fromRadians(gyroInputs.yawPositionRad);
         }
         else {
             return Rotation2d.fromRadians(chassisSpeeds.omegaRadiansPerSecond * RobotConstants.LOOP_TIME_SECONDS + lastRotation.getRadians());
