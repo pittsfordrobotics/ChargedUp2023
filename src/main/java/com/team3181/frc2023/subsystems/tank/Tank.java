@@ -190,7 +190,7 @@ public class Tank extends SubsystemBase {
 
     /**
      * Gets the pigeon's angle
-     * @return current angle; positive = clockwise
+     * @return current angle; positive = ccw
      */
     public double getAngle() {
         return -Units.radiansToDegrees(inputs.gyroYawPositionRad);

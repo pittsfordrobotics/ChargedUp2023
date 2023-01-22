@@ -62,12 +62,12 @@ public class TankIOSparkMax implements TankIO {
         inputs.gyroConnected = pigeon.getUpTime() > 0;
         pigeon.getRawGyro(xyz);
         pigeon.getYawPitchRoll(ypr);
-        inputs.gyroYawPositionRad = Units.degreesToRadians(-ypr[0]); // cw+
+        inputs.gyroYawPositionRad = Units.degreesToRadians(ypr[0]); // ccw+
         inputs.gyroPitchPositionRad = Units.degreesToRadians(-ypr[1]); // up+ down-
         inputs.gyroRollPositionRad = Units.degreesToRadians(ypr[2]); // cw+
         inputs.gyroRollVelocityRadPerSec = Units.degreesToRadians(xyz[0]); // cw+
         inputs.gyroPitchVelocityRadPerSec = Units.degreesToRadians(-xyz[1]); // up+ down-
-        inputs.gyroYawVelocityRadPerSec = Units.degreesToRadians(-xyz[2]); // cw+
+        inputs.gyroYawVelocityRadPerSec = Units.degreesToRadians(xyz[2]); // ccw+
     }
 
     @Override

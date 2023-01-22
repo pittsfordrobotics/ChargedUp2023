@@ -180,7 +180,7 @@ public class Swerve extends SubsystemBase {
 
     /**
      * Gets the pigeon's angle
-     * @return current angle; positive = clockwise
+     * @return current angle; ccw+
      */
     private Rotation2d getRobotRelativeAngle() {
         if (gyroInputs.connected) {

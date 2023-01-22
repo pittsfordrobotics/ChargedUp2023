@@ -32,11 +32,11 @@ public class GyroIOPigeon implements GyroIO {
         inputs.connected = pigeon.getUpTime() > 0;
         pigeon.getRawGyro(xyz);
         pigeon.getYawPitchRoll(ypr);
-        inputs.yawPositionRad = Units.degreesToRadians(-ypr[0]); // cw+
+        inputs.yawPositionRad = Units.degreesToRadians(ypr[0]); // ccw+
         inputs.pitchPositionRad = Units.degreesToRadians(-ypr[1]); // up+ down-
         inputs.rollPositionRad = Units.degreesToRadians(ypr[2]); // cw+
         inputs.rollVelocityRadPerSec = Units.degreesToRadians(xyz[0]); // cw+
         inputs.pitchVelocityRadPerSec = Units.degreesToRadians(-xyz[1]); // up+ down-
-        inputs.yawVelocityRadPerSec = Units.degreesToRadians(-xyz[2]); // cw+
+        inputs.yawVelocityRadPerSec = Units.degreesToRadians(xyz[2]); // ccw+
     }
 }

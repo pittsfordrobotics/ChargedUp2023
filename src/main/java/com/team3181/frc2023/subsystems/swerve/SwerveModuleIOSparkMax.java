@@ -33,6 +33,10 @@ public class SwerveModuleIOSparkMax implements SwerveModuleIO {
         steerAbsoluteEncoder = steerMotor.getAbsoluteEncoder(Type.kDutyCycle);
         steerAbsoluteEncoder.setInverted(true);
 
+        // allows for faster response time
+        driveRelativeEncoder.setAverageDepth(5);
+        driveRelativeEncoder.setMeasurementPeriod(20);
+
         // converts to m/s
         driveRelativeEncoder.setPositionConversionFactor(Math.PI * SwerveConstants.WHEEL_DIAMETER_METERS / SwerveConstants.DRIVE_GEAR_RATIO);
         driveRelativeEncoder.setVelocityConversionFactor(Math.PI * SwerveConstants.WHEEL_DIAMETER_METERS / SwerveConstants.DRIVE_GEAR_RATIO / 60.0);
