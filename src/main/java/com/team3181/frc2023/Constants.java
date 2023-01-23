@@ -28,37 +28,21 @@ public final class Constants {
         public final static TankIO TANK;
         public final static GyroIO GYRO;
         static {
-            if (RobotBase.isReal() && RobotConstants.IS_TANK) {
-                TANK = new TankIOSparkMax();
-                FL_MODULE = new SwerveModuleIO(){};
-                FR_MODULE = new SwerveModuleIO(){};
-                BL_MODULE = new SwerveModuleIO(){};
-                BR_MODULE = new SwerveModuleIO(){};
-                GYRO = new GyroIO() {};
-            }
-            else if (RobotBase.isReal()) {
-                TANK = new TankIO() {};
-                FL_MODULE = new SwerveModuleIOSparkMax(SwerveConstants.CAN_FL_DRIVE, SwerveConstants.CAN_FL_STEER, SwerveConstants.FL_OFFSET);
-                FR_MODULE = new SwerveModuleIOSparkMax(SwerveConstants.CAN_FR_DRIVE, SwerveConstants.CAN_FR_STEER, SwerveConstants.FR_OFFSET);
-                BL_MODULE = new SwerveModuleIOSparkMax(SwerveConstants.CAN_BL_DRIVE, SwerveConstants.CAN_BL_STEER, SwerveConstants.BL_OFFSET);
-                BR_MODULE = new SwerveModuleIOSparkMax(SwerveConstants.CAN_BR_DRIVE, SwerveConstants.CAN_BR_STEER, SwerveConstants.BR_OFFSET);
-                GYRO = new GyroIOPigeon();
-            }
-            else if (RobotConstants.IS_TANK) {
-                TANK = new TankIOSim();
-                FL_MODULE = new SwerveModuleIO(){};
-                FR_MODULE = new SwerveModuleIO(){};
-                BL_MODULE = new SwerveModuleIO(){};
-                BR_MODULE = new SwerveModuleIO(){};
-                GYRO = new GyroIO() {};
+            if (RobotBase.isReal()) {
+                TANK = RobotConstants.IS_TANK ? new TankIOSparkMax() : new TankIO(){};
+                FL_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSparkMax(SwerveConstants.CAN_FL_DRIVE, SwerveConstants.CAN_FL_STEER, SwerveConstants.FL_OFFSET);
+                FR_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSparkMax(SwerveConstants.CAN_FR_DRIVE, SwerveConstants.CAN_FR_STEER, SwerveConstants.FR_OFFSET);
+                BL_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSparkMax(SwerveConstants.CAN_BL_DRIVE, SwerveConstants.CAN_BL_STEER, SwerveConstants.BL_OFFSET);
+                BR_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSparkMax(SwerveConstants.CAN_BR_DRIVE, SwerveConstants.CAN_BR_STEER, SwerveConstants.BR_OFFSET);
+                GYRO = RobotConstants.IS_TANK ? new GyroIO(){} : new GyroIOPigeon();
             }
             else {
-                TANK = new TankIO() {};
-                FR_MODULE = new SwerveModuleIOSim();
-                FL_MODULE = new SwerveModuleIOSim();
-                BR_MODULE = new SwerveModuleIOSim();
-                BL_MODULE = new SwerveModuleIOSim();
-                GYRO = new GyroIOSim();
+                TANK = RobotConstants.IS_TANK ? new TankIOSim() : new TankIO(){};
+                FL_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSim();
+                FR_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSim();
+                BL_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSim();
+                BR_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSim();
+                GYRO = RobotConstants.IS_TANK ? new GyroIO(){} : new GyroIOSim();
             }
         }
 
@@ -70,13 +54,13 @@ public final class Constants {
 
         public static final HashMap<Integer, String> SPARKMAX_HASHMAP = new HashMap<>();
         static {
-            SPARKMAX_HASHMAP.put(1, "Front Left Tank");
+            SPARKMAX_HASHMAP.put(1, "Front Left Drive");
             SPARKMAX_HASHMAP.put(2, "Front Left Steer");
-            SPARKMAX_HASHMAP.put(3, "Front Right Tank");
+            SPARKMAX_HASHMAP.put(3, "Front Right Drive");
             SPARKMAX_HASHMAP.put(4, "Front Right Steer");
-            SPARKMAX_HASHMAP.put(5, "Back Left Tank");
+            SPARKMAX_HASHMAP.put(5, "Back Left Drive");
             SPARKMAX_HASHMAP.put(6, "Back Left Steer");
-            SPARKMAX_HASHMAP.put(7, "Back Right Tank");
+            SPARKMAX_HASHMAP.put(7, "Back Right Drive");
             SPARKMAX_HASHMAP.put(8, "Back Right Steer");
         }
     }
