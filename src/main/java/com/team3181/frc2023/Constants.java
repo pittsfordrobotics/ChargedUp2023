@@ -10,6 +10,9 @@ import com.team3181.frc2023.subsystems.swerve.*;
 import com.team3181.frc2023.subsystems.tank.TankIO;
 import com.team3181.frc2023.subsystems.tank.TankIOSim;
 import com.team3181.frc2023.subsystems.tank.TankIOSparkMax;
+import com.team3181.frc2023.subsystems.vision.VisionIO;
+import com.team3181.frc2023.subsystems.vision.VisionIOLimelight;
+import com.team3181.frc2023.subsystems.vision.VisionIOSim;
 import com.team3181.lib.swerve.BetterSwerveKinematics;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -25,8 +28,9 @@ public final class Constants {
         public final static SwerveModuleIO FR_MODULE;
         public final static SwerveModuleIO BL_MODULE;
         public final static SwerveModuleIO BR_MODULE;
-        public final static TankIO TANK;
         public final static GyroIO GYRO;
+        public final static TankIO TANK;
+        public final static VisionIO VISION;
         static {
             if (RobotBase.isReal() && RobotConstants.IS_TANK) {
                 TANK = new TankIOSparkMax();
@@ -35,6 +39,7 @@ public final class Constants {
                 BL_MODULE = new SwerveModuleIO(){};
                 BR_MODULE = new SwerveModuleIO(){};
                 GYRO = new GyroIO() {};
+                VISION = new VisionIOLimelight();
             }
             else if (RobotBase.isReal()) {
                 TANK = new TankIO() {};
@@ -43,6 +48,7 @@ public final class Constants {
                 BL_MODULE = new SwerveModuleIOSparkMax(SwerveConstants.CAN_BL_DRIVE, SwerveConstants.CAN_BL_STEER, SwerveConstants.BL_OFFSET);
                 BR_MODULE = new SwerveModuleIOSparkMax(SwerveConstants.CAN_BR_DRIVE, SwerveConstants.CAN_BR_STEER, SwerveConstants.BR_OFFSET);
                 GYRO = new GyroIOPigeon();
+                VISION = new VisionIOLimelight();
             }
             else if (RobotConstants.IS_TANK) {
                 TANK = new TankIOSim();
@@ -51,6 +57,7 @@ public final class Constants {
                 BL_MODULE = new SwerveModuleIO(){};
                 BR_MODULE = new SwerveModuleIO(){};
                 GYRO = new GyroIO() {};
+                VISION = new VisionIOSim();
             }
             else {
                 TANK = new TankIO() {};
@@ -59,6 +66,7 @@ public final class Constants {
                 BR_MODULE = new SwerveModuleIOSim();
                 BL_MODULE = new SwerveModuleIOSim();
                 GYRO = new GyroIOSim();
+                VISION = new VisionIOSim();
             }
         }
 
