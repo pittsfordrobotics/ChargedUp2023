@@ -7,12 +7,12 @@ public interface VisionIO {
     @AutoLog
     class VisionIOInputs {
         public double captureTimestamp = 0.0;
-        public double[] cornerX = new double[] {};
-        public double[] cornerY = new double[] {};
         public boolean hasTarget = false;
         public boolean connected = false;
         public double vAngle = 0.0;
         public double hAngle = 0.0;
+        public double[] botXYZ = new double[]{};
+        public double[] botYPR = new double[]{};
     }
 
     enum Pipelines {
