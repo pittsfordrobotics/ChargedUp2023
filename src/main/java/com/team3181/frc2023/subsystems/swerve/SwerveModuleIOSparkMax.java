@@ -9,6 +9,7 @@ import com.revrobotics.SparkMaxPIDController;
 import com.team3181.frc2023.Constants.SwerveConstants;
 import com.team3181.lib.drivers.LazySparkMax;
 import com.team3181.lib.swerve.BetterSwerveModuleState;
+import com.team3181.lib.util.PIDTuner;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 
@@ -19,9 +20,11 @@ public class SwerveModuleIOSparkMax implements SwerveModuleIO {
     private final RelativeEncoder driveRelativeEncoder;
     private final AbsoluteEncoder steerAbsoluteEncoder;
 
-    private final SparkMaxPIDController drivePID;
     private final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(SwerveConstants.MODULE_DRIVE_S, SwerveConstants.MODULE_DRIVE_V, SwerveConstants.MODULE_DRIVE_A);
+    private final SparkMaxPIDController drivePID;
     private final SparkMaxPIDController steerPID;
+    private final PIDTuner driveTuner;
+    private final PIDTuner steerTuner;
 
     private final Rotation2d steerOffset;
 
@@ -62,6 +65,9 @@ public class SwerveModuleIOSparkMax implements SwerveModuleIO {
         steerPID.setI(SwerveConstants.MODULE_STEER_I);
         steerPID.setD(SwerveConstants.MODULE_STEER_D);
 
+        driveTuner = new PIDTuner("Drive " + driveID, drivePID);
+        steerTuner = new PIDTuner("Steer " + steerID, drivePID);
+
 //        saves PID Config
         driveMotor.burnFlash();
         steerMotor.burnFlash();
@@ -71,6 +77,9 @@ public class SwerveModuleIOSparkMax implements SwerveModuleIO {
 
     @Override
     public void updateInputs(SwerveModuleIOInputs inputs) {
+        driveTuner.setPID();
+        steerTuner.setPID();
+
         inputs.drivePositionMeters = driveRelativeEncoder.getPosition();
         inputs.driveVelocityMetersPerSec = driveRelativeEncoder.getVelocity();
         inputs.driveAppliedVolts = driveMotor.getAppliedOutput() * driveMotor.getBusVoltage();

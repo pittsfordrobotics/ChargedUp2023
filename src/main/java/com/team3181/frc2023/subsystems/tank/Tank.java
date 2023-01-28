@@ -44,9 +44,11 @@ public class Tank extends SubsystemBase {
 
         setThrottle(0.7);
 
-        ShuffleboardTab driveTab = Shuffleboard.getTab("Tank");
-        driveTab.addNumber("Pigeon", this::getAngle);
-        driveTab.addNumber("Throttle", this::getThrottle);
+        if (RobotConstants.IS_TANK) {
+            ShuffleboardTab driveTab = Shuffleboard.getTab("Tank");
+            driveTab.addNumber("Pigeon", this::getAngle);
+            driveTab.addNumber("Throttle", this::getThrottle);
+        }
     }
 
     @Override
