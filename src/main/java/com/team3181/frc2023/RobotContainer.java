@@ -34,6 +34,7 @@ public class RobotContainer {
       testButtons();
 
     Swerve.getInstance().setDefaultCommand(new SwerveDriveFieldXbox());
+//    Tank.getInstance().setDefaultCommand(new TankXbox());
   }
 
   private void driverDashboardSetup() {
@@ -41,6 +42,7 @@ public class RobotContainer {
   }
 
   private void testButtons() {
+//    driverController.a().whileTrue(new SwervePathing(Paths.TEST_ON_THE_FLY, false));
   }
 
   private void competitionButtons() {}

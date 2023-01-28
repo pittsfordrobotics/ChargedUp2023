@@ -38,7 +38,7 @@ public class TankIOSparkMax implements TankIO {
     }
 
     @Override
-    public void updateInputs(DriveIOInputs inputs) {
+    public void updateInputs(TankIOInputs inputs) {
         inputs.leftPositionMeters = leftEncoder.getPosition();
         inputs.rightPositionMeters = rightEncoder.getPosition();
         inputs.leftVelocityMetersPerSec = leftEncoder.getVelocity();

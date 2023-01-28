@@ -25,7 +25,7 @@ public class TankIOSim implements TankIO {
     }
 
     @Override
-    public void updateInputs(DriveIOInputs inputs) {
+    public void updateInputs(TankIOInputs inputs) {
         drivetrain.update(0.02);
         inputs.leftPositionMeters = drivetrain.getLeftPositionMeters();
         inputs.rightPositionMeters = drivetrain.getRightPositionMeters();
