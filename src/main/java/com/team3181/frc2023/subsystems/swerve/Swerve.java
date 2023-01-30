@@ -66,12 +66,10 @@ public class Swerve extends SubsystemBase {
 
     @Override
     public void periodic() {
-//        System.out.println(poseEstimator.getEstimatedPosition().getX());
         SwerveModuleState[] wantedModuleStates = new SwerveModuleState[4];
         SwerveModuleState[] actualStates = new SwerveModuleState[4];
         for (int i = 0; i < 4; i++) {
             moduleIO[i].updateInputs(moduleInputs[i]);
-//            System.out.println(moduleInputs[i].driveVelocityMetersPerSec);
             actualStates[i] = new SwerveModuleState(moduleInputs[i].driveVelocityMetersPerSec, Rotation2d.fromRadians(moduleInputs[i].steerAbsolutePositionRad));
             modulePositions[i] = new SwerveModulePosition(moduleInputs[i].drivePositionMeters, Rotation2d.fromRadians(moduleInputs[i].steerAbsolutePositionRad));
             wantedModuleStates[i] = new SwerveModuleState(lastModuleStates[i].speedMetersPerSecond, Rotation2d.fromRadians(lastModuleStates[i].angle.getRadians() + lastModuleStates[i].omegaRadPerSecond * (isOpenLoop ? SwerveConstants.MODULE_STEER_FF_OL : SwerveConstants.MODULE_STEER_FF_CL) * 0.065));
@@ -118,7 +116,7 @@ public class Swerve extends SubsystemBase {
 
     public void driveFieldOrientated(double vxMetersPerSecond, double vyMetersPerSecond, double omegaRadiansPerSecond) {
         // this uses the rotation from pose because it offsets the initial robot rotation and gyro rotation
-        setChassisSpeeds(ChassisSpeeds.fromFieldRelativeSpeeds(vxMetersPerSecond, vyMetersPerSecond, omegaRadiansPerSecond, getPose().getRotation()), true);
+        setChassisSpeeds(ChassisSpeeds.fromFieldRelativeSpeeds(vxMetersPerSecond, vyMetersPerSecond, omegaRadiansPerSecond, getPose().getRotation()), false);
     }
 
     public void driveRobotOrientated(double vxMetersPerSecond, double vyMetersPerSecond, double omegaRadiansPerSecond) {
