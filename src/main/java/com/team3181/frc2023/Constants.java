@@ -21,6 +21,17 @@ import java.util.HashMap;
 
 public final class Constants {
     public static final class RobotConstants {
+        public static final HashMap<Integer, String> SPARKMAX_HASHMAP = new HashMap<>();
+        static {
+            SPARKMAX_HASHMAP.put(1, "Front Left Drive");
+            SPARKMAX_HASHMAP.put(2, "Front Left Steer");
+            SPARKMAX_HASHMAP.put(3, "Front Right Drive");
+            SPARKMAX_HASHMAP.put(4, "Front Right Steer");
+            SPARKMAX_HASHMAP.put(5, "Back Left Drive");
+            SPARKMAX_HASHMAP.put(6, "Back Left Steer");
+            SPARKMAX_HASHMAP.put(7, "Back Right Drive");
+            SPARKMAX_HASHMAP.put(8, "Back Right Steer");
+        }
         public final static SwerveModuleIO FL_MODULE;
         public final static SwerveModuleIO FR_MODULE;
         public final static SwerveModuleIO BL_MODULE;
@@ -52,17 +63,7 @@ public final class Constants {
         public static final boolean PID_TUNER_ENABLED = false;
         public static final double LOOP_TIME_SECONDS = 0.02;
 
-        public static final HashMap<Integer, String> SPARKMAX_HASHMAP = new HashMap<>();
-        static {
-            SPARKMAX_HASHMAP.put(1, "Front Left Drive");
-            SPARKMAX_HASHMAP.put(2, "Front Left Steer");
-            SPARKMAX_HASHMAP.put(3, "Front Right Drive");
-            SPARKMAX_HASHMAP.put(4, "Front Right Steer");
-            SPARKMAX_HASHMAP.put(5, "Back Left Drive");
-            SPARKMAX_HASHMAP.put(6, "Back Left Steer");
-            SPARKMAX_HASHMAP.put(7, "Back Right Drive");
-            SPARKMAX_HASHMAP.put(8, "Back Right Steer");
-        }
+
     }
 
     public static final class SwerveConstants {
@@ -77,14 +78,14 @@ public final class Constants {
          *    ^   FL  FR   ^
          *    |   BL  BR   |
          */
-        public static final int CAN_FL_DRIVE = 1;
-        public static final int CAN_FL_STEER = 2;
-        public static final int CAN_FR_DRIVE = 3;
-        public static final int CAN_FR_STEER = 4;
-        public static final int CAN_BL_DRIVE = 5;
-        public static final int CAN_BL_STEER = 6;
-        public static final int CAN_BR_DRIVE = 7;
-        public static final int CAN_BR_STEER = 8;
+        public static final int CAN_FL_DRIVE = 5;
+        public static final int CAN_FL_STEER = 6;
+        public static final int CAN_FR_DRIVE = 1;
+        public static final int CAN_FR_STEER = 2;
+        public static final int CAN_BL_DRIVE = 7;
+        public static final int CAN_BL_STEER = 8;
+        public static final int CAN_BR_DRIVE = 3;
+        public static final int CAN_BR_STEER = 4;
 
         /**
          *  Pinon    Gear Ratio    Max Speed (m/s) (approximate)

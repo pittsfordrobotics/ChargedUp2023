@@ -15,7 +15,7 @@ import java.util.Objects;
  * This is a thick wrapper for CANSparkMax because I am lazy
  */
 public class LazySparkMax extends CANSparkMax {
-    private final String SPARK_MAX_FIRMWARE = "1.6.2";
+    private final String SPARK_MAX_FIRMWARE = "1.6.3";
     private int errors = 1;
     private int attempts = -1;
     private static final ArrayList<LazySparkMax> sparkMaxes = new ArrayList<>();

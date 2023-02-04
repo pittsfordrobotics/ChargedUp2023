@@ -37,7 +37,7 @@ public class SwerveModuleIOSparkMax implements SwerveModuleIO {
         steerAbsoluteEncoder.setInverted(true);
 
         // allows for faster response time
-        driveRelativeEncoder.setAverageDepth(5);
+        driveRelativeEncoder.setAverageDepth(4);
         driveRelativeEncoder.setMeasurementPeriod(20);
 
         // converts to m/s
