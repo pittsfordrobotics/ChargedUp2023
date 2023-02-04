@@ -6,6 +6,7 @@ package com.team3181.frc2023;
 
 import com.ctre.phoenix.sensors.Pigeon2Configuration;
 import com.pathplanner.lib.PathConstraints;
+import com.team3181.frc2023.subsystems.endeffector.EndEffectorIO;
 import com.team3181.frc2023.subsystems.swerve.*;
 import com.team3181.frc2023.subsystems.tank.TankIO;
 import com.team3181.frc2023.subsystems.tank.TankIOSim;
@@ -21,6 +22,7 @@ import java.util.HashMap;
 
 public final class Constants {
     public static final class RobotConstants {
+        public final static EndEffectorIO END_EFFECTOR;
         public final static SwerveModuleIO FL_MODULE;
         public final static SwerveModuleIO FR_MODULE;
         public final static SwerveModuleIO BL_MODULE;
@@ -29,6 +31,7 @@ public final class Constants {
         public final static GyroIO GYRO;
         static {
             if (RobotBase.isReal()) {
+                END_EFFECTOR = new EndEffectorIO() {};
                 TANK = RobotConstants.IS_TANK ? new TankIOSparkMax() : new TankIO(){};
                 FL_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSparkMax(SwerveConstants.CAN_FL_DRIVE, SwerveConstants.CAN_FL_STEER, SwerveConstants.FL_OFFSET);
                 FR_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSparkMax(SwerveConstants.CAN_FR_DRIVE, SwerveConstants.CAN_FR_STEER, SwerveConstants.FR_OFFSET);
@@ -37,6 +40,7 @@ public final class Constants {
                 GYRO = RobotConstants.IS_TANK ? new GyroIO(){} : new GyroIOPigeon();
             }
             else {
+                END_EFFECTOR = new EndEffectorIO() {};
                 TANK = RobotConstants.IS_TANK ? new TankIOSim() : new TankIO(){};
                 FL_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSim();
                 FR_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSim();
@@ -185,6 +189,15 @@ public final class Constants {
 
         public static final double MAX_VELOCITY_METERS_PER_SECOND = 10;
         public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 5;
+    }
+
+    // TODO: Determine these constants
+    public static final class EndEffectorConstants {
+        public static final double EXHAUST_POWER = 0.0;
+        public static final double CUBE_INTAKE_POWER = 0.0;
+        public static final double CONE_INTAKE_POWER = 0.0;
+        public static final double CUBE_CLAW_POSITION = 0.0; // radians
+        public static final double CONE_CLAW_POSITION = 0.0; // radians
     }
 
     public static final class AutoConstants {
