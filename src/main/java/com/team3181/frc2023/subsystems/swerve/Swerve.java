@@ -34,7 +34,7 @@ public class Swerve extends SubsystemBase {
 
     private final SwerveModulePosition[] modulePositions = new SwerveModulePosition[4];
     private final BetterSwerveModuleState[] lastModuleStates = new BetterSwerveModuleState[4];
-    private ChassisSpeeds chassisSpeeds = new ChassisSpeeds();
+    private ChassisSpeeds actualRobotRelativeChassisSpeeds = new ChassisSpeeds();
     private final SwerveDrivePoseEstimator poseEstimator;
 
     private Rotation2d lastRotation = new Rotation2d();
@@ -74,7 +74,7 @@ public class Swerve extends SubsystemBase {
             modulePositions[i] = new SwerveModulePosition(moduleInputs[i].drivePositionMeters, Rotation2d.fromRadians(moduleInputs[i].steerAbsolutePositionRad));
             wantedModuleStates[i] = new SwerveModuleState(lastModuleStates[i].speedMetersPerSecond, Rotation2d.fromRadians(lastModuleStates[i].angle.getRadians() + lastModuleStates[i].omegaRadPerSecond * (isOpenLoop ? SwerveConstants.MODULE_STEER_FF_OL : SwerveConstants.MODULE_STEER_FF_CL) * 0.065));
         }
-        chassisSpeeds = SwerveConstants.DRIVE_KINEMATICS.toChassisSpeeds(actualStates);
+        actualRobotRelativeChassisSpeeds = SwerveConstants.DRIVE_KINEMATICS.toChassisSpeeds(actualStates);
 
         Logger.getInstance().processInputs("FL Swerve Module", moduleInputs[0]);
         Logger.getInstance().processInputs("FR Swerve Module", moduleInputs[1]);
@@ -91,9 +91,9 @@ public class Swerve extends SubsystemBase {
         Logger.getInstance().recordOutput("Swerve/Wanted States", wantedModuleStates);
         Logger.getInstance().recordOutput("Swerve/Actual States", actualStates);
         Logger.getInstance().recordOutput("Swerve/Robot Rotation Rad", getRobotRelativeAngle().getRadians());
-        Logger.getInstance().recordOutput("Swerve/Chassis Speeds X", chassisSpeeds.vxMetersPerSecond);
-        Logger.getInstance().recordOutput("Swerve/Chassis Speeds Y", chassisSpeeds.vyMetersPerSecond);
-        Logger.getInstance().recordOutput("Swerve/Chassis Speeds Rot", chassisSpeeds.omegaRadiansPerSecond);
+        Logger.getInstance().recordOutput("Swerve/Chassis Speeds X", actualRobotRelativeChassisSpeeds.vxMetersPerSecond);
+        Logger.getInstance().recordOutput("Swerve/Chassis Speeds Y", actualRobotRelativeChassisSpeeds.vyMetersPerSecond);
+        Logger.getInstance().recordOutput("Swerve/Chassis Speeds Rot", actualRobotRelativeChassisSpeeds.omegaRadiansPerSecond);
 
         pigeonAlert.set(!gyroInputs.connected);
     }
@@ -116,7 +116,7 @@ public class Swerve extends SubsystemBase {
 
     public void driveFieldOrientated(double vxMetersPerSecond, double vyMetersPerSecond, double omegaRadiansPerSecond) {
         // this uses the rotation from pose because it offsets the initial robot rotation and gyro rotation
-        setChassisSpeeds(ChassisSpeeds.fromFieldRelativeSpeeds(vxMetersPerSecond, vyMetersPerSecond, omegaRadiansPerSecond, getPose().getRotation()), false);
+        setChassisSpeeds(ChassisSpeeds.fromFieldRelativeSpeeds(vxMetersPerSecond, vyMetersPerSecond, omegaRadiansPerSecond, getPose().getRotation()), true);
     }
 
     public void driveRobotOrientated(double vxMetersPerSecond, double vyMetersPerSecond, double omegaRadiansPerSecond) {
@@ -186,7 +186,7 @@ public class Swerve extends SubsystemBase {
             return Rotation2d.fromRadians(gyroInputs.yawPositionRad);
         }
         else {
-            return Rotation2d.fromRadians(chassisSpeeds.omegaRadiansPerSecond * RobotConstants.LOOP_TIME_SECONDS + lastRotation.getRadians());
+            return Rotation2d.fromRadians(actualRobotRelativeChassisSpeeds.omegaRadiansPerSecond * RobotConstants.LOOP_TIME_SECONDS + lastRotation.getRadians());
         }
     }
 }

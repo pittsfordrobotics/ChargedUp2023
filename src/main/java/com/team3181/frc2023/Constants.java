@@ -21,24 +21,30 @@ import java.util.HashMap;
 
 public final class Constants {
     public static final class RobotConstants {
-        public static final HashMap<Integer, String> SPARKMAX_HASHMAP = new HashMap<>();
-        static {
-            SPARKMAX_HASHMAP.put(1, "Front Left Drive");
-            SPARKMAX_HASHMAP.put(2, "Front Left Steer");
-            SPARKMAX_HASHMAP.put(3, "Front Right Drive");
-            SPARKMAX_HASHMAP.put(4, "Front Right Steer");
-            SPARKMAX_HASHMAP.put(5, "Back Left Drive");
-            SPARKMAX_HASHMAP.put(6, "Back Left Steer");
-            SPARKMAX_HASHMAP.put(7, "Back Right Drive");
-            SPARKMAX_HASHMAP.put(8, "Back Right Steer");
-        }
         public final static SwerveModuleIO FL_MODULE;
         public final static SwerveModuleIO FR_MODULE;
         public final static SwerveModuleIO BL_MODULE;
         public final static SwerveModuleIO BR_MODULE;
         public final static TankIO TANK;
         public final static GyroIO GYRO;
+
+        public final static boolean IS_TANK = false;
+        public static final boolean LOGGING_ENABLED = true;
+        public static final String LOGGING_PATH = "/media/sda2/";
+        public static final boolean PID_TUNER_ENABLED = false;
+        public static final double LOOP_TIME_SECONDS = 0.02;
+
+        public static final HashMap<Integer, String> SPARKMAX_HASHMAP = new HashMap<>();
         static {
+            SPARKMAX_HASHMAP.put(SwerveConstants.CAN_FL_DRIVE, "Front Left Drive");
+            SPARKMAX_HASHMAP.put(SwerveConstants.CAN_FL_STEER, "Front Left Steer");
+            SPARKMAX_HASHMAP.put(SwerveConstants.CAN_FR_DRIVE, "Front Right Drive");
+            SPARKMAX_HASHMAP.put(SwerveConstants.CAN_FR_STEER, "Front Right Steer");
+            SPARKMAX_HASHMAP.put(SwerveConstants.CAN_BL_DRIVE, "Back Left Drive");
+            SPARKMAX_HASHMAP.put(SwerveConstants.CAN_BL_STEER, "Back Left Steer");
+            SPARKMAX_HASHMAP.put(SwerveConstants.CAN_BR_DRIVE, "Back Right Drive");
+            SPARKMAX_HASHMAP.put(SwerveConstants.CAN_BR_STEER, "Back Right Steer");
+
             if (RobotBase.isReal()) {
                 TANK = RobotConstants.IS_TANK ? new TankIOSparkMax() : new TankIO(){};
                 FL_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSparkMax(SwerveConstants.CAN_FL_DRIVE, SwerveConstants.CAN_FL_STEER, SwerveConstants.FL_OFFSET);
@@ -56,14 +62,6 @@ public final class Constants {
                 GYRO = RobotConstants.IS_TANK ? new GyroIO(){} : new GyroIOSim();
             }
         }
-
-        public final static boolean IS_TANK = false;
-        public static final boolean LOGGING_ENABLED = true;
-        public static final String LOGGING_PATH = "/media/sda2/";
-        public static final boolean PID_TUNER_ENABLED = false;
-        public static final double LOOP_TIME_SECONDS = 0.02;
-
-
     }
 
     public static final class SwerveConstants {
@@ -149,8 +147,8 @@ public final class Constants {
         // sim
         // -0.65 for open loop
         // -0.15 closed loop
-        public static final double MODULE_STEER_FF_OL = Robot.isReal() ? -0 : -0.65;
-        public static final double MODULE_STEER_FF_CL = Robot.isReal() ? -0 : -0.3;
+        public static final double MODULE_STEER_FF_OL = Robot.isReal() ? 0 : 0.5;
+        public static final double MODULE_STEER_FF_CL = Robot.isReal() ? 0 : 0.33;
     }
 
     public static final class TankConstants {
