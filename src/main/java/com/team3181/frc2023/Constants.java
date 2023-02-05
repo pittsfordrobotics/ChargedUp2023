@@ -88,7 +88,7 @@ public final class Constants {
         public static final int CAN_BR_STEER = 4;
 
         /**
-         *  Pinon    Gear Ratio    Max Speed (m/s) (approximate)
+         *  Pinon    Gear Ratio    Max Speed [m/s] (approximate)
          *   12T 	   5.50:1 	      4.12
          *   13T 	   5.08:1 	      4.46
          *   14T 	   4.71:1         4.8
