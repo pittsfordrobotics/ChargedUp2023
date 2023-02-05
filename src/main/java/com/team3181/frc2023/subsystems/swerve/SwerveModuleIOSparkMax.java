@@ -30,7 +30,7 @@ public class SwerveModuleIOSparkMax implements SwerveModuleIO {
 
     public SwerveModuleIOSparkMax(int driveID, int steerID, Rotation2d offset) {
         driveMotor = new LazySparkMax(driveID, IdleMode.kBrake, 50);
-        steerMotor = new LazySparkMax(steerID, IdleMode.kBrake, 20);
+        steerMotor = new LazySparkMax(steerID, IdleMode.kBrake, 20, false, false);
 
         driveRelativeEncoder = driveMotor.getEncoder();
         steerAbsoluteEncoder = steerMotor.getAbsoluteEncoder(Type.kDutyCycle);

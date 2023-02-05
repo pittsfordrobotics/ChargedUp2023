@@ -185,8 +185,8 @@ public class BetterSwerveKinematics extends SwerveDriveKinematics {
 
             var omegaVector = trigThetaAngle.mult(accelVector);
 
-            double omega = omegaVector.get(1, 0) / speed;
-            m_moduleStates[i] = new BetterSwerveModuleState(speed, angle, omega - chassisSpeeds.omegaRadiansPerSecond);
+            double omega = (omegaVector.get(1, 0) / speed) - chassisSpeeds.omegaRadiansPerSecond;
+            m_moduleStates[i] = new BetterSwerveModuleState(speed, angle, omega);
         }
 
         return m_moduleStates;
