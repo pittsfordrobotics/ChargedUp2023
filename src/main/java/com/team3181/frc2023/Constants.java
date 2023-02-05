@@ -138,7 +138,7 @@ public final class Constants {
         public static final double MODULE_DRIVE_A = 0;
 
         // controlling module position / angle
-        public static final double MODULE_STEER_P = 0.05;
+        public static final double MODULE_STEER_P = 1;
         public static final double MODULE_STEER_I = 0;
         public static final double MODULE_STEER_D = 0;
         // irl
