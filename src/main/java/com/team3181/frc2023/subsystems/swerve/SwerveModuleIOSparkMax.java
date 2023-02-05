@@ -47,6 +47,7 @@ public class SwerveModuleIOSparkMax implements SwerveModuleIO {
         // converts to rad/s
         steerAbsoluteEncoder.setPositionConversionFactor(2.0 * Math.PI);
         steerAbsoluteEncoder.setVelocityConversionFactor(2.0 * Math.PI / 60.0);
+        steerAbsoluteEncoder.setZeroOffset(0);
 
         drivePID = driveMotor.getPIDController();
         steerPID = steerMotor.getPIDController();

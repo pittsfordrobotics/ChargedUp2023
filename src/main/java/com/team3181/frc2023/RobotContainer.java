@@ -7,6 +7,7 @@ package com.team3181.frc2023;
 import com.team3181.frc2023.commands.AutoCollectAndGo;
 import com.team3181.frc2023.commands.DropClimb;
 import com.team3181.frc2023.commands.SwerveDriveFieldXbox;
+import com.team3181.frc2023.commands.SwerveResetPose;
 import com.team3181.frc2023.subsystems.swerve.Swerve;
 import com.team3181.lib.controller.BetterXboxController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -42,6 +43,7 @@ public class RobotContainer {
   }
 
   private void testButtons() {
+    driverController.a().whileTrue(new SwerveResetPose(new Pose2d()));
 //    driverController.a().whileTrue(new SwervePathing(Paths.TEST_ON_THE_FLY, false));
   }
 

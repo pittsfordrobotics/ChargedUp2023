@@ -107,7 +107,6 @@ public class Robot extends LoggedRobot {
   public void disabledPeriodic() {
     if (Swerve.getInstance().isStopped() && disabledTimer.hasElapsed(3)) {
       Swerve.getInstance().setCoastMode();
-      disabledTimer.stop();
     }
   }
 

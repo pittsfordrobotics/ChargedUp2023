@@ -76,14 +76,14 @@ public final class Constants {
          *    ^   FL  FR   ^
          *    |   BL  BR   |
          */
-        public static final int CAN_FL_DRIVE = 5;
-        public static final int CAN_FL_STEER = 6;
-        public static final int CAN_FR_DRIVE = 1;
-        public static final int CAN_FR_STEER = 2;
-        public static final int CAN_BL_DRIVE = 7;
-        public static final int CAN_BL_STEER = 8;
-        public static final int CAN_BR_DRIVE = 3;
-        public static final int CAN_BR_STEER = 4;
+        public static final int CAN_BL_DRIVE = 5; // RF
+        public static final int CAN_BL_STEER = 6; // RF
+        public static final int CAN_BR_DRIVE = 1; // LF
+        public static final int CAN_BR_STEER = 2; // LF
+        public static final int CAN_FL_DRIVE = 7; // RR
+        public static final int CAN_FL_STEER = 8; // RR
+        public static final int CAN_FR_DRIVE = 3; // LR
+        public static final int CAN_FR_STEER = 4; // LR
 
         /**
          *  Pinon    Gear Ratio    Max Speed [m/s] (approximate)
@@ -121,14 +121,14 @@ public final class Constants {
         };
         public static final BetterSwerveKinematics DRIVE_KINEMATICS = new BetterSwerveKinematics(MODULE_OFFSETS);
 
-        public static final Rotation2d FL_OFFSET = Rotation2d.fromRadians(0.504);
-        public static final Rotation2d FR_OFFSET = Rotation2d.fromRadians(0.342);
-        public static final Rotation2d BL_OFFSET = Rotation2d.fromRadians(0.98);
-        public static final Rotation2d BR_OFFSET = Rotation2d.fromRadians(0.175);
+        public static final Rotation2d FL_OFFSET = Rotation2d.fromRadians(0.1715);
+        public static final Rotation2d FR_OFFSET = Rotation2d.fromRadians(5.167658);
+        public static final Rotation2d BL_OFFSET = Rotation2d.fromRadians(3.11452428);
+        public static final Rotation2d BR_OFFSET = Rotation2d.fromRadians(4.138);
 
         // controlling module wheel speed
         // read this later: https://github.com/Team364/BaseFalconSwerve
-        public static final double MODULE_DRIVE_P = 0.04;
+        public static final double MODULE_DRIVE_P = 0.07;
         public static final double MODULE_DRIVE_I = 0;
         public static final double MODULE_DRIVE_D = 0;
 
@@ -138,7 +138,7 @@ public final class Constants {
         public static final double MODULE_DRIVE_A = 0;
 
         // controlling module position / angle
-        public static final double MODULE_STEER_P = 1;
+        public static final double MODULE_STEER_P = 1.5;
         public static final double MODULE_STEER_I = 0;
         public static final double MODULE_STEER_D = 0;
         // irl
@@ -147,7 +147,7 @@ public final class Constants {
         // sim
         // -0.65 for open loop
         // -0.15 closed loop
-        public static final double MODULE_STEER_FF_OL = Robot.isReal() ? 0 : 0.5;
+        public static final double MODULE_STEER_FF_OL = Robot.isReal() ? 0.4 : 0.5;
         public static final double MODULE_STEER_FF_CL = Robot.isReal() ? 0 : 0.33;
     }
 
