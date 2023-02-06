@@ -61,15 +61,9 @@ public class Alert {
         if (active && !this.active) {
             activeStartTime = Timer.getFPGATimestamp();
             switch (type) {
-                case ERROR:
-                    DriverStation.reportError(text, false);
-                    break;
-                case WARNING:
-                    DriverStation.reportWarning(text, false);
-                    break;
-                case INFO:
-                    System.out.println(text);
-                    break;
+                case ERROR -> DriverStation.reportError(text, false);
+                case WARNING -> DriverStation.reportWarning(text, false);
+                case INFO -> System.out.println(text);
             }
         }
         this.active = active;
@@ -79,6 +73,13 @@ public class Alert {
      * Updates current alert text.
      */
     public void setText(String text) {
+        if (active && !text.equals(this.text)) {
+            switch (type) {
+                case ERROR -> DriverStation.reportError(text, false);
+                case WARNING -> DriverStation.reportWarning(text, false);
+                case INFO -> System.out.println(text);
+            }
+        }
         this.text = text;
     }
 
