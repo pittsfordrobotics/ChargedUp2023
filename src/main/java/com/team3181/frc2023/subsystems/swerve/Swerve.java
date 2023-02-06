@@ -158,6 +158,10 @@ public class Swerve extends SubsystemBase {
         poseEstimator.resetPosition(getRobotRelativeAngle(), modulePositions, pose);
     }
 
+    public void zeroGyro() {
+        poseEstimator.resetPosition(getRobotRelativeAngle(), modulePositions, getPose());
+    }
+
     public void addVisionData(Pose2d pose, double time) {
 //        this is recommended, but I'm not sure if it's needed
 //        if (GeomUtil.distance(pose, getPose()) < 1) {
