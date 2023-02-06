@@ -4,11 +4,10 @@
 
 package com.team3181.frc2023;
 
-import com.team3181.frc2023.commands.AutoCollectAndGo;
-import com.team3181.frc2023.commands.DropClimb;
-import com.team3181.frc2023.commands.SwerveDriveFieldXbox;
-import com.team3181.frc2023.commands.SwerveResetPose;
+import com.team3181.frc2023.Constants.RobotConstants;
+import com.team3181.frc2023.commands.*;
 import com.team3181.frc2023.subsystems.swerve.Swerve;
+import com.team3181.frc2023.subsystems.tank.Tank;
 import com.team3181.lib.controller.BetterXboxController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -34,8 +33,8 @@ public class RobotContainer {
 //      competitionButtons();
       testButtons();
 
-    Swerve.getInstance().setDefaultCommand(new SwerveDriveFieldXbox());
-//    Tank.getInstance().setDefaultCommand(new TankXbox());
+    if (!RobotConstants.IS_TANK) Swerve.getInstance().setDefaultCommand(new SwerveDriveFieldXbox());
+    if (RobotConstants.IS_TANK) Tank.getInstance().setDefaultCommand(new TankXbox());
   }
 
   private void driverDashboardSetup() {
