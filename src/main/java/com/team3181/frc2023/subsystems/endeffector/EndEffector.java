@@ -17,7 +17,6 @@ public class EndEffector extends SubsystemBase {
     public ActualState mActualState = ActualState.IDLE;
 
     private final static EndEffector INSTANCE = new EndEffector(Constants.RobotConstants.END_EFFECTOR);
-
     public static EndEffector getInstance() {
         return INSTANCE;
     }
@@ -50,19 +49,13 @@ public class EndEffector extends SubsystemBase {
             switch(mActualState) {
                 // would be nice if this were command based but that's annoying and periodic is easier
                 case INTAKING_CONE:
-                    if(inputs.positionRad < Constants.EndEffectorConstants.CONE_CLAW_POSITION) {
-                        io.setVoltage(Constants.EndEffectorConstants.CONE_INTAKE_POWER);
-                    }
+                    io.setVoltage(Constants.EndEffectorConstants.CONE_INTAKE_POWER);
                     break;
                 case INTAKING_CUBE:
-                    if(inputs.positionRad < Constants.EndEffectorConstants.CUBE_CLAW_POSITION) {
-                        io.setVoltage(Constants.EndEffectorConstants.CUBE_INTAKE_POWER);
-                    }
+                    io.setVoltage(Constants.EndEffectorConstants.CUBE_INTAKE_POWER);
                     break;
-                case EXHAUSTING:
-                    if(inputs.positionRad != 0.0) {
-                        io.setVoltage(Constants.EndEffectorConstants.EXHAUST_POWER);
-                    }
+                case EXHAUSTING: // may need to be 2 different values if we need to shoot cone and cube at different speeds
+                    io.setVoltage(Constants.EndEffectorConstants.EXHAUST_POWER);
                     break;
                 default:
                 case IDLE:
@@ -73,7 +66,7 @@ public class EndEffector extends SubsystemBase {
 
             Logger.getInstance().recordOutput("End Effector/Wanted States", mWantedState.name());
             Logger.getInstance().recordOutput("End Effector/Actual States", mActualState.name());
-            Logger.getInstance().recordOutput("End Effector/Angular Position", inputs.positionRad);
+            //Logger.getInstance().recordOutput("End Effector/Angular Position", inputs.positionRad);
             Logger.getInstance().recordOutput("End Effector/Applied Voltage", inputs.appliedVolts);
             Logger.getInstance().recordOutput("End Effector/Angular Velocity", inputs.velocityRadPerSec);
         }

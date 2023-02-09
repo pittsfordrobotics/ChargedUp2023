@@ -7,7 +7,7 @@ import org.littletonrobotics.junction.inputs.LoggableInputs;
 public interface EndEffectorIO {
     @AutoLog
     class EndEffectorIOInputs {
-        public double positionRad = 0.0;
+        // public double positionRad = 0.0;
         public double velocityRadPerSec = 0.0;
         public double appliedVolts = 0.0;
         // public double[] currentAmps = new double[] {};
