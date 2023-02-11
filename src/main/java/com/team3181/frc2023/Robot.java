@@ -94,7 +94,7 @@ public class Robot extends LoggedRobot {
     driverControllerAlert.set(!DriverStation.isJoystickConnected(0));
     operatorControllerAlert.set(!DriverStation.isJoystickConnected(1));
     LazySparkMax.checkAlive();
-    Threads.setCurrentThreadPriority(false, 10);
+//    Threads.setCurrentThreadPriority(false, 10);
   }
 
   @Override

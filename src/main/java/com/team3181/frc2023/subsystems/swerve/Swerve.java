@@ -126,10 +126,10 @@ public class Swerve extends SubsystemBase {
 //    drives wheels at x to prevent being shoved
     public void driveX() {
         setModuleStates(new BetterSwerveModuleState[]{
-                new BetterSwerveModuleState(0.1, Rotation2d.fromDegrees(315), 0),
-                new BetterSwerveModuleState(0.1, Rotation2d.fromDegrees(225), 0),
                 new BetterSwerveModuleState(0.1, Rotation2d.fromDegrees(45), 0),
-                new BetterSwerveModuleState(0.1, Rotation2d.fromDegrees(135), 0),
+                new BetterSwerveModuleState(0.1, Rotation2d.fromDegrees(-45), 0),
+                new BetterSwerveModuleState(0.1, Rotation2d.fromDegrees(315), 0),
+                new BetterSwerveModuleState(0.1, Rotation2d.fromDegrees(45), 0),
         }, true);
     }
 
@@ -159,7 +159,8 @@ public class Swerve extends SubsystemBase {
     }
 
     public void zeroGyro() {
-        poseEstimator.resetPosition(getRobotRelativeAngle(), modulePositions, getPose());
+        Pose2d pose = new Pose2d(getPose().getX(), getPose().getY(), new Rotation2d());
+        poseEstimator.resetPosition(getRobotRelativeAngle(), modulePositions, pose);
     }
 
     public void addVisionData(Pose2d pose, double time) {

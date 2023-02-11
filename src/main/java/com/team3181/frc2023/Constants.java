@@ -128,7 +128,7 @@ public final class Constants {
 
         // controlling module wheel speed
         // read this later: https://github.com/Team364/BaseFalconSwerve
-        public static final double MODULE_DRIVE_P = 0.07;
+        public static final double MODULE_DRIVE_P = 0.0001;
         public static final double MODULE_DRIVE_I = 0;
         public static final double MODULE_DRIVE_D = 0;
 
@@ -136,6 +136,7 @@ public final class Constants {
         public static final double MODULE_DRIVE_S = 0;
         public static final double MODULE_DRIVE_V = 0;
         public static final double MODULE_DRIVE_A = 0;
+        public static final double MODULE_DRIVE_FF = 1 / MAX_LINEAR_VELOCITY_METERS_PER_SECOND;
 
         // controlling module position / angle
         public static final double MODULE_STEER_P = 1.5;
@@ -148,7 +149,7 @@ public final class Constants {
         // -0.65 for open loop
         // -0.15 closed loop
         public static final double MODULE_STEER_FF_OL = Robot.isReal() ? 0.4 : 0.5;
-        public static final double MODULE_STEER_FF_CL = Robot.isReal() ? 0 : 0.33;
+        public static final double MODULE_STEER_FF_CL = Robot.isReal() ? 0.9 : 0.33;
     }
 
     public static final class TankConstants {

@@ -44,7 +44,8 @@ public class RobotContainer {
 
   private void testButtons() {
     driverController.a().whileTrue(new InstantCommand(Swerve.getInstance()::zeroGyro));
-//    driverController.a().whileTrue(new SwervePathing(Paths.TEST_ON_THE_FLY, false));
+    driverController.x().whileTrue(new InstantCommand(Swerve.getInstance()::driveX));
+//    driverContxroller.a().whileTrue(new SwervePathing(Paths.TEST_ON_THE_FLY, false));
   }
 
   private void competitionButtons() {}
