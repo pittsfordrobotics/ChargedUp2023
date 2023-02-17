@@ -190,7 +190,7 @@ public final class Constants {
 
     public static final class AutoConstants {
         // PID values for trajectory follower
-        public static final double LINEAR_P = 1;
+        public static final double LINEAR_P = 8;
         public static final double ROT_P = 5;
 
 //        numbers from 1678
