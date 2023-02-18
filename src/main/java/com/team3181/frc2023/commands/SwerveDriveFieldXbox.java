@@ -28,7 +28,6 @@ public class SwerveDriveFieldXbox extends CommandBase {
 
     @Override
     public void initialize() {
-        m_prevTime = MathSharedStore.getTimestamp();
         m_magLimiter = new SlewRateLimiter(SwerveConstants.MAGNITUDE_RATE_LIMIT);
         m_rotLimiter = new SlewRateLimiter(SwerveConstants.ROTATION_RATE_LIMIT);
     }
@@ -86,6 +85,11 @@ public class SwerveDriveFieldXbox extends CommandBase {
                     ySpeedCommanded,
                     rotCommanded
             );
+//            swerve.driveFieldOrientated(
+//                    BetterXboxController.getController(Humans.DRIVER).getSwerveTranslation().getX(),
+//                    BetterXboxController.getController(Humans.DRIVER).getSwerveTranslation().getY(),
+//                    BetterXboxController.getController(Humans.DRIVER).getSwerveRotation()
+//            );
         }
     }
 
