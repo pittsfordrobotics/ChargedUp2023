@@ -1,6 +1,6 @@
 //LimelightHelpers v1.2.0 (Feb 13, 2023)
 
-package com.team3181.frc2023;
+package com.team3181.lib.util;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
