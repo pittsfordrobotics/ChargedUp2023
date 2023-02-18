@@ -156,6 +156,10 @@ public final class Constants {
         // -0.15 closed loop
         public static final double MODULE_STEER_FF_OL = Robot.isReal() ? 0.4 : 0.5;
         public static final double MODULE_STEER_FF_CL = Robot.isReal() ? 0.9 : 0.33;
+
+        public static final double DIRECTION_RATE_LIMIT = 20; // radians per second
+        public static final double MAGNITUDE_RATE_LIMIT = 10.7; // percent per second (1 = 100%)
+        public static final double ROTATION_RATE_LIMIT = 8.0; // percent per second (1 = 100%)
     }
 
     public static final class TankConstants {
