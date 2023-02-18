@@ -1,23 +1,36 @@
 package com.team3181.frc2023.subsystems.fourbar;
 
+import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
-import com.team3181.frc2023.Constants;
+import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.team3181.lib.drivers.LazySparkMax;
+import edu.wpi.first.math.util.Units;
 
-public class FourBarIOSparkMax implements ArmIO {
-    public final LazySparkMax shoulder = new LazySparkMax(Constants.FourBarConstants.CAN_SHOULDER, CANSparkMax.IdleMode.kBrake, 30);
-    public final LazySparkMax elbow = new LazySparkMax(Constants.FourBarConstants.CAN_ELBOW, CANSparkMax.IdleMode.kBrake, 30);
+public class ArmIOSparkMax implements ArmIO {
+    public final LazySparkMax motor;
+    public final AbsoluteEncoder absoluteEncoder;
 
-    public ArmIOSparkMax() {};
-
-    @Override
-    default void updateInputs(ArmIOInputs inputs) {
-        inputs.velocityRadPerSec
+    public ArmIOSparkMax(int id) {
+        motor = new LazySparkMax(id, CANSparkMax.IdleMode.kBrake, 30);
+        absoluteEncoder = motor.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle);
     }
 
     @Override
-    default void setVoltage(double volts) {}
+    public void updateInputs(ArmIOInputs inputs) {
+        inputs.armPositionRad = absoluteEncoder.getPosition();
+        inputs.armVelocityRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(absoluteEncoder.getVelocity());
+        inputs.armAppliedVolts = motor.getAppliedOutput() * motor.getBusVoltage();
+        inputs.armCurrentAmps = motor.getOutputCurrent();
+        inputs.armTempCelsius = motor.getMotorTemperature();
+    }
 
     @Override
-    default void setBrakeMode(boolean enable) {}
+    public void setVoltage(double volts) {
+        motor.setVoltage(volts);
+    }
+
+    @Override
+    public void setBrakeMode(boolean enable) {
+        motor.setIdleMode(enable ? CANSparkMax.IdleMode.kBrake : CANSparkMax.IdleMode.kCoast);
+    }
 }

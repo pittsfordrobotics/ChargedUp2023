@@ -2,19 +2,17 @@ package com.team3181.frc2023.subsystems.fourbar;
 
 import org.littletonrobotics.junction.AutoLog;
 
-public class FourBarIO {
+public interface ArmIO {
     @AutoLog
-    class FourBarIOInputs{
-        public double shoulderPositionRad = 0.0;
-        public double elbowPositionRad = 0.0;
-        public double shoulderVelocityRadPerSec = 0.0;
-        public double elbowVelocityRadPerSec = 0.0;
+    class ArmIOInputs{
+        public double armPositionRad = 0.0;
+        public double armVelocityRadPerSec = 0.0;
 
-        public double appliedVolts = 0.0;
-        // public double[] currentAmps = new double[] {};
-        // public double[] tempCelsius = new double[] {};
+        public double armAppliedVolts = 0.0;
+        public double armCurrentAmps = 0.0;
+        public double armTempCelsius = 0.0;
     }
-    default void updateInputs(FourBarIOInputs inputs) {}
+    default void updateInputs(ArmIOInputs inputs) {}
 
     default void setVoltage(double volts) {}
 

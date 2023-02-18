@@ -6,6 +6,9 @@ package com.team3181.frc2023;
 
 import com.ctre.phoenix.sensors.Pigeon2Configuration;
 import com.pathplanner.lib.PathConstraints;
+import com.team3181.frc2023.subsystems.fourbar.FourBar;
+import com.team3181.frc2023.subsystems.fourbar.ArmIO;
+import com.team3181.frc2023.subsystems.fourbar.ArmIOSparkMax;
 import com.team3181.frc2023.subsystems.swerve.*;
 import com.team3181.frc2023.subsystems.tank.TankIO;
 import com.team3181.frc2023.subsystems.tank.TankIOSim;
@@ -27,8 +30,12 @@ public final class Constants {
         public final static SwerveModuleIO BR_MODULE;
         public final static TankIO TANK;
         public final static GyroIO GYRO;
+        public final static ArmIO SHOULDER;
+        public final static ArmIO ELBOW;
         static {
             if (RobotBase.isReal()) {
+                SHOULDER = new ArmIOSparkMax(FourBarConstants.CAN_SHOULDER);
+                ELBOW = new ArmIOSparkMax(FourBarConstants.CAN_ELBOW);
                 TANK = RobotConstants.IS_TANK ? new TankIOSparkMax() : new TankIO(){};
                 FL_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSparkMax(SwerveConstants.CAN_FL_DRIVE, SwerveConstants.CAN_FL_STEER, SwerveConstants.FL_OFFSET);
                 FR_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSparkMax(SwerveConstants.CAN_FR_DRIVE, SwerveConstants.CAN_FR_STEER, SwerveConstants.FR_OFFSET);
@@ -37,6 +44,8 @@ public final class Constants {
                 GYRO = RobotConstants.IS_TANK ? new GyroIO(){} : new GyroIOPigeon();
             }
             else {
+                SHOULDER = new ArmIO(){};
+                ELBOW = new ArmIO(){};
                 TANK = RobotConstants.IS_TANK ? new TankIOSim() : new TankIO(){};
                 FL_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSim();
                 FR_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSim();
@@ -63,6 +72,11 @@ public final class Constants {
             SPARKMAX_HASHMAP.put(7, "Back Right Drive");
             SPARKMAX_HASHMAP.put(8, "Back Right Steer");
         }
+    }
+
+    public static final class FourBarConstants {
+        public static final int CAN_SHOULDER = 10; // TODO: Change
+        public static final int CAN_ELBOW = 11;
     }
 
     public static final class SwerveConstants {
