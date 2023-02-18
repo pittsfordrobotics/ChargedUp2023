@@ -15,8 +15,14 @@ public interface VisionIO {
         public double[] botYPR = new double[]{};
     }
 
+    /**
+     * FAR_RANGE: has the lowest FPS, but allows for possible vision updates when halfway down the field
+     * MID_RANGE: has slightly higher FPS, but allows for farther vision updates when halfway down the field
+     * CLOSE_RANGE: has the highest FPS, but only has limited range
+     * RETRO: uses the green lights
+     */
     enum Pipelines {
-        APRIL_TAGS(0), RETROREFLECTOR(1);
+        FAR_RANGE(0), MID_RANGE(1), CLOSE_RANGE(2), RETRO(3);
 
         private final int num;
         Pipelines(int num) {

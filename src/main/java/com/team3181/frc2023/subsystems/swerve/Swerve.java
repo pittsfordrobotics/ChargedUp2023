@@ -89,8 +89,6 @@ public class Swerve extends SubsystemBase {
         poseEstimator.update(getRobotRelativeAngle(), modulePositions);
         lastRotation = getRobotRelativeAngle();
 
-        addVisionData(Vision.getInstance().getPose(), Vision.getInstance().getLatency());
-
         Logger.getInstance().recordOutput("Swerve/Pose", getPose());
         Logger.getInstance().recordOutput("Swerve/Wanted States", wantedModuleStates);
         Logger.getInstance().recordOutput("Swerve/Actual States", actualStates);

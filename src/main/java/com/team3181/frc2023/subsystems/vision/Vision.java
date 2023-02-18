@@ -1,6 +1,7 @@
 package com.team3181.frc2023.subsystems.vision;
 
 import com.team3181.frc2023.Constants.RobotConstants;
+import com.team3181.frc2023.subsystems.swerve.Swerve;
 import com.team3181.frc2023.subsystems.vision.VisionIO.CameraMode;
 import com.team3181.frc2023.subsystems.vision.VisionIO.LED;
 import com.team3181.frc2023.subsystems.vision.VisionIO.Pipelines;
@@ -18,7 +19,7 @@ public class Vision extends SubsystemBase {
     private final VisionIO io;
     private final VisionIOInputsAutoLogged inputs = new VisionIOInputsAutoLogged();
 
-    private Pipelines pipeline = Pipelines.APRIL_TAGS;
+    private Pipelines pipeline = Pipelines.FAR_RANGE;
     private LED led = LED.PIPELINE;
     private CameraMode camera = CameraMode.VISION_PROCESSING;
 
@@ -48,6 +49,11 @@ public class Vision extends SubsystemBase {
 
         io.setPipeline(pipeline);
         io.setCameraModes(camera);
+
+        if (getPose() != null) {
+            Swerve.getInstance().addVisionData(Vision.getInstance().getPose(), Vision.getInstance().getLatency());
+            Logger.getInstance().recordOutput("Vision/Pose", Vision.getInstance().getPose());
+        }
     }
 
     public boolean hasTarget() {
@@ -66,7 +72,7 @@ public class Vision extends SubsystemBase {
         if (inputs.botXYZ.length != 0 && inputs.botYPR.length != 0) {
             return new Pose2d(new Translation2d(inputs.botXYZ[0], inputs.botXYZ[1]), new Rotation2d(inputs.botYPR[0]));
         }
-        return new Pose2d();
+        return null;
     }
 
     public double getLatency() {
