@@ -9,13 +9,11 @@ import edu.wpi.first.wpilibj.DriverStation;
 import org.littletonrobotics.junction.Logger;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 /**
  * This is a thick wrapper for CANSparkMax because I am lazy
  */
 public class LazySparkMax extends CANSparkMax {
-    private final String SPARK_MAX_FIRMWARE = "1.6.2";
     private int errors = 1;
     private int attempts = -1;
     private static final ArrayList<LazySparkMax> sparkMaxes = new ArrayList<>();
@@ -27,7 +25,7 @@ public class LazySparkMax extends CANSparkMax {
      * @param currentLimit 0-30 for 550 / 0-80 for NEO
      * @param inverted Inverted?
      */
-    public LazySparkMax(int port, IdleMode mode, int currentLimit, boolean inverted) {
+    public LazySparkMax(int port, IdleMode mode, int currentLimit, boolean inverted, boolean burn) {
         super(port, MotorType.kBrushless);
         while (errors > 0 && ++attempts <= 5) {
             if (attempts > 0) {
@@ -41,14 +39,13 @@ public class LazySparkMax extends CANSparkMax {
             errors += check(enableVoltageCompensation(12));
             errors += check(getEncoder().setPosition(0));
             errors += check(setSmartCurrentLimit(currentLimit));
-            errors += check(burnFlash());
+            if (burn) errors += check(burnFlash());
         }
         if (errors > 0) {
             Logger.getInstance().recordOutput("SparkMaxes/" + RobotConstants.SPARKMAX_HASHMAP.get(port) + port, "INITIALIZE_ERROR");
             new Alert("SparkMaxes", RobotConstants.SPARKMAX_HASHMAP.get(port) + " FAILED to initialize (" + port + ")!", AlertType.ERROR).set(true);
         }
         else {
-            checkUpdated();
             sparkMaxes.add(this);
         }
     }
@@ -60,7 +57,7 @@ public class LazySparkMax extends CANSparkMax {
      * @param currentLimit 0-30 for 550 / 0-80 for NEO
      */
     public LazySparkMax(int port, IdleMode mode, int currentLimit) {
-        this(port, mode, currentLimit, false);
+        this(port, mode, currentLimit, false, true);
     }
 
     /**
@@ -71,7 +68,7 @@ public class LazySparkMax extends CANSparkMax {
      * @param leader SparkMax to follow
      * @param inverted Whether to follow the leader inverted
      */
-    public LazySparkMax(int port, IdleMode mode, int currentLimit, CANSparkMax leader, boolean inverted) {
+    public LazySparkMax(int port, IdleMode mode, int currentLimit, CANSparkMax leader, boolean inverted, boolean burn) {
         super(port, MotorType.kBrushless);
         while (errors > 0 && ++attempts <= 5) {
             if (attempts > 0) {
@@ -85,14 +82,13 @@ public class LazySparkMax extends CANSparkMax {
             errors += check(getEncoder().setPosition(0));
             errors += check(setSmartCurrentLimit(currentLimit));
             errors += check(follow(leader, inverted));
-            errors += check(burnFlash());
+            if (burn) errors += check(burnFlash());
         }
         if (errors > 0) {
             Logger.getInstance().recordOutput("SparkMaxes/" + RobotConstants.SPARKMAX_HASHMAP.get(port) + port, "INITIALIZE_ERROR");
             new Alert("SparkMaxes",RobotConstants.SPARKMAX_HASHMAP.get(port) + " FAILED to initialize (" + port + ")!", AlertType.ERROR).set(true);
         }
         else {
-            checkUpdated();
             sparkMaxes.add(this);
         }
     }
@@ -105,7 +101,7 @@ public class LazySparkMax extends CANSparkMax {
      * @param leader SparkMax to follow
      */
     public LazySparkMax(int port, IdleMode mode, int currentLimit, CANSparkMax leader) {
-        this(port, mode, currentLimit, leader, false);
+        this(port, mode, currentLimit, leader, false, true);
     }
 
     public static void checkAlive() {
@@ -114,13 +110,6 @@ public class LazySparkMax extends CANSparkMax {
                 Logger.getInstance().recordOutput("SparkMaxes/" + RobotConstants.SPARKMAX_HASHMAP.get(i.getDeviceId()) + i.getDeviceId(), "ERROR");
                 new Alert("SparkMaxes", RobotConstants.SPARKMAX_HASHMAP.get(i.getDeviceId()) + " PROBLEMED (" + i.getDeviceId() + ")!", AlertType.ERROR).set(true);
             }
-        }
-    }
-
-    private void checkUpdated() {
-        if (!Objects.equals(getFirmwareString(), SPARK_MAX_FIRMWARE)) {
-            Logger.getInstance().recordOutput("SparkMaxes/" + RobotConstants.SPARKMAX_HASHMAP.get(getDeviceId()) + getDeviceId(), "OUT_OF_DATE");
-            new Alert("SparkMaxes",RobotConstants.SPARKMAX_HASHMAP.get(getDeviceId()) + " needs to be updated (" + getDeviceId() + ")!", AlertType.INFO).set(true);
         }
     }
 

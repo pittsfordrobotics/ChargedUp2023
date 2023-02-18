@@ -77,7 +77,7 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void robotPeriodic() {
-    Threads.setCurrentThreadPriority(true, 99);
+    // Threads.setCurrentThreadPriority(true, 99);
     CommandScheduler.getInstance().run();
 
     // Log scheduled commands
@@ -94,7 +94,7 @@ public class Robot extends LoggedRobot {
     driverControllerAlert.set(!DriverStation.isJoystickConnected(0));
     operatorControllerAlert.set(!DriverStation.isJoystickConnected(1));
     LazySparkMax.checkAlive();
-    Threads.setCurrentThreadPriority(false, 10);
+//    Threads.setCurrentThreadPriority(false, 10);
   }
 
   @Override
@@ -105,9 +105,8 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void disabledPeriodic() {
-    if (Swerve.getInstance().isStopped() && disabledTimer.hasElapsed(3)) {
+    if (Swerve.getInstance().isStopped() && disabledTimer.hasElapsed(5)) {
       Swerve.getInstance().setCoastMode();
-      disabledTimer.stop();
     }
   }
 

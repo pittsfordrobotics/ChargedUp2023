@@ -10,7 +10,6 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import org.ejml.simple.SimpleMatrix;
-import org.littletonrobotics.junction.Logger;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -158,7 +157,6 @@ public class BetterSwerveKinematics extends SwerveDriveKinematics {
 
             double ax = moduleAccelerationStatesMatrix.get(i * 2, 0);
             double ay = moduleAccelerationStatesMatrix.get(i * 2 + 1, 0);
-            Logger.getInstance().recordOutput("ax", moduleAccelerationStatesMatrix.get(i * 2, 0));
 
             double speed = Math.hypot(x, y);
             Rotation2d angle = new Rotation2d(x, y);
@@ -187,7 +185,7 @@ public class BetterSwerveKinematics extends SwerveDriveKinematics {
 
             var omegaVector = trigThetaAngle.mult(accelVector);
 
-            double omega = omegaVector.get(1, 0) / speed;
+            double omega = (omegaVector.get(1, 0) / speed) - chassisSpeeds.omegaRadiansPerSecond;
             m_moduleStates[i] = new BetterSwerveModuleState(speed, angle, omega);
         }
 
