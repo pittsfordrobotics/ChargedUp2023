@@ -7,6 +7,7 @@ package com.team3181.frc2023;
 import com.team3181.frc2023.commands.AutoCollectAndGo;
 import com.team3181.frc2023.commands.DropClimb;
 import com.team3181.frc2023.commands.SwerveDriveFieldXbox;
+import com.team3181.frc2023.subsystems.endeffector.EndEffector;
 import com.team3181.frc2023.subsystems.swerve.Swerve;
 import com.team3181.lib.controller.BetterXboxController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -17,6 +18,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public class RobotContainer {
@@ -41,6 +43,7 @@ public class RobotContainer {
   }
 
   private void testButtons() {
+    operatorController.a().onTrue(new InstantCommand(() -> EndEffector.getInstance().mWantedState = EndEffector.WantedState.INTAKING_CONE, EndEffector.getInstance())).onFalse(new InstantCommand(() -> EndEffector.getInstance().mWantedState = EndEffector.WantedState.IDLE, EndEffector.getInstance()));
   }
 
   private void competitionButtons() {}
