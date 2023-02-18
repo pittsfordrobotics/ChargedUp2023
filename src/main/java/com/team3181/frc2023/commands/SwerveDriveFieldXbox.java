@@ -1,7 +1,9 @@
 package com.team3181.frc2023.commands;
 
 import com.team3181.frc2023.Constants.SwerveConstants;
+import com.team3181.frc2023.Robot;
 import com.team3181.lib.swerve.SwerveUtils;
+import edu.wpi.first.math.MathSharedStore;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -9,18 +11,26 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import com.team3181.frc2023.subsystems.swerve.Swerve;
 import com.team3181.lib.controller.BetterXboxController;
 import com.team3181.lib.controller.BetterXboxController.Humans;
+import org.littletonrobotics.junction.Logger;
 
 
 public class SwerveDriveFieldXbox extends CommandBase {
     private final Swerve swerve = Swerve.getInstance();
-    private SlewRateLimiter m_magLimiter = new SlewRateLimiter(SwerveConstants.MAGNITUDE_RATE_LIMIT);
-    private SlewRateLimiter m_rotLimiter = new SlewRateLimiter(SwerveConstants.ROTATION_RATE_LIMIT);
+    private SlewRateLimiter m_magLimiter;
+    private SlewRateLimiter m_rotLimiter;
     private double m_prevTime = WPIUtilJNI.now() * 1e-6;
     private double m_currentTranslationDir = 0.0;
     private double m_currentTranslationMag = 0.0;
 
     public SwerveDriveFieldXbox() {
         addRequirements(this.swerve);
+    }
+
+    @Override
+    public void initialize() {
+        m_prevTime = MathSharedStore.getTimestamp();
+        m_magLimiter = new SlewRateLimiter(SwerveConstants.MAGNITUDE_RATE_LIMIT);
+        m_rotLimiter = new SlewRateLimiter(SwerveConstants.ROTATION_RATE_LIMIT);
     }
 
     @Override
