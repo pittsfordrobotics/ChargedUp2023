@@ -1,7 +1,6 @@
 package com.team3181.frc2023.subsystems.vision;
 
 import com.team3181.frc2023.Constants.RobotConstants;
-import com.team3181.frc2023.subsystems.swerve.Swerve;
 import com.team3181.frc2023.subsystems.vision.VisionIO.CameraMode;
 import com.team3181.frc2023.subsystems.vision.VisionIO.LED;
 import com.team3181.frc2023.subsystems.vision.VisionIO.Pipelines;
@@ -44,10 +43,6 @@ public class Vision extends SubsystemBase {
     public void periodic() {
         io.updateInputs(inputs);
         Logger.getInstance().processInputs("Vision", inputs);
-
-        if (!RobotConstants.IS_TANK) {
-            Swerve.getInstance().addVisionData(new Pose2d(inputs.botXYZ[0],inputs.botXYZ[1], Rotation2d.fromDegrees(inputs.botYPR[0])), inputs.captureTimestamp);
-        }
 
         limelightAlert.set(!inputs.connected);
 
