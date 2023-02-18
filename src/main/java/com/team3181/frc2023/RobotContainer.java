@@ -8,7 +8,10 @@ import com.team3181.frc2023.commands.AutoCollectAndGo;
 import com.team3181.frc2023.commands.DropClimb;
 import com.team3181.frc2023.commands.SwerveDriveFieldXbox;
 import com.team3181.frc2023.subsystems.endeffector.EndEffector;
+import com.team3181.frc2023.Constants.RobotConstants;
+import com.team3181.frc2023.commands.*;
 import com.team3181.frc2023.subsystems.swerve.Swerve;
+import com.team3181.frc2023.subsystems.tank.Tank;
 import com.team3181.lib.controller.BetterXboxController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -35,7 +38,8 @@ public class RobotContainer {
 //      competitionButtons();
       testButtons();
 
-//    Swerve.getInstance().setDefaultCommand(new SwerveDriveFieldXbox());
+//    if (!RobotConstants.IS_TANK) Swerve.getInstance().setDefaultCommand(new SwerveDriveFieldXbox());
+    if (RobotConstants.IS_TANK) Tank.getInstance().setDefaultCommand(new TankXbox());
   }
 
   private void driverDashboardSetup() {
@@ -44,6 +48,9 @@ public class RobotContainer {
 
   private void testButtons() {
     driverController.a().onTrue(new InstantCommand(() -> EndEffector.getInstance().mWantedState = EndEffector.WantedState.INTAKING_CONE, EndEffector.getInstance())).onFalse(new InstantCommand(() -> EndEffector.getInstance().mWantedState = EndEffector.WantedState.IDLE, EndEffector.getInstance()));
+//    driverController.a().whileTrue(new InstantCommand(Swerve.getInstance()::zeroGyro));
+//    driverController.x().whileTrue(new InstantCommand(Swerve.getInstance()::driveX));
+//    driverContxroller.a().whileTrue(new SwervePathing(Paths.TEST_ON_THE_FLY, false));
   }
 
   private void competitionButtons() {}

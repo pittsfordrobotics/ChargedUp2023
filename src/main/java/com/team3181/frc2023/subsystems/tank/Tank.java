@@ -19,7 +19,7 @@ import org.littletonrobotics.junction.Logger;
 
 public class Tank extends SubsystemBase {
     private final TankIO io;
-    private final DriveIOInputsAutoLogged inputs = new DriveIOInputsAutoLogged();
+    private final TankIOInputsAutoLogged inputs = new TankIOInputsAutoLogged();
 
     private double throttle;
     private Pose2d pose = new Pose2d(0, 0, Rotation2d.fromDegrees(getAngle()));
@@ -44,9 +44,11 @@ public class Tank extends SubsystemBase {
 
         setThrottle(0.7);
 
-        ShuffleboardTab driveTab = Shuffleboard.getTab("Tank");
-        driveTab.addNumber("Pigeon", this::getAngle);
-        driveTab.addNumber("Throttle", this::getThrottle);
+        if (RobotConstants.IS_TANK) {
+            ShuffleboardTab driveTab = Shuffleboard.getTab("Tank");
+            driveTab.addNumber("Pigeon", this::getAngle);
+            driveTab.addNumber("Throttle", this::getThrottle);
+        }
     }
 
     @Override

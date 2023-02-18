@@ -2,15 +2,16 @@ package com.team3181.frc2023.commands;
 
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
+import com.team3181.frc2023.Constants.AutoConstants;
+import com.team3181.frc2023.subsystems.swerve.Swerve;
 import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import com.team3181.frc2023.Constants.AutoConstants;
-import com.team3181.frc2023.subsystems.swerve.Swerve;
 
 
 public class SwervePathing extends CommandBase {
@@ -36,7 +37,7 @@ public class SwervePathing extends CommandBase {
         // adjusts because the field is flipped instead of rotated by 180
         PathPlannerState adjustedState = PathPlannerTrajectory.transformStateForAlliance(trajectory.getInitialState(), DriverStation.getAlliance());
         if (reset) {
-            swerve.resetPose(adjustedState.poseMeters);
+            swerve.resetPose(new Pose2d(adjustedState.poseMeters.getTranslation(), adjustedState.holonomicRotation));
         }
         xController.reset();
         yController.reset();
