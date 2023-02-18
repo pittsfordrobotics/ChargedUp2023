@@ -202,9 +202,9 @@ public final class Constants {
 
     // TODO: Determine these constants
     public static final class EndEffectorConstants {
-        public static final double EXHAUST_POWER = 0.0;
-        public static final double CUBE_INTAKE_POWER = 2.0; // may not be relevant now that the intake is wheels, the two values should be the same
-        public static final double CONE_INTAKE_POWER = 2.0;
+        public static final double EXHAUST_POWER = -12.0;
+        public static final double CUBE_INTAKE_POWER = 5.0; // may not be relevant now that the intake is wheels, the two values should be the same
+        public static final double CONE_INTAKE_POWER = 5.0;
         public static final double GEARING = 1.0; // TODO: Set this value
         // public static final double CUBE_CLAW_POSITION = 0.0; // radians
         // public static final double CONE_CLAW_POSITION = 0.0; // radians

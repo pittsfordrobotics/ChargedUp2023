@@ -7,11 +7,11 @@ import org.littletonrobotics.junction.inputs.LoggableInputs;
 public interface EndEffectorIO {
     @AutoLog
     class EndEffectorIOInputs {
-        // public double positionRad = 0.0;
+        public double positionRad = 0.0;
         public double velocityRadPerSec = 0.0;
         public double appliedVolts = 0.0;
-        // public double[] currentAmps = new double[] {};
-        // public double[] tempCelsius = new double[] {};
+        public double currentAmps = 0.0;
+        public double tempCelcius = 0.0;
     }
 
     // override in iosparkmax
