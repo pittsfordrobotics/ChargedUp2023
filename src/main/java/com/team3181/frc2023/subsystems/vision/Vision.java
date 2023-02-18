@@ -9,6 +9,7 @@ import com.team3181.lib.util.Alert;
 import com.team3181.lib.util.Alert.AlertType;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -64,6 +65,17 @@ public class Vision extends SubsystemBase {
 
     public double getVertical() {
         return inputs.vAngle;
+    }
+
+    public Pose2d getPose() {
+        if (inputs.botXYZ.length != 0 && inputs.botYPR.length != 0) {
+            return new Pose2d(new Translation2d(inputs.botXYZ[0], inputs.botXYZ[1]), new Rotation2d(inputs.botYPR[0]));
+        }
+        return new Pose2d();
+    }
+
+    public double getLatency() {
+        return inputs.captureTimestamp;
     }
 
     public void setPipeline(Pipelines pipeline) {

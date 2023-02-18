@@ -2,7 +2,9 @@ package com.team3181.frc2023.subsystems.swerve;
 
 import com.team3181.frc2023.Constants.RobotConstants;
 import com.team3181.frc2023.Constants.SwerveConstants;
+import com.team3181.frc2023.subsystems.vision.Vision;
 import com.team3181.lib.math.BetterMath;
+import com.team3181.lib.math.GeomUtil;
 import com.team3181.lib.swerve.BetterSwerveKinematics;
 import com.team3181.lib.swerve.BetterSwerveModuleState;
 import com.team3181.lib.swerve.SwerveOptimizer;
@@ -87,6 +89,8 @@ public class Swerve extends SubsystemBase {
         poseEstimator.update(getRobotRelativeAngle(), modulePositions);
         lastRotation = getRobotRelativeAngle();
 
+        addVisionData(Vision.getInstance().getPose(), Vision.getInstance().getLatency());
+
         Logger.getInstance().recordOutput("Swerve/Pose", getPose());
         Logger.getInstance().recordOutput("Swerve/Wanted States", wantedModuleStates);
         Logger.getInstance().recordOutput("Swerve/Actual States", actualStates);
@@ -165,9 +169,9 @@ public class Swerve extends SubsystemBase {
 
     public void addVisionData(Pose2d pose, double time) {
 //        this is recommended, but I'm not sure if it's needed
-//        if (GeomUtil.distance(pose, getPose()) < 1) {
+        if (GeomUtil.distance(pose, getPose()) < 1) {
             poseEstimator.addVisionMeasurement(pose, time);
-//        }
+        }
     }
 
     public Pose2d getPose() {
