@@ -7,6 +7,7 @@ package com.team3181.frc2023;
 import com.ctre.phoenix.sensors.Pigeon2Configuration;
 import com.pathplanner.lib.PathConstraints;
 import com.team3181.frc2023.subsystems.endeffector.EndEffectorIO;
+import com.team3181.frc2023.subsystems.endeffector.EndEffectorIOSparkMax;
 import com.team3181.frc2023.subsystems.swerve.*;
 import com.team3181.frc2023.subsystems.tank.TankIO;
 import com.team3181.frc2023.subsystems.tank.TankIOSim;
@@ -31,7 +32,7 @@ public final class Constants {
         public final static GyroIO GYRO;
         static {
             if (RobotBase.isReal()) {
-                END_EFFECTOR = new EndEffectorIO() {};
+                END_EFFECTOR = new EndEffectorIOSparkMax() {};
                 TANK = RobotConstants.IS_TANK ? new TankIOSparkMax() : new TankIO(){};
                 FL_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSparkMax(SwerveConstants.CAN_FL_DRIVE, SwerveConstants.CAN_FL_STEER, SwerveConstants.FL_OFFSET);
                 FR_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSparkMax(SwerveConstants.CAN_FR_DRIVE, SwerveConstants.CAN_FR_STEER, SwerveConstants.FR_OFFSET);
@@ -66,6 +67,7 @@ public final class Constants {
             SPARKMAX_HASHMAP.put(6, "Back Left Steer");
             SPARKMAX_HASHMAP.put(7, "Back Right Drive");
             SPARKMAX_HASHMAP.put(8, "Back Right Steer");
+            SPARKMAX_HASHMAP.put(EndEffectorConstants.INTAKE_CAN_MAIN, "Intake");
         }
     }
 
@@ -193,14 +195,14 @@ public final class Constants {
 
     // TODO: Determine these constants
     public static final class EndEffectorConstants {
-        public static final double EXHAUST_POWER = 0.0; // could split into two when exhausting different objects? doesn't matter
-        public static final double CUBE_INTAKE_POWER = 0.0; // may not be relevant now that the intake is wheels, the two values should be the same
-        public static final double CONE_INTAKE_POWER = 0.0;
+        public static final double EXHAUST_POWER = 0.0;
+        public static final double CUBE_INTAKE_POWER = 2.0; // may not be relevant now that the intake is wheels, the two values should be the same
+        public static final double CONE_INTAKE_POWER = 2.0;
         public static final double GEARING = 1.0; // TODO: Set this value
         // public static final double CUBE_CLAW_POSITION = 0.0; // radians
         // public static final double CONE_CLAW_POSITION = 0.0; // radians
 
-        public static final int INTAKE_CAN_MAIN = 0;
+        public static final int INTAKE_CAN_MAIN = 9;
     }
 
     public static final class AutoConstants {

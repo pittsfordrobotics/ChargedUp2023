@@ -35,7 +35,7 @@ public class RobotContainer {
 //      competitionButtons();
       testButtons();
 
-    Swerve.getInstance().setDefaultCommand(new SwerveDriveFieldXbox());
+//    Swerve.getInstance().setDefaultCommand(new SwerveDriveFieldXbox());
   }
 
   private void driverDashboardSetup() {
@@ -43,7 +43,7 @@ public class RobotContainer {
   }
 
   private void testButtons() {
-    operatorController.a().onTrue(new InstantCommand(() -> EndEffector.getInstance().mWantedState = EndEffector.WantedState.INTAKING_CONE, EndEffector.getInstance())).onFalse(new InstantCommand(() -> EndEffector.getInstance().mWantedState = EndEffector.WantedState.IDLE, EndEffector.getInstance()));
+    driverController.a().onTrue(new InstantCommand(() -> EndEffector.getInstance().mWantedState = EndEffector.WantedState.INTAKING_CONE, EndEffector.getInstance())).onFalse(new InstantCommand(() -> EndEffector.getInstance().mWantedState = EndEffector.WantedState.IDLE, EndEffector.getInstance()));
   }
 
   private void competitionButtons() {}
