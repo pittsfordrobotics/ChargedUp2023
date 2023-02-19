@@ -4,20 +4,19 @@
 
 package com.team3181.frc2023;
 
-import com.team3181.lib.drivers.LazySparkMax;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.Threads;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import com.team3181.frc2023.Constants.RobotConstants;
 import com.team3181.frc2023.subsystems.swerve.Swerve;
+import com.team3181.lib.controller.BetterXboxController;
+import com.team3181.lib.drivers.LazySparkMax;
 import com.team3181.lib.util.Alert;
 import com.team3181.lib.util.Alert.AlertType;
 import com.team3181.lib.util.PIDTuner;
-import com.team3181.lib.controller.BetterXboxController;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.inputs.LoggedPowerDistribution;

@@ -2,7 +2,6 @@ package com.team3181.frc2023.subsystems.swerve;
 
 import com.team3181.frc2023.Constants.RobotConstants;
 import com.team3181.frc2023.Constants.SwerveConstants;
-import com.team3181.frc2023.subsystems.vision.Vision;
 import com.team3181.lib.math.BetterMath;
 import com.team3181.lib.math.GeomUtil;
 import com.team3181.lib.swerve.BetterSwerveKinematics;
@@ -174,6 +173,10 @@ public class Swerve extends SubsystemBase {
 
     public Pose2d getPose() {
         return poseEstimator.getEstimatedPosition();
+    }
+
+    public ChassisSpeeds getChassisSpeeds() {
+        return actualRobotRelativeChassisSpeeds;
     }
 
     public boolean isStopped() {
