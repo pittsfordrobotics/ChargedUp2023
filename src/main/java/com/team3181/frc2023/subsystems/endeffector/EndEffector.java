@@ -4,6 +4,7 @@ package com.team3181.frc2023.subsystems.endeffector;
 import com.team3181.frc2023.Constants;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
+import java.util.Vector;
 
 public class EndEffector extends SubsystemBase {
 
@@ -13,8 +14,9 @@ public class EndEffector extends SubsystemBase {
     private final EndEffectorIO io;
     private final EndEffectorIOInputsAutoLogged inputs = new EndEffectorIOInputsAutoLogged();
 
-    public WantedState mWantedState = WantedState.IDLE;
-    public ActualState mActualState = ActualState.IDLE;
+    private WantedState wantedState = WantedState.IDLE;
+    private ActualState actualState = ActualState.IDLE;
+    private Vector<Double> intakeCurrents = new Vector<>();
 
     private final static EndEffector INSTANCE = new EndEffector(Constants.RobotConstants.END_EFFECTOR);
     public static EndEffector getInstance() {
@@ -22,17 +24,14 @@ public class EndEffector extends SubsystemBase {
     }
 
     public enum WantedState {
-        IDLE, INTAKING_CUBE, INTAKING_CONE, EXHAUSTING
+        IDLE, INTAKING, EXHAUSTING
     }
     public enum ActualState {
-        IDLE, INTAKING_CUBE, INTAKING_CONE, EXHAUSTING
+        IDLE, INTAKING, CONE_OBTAINED, CUBE_OBTAINED, EXHAUSTING
     }
     private EndEffector(EndEffectorIO io) {
-        // TODO: Set the default command, if any, for this subsystem by calling setDefaultCommand(command)
-        //       in the constructor or in the robot coordination class, such as RobotContainer.
-        //       Also, you can call addChild(name, sendableChild) to associate sendables with the subsystem
-        //       such as SpeedControllers, Encoders, DigitalInputs, etc.
         this.io = io;
+        for (int i = 0; i < 5; i++) intakeCurrents.add(0.0);
     }
 
     @Override
@@ -40,50 +39,80 @@ public class EndEffector extends SubsystemBase {
         io.updateInputs(inputs);
         synchronized (EndEffector.this) {
             ActualState newState = handleAll();
-            if(newState != mActualState) {
-                mActualState = newState;
+            if(newState != actualState) {
+                actualState = newState;
             }
 
             Logger.getInstance().processInputs("End Effector", inputs);
 
-            switch(mActualState) {
+            switch(actualState) {
                 // would be nice if this were command based but that's annoying and periodic is easier
-                case INTAKING_CONE:
-                    io.setVoltage(Constants.EndEffectorConstants.CONE_INTAKE_POWER);
-                    break;
-                case INTAKING_CUBE:
-                    io.setVoltage(Constants.EndEffectorConstants.CUBE_INTAKE_POWER);
+                case INTAKING:
+                    io.setVoltage(Constants.EndEffectorConstants.INTAKE_POWER);
                     break;
                 case EXHAUSTING: // may need to be 2 different values if we need to shoot cone and cube at different speeds
                     io.setVoltage(Constants.EndEffectorConstants.EXHAUST_POWER);
                     break;
-                default:
+                case CONE_OBTAINED:
+                case CUBE_OBTAINED:
                 case IDLE:
+                default:
                     io.setVoltage(0.0);
                     // last thing command to do is call back and set state here, removes need for
                     break;
             }
 
-            Logger.getInstance().recordOutput("End Effector/Wanted States", mWantedState.name());
-            Logger.getInstance().recordOutput("End Effector/Actual States", mActualState.name());
-            //Logger.getInstance().recordOutput("End Effector/Angular Position", inputs.positionRad);
-            Logger.getInstance().recordOutput("End Effector/Applied Voltage", inputs.appliedVolts);
-            Logger.getInstance().recordOutput("End Effector/Angular Velocity", inputs.velocityRadPerSec);
+            Logger.getInstance().recordOutput("End Effector/Wanted States", wantedState.name());
+            Logger.getInstance().recordOutput("End Effector/Actual States", actualState.name());
         }
     }
 
-    public ActualState handleAll() {
-        switch(mWantedState) {
+    public void intake() {
+        wantedState = WantedState.INTAKING;
+    }
+
+    public void exhaust() {
+        wantedState = WantedState.EXHAUSTING;
+    }
+
+    public void idle() {
+        wantedState = WantedState.IDLE;
+    }
+
+    private ActualState handleAll() {
+        switch(wantedState) {
             case EXHAUSTING:
                 return ActualState.EXHAUSTING;
-            case INTAKING_CONE:
-                return ActualState.INTAKING_CONE;
-            case INTAKING_CUBE:
-                return ActualState.INTAKING_CUBE;
+            case INTAKING:
+                intakeCurrents.remove(0);
+                intakeCurrents.add(inputs.currentAmps);
+                return checkCurrent();
             case IDLE:
             default:
-                return ActualState.IDLE;
+                intakeCurrents.clear();
+                for (int i = 0; i < 5; i++) intakeCurrents.add(0.0);
+                return ((actualState != ActualState.CONE_OBTAINED) && (actualState != ActualState.CUBE_OBTAINED)) ? ActualState.IDLE : actualState;
+        }
+    }
+
+    private ActualState checkCurrent() {
+        if (actualState == ActualState.CONE_OBTAINED || actualState == ActualState.CUBE_OBTAINED) {
+            return actualState;
+        }
+
+        double sum = 0;
+        for (int i = 0; i < 5; i++) {
+            sum += intakeCurrents.get(i);
+        }
+        double avg = sum / 5;
+        if (avg > 30) {
+            return ActualState.CONE_OBTAINED;
+        }
+        else if (avg > 20) {
+            return ActualState.CONE_OBTAINED;
+        }
+        else {
+            return ActualState.INTAKING;
         }
     }
 }
-

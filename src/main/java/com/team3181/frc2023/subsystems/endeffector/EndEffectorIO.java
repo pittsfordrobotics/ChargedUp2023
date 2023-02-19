@@ -1,8 +1,6 @@
 package com.team3181.frc2023.subsystems.endeffector;
 
 import org.littletonrobotics.junction.AutoLog;
-import org.littletonrobotics.junction.LogTable;
-import org.littletonrobotics.junction.inputs.LoggableInputs;
 
 public interface EndEffectorIO {
     @AutoLog
@@ -11,7 +9,7 @@ public interface EndEffectorIO {
         public double velocityRadPerSec = 0.0;
         public double appliedVolts = 0.0;
         public double currentAmps = 0.0;
-        public double tempCelcius = 0.0;
+        public double tempCelsius = 0.0;
     }
 
     // override in iosparkmax
