@@ -62,8 +62,9 @@ public class EndEffector extends SubsystemBase {
                     break;
             }
 
-            Logger.getInstance().recordOutput("End Effector/Wanted States", wantedState.name());
-            Logger.getInstance().recordOutput("End Effector/Actual States", actualState.name());
+            Logger.getInstance().recordOutput("End Effector/Wanted State", wantedState.toString());
+            Logger.getInstance().recordOutput("End Effector/Actual State", actualState.toString());
+            Logger.getInstance().recordOutput("End Effector/Current Array", intakeCurrents.toString());
         }
     }
 
@@ -105,6 +106,7 @@ public class EndEffector extends SubsystemBase {
             sum += intakeCurrents.get(i);
         }
         double avg = sum / 5;
+        Logger.getInstance().recordOutput("End Effector/Avg Current", avg);
         if (avg > 30) {
             return ActualState.CONE_OBTAINED;
         }
