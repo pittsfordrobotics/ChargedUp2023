@@ -644,7 +644,7 @@ public class LimelightHelpers {
     }
 
     /**
-     * The LEDs will be controlled by Limelight pipeline settings, and not by robot
+     * The LED will be controlled by Limelight pipeline settings, and not by robot
      * code.
      */
     public static void setLEDMode_PipelineControl(String limelightName) {

@@ -6,6 +6,8 @@ package com.team3181.frc2023;
 
 import com.ctre.phoenix.sensors.Pigeon2Configuration;
 import com.pathplanner.lib.PathConstraints;
+import com.team3181.frc2023.subsystems.leds.LEDStripIO;
+import com.team3181.frc2023.subsystems.leds.LEDStripIORio;
 import com.team3181.frc2023.subsystems.swerve.*;
 import com.team3181.frc2023.subsystems.tank.TankIO;
 import com.team3181.frc2023.subsystems.tank.TankIOSim;
@@ -31,6 +33,8 @@ public final class Constants {
         public final static GyroIO GYRO;
         public final static TankIO TANK;
         public final static VisionIO VISION;
+        public final static LEDStripIO LEFT_LEDS;
+        public final static LEDStripIO RIGHT_LEDS;
 
         public final static boolean IS_TANK = false;
         public static final boolean LOGGING_ENABLED = true;
@@ -56,7 +60,9 @@ public final class Constants {
                 BL_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSparkMax(SwerveConstants.CAN_BL_DRIVE, SwerveConstants.CAN_BL_STEER, SwerveConstants.BL_OFFSET);
                 BR_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSparkMax(SwerveConstants.CAN_BR_DRIVE, SwerveConstants.CAN_BR_STEER, SwerveConstants.BR_OFFSET);
                 GYRO = RobotConstants.IS_TANK ? new GyroIO(){} : new GyroIOPigeon();
-                VISION = new VisionIOLimelight();
+                VISION = RobotConstants.IS_TANK ? new VisionIO() {} : new VisionIOLimelight();
+                LEFT_LEDS = RobotConstants.IS_TANK ? new LEDStripIO(){} : new LEDStripIORio(LEDConstants.LEFT_PWM, LEDConstants.LEFT_NUMBER);
+                RIGHT_LEDS = RobotConstants.IS_TANK ? new LEDStripIO(){} : new LEDStripIORio(LEDConstants.RIGHT_PWM, LEDConstants.RIGHT_NUMBER);
             }
             else {
                 TANK = RobotConstants.IS_TANK ? new TankIOSim() : new TankIO(){};
@@ -66,6 +72,8 @@ public final class Constants {
                 BR_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSim();
                 GYRO = RobotConstants.IS_TANK ? new GyroIO(){} : new GyroIOSim();
                 VISION = new VisionIOSim();
+                LEFT_LEDS = new LEDStripIO() {};
+                RIGHT_LEDS = new LEDStripIO() {};
             }
         }
     }
@@ -220,5 +228,13 @@ public final class Constants {
         public static final PathConstraints MAX_SPEED = new PathConstraints(MAX_LINEAR_VELOCITY_METERS_PER_SECOND, MAX_LINEAR_ACCELERATION_METERS_PER_SECOND_SQUARED);
 
         public static final TrapezoidProfile.Constraints MAX_ROT_CONSTRAINTS = new TrapezoidProfile.Constraints(MAX_ANGULAR_VELOCITY_METERS_PER_SECOND, MAX_ANGULAR_ACCELERATION_METERS_PER_SECOND_SQUARED);
+    }
+
+    public static final class LEDConstants {
+        public static final int LEFT_PWM = 0;
+        public static final int LEFT_NUMBER = 0;
+
+        public static final int RIGHT_PWM = 0;
+        public static final int RIGHT_NUMBER = 0;
     }
 }
