@@ -26,23 +26,15 @@ public class ObjectiveTracker extends VirtualSubsystem {
   public static class Objective {
     public int nodeRow; // The row of the selected target node
     public NodeLevel nodeLevel; // The level of the selected target node
-    public GamePiece gamePiece; // The selected game piece for intaking and scoring
-    public boolean
-        lastIntakeFront; // Whether the last game piece was grabbed from the front of the robot
 
-    public Objective(
-        int nodeRow, NodeLevel nodeLevel, GamePiece gamePiece, boolean lastIntakeFront) {
+    public Objective(int nodeRow, NodeLevel nodeLevel) {
       this.nodeRow = nodeRow;
       this.nodeLevel = nodeLevel;
-      this.gamePiece = gamePiece;
-      this.lastIntakeFront = lastIntakeFront;
     }
 
     public Objective() {
       this.nodeRow = 0;
       this.nodeLevel = NodeLevel.HYBRID;
-      this.gamePiece = GamePiece.CUBE;
-      lastIntakeFront = true;
     }
   }
 
@@ -60,9 +52,6 @@ public class ObjectiveTracker extends VirtualSubsystem {
   public void periodic() {
     selectorIO.updateInputs(selectorInputs);
     Logger.getInstance().processInputs("NodeSelector", selectorInputs);
-
-    // Send selected game piece
-    SmartDashboard.putBoolean("Cube Selected", objective.gamePiece == GamePiece.CUBE);
 
     // Read updates from node selector
     if (selectorInputs.selected != -1) {
@@ -130,9 +119,6 @@ public class ObjectiveTracker extends VirtualSubsystem {
     // Log state
     Logger.getInstance().recordOutput("ObjectiveTracker/NodeRow", objective.nodeRow);
     Logger.getInstance().recordOutput("ObjectiveTracker/NodeLevel", objective.nodeLevel.toString());
-    Logger.getInstance().recordOutput("ObjectiveTracker/GamePiece", objective.gamePiece.toString());
-    Logger.getInstance()
-        .recordOutput("ObjectiveTracker/LastIntakeFront", objective.lastIntakeFront);
   }
 
   /** Shifts the selected node in the selector by one position. */
@@ -188,11 +174,6 @@ public class ObjectiveTracker extends VirtualSubsystem {
             Commands.repeatingSequence(
                 new InstantCommand(() -> shiftNode(direction)), new WaitCommand(0.1)))
         .ignoringDisable(true);
-  }
-
-  public static enum GamePiece {
-    CUBE,
-    CONE
   }
 
   public static enum NodeLevel {

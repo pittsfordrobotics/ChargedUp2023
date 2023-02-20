@@ -42,11 +42,11 @@ public final class FieldConstants {
         public static final BetterPathPoint LOADING_STATION_BOTTOM_INNER = new BetterPathPoint(new Translation2d(LoadingZone.doubleSubstationX - SwerveConstants.X_LENGTH_METERS / 2 - 0.2, LoadingZone.midY - Units.inchesToMeters(50.5) / 2), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(0));
 
         /**
-         * @param node Select a node (1-9): starting at the bottom
+         * @param node Select a node (0-8): starting at the bottom
          * @return PathPoint to the selected node on the Blue Alliance
          */
         public static BetterPathPoint nodeSelector(int node) {
-            return new BetterPathPoint(new Translation2d(Grids.outerX + SwerveConstants.X_LENGTH_METERS / 2, Grids.nodeFirstY + Grids.nodeSeparationY * (node-1)), BOTTOM_NODE.getHeading(), BOTTOM_NODE.getHolonomicRotation());
+            return new BetterPathPoint(new Translation2d(Grids.outerX + SwerveConstants.X_LENGTH_METERS / 2, Grids.nodeFirstY + Grids.nodeSeparationY * (node)), BOTTOM_NODE.getHeading(), BOTTOM_NODE.getHolonomicRotation());
         }
 
         public static BetterPathPoint leavingCommunity(BetterPathPoint betterPathPoint) {
