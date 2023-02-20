@@ -6,10 +6,15 @@ package com.team3181.frc2023;
 
 import com.ctre.phoenix.sensors.Pigeon2Configuration;
 import com.pathplanner.lib.PathConstraints;
+import com.team3181.frc2023.subsystems.objectivetracker.NodeSelectorIO;
+import com.team3181.frc2023.subsystems.objectivetracker.NodeSelectorIOServer;
 import com.team3181.frc2023.subsystems.swerve.*;
 import com.team3181.frc2023.subsystems.tank.TankIO;
 import com.team3181.frc2023.subsystems.tank.TankIOSim;
 import com.team3181.frc2023.subsystems.tank.TankIOSparkMax;
+import com.team3181.frc2023.subsystems.vision.VisionIO;
+import com.team3181.frc2023.subsystems.vision.VisionIOLimelight;
+import com.team3181.frc2023.subsystems.vision.VisionIOSim;
 import com.team3181.lib.swerve.BetterSwerveKinematics;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -25,26 +30,10 @@ public final class Constants {
         public final static SwerveModuleIO FR_MODULE;
         public final static SwerveModuleIO BL_MODULE;
         public final static SwerveModuleIO BR_MODULE;
-        public final static TankIO TANK;
         public final static GyroIO GYRO;
-        static {
-            if (RobotBase.isReal()) {
-                TANK = RobotConstants.IS_TANK ? new TankIOSparkMax() : new TankIO(){};
-                FL_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSparkMax(SwerveConstants.CAN_FL_DRIVE, SwerveConstants.CAN_FL_STEER, SwerveConstants.FL_OFFSET);
-                FR_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSparkMax(SwerveConstants.CAN_FR_DRIVE, SwerveConstants.CAN_FR_STEER, SwerveConstants.FR_OFFSET);
-                BL_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSparkMax(SwerveConstants.CAN_BL_DRIVE, SwerveConstants.CAN_BL_STEER, SwerveConstants.BL_OFFSET);
-                BR_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSparkMax(SwerveConstants.CAN_BR_DRIVE, SwerveConstants.CAN_BR_STEER, SwerveConstants.BR_OFFSET);
-                GYRO = RobotConstants.IS_TANK ? new GyroIO(){} : new GyroIOPigeon();
-            }
-            else {
-                TANK = RobotConstants.IS_TANK ? new TankIOSim() : new TankIO(){};
-                FL_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSim();
-                FR_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSim();
-                BL_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSim();
-                BR_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSim();
-                GYRO = RobotConstants.IS_TANK ? new GyroIO(){} : new GyroIOSim();
-            }
-        }
+        public final static TankIO TANK;
+        public final static VisionIO VISION;
+        public final static NodeSelectorIO NODE_SELECTOR;
 
         public final static boolean IS_TANK = false;
         public static final boolean LOGGING_ENABLED = true;
@@ -54,14 +43,35 @@ public final class Constants {
 
         public static final HashMap<Integer, String> SPARKMAX_HASHMAP = new HashMap<>();
         static {
-            SPARKMAX_HASHMAP.put(1, "Front Left Drive");
-            SPARKMAX_HASHMAP.put(2, "Front Left Steer");
-            SPARKMAX_HASHMAP.put(3, "Front Right Drive");
-            SPARKMAX_HASHMAP.put(4, "Front Right Steer");
-            SPARKMAX_HASHMAP.put(5, "Back Left Drive");
-            SPARKMAX_HASHMAP.put(6, "Back Left Steer");
-            SPARKMAX_HASHMAP.put(7, "Back Right Drive");
-            SPARKMAX_HASHMAP.put(8, "Back Right Steer");
+            SPARKMAX_HASHMAP.put(SwerveConstants.CAN_FL_DRIVE, "Front Left Drive");
+            SPARKMAX_HASHMAP.put(SwerveConstants.CAN_FL_STEER, "Front Left Steer");
+            SPARKMAX_HASHMAP.put(SwerveConstants.CAN_FR_DRIVE, "Front Right Drive");
+            SPARKMAX_HASHMAP.put(SwerveConstants.CAN_FR_STEER, "Front Right Steer");
+            SPARKMAX_HASHMAP.put(SwerveConstants.CAN_BL_DRIVE, "Back Left Drive");
+            SPARKMAX_HASHMAP.put(SwerveConstants.CAN_BL_STEER, "Back Left Steer");
+            SPARKMAX_HASHMAP.put(SwerveConstants.CAN_BR_DRIVE, "Back Right Drive");
+            SPARKMAX_HASHMAP.put(SwerveConstants.CAN_BR_STEER, "Back Right Steer");
+
+            if (RobotBase.isReal()) {
+                TANK = RobotConstants.IS_TANK ? new TankIOSparkMax() : new TankIO(){};
+                FL_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSparkMax(SwerveConstants.CAN_FL_DRIVE, SwerveConstants.CAN_FL_STEER, SwerveConstants.FL_OFFSET);
+                FR_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSparkMax(SwerveConstants.CAN_FR_DRIVE, SwerveConstants.CAN_FR_STEER, SwerveConstants.FR_OFFSET);
+                BL_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSparkMax(SwerveConstants.CAN_BL_DRIVE, SwerveConstants.CAN_BL_STEER, SwerveConstants.BL_OFFSET);
+                BR_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSparkMax(SwerveConstants.CAN_BR_DRIVE, SwerveConstants.CAN_BR_STEER, SwerveConstants.BR_OFFSET);
+                GYRO = RobotConstants.IS_TANK ? new GyroIO(){} : new GyroIOPigeon();
+                VISION = new VisionIOLimelight();
+                NODE_SELECTOR = new NodeSelectorIOServer();
+            }
+            else {
+                TANK = RobotConstants.IS_TANK ? new TankIOSim() : new TankIO(){};
+                FL_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSim();
+                FR_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSim();
+                BL_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSim();
+                BR_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSim();
+                GYRO = RobotConstants.IS_TANK ? new GyroIO(){} : new GyroIOSim();
+                VISION = new VisionIOSim();
+                NODE_SELECTOR = new NodeSelectorIOServer();
+            }
         }
     }
 
@@ -77,33 +87,34 @@ public final class Constants {
          *    ^   FL  FR   ^
          *    |   BL  BR   |
          */
-        public static final int CAN_FL_DRIVE = 1;
-        public static final int CAN_FL_STEER = 2;
-        public static final int CAN_FR_DRIVE = 3;
-        public static final int CAN_FR_STEER = 4;
-        public static final int CAN_BL_DRIVE = 5;
-        public static final int CAN_BL_STEER = 6;
-        public static final int CAN_BR_DRIVE = 7;
-        public static final int CAN_BR_STEER = 8;
+        public static final int CAN_BL_DRIVE = 5; // RF
+        public static final int CAN_BL_STEER = 6; // RF
+        public static final int CAN_BR_DRIVE = 1; // LF
+        public static final int CAN_BR_STEER = 2; // LF
+        public static final int CAN_FL_DRIVE = 7; // RR
+        public static final int CAN_FL_STEER = 8; // RR
+        public static final int CAN_FR_DRIVE = 3; // LR
+        public static final int CAN_FR_STEER = 4; // LR
 
         /**
-         *  Pinon    Gear Ratio    Max Speed (m/s) (approximate)
+         *  Pinon    Gear Ratio    Max Speed [m/s] (approximate)
          *   12T 	   5.50:1 	      4.12
          *   13T 	   5.08:1 	      4.46
          *   14T 	   4.71:1         4.8
          */
         private enum MAX_SWERVE_GEARS {
-            SLOW(12), MED(13), FAST(14);
+            SLOW(12.0), MED(13.0), FAST(14.0);
 
             private final double gearRatio;
             private final double maxSpeed;
             MAX_SWERVE_GEARS(double pinon) {
                 this.gearRatio = (45.0 * 22.0) / (pinon * 15.0);
+                double WHEEL_DIAMETER_METERS = 3 * 0.0254;
                 this.maxSpeed = ((5676.0 / 60.0) * WHEEL_DIAMETER_METERS * Math.PI) / gearRatio;
             }
         }
 
-        public static final MAX_SWERVE_GEARS GEAR_CONSTANTS = MAX_SWERVE_GEARS.MED;
+        public static final MAX_SWERVE_GEARS GEAR_CONSTANTS = MAX_SWERVE_GEARS.FAST;
         public static final double MAX_LINEAR_VELOCITY_METERS_PER_SECOND = GEAR_CONSTANTS.maxSpeed; // 1678 ran 4.5 m/s in 2022
         public static final double MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND = 10.0; // from 1678
 
@@ -121,14 +132,14 @@ public final class Constants {
         };
         public static final BetterSwerveKinematics DRIVE_KINEMATICS = new BetterSwerveKinematics(MODULE_OFFSETS);
 
-        public static final Rotation2d FL_OFFSET = Rotation2d.fromDegrees(0);
-        public static final Rotation2d FR_OFFSET = Rotation2d.fromDegrees(0);
-        public static final Rotation2d BL_OFFSET = Rotation2d.fromDegrees(0);
-        public static final Rotation2d BR_OFFSET = Rotation2d.fromDegrees(0);
+        public static final Rotation2d FL_OFFSET = Rotation2d.fromRadians(0.1715);
+        public static final Rotation2d FR_OFFSET = Rotation2d.fromRadians(5.167658);
+        public static final Rotation2d BL_OFFSET = Rotation2d.fromRadians(3.11452428);
+        public static final Rotation2d BR_OFFSET = Rotation2d.fromRadians(4.138);
 
         // controlling module wheel speed
         // read this later: https://github.com/Team364/BaseFalconSwerve
-        public static final double MODULE_DRIVE_P = 0.04;
+        public static final double MODULE_DRIVE_P = 0.0001;
         public static final double MODULE_DRIVE_I = 0;
         public static final double MODULE_DRIVE_D = 0;
 
@@ -136,9 +147,10 @@ public final class Constants {
         public static final double MODULE_DRIVE_S = 0;
         public static final double MODULE_DRIVE_V = 0;
         public static final double MODULE_DRIVE_A = 0;
+        public static final double MODULE_DRIVE_FF = 1 / MAX_LINEAR_VELOCITY_METERS_PER_SECOND;
 
         // controlling module position / angle
-        public static final double MODULE_STEER_P = 1;
+        public static final double MODULE_STEER_P = 1.5;
         public static final double MODULE_STEER_I = 0;
         public static final double MODULE_STEER_D = 0;
         // irl
@@ -147,8 +159,12 @@ public final class Constants {
         // sim
         // -0.65 for open loop
         // -0.15 closed loop
-        public static final double MODULE_STEER_FF_OL = Robot.isReal() ? -0 : -0.65;
-        public static final double MODULE_STEER_FF_CL = Robot.isReal() ? -0 : -0.3;
+        public static final double MODULE_STEER_FF_OL = Robot.isReal() ? 0.4 : 0.5;
+        public static final double MODULE_STEER_FF_CL = Robot.isReal() ? 0.9 : 0.33;
+
+        public static final double DIRECTION_RATE_LIMIT = 15; // radians per second
+        public static final double MAGNITUDE_RATE_LIMIT = 10.7; // percent per second (1 = 100%)
+        public static final double ROTATION_RATE_LIMIT = 16.0; // percent per second (1 = 100%)
     }
 
     public static final class TankConstants {
@@ -189,15 +205,15 @@ public final class Constants {
 
     public static final class AutoConstants {
         // PID values for trajectory follower
-        public static final double LINEAR_P = 1;
+        public static final double LINEAR_P = 8;
         public static final double ROT_P = 5;
 
 //        numbers from 1678
         public static final double SLOW_LINEAR_VELOCITY_METERS_PER_SECOND = 2.0;
         public static final double SLOW_LINEAR_ACCELERATION_METERS_PER_SECOND_SQUARED = 2.0;
 
-        public static final double MAX_LINEAR_VELOCITY_METERS_PER_SECOND = 4.0;
-        public static final double MAX_LINEAR_ACCELERATION_METERS_PER_SECOND_SQUARED = 4.0;
+        public static final double MAX_LINEAR_VELOCITY_METERS_PER_SECOND = 4.8;
+        public static final double MAX_LINEAR_ACCELERATION_METERS_PER_SECOND_SQUARED = 6.0;
 
         public static final double SLOW_ANGULAR_VELOCITY_METERS_PER_SECOND = 0.8 * Math.PI;
         public static final double SLOW_ANGULAR_ACCELERATION_METERS_PER_SECOND_SQUARED = Math.pow(SLOW_ANGULAR_VELOCITY_METERS_PER_SECOND, 2);
