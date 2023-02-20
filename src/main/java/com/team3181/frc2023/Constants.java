@@ -6,6 +6,8 @@ package com.team3181.frc2023;
 
 import com.ctre.phoenix.sensors.Pigeon2Configuration;
 import com.pathplanner.lib.PathConstraints;
+import com.team3181.frc2023.subsystems.objectivetracker.NodeSelectorIO;
+import com.team3181.frc2023.subsystems.objectivetracker.NodeSelectorIOServer;
 import com.team3181.frc2023.subsystems.swerve.*;
 import com.team3181.frc2023.subsystems.tank.TankIO;
 import com.team3181.frc2023.subsystems.tank.TankIOSim;
@@ -31,6 +33,7 @@ public final class Constants {
         public final static GyroIO GYRO;
         public final static TankIO TANK;
         public final static VisionIO VISION;
+        public final static NodeSelectorIO NODE_SELECTOR;
 
         public final static boolean IS_TANK = false;
         public static final boolean LOGGING_ENABLED = true;
@@ -57,6 +60,7 @@ public final class Constants {
                 BR_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSparkMax(SwerveConstants.CAN_BR_DRIVE, SwerveConstants.CAN_BR_STEER, SwerveConstants.BR_OFFSET);
                 GYRO = RobotConstants.IS_TANK ? new GyroIO(){} : new GyroIOPigeon();
                 VISION = new VisionIOLimelight();
+                NODE_SELECTOR = new NodeSelectorIOServer();
             }
             else {
                 TANK = RobotConstants.IS_TANK ? new TankIOSim() : new TankIO(){};
@@ -66,6 +70,7 @@ public final class Constants {
                 BR_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSim();
                 GYRO = RobotConstants.IS_TANK ? new GyroIO(){} : new GyroIOSim();
                 VISION = new VisionIOSim();
+                NODE_SELECTOR = new NodeSelectorIOServer();
             }
         }
     }
@@ -207,8 +212,8 @@ public final class Constants {
         public static final double SLOW_LINEAR_VELOCITY_METERS_PER_SECOND = 2.0;
         public static final double SLOW_LINEAR_ACCELERATION_METERS_PER_SECOND_SQUARED = 2.0;
 
-        public static final double MAX_LINEAR_VELOCITY_METERS_PER_SECOND = 4.0;
-        public static final double MAX_LINEAR_ACCELERATION_METERS_PER_SECOND_SQUARED = 4.0;
+        public static final double MAX_LINEAR_VELOCITY_METERS_PER_SECOND = 4.8;
+        public static final double MAX_LINEAR_ACCELERATION_METERS_PER_SECOND_SQUARED = 6.0;
 
         public static final double SLOW_ANGULAR_VELOCITY_METERS_PER_SECOND = 0.8 * Math.PI;
         public static final double SLOW_ANGULAR_ACCELERATION_METERS_PER_SECOND_SQUARED = Math.pow(SLOW_ANGULAR_VELOCITY_METERS_PER_SECOND, 2);

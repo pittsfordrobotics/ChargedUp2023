@@ -1,7 +1,11 @@
 package com.team3181.frc2023;
 
+import com.pathplanner.lib.PathPoint;
+import com.team3181.frc2023.Constants.SwerveConstants;
+import com.team3181.lib.swerve.BetterPathPoint;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 import java.util.Map;
 
@@ -12,11 +16,59 @@ import java.util.Map;
  * <p>All translations and poses are stored with the origin at the rightmost point on the BLUE
  * ALLIANCE wall. 
  */
+
+// from 6328
 public final class FieldConstants {
-    public static final double fieldLength = Units.inchesToMeters(651.25);
+    public static final double fieldLength = Units.inchesToMeters(651.25); // 16.54
     public static final double fieldWidth = Units.inchesToMeters(315.5);
     public static final double tapeWidth = Units.inchesToMeters(2.0);
     public static final double aprilTagWidth = Units.inchesToMeters(6.0);
+
+    /**
+     * ALL DEFINED IN BLUE, YOU MUST USE PATHPOINTFLIPPER!!!!!
+     */
+    public static final class AutoDrivePoints {
+        public static final BetterPathPoint BOTTOM_NODE = new BetterPathPoint(new Translation2d(Grids.outerX + SwerveConstants.X_LENGTH_METERS / 2, Grids.nodeFirstY), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(-180));
+        public static final BetterPathPoint COMMUNITY_TOP_EXIT = new BetterPathPoint(new Translation2d(Community.midX + SwerveConstants.X_LENGTH_METERS / 2, Community.leftY - Units.inchesToMeters(59.39) / 2), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(-180));
+        public static final BetterPathPoint COMMUNITY_BOTTOM_EXIT = new BetterPathPoint(new Translation2d(Community.outerX + SwerveConstants.X_LENGTH_METERS / 2, 0.8), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(-180));
+
+        public static final BetterPathPoint COMMUNITY_TOP_INNER = new BetterPathPoint(new Translation2d(Grids.outerX + SwerveConstants.X_LENGTH_METERS, Community.leftY - Units.inchesToMeters(59.39) / 2), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(-180));
+        public static final BetterPathPoint COMMUNITY_BOTTOM_INNER = new BetterPathPoint(new Translation2d(Grids.outerX + SwerveConstants.X_LENGTH_METERS, 0.8), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(-180));
+
+        public static final BetterPathPoint LOADING_STATION_TOP_EXIT = new BetterPathPoint(new Translation2d(LoadingZone.midX, LoadingZone.midY + Units.inchesToMeters(50.5) / 2), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(-180));
+        public static final BetterPathPoint LOADING_STATION_BOTTOM_EXIT = new BetterPathPoint(new Translation2d(LoadingZone.midX, LoadingZone.midY - Units.inchesToMeters(50.5)/ 2), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(-180));
+
+        public static final BetterPathPoint LOADING_STATION_TOP_INNER = new BetterPathPoint(new Translation2d(LoadingZone.doubleSubstationX - SwerveConstants.X_LENGTH_METERS / 2 - 0.2, LoadingZone.midY + Units.inchesToMeters(50.5) / 2), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(0));
+        public static final BetterPathPoint LOADING_STATION_BOTTOM_INNER = new BetterPathPoint(new Translation2d(LoadingZone.doubleSubstationX - SwerveConstants.X_LENGTH_METERS / 2 - 0.2, LoadingZone.midY - Units.inchesToMeters(50.5) / 2), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(0));
+
+        /**
+         * @param node Select a node (1-9): starting at the bottom
+         * @return PathPoint to the selected node on the Blue Alliance
+         */
+        public static BetterPathPoint nodeSelector(int node) {
+            return new BetterPathPoint(new Translation2d(Grids.outerX + SwerveConstants.X_LENGTH_METERS / 2, Grids.nodeFirstY + Grids.nodeSeparationY * (node-1)), BOTTOM_NODE.getHeading(), BOTTOM_NODE.getHolonomicRotation());
+        }
+
+        public static BetterPathPoint leavingCommunity(BetterPathPoint betterPathPoint) {
+            if (betterPathPoint == BOTTOM_NODE || betterPathPoint == LOADING_STATION_TOP_INNER || betterPathPoint == LOADING_STATION_BOTTOM_INNER) {
+                return betterPathPoint;
+            }
+            else if (betterPathPoint == LOADING_STATION_TOP_EXIT || betterPathPoint == LOADING_STATION_BOTTOM_EXIT) {
+                return new BetterPathPoint(betterPathPoint.getPosition(), betterPathPoint.getHeading().plus(Rotation2d.fromDegrees(180)), betterPathPoint.getHolonomicRotation().plus(Rotation2d.fromDegrees(180)));
+            }
+            return new BetterPathPoint(betterPathPoint.getPosition(), betterPathPoint.getHeading().plus(Rotation2d.fromDegrees(180)), betterPathPoint.getHolonomicRotation());
+        }
+
+        public static PathPoint pathPointFlipper(BetterPathPoint betterPathPoint, Alliance alliance) {
+            if (alliance == Alliance.Blue) {
+                return betterPathPoint;
+            } else if (alliance == Alliance.Red) {
+                Translation2d transformedTranslation = new Translation2d(betterPathPoint.getPosition().getX(), fieldWidth - betterPathPoint.getPosition().getY());
+                return new PathPoint(transformedTranslation, betterPathPoint.getHeading().times(-1), betterPathPoint.getHolonomicRotation().times(-1));
+            }
+            return betterPathPoint;
+        }
+    }
 
     // Dimensions for community and charging station, including the tape.
     public static final class Community {
@@ -71,7 +123,7 @@ public final class FieldConstants {
     // Dimensions for grids and nodes
     public static final class Grids {
         // X layout
-        public static final double outerX = Units.inchesToMeters(54.25);
+        public static final double outerX = Units.inchesToMeters(54.25); // 1.38 m
         public static final double lowX =
                 outerX - (Units.inchesToMeters(14.25) / 2.0); // Centered when under cube nodes
         public static final double midX = outerX - Units.inchesToMeters(22.75);

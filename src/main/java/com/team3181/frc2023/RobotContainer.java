@@ -5,7 +5,10 @@
 package com.team3181.frc2023;
 
 import com.team3181.frc2023.Constants.RobotConstants;
+import com.team3181.frc2023.FieldConstants.AutoDrivePoints;
 import com.team3181.frc2023.commands.*;
+import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker;
+import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker.Direction;
 import com.team3181.frc2023.subsystems.swerve.Swerve;
 import com.team3181.frc2023.subsystems.tank.Tank;
 import com.team3181.lib.controller.BetterXboxController;
@@ -17,10 +20,11 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public class RobotContainer {
+  private ObjectiveTracker objectiveTracker = ObjectiveTracker.getInstance();
+
   private final BetterXboxController driverController = new BetterXboxController(0, BetterXboxController.Humans.DRIVER);
   private final BetterXboxController operatorController = new BetterXboxController(1, BetterXboxController.Humans.OPERATOR);
 
@@ -43,9 +47,24 @@ public class RobotContainer {
   }
 
   private void testButtons() {
-    driverController.a().whileTrue(new InstantCommand(Swerve.getInstance()::zeroGyro));
-    driverController.x().whileTrue(new InstantCommand(Swerve.getInstance()::driveX));
-//    driverContxroller.a().whileTrue(new SwervePathing(Paths.TEST_ON_THE_FLY, false));
+//    driverController.a().whileTrue(new InstantCommand(Swerve.getInstance()::zeroGyro));
+//    driverController.x().whileTrue(new InstantCommand(Swerve.getInstance()::driveX));
+    driverController.a().whileTrue(new SwervePathingOnTheFly(
+            AutoDrivePoints.LOADING_STATION_TOP_EXIT,
+            AutoDrivePoints.COMMUNITY_TOP_EXIT,
+            AutoDrivePoints.COMMUNITY_TOP_INNER,
+            AutoDrivePoints.nodeSelector(5))
+    );
+    driverController.b().whileTrue(new SwervePathingOnTheFly(
+            AutoDrivePoints.leavingCommunity(AutoDrivePoints.COMMUNITY_BOTTOM_INNER),
+            AutoDrivePoints.leavingCommunity(AutoDrivePoints.COMMUNITY_BOTTOM_EXIT),
+            AutoDrivePoints.leavingCommunity(AutoDrivePoints.LOADING_STATION_TOP_EXIT),
+            AutoDrivePoints.leavingCommunity(AutoDrivePoints.LOADING_STATION_TOP_INNER))
+    );
+    operatorController.povUp().whileTrue(objectiveTracker.shiftNodeCommand(Direction.UP));
+    operatorController.povRight().whileTrue(objectiveTracker.shiftNodeCommand(Direction.RIGHT));
+    operatorController.povDown().whileTrue(objectiveTracker.shiftNodeCommand(Direction.DOWN));
+    operatorController.povLeft().whileTrue(objectiveTracker.shiftNodeCommand(Direction.LEFT));
   }
 
   private void competitionButtons() {}
