@@ -40,8 +40,6 @@ public final class Constants {
         public final static VisionIO VISION;
         public final static ArmIO SHOULDER;
         public final static ArmIO ELBOW;
-        public final static TankIO TANK;
-        public final static VisionIO VISION;
         public final static NodeSelectorIO NODE_SELECTOR;
 
         public final static boolean IS_TANK = false;
@@ -73,7 +71,6 @@ public final class Constants {
                 GYRO = RobotConstants.IS_TANK ? new GyroIO(){} : new GyroIOPigeon();
                 VISION = new VisionIOLimelight();
                 END_EFFECTOR = new EndEffectorIOSparkMax();
-                NODE_SELECTOR = new NodeSelectorIOServer();
             }
             else {
                 SHOULDER = new ArmIO(){};
@@ -86,8 +83,8 @@ public final class Constants {
                 GYRO = RobotConstants.IS_TANK ? new GyroIO(){} : new GyroIOSim();
                 VISION = new VisionIOSim();
                 END_EFFECTOR = new EndEffectorIO() {};
-                NODE_SELECTOR = new NodeSelectorIOServer();
             }
+            NODE_SELECTOR = new NodeSelectorIOServer();
         }
     }
 
