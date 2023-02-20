@@ -221,4 +221,15 @@ public final class Constants {
 
         public static final TrapezoidProfile.Constraints MAX_ROT_CONSTRAINTS = new TrapezoidProfile.Constraints(MAX_ANGULAR_VELOCITY_METERS_PER_SECOND, MAX_ANGULAR_ACCELERATION_METERS_PER_SECOND_SQUARED);
     }
+
+    public static final class Dimensions {
+        public static double wheelToChassis = Units.inchesToMeters(4.75);
+        public static double chassisToArm = Units.inchesToMeters(32);
+        public static double arm1 = Units.inchesToMeters(29);
+        public static double arm2 = Units.inchesToMeters(26.875);
+        public static double endEffector = Units.inchesToMeters(7.15);
+        public static double endEffectorCube = Units.inchesToMeters(6.275);
+        public static double endEffectorCone = Units.inchesToMeters(3.6);
+
+    }
 }
