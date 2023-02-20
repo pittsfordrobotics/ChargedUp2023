@@ -6,6 +6,8 @@ package com.team3181.frc2023;
 
 import com.ctre.phoenix.sensors.Pigeon2Configuration;
 import com.pathplanner.lib.PathConstraints;
+import com.team3181.frc2023.subsystems.fourbar.ArmIO;
+import com.team3181.frc2023.subsystems.fourbar.ArmIOSparkMax;
 import com.team3181.frc2023.subsystems.objectivetracker.NodeSelectorIO;
 import com.team3181.frc2023.subsystems.objectivetracker.NodeSelectorIOServer;
 import com.team3181.frc2023.subsystems.swerve.*;
@@ -31,6 +33,8 @@ public final class Constants {
         public final static SwerveModuleIO BL_MODULE;
         public final static SwerveModuleIO BR_MODULE;
         public final static GyroIO GYRO;
+        public final static ArmIO SHOULDER;
+        public final static ArmIO ELBOW;
         public final static TankIO TANK;
         public final static VisionIO VISION;
         public final static NodeSelectorIO NODE_SELECTOR;
@@ -53,6 +57,8 @@ public final class Constants {
             SPARKMAX_HASHMAP.put(SwerveConstants.CAN_BR_STEER, "Back Right Steer");
 
             if (RobotBase.isReal()) {
+                SHOULDER = new ArmIOSparkMax(FourBarConstants.CAN_SHOULDER);
+                ELBOW = new ArmIOSparkMax(FourBarConstants.CAN_ELBOW);
                 TANK = RobotConstants.IS_TANK ? new TankIOSparkMax() : new TankIO(){};
                 FL_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSparkMax(SwerveConstants.CAN_FL_DRIVE, SwerveConstants.CAN_FL_STEER, SwerveConstants.FL_OFFSET);
                 FR_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSparkMax(SwerveConstants.CAN_FR_DRIVE, SwerveConstants.CAN_FR_STEER, SwerveConstants.FR_OFFSET);
@@ -63,6 +69,8 @@ public final class Constants {
                 NODE_SELECTOR = new NodeSelectorIOServer();
             }
             else {
+                SHOULDER = new ArmIO(){};
+                ELBOW = new ArmIO(){};
                 TANK = RobotConstants.IS_TANK ? new TankIOSim() : new TankIO(){};
                 FL_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSim();
                 FR_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSim();
@@ -73,6 +81,11 @@ public final class Constants {
                 NODE_SELECTOR = new NodeSelectorIOServer();
             }
         }
+    }
+
+    public static final class FourBarConstants {
+        public static final int CAN_SHOULDER = 10; // TODO: Change
+        public static final int CAN_ELBOW = 11;
     }
 
     public static final class SwerveConstants {
@@ -225,5 +238,17 @@ public final class Constants {
         public static final PathConstraints MAX_SPEED = new PathConstraints(MAX_LINEAR_VELOCITY_METERS_PER_SECOND, MAX_LINEAR_ACCELERATION_METERS_PER_SECOND_SQUARED);
 
         public static final TrapezoidProfile.Constraints MAX_ROT_CONSTRAINTS = new TrapezoidProfile.Constraints(MAX_ANGULAR_VELOCITY_METERS_PER_SECOND, MAX_ANGULAR_ACCELERATION_METERS_PER_SECOND_SQUARED);
+    }
+
+    public static final class Dimensions {
+        public static double wheelToChassis = Units.inchesToMeters(4.75);
+        public static double chassisToArm = Units.inchesToMeters(28.9);
+        public static double arm1 = Units.inchesToMeters(29);
+        public static double arm2 = Units.inchesToMeters(26.875);
+        public static double endEffector = Units.inchesToMeters(7.15);
+        public static double endEffectorCube = Units.inchesToMeters(6.275);
+        public static double endEffectorCone = Units.inchesToMeters(3.6);
+        public static double shoulderJointPositionX = 0; // TODO: Set this
+        public static double shoulderJointPositionY = 0;
     }
 }
