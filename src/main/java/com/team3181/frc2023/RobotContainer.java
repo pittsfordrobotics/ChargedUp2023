@@ -5,6 +5,14 @@
 package com.team3181.frc2023;
 
 import com.team3181.frc2023.Constants.RobotConstants;
+import com.team3181.frc2023.commands.AutoCollectAndGo;
+import com.team3181.frc2023.commands.DropClimb;
+import com.team3181.frc2023.commands.SwerveDriveFieldXbox;
+import com.team3181.frc2023.commands.TankXbox;
+import com.team3181.frc2023.subsystems.endeffector.EndEffector;
+import com.team3181.frc2023.subsystems.swerve.Swerve;
+import com.team3181.frc2023.subsystems.tank.Tank;
+import com.team3181.frc2023.subsystems.vision.Vision;
 import com.team3181.frc2023.FieldConstants.AutoDrivePoints;
 import com.team3181.frc2023.commands.*;
 import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker;
@@ -20,9 +28,13 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public class RobotContainer {
+  private final Swerve swerve = Swerve.getInstance();
+  private final EndEffector endEffector = EndEffector.getInstance();
+  private final Vision vision = Vision.getInstance();
   private final ObjectiveTracker objectiveTracker = ObjectiveTracker.getInstance();
 
   private final BetterXboxController driverController = new BetterXboxController(0, BetterXboxController.Humans.DRIVER);
@@ -38,7 +50,7 @@ public class RobotContainer {
 //      competitionButtons();
       testButtons();
 
-    if (!RobotConstants.IS_TANK) Swerve.getInstance().setDefaultCommand(new SwerveDriveFieldXbox());
+    if (!RobotConstants.IS_TANK) swerve.setDefaultCommand(new SwerveDriveFieldXbox());
     if (RobotConstants.IS_TANK) Tank.getInstance().setDefaultCommand(new TankXbox());
   }
 
@@ -47,8 +59,11 @@ public class RobotContainer {
   }
 
   private void testButtons() {
-//    driverController.a().whileTrue(new InstantCommand(Swerve.getInstance()::zeroGyro));
-//    driverController.x().whileTrue(new InstantCommand(Swerve.getInstance()::driveX));
+//    driverController.a().onTrue(new InstantCommand(endEffector::intake)).onFalse(new InstantCommand(endEffector::idle));
+//    driverController.x().onTrue(new InstantCommand(endEffector::exhaust)).onFalse(new InstantCommand(endEffector::idle));
+//    driverController.start().whileTrue(new InstantCommand(swerve::zeroGyro));
+//    driverController.back().whileTrue(new InstantCommand(swerve::driveX));
+//    driverController.a().whileTrue(new SwervePathing(Paths.TEST_ON_THE_FLY, false));
     driverController.a().whileTrue(new SwervePathingOnTheFly(
             AutoDrivePoints.LOADING_STATION_TOP_INNER,
             AutoDrivePoints.LOADING_STATION_TOP_EXIT,

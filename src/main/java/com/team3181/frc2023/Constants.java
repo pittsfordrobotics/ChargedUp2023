@@ -6,6 +6,8 @@ package com.team3181.frc2023;
 
 import com.ctre.phoenix.sensors.Pigeon2Configuration;
 import com.pathplanner.lib.PathConstraints;
+import com.team3181.frc2023.subsystems.endeffector.EndEffectorIO;
+import com.team3181.frc2023.subsystems.endeffector.EndEffectorIOSparkMax;
 import com.team3181.frc2023.subsystems.fourbar.ArmIO;
 import com.team3181.frc2023.subsystems.fourbar.ArmIOSparkMax;
 import com.team3181.frc2023.subsystems.objectivetracker.NodeSelectorIO;
@@ -28,11 +30,14 @@ import java.util.HashMap;
 
 public final class Constants {
     public static final class RobotConstants {
+        public final static EndEffectorIO END_EFFECTOR;
         public final static SwerveModuleIO FL_MODULE;
         public final static SwerveModuleIO FR_MODULE;
         public final static SwerveModuleIO BL_MODULE;
         public final static SwerveModuleIO BR_MODULE;
         public final static GyroIO GYRO;
+        public final static TankIO TANK;
+        public final static VisionIO VISION;
         public final static ArmIO SHOULDER;
         public final static ArmIO ELBOW;
         public final static TankIO TANK;
@@ -55,6 +60,7 @@ public final class Constants {
             SPARKMAX_HASHMAP.put(SwerveConstants.CAN_BL_STEER, "Back Left Steer");
             SPARKMAX_HASHMAP.put(SwerveConstants.CAN_BR_DRIVE, "Back Right Drive");
             SPARKMAX_HASHMAP.put(SwerveConstants.CAN_BR_STEER, "Back Right Steer");
+            SPARKMAX_HASHMAP.put(EndEffectorConstants.INTAKE_CAN_MAIN, "Intake");
 
             if (RobotBase.isReal()) {
                 SHOULDER = new ArmIOSparkMax(FourBarConstants.CAN_SHOULDER);
@@ -66,6 +72,7 @@ public final class Constants {
                 BR_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSparkMax(SwerveConstants.CAN_BR_DRIVE, SwerveConstants.CAN_BR_STEER, SwerveConstants.BR_OFFSET);
                 GYRO = RobotConstants.IS_TANK ? new GyroIO(){} : new GyroIOPigeon();
                 VISION = new VisionIOLimelight();
+                END_EFFECTOR = new EndEffectorIOSparkMax();
                 NODE_SELECTOR = new NodeSelectorIOServer();
             }
             else {
@@ -78,6 +85,7 @@ public final class Constants {
                 BR_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSim();
                 GYRO = RobotConstants.IS_TANK ? new GyroIO(){} : new GyroIOSim();
                 VISION = new VisionIOSim();
+                END_EFFECTOR = new EndEffectorIO() {};
                 NODE_SELECTOR = new NodeSelectorIOServer();
             }
         }
@@ -214,6 +222,17 @@ public final class Constants {
 
         public static final double MAX_VELOCITY_METERS_PER_SECOND = 10;
         public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 5;
+    }
+
+    // TODO: Determine these constants
+    public static final class EndEffectorConstants {
+        public static final double EXHAUST_POWER = -12.0;
+        public static final double INTAKE_POWER = 5.0;
+        public static final double GEARING = 1.0; // TODO: Set this value
+        // public static final double CUBE_CLAW_POSITION = 0.0; // radians
+        // public static final double CONE_CLAW_POSITION = 0.0; // radians
+
+        public static final int INTAKE_CAN_MAIN = 9;
     }
 
     public static final class AutoConstants {
