@@ -50,6 +50,7 @@ public class RobotContainer {
 //    driverController.a().whileTrue(new InstantCommand(Swerve.getInstance()::zeroGyro));
 //    driverController.x().whileTrue(new InstantCommand(Swerve.getInstance()::driveX));
     driverController.a().whileTrue(new SwervePathingOnTheFly(
+            AutoDrivePoints.LOADING_STATION_TOP_INNER,
             AutoDrivePoints.LOADING_STATION_TOP_EXIT,
             AutoDrivePoints.COMMUNITY_TOP_EXIT,
             AutoDrivePoints.COMMUNITY_TOP_INNER,

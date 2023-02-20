@@ -28,18 +28,18 @@ public final class FieldConstants {
      * ALL DEFINED IN BLUE, YOU MUST USE PATHPOINTFLIPPER!!!!!
      */
     public static final class AutoDrivePoints {
-        public static final BetterPathPoint BOTTOM_NODE = new BetterPathPoint(new Translation2d(Grids.outerX + SwerveConstants.X_LENGTH_METERS / 2, Grids.nodeFirstY), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(-180));
+        public static final BetterPathPoint BOTTOM_NODE = new BetterPathPoint(new Translation2d(Grids.outerX + SwerveConstants.X_LENGTH_METERS / 2, Grids.nodeFirstY), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(-180));
         public static final BetterPathPoint COMMUNITY_TOP_EXIT = new BetterPathPoint(new Translation2d(Community.midX + SwerveConstants.X_LENGTH_METERS / 2, Community.leftY - Units.inchesToMeters(59.39) / 2), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(-180));
         public static final BetterPathPoint COMMUNITY_BOTTOM_EXIT = new BetterPathPoint(new Translation2d(Community.outerX + SwerveConstants.X_LENGTH_METERS / 2, 0.8), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(-180));
 
         public static final BetterPathPoint COMMUNITY_TOP_INNER = new BetterPathPoint(new Translation2d(Grids.outerX + SwerveConstants.X_LENGTH_METERS, Community.leftY - Units.inchesToMeters(59.39) / 2), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(-180));
         public static final BetterPathPoint COMMUNITY_BOTTOM_INNER = new BetterPathPoint(new Translation2d(Grids.outerX + SwerveConstants.X_LENGTH_METERS, 0.8), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(-180));
 
-        public static final BetterPathPoint LOADING_STATION_TOP_EXIT = new BetterPathPoint(new Translation2d(LoadingZone.midX, LoadingZone.midY + Units.inchesToMeters(50.5) / 2), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(-180));
-        public static final BetterPathPoint LOADING_STATION_BOTTOM_EXIT = new BetterPathPoint(new Translation2d(LoadingZone.midX, LoadingZone.midY - Units.inchesToMeters(50.5)/ 2), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(-180));
+        public static final BetterPathPoint LOADING_STATION_TOP_EXIT = new BetterPathPoint(new Translation2d(0.5 * LoadingZone.midX + LoadingZone.outerX * 0.5, LoadingZone.midY + Units.inchesToMeters(50.5) / 2), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(-180));
+        public static final BetterPathPoint LOADING_STATION_BOTTOM_EXIT = new BetterPathPoint(new Translation2d(0.5 * LoadingZone.midX + LoadingZone.outerX * 0.5, LoadingZone.midY - Units.inchesToMeters(50.5)/ 2), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(-180));
 
-        public static final BetterPathPoint LOADING_STATION_TOP_INNER = new BetterPathPoint(new Translation2d(LoadingZone.doubleSubstationX - SwerveConstants.X_LENGTH_METERS / 2 - 0.2, LoadingZone.midY + Units.inchesToMeters(50.5) / 2), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(0));
-        public static final BetterPathPoint LOADING_STATION_BOTTOM_INNER = new BetterPathPoint(new Translation2d(LoadingZone.doubleSubstationX - SwerveConstants.X_LENGTH_METERS / 2 - 0.2, LoadingZone.midY - Units.inchesToMeters(50.5) / 2), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(0));
+        public static final BetterPathPoint LOADING_STATION_TOP_INNER = new BetterPathPoint(new Translation2d(LoadingZone.doubleSubstationX - SwerveConstants.X_LENGTH_METERS / 2 - 0.2, LoadingZone.midY + Units.inchesToMeters(50.5) / 2), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(0));
+        public static final BetterPathPoint LOADING_STATION_BOTTOM_INNER = new BetterPathPoint(new Translation2d(LoadingZone.doubleSubstationX - SwerveConstants.X_LENGTH_METERS / 2 - 0.2, LoadingZone.midY - Units.inchesToMeters(50.5) / 2), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(0));
 
         /**
          * @param node Select a node (0-8): starting at the bottom
@@ -50,12 +50,6 @@ public final class FieldConstants {
         }
 
         public static BetterPathPoint leavingCommunity(BetterPathPoint betterPathPoint) {
-            if (betterPathPoint == BOTTOM_NODE || betterPathPoint == LOADING_STATION_TOP_INNER || betterPathPoint == LOADING_STATION_BOTTOM_INNER) {
-                return betterPathPoint;
-            }
-            else if (betterPathPoint == LOADING_STATION_TOP_EXIT || betterPathPoint == LOADING_STATION_BOTTOM_EXIT) {
-                return new BetterPathPoint(betterPathPoint.getPosition(), betterPathPoint.getHeading().plus(Rotation2d.fromDegrees(180)), betterPathPoint.getHolonomicRotation().plus(Rotation2d.fromDegrees(180)));
-            }
             return new BetterPathPoint(betterPathPoint.getPosition(), betterPathPoint.getHeading().plus(Rotation2d.fromDegrees(180)), betterPathPoint.getHolonomicRotation());
         }
 
