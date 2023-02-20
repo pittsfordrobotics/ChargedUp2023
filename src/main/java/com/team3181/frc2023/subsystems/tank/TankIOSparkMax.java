@@ -11,9 +11,9 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotController;
 
 public class TankIOSparkMax implements TankIO {
-    private final LazySparkMax leftPrimary = new LazySparkMax(TankConstants.CAN_LEFT_LEADER, IdleMode.kBrake, 60,false);
+    private final LazySparkMax leftPrimary = new LazySparkMax(TankConstants.CAN_LEFT_LEADER, IdleMode.kBrake, 60,false, true);
     private final LazySparkMax leftFollower = new LazySparkMax(TankConstants.CAN_LEFT_FOLLOWER, IdleMode.kBrake, 60, leftPrimary);
-    private final LazySparkMax rightPrimary = new LazySparkMax(TankConstants.CAN_RIGHT_LEADER, IdleMode.kBrake, 60, true);
+    private final LazySparkMax rightPrimary = new LazySparkMax(TankConstants.CAN_RIGHT_LEADER, IdleMode.kBrake, 60, true, true);
     private final LazySparkMax rightFollower = new LazySparkMax(TankConstants.CAN_RIGHT_FOLLOWER, IdleMode.kBrake, 60, rightPrimary);
 
     private final Pigeon2 pigeon = new Pigeon2(SwerveConstants.CAN_PIGEON);
@@ -38,7 +38,7 @@ public class TankIOSparkMax implements TankIO {
     }
 
     @Override
-    public void updateInputs(DriveIOInputs inputs) {
+    public void updateInputs(TankIOInputs inputs) {
         inputs.leftPositionMeters = leftEncoder.getPosition();
         inputs.rightPositionMeters = rightEncoder.getPosition();
         inputs.leftVelocityMetersPerSec = leftEncoder.getVelocity();

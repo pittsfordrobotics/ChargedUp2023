@@ -6,7 +6,7 @@ import org.littletonrobotics.junction.AutoLog;
 public interface TankIO {
     /** The set of loggable inputs for the drive subsystem. */
     @AutoLog
-    class DriveIOInputs {
+    class TankIOInputs {
         public double leftPositionMeters = 0.0;
         public double leftVelocityMetersPerSec = 0.0;
         public double leftAppliedVolts = 0.0;
@@ -29,7 +29,7 @@ public interface TankIO {
     }
 
     /** Updates the set of loggable inputs. */
-    default void updateInputs(DriveIOInputs inputs) {}
+    default void updateInputs(TankIOInputs inputs) {}
 
     /** Run open loop at the percentage of 12V from -1.0 to 1.0. */
     default void set(double leftPercent, double rightPercent) {}

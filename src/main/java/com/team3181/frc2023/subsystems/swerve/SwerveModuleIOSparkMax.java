@@ -9,6 +9,7 @@ import com.revrobotics.SparkMaxPIDController;
 import com.team3181.frc2023.Constants.SwerveConstants;
 import com.team3181.lib.drivers.LazySparkMax;
 import com.team3181.lib.swerve.BetterSwerveModuleState;
+import com.team3181.lib.util.PIDTuner;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 
@@ -19,31 +20,34 @@ public class SwerveModuleIOSparkMax implements SwerveModuleIO {
     private final RelativeEncoder driveRelativeEncoder;
     private final AbsoluteEncoder steerAbsoluteEncoder;
 
-    private final SparkMaxPIDController drivePID;
     private final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(SwerveConstants.MODULE_DRIVE_S, SwerveConstants.MODULE_DRIVE_V, SwerveConstants.MODULE_DRIVE_A);
+    private final SparkMaxPIDController drivePID;
     private final SparkMaxPIDController steerPID;
+    private final PIDTuner driveTuner;
+    private final PIDTuner steerTuner;
 
     private final Rotation2d steerOffset;
 
     public SwerveModuleIOSparkMax(int driveID, int steerID, Rotation2d offset) {
-        driveMotor = new LazySparkMax(driveID, IdleMode.kBrake, 50);
-        steerMotor = new LazySparkMax(steerID, IdleMode.kBrake, 20);
+        driveMotor = new LazySparkMax(driveID, IdleMode.kBrake, 50, false, false);
+        steerMotor = new LazySparkMax(steerID, IdleMode.kBrake, 30, false, false);
 
         driveRelativeEncoder = driveMotor.getEncoder();
         steerAbsoluteEncoder = steerMotor.getAbsoluteEncoder(Type.kDutyCycle);
         steerAbsoluteEncoder.setInverted(true);
 
         // allows for faster response time
-        driveRelativeEncoder.setAverageDepth(5);
+        driveRelativeEncoder.setAverageDepth(4);
         driveRelativeEncoder.setMeasurementPeriod(20);
 
         // converts to m/s
-        driveRelativeEncoder.setPositionConversionFactor(Math.PI * SwerveConstants.WHEEL_DIAMETER_METERS / SwerveConstants.DRIVE_GEAR_RATIO);
-        driveRelativeEncoder.setVelocityConversionFactor(Math.PI * SwerveConstants.WHEEL_DIAMETER_METERS / SwerveConstants.DRIVE_GEAR_RATIO / 60.0);
+        driveRelativeEncoder.setPositionConversionFactor((Math.PI * SwerveConstants.WHEEL_DIAMETER_METERS) / SwerveConstants.DRIVE_GEAR_RATIO);
+        driveRelativeEncoder.setVelocityConversionFactor(((Math.PI * SwerveConstants.WHEEL_DIAMETER_METERS) / SwerveConstants.DRIVE_GEAR_RATIO) / 60.0);
 
         // converts to rad/s
         steerAbsoluteEncoder.setPositionConversionFactor(2.0 * Math.PI);
         steerAbsoluteEncoder.setVelocityConversionFactor(2.0 * Math.PI / 60.0);
+        steerAbsoluteEncoder.setZeroOffset(0);
 
         drivePID = driveMotor.getPIDController();
         steerPID = steerMotor.getPIDController();
@@ -57,10 +61,14 @@ public class SwerveModuleIOSparkMax implements SwerveModuleIO {
         drivePID.setP(SwerveConstants.MODULE_DRIVE_P);
         drivePID.setI(SwerveConstants.MODULE_DRIVE_I);
         drivePID.setD(SwerveConstants.MODULE_DRIVE_D);
+        drivePID.setFF(SwerveConstants.MODULE_DRIVE_FF);
 
         steerPID.setP(SwerveConstants.MODULE_STEER_P);
         steerPID.setI(SwerveConstants.MODULE_STEER_I);
         steerPID.setD(SwerveConstants.MODULE_STEER_D);
+
+        driveTuner = new PIDTuner("Drive " + driveID, drivePID);
+        steerTuner = new PIDTuner("Steer " + steerID, drivePID);
 
 //        saves PID Config
         driveMotor.burnFlash();
@@ -71,6 +79,9 @@ public class SwerveModuleIOSparkMax implements SwerveModuleIO {
 
     @Override
     public void updateInputs(SwerveModuleIOInputs inputs) {
+        driveTuner.setPID();
+        steerTuner.setPID();
+
         inputs.drivePositionMeters = driveRelativeEncoder.getPosition();
         inputs.driveVelocityMetersPerSec = driveRelativeEncoder.getVelocity();
         inputs.driveAppliedVolts = driveMotor.getAppliedOutput() * driveMotor.getBusVoltage();
@@ -101,7 +112,8 @@ public class SwerveModuleIOSparkMax implements SwerveModuleIO {
             driveMotor.set(percent);
         }
         else {
-            drivePID.setReference(state.speedMetersPerSecond, ControlType.kVelocity, 0, feedforward.calculate(state.speedMetersPerSecond));
+//            drivePID.setReference(state.speedMetersPerSecond, ControlType.kVelocity, 0, feedforward.calculate(state.speedMetersPerSecond));
+            drivePID.setReference(state.speedMetersPerSecond, ControlType.kVelocity);
         }
         steerPID.setReference(state.angle.plus(steerOffset).getRadians(), ControlType.kPosition, 0, state.omegaRadPerSecond * (isOpenLoop ? SwerveConstants.MODULE_STEER_FF_OL : SwerveConstants.MODULE_STEER_FF_CL));
     }

@@ -1,0 +1,76 @@
+package com.team3181.frc2023.subsystems.vision;
+
+import org.littletonrobotics.junction.AutoLog;
+
+/** Vision subsystem hardware interface. */
+public interface VisionIO {
+    @AutoLog
+    class VisionIOInputs {
+        public double captureTimestamp = 0.0;
+        public boolean hasTarget = false;
+        public boolean connected = false;
+        public double vAngle = 0.0;
+        public double hAngle = 0.0;
+        public double[] botXYZ = new double[]{};
+        public double[] botYPR = new double[]{};
+    }
+
+    /**
+     * FAR_RANGE: has the lowest FPS, but allows for possible vision updates when halfway down the field
+     * MID_RANGE: has slightly higher FPS, but allows for farther vision updates when halfway down the field
+     * CLOSE_RANGE: has the highest FPS, but only has limited range
+     * RETRO: uses the green lights
+     */
+    enum Pipelines {
+        FAR_RANGE(0), MID_RANGE(1), CLOSE_RANGE(2), RETRO(3);
+
+        private final int num;
+        Pipelines(int num) {
+            this.num = num;
+        }
+
+        public int getNum() {
+            return num;
+        }
+    }
+
+    enum LED {
+        PIPELINE(0), OFF(1), BLINK(2), ON(3);
+
+        private final int num;
+
+        LED(int num) {
+            this.num = num;
+        }
+
+        public int getNum() {
+            return num;
+        }
+    }
+
+    enum CameraMode {
+        VISION_PROCESSING(0), DRIVER_CAMERA(1);
+
+        private final int num;
+
+        CameraMode(int num) {
+            this.num = num;
+        }
+
+        public int getNum() {
+            return num;
+        }
+    }
+
+    /** Updates the set of loggable inputs. */
+    default void updateInputs(VisionIOInputs inputs) {}
+
+    /** Enabled or disabled vision LEDs. */
+    default void setLEDs(LED led) {}
+
+    /** Enabled or disabled vision LEDs. */
+    default void setCameraModes(CameraMode mode) {}
+
+    /** Sets the pipeline number. */
+    default void setPipeline(Pipelines pipeline) {}
+}

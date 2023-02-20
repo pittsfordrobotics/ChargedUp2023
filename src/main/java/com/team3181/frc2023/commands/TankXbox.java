@@ -27,7 +27,7 @@ public class TankXbox extends CommandBase {
 
     @Override
     public void execute() {
-        drive.driveCurve(MathUtil.applyDeadband(-driverController.getLeftY(), 0.15), MathUtil.applyDeadband(-driverController.getRightX(), 0.15));
+        drive.driveCurve(MathUtil.applyDeadband(-driverController.getLeftY(), 0.15), MathUtil.applyDeadband(driverController.getRightX(), 0.15) * 0.5);
     }
 
     @Override
