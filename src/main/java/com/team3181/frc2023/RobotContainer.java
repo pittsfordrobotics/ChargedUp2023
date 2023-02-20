@@ -23,7 +23,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public class RobotContainer {
-  private ObjectiveTracker objectiveTracker = ObjectiveTracker.getInstance();
+  private final ObjectiveTracker objectiveTracker = ObjectiveTracker.getInstance();
 
   private final BetterXboxController driverController = new BetterXboxController(0, BetterXboxController.Humans.DRIVER);
   private final BetterXboxController operatorController = new BetterXboxController(1, BetterXboxController.Humans.OPERATOR);

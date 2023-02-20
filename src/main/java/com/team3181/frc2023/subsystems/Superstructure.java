@@ -1,12 +1,15 @@
 package com.team3181.frc2023.subsystems;
 
+import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker;
+import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker.Objective;
 import com.team3181.frc2023.subsystems.swerve.Swerve;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import org.littletonrobotics.junction.Logger;
 
 public class Superstructure extends SubsystemBase {
 
     enum StructureState {
-        IDLE, LOW, MID, HIGH
+        IDLE, INTAKE_GROUND, INTAKE_MID, EXPEL, MOVING, OBJECTIVE
     }
 
     // TODO: migrate to end effect and get game piece from there
@@ -14,12 +17,12 @@ public class Superstructure extends SubsystemBase {
         NONE, CONE, CUBE
     }
 
-    private StructureState structureState = StructureState.IDLE;
+    private StructureState systemState = StructureState.IDLE;
     private StructureState wantedState = StructureState.IDLE;
     private GamePiece gamePiece = GamePiece.NONE;
-    private boolean wantIntake = false;
-    private boolean wantDrop = false;
+    private boolean wantLunge = false;
     private boolean aligned = false;
+    private Objective objective;
 
     private final static Superstructure INSTANCE = new Superstructure();
 
@@ -27,73 +30,59 @@ public class Superstructure extends SubsystemBase {
         return INSTANCE;
     }
 
-    private Superstructure() {}
+    private Superstructure() {
+        objective = ObjectiveTracker.getInstance().getObjective();
+    }
 
     @Override
     public void periodic() {
         boolean shouldAutoRetract = shouldAutoRetract();
-        boolean shouldIntake = wantIntake;
-        boolean shouldDrop = wantDrop;
-        StructureState state = structureState;
+        boolean shouldLunge = wantLunge;
+        objective = ObjectiveTracker.getInstance().getObjective();
+        StructureState state = StructureState.IDLE;
 
         switch (wantedState) {
-            case LOW:
-                state = StructureState.LOW;
-                break;
-            case MID:
-                state = StructureState.MID;
-                break;
-            case HIGH:
-                state = StructureState.HIGH;
-                break;
-            case IDLE:
-            default:
-                state = StructureState.IDLE;
-        };
-
-        if (state != structureState) {
-            structureState = state;
-        }
-
-        switch (structureState) {
-            case LOW:
-//                SET MECH TO LOW
-//                SET INTAKE ON OR OFF
-                break;
-            case MID:
-//                SET MECH TO MID
-//                SET INTAKE ON OR OFF
-                break;
-            case HIGH:
-//                SET MECH TO HIGH
-//                SET INTAKE ON OR OFF
+            case OBJECTIVE:
+                state = StructureState.OBJECTIVE;
                 break;
             case IDLE:
             default:
                 state = StructureState.IDLE;
         }
+//        if (state != systemState) {
+//            systemState = state;
+//        }
+
+//        switch (systemState) {
+//            case Objective:
+//                switch (objective.nodeLevel) {
+//                    case HYBRID -> state = StructureState.MOVING;
+//                    case MID -> state = StructureState.MIm;
+//                    case HIGH -> state = StructureState.HIGH;
+//                    default ->
+//                }
+//                break;
+//            case MOVING:
+//                break;
+//            case IDLE:
+//            default:
+//                state = StructureState.IDLE;
+//        }
+
+        Logger.getInstance().recordOutput("Superstructure/Wanted State", wantedState.toString());
+        Logger.getInstance().recordOutput("Superstructure/System State", systemState.toString());
     }
 
-    public void structureHigh() {
-        wantedState = StructureState.HIGH;
-    }
-
-    public void structureMid() {
-        wantedState = StructureState.MID;
-    }
-
-    public void structureLow() {
-        wantedState = StructureState.LOW;
+    public void setWantedState(StructureState state) {
+        wantedState = state;
     }
 
     public void collectGround() {
-        wantedState = StructureState.LOW;
-        wantIntake = true;
+        wantedState = StructureState.INTAKE_GROUND;
     }
 
     public void collectMid() {
-        wantedState = StructureState.MID;
-        wantIntake = true;
+        wantedState = StructureState.INTAKE_MID;
     }
 
     private boolean shouldAutoRetract() {

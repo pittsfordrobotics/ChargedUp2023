@@ -11,11 +11,11 @@ import org.littletonrobotics.junction.AutoLog;
 
 public interface NodeSelectorIO {
   @AutoLog
-  public static class NodeSelectorIOInputs {
+  class NodeSelectorIOInputs {
     public long selected = -1;
   }
 
-  public default void updateInputs(NodeSelectorIOInputs inputs) {}
+  default void updateInputs(NodeSelectorIOInputs inputs) {}
 
-  public default void setSelected(long selected) {}
+  default void setSelected(long selected) {}
 }

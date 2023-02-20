@@ -21,7 +21,7 @@ import org.littletonrobotics.junction.Logger;
 public class ObjectiveTracker extends VirtualSubsystem {
   private final NodeSelectorIO selectorIO;
   private final NodeSelectorIOInputsAutoLogged selectorInputs = new NodeSelectorIOInputsAutoLogged();
-  public final Objective objective = new Objective();
+  private final Objective objective = new Objective();
 
   public static class Objective {
     public int nodeRow; // The row of the selected target node
@@ -69,6 +69,9 @@ public class ObjectiveTracker extends VirtualSubsystem {
       }
       selectorInputs.selected = -1;
     }
+
+    Logger.getInstance().recordOutput("NodeSelector/Node Level", objective.nodeLevel.toString());
+    Logger.getInstance().recordOutput("NodeSelector/Node Row", objective.nodeRow);
 
     // Send current node to selector
     {
@@ -119,6 +122,10 @@ public class ObjectiveTracker extends VirtualSubsystem {
     // Log state
     Logger.getInstance().recordOutput("ObjectiveTracker/NodeRow", objective.nodeRow);
     Logger.getInstance().recordOutput("ObjectiveTracker/NodeLevel", objective.nodeLevel.toString());
+  }
+
+  public Objective getObjective() {
+    return objective;
   }
 
   /** Shifts the selected node in the selector by one position. */
@@ -176,13 +183,13 @@ public class ObjectiveTracker extends VirtualSubsystem {
         .ignoringDisable(true);
   }
 
-  public static enum NodeLevel {
+  public enum NodeLevel {
     HYBRID,
     MID,
     HIGH
   }
 
-  public static enum Direction {
+  public enum Direction {
     LEFT,
     RIGHT,
     UP,
