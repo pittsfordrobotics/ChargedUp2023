@@ -21,7 +21,7 @@ public class Vision extends SubsystemBase {
     private final VisionIO io;
     private final VisionIOInputsAutoLogged inputs = new VisionIOInputsAutoLogged();
 
-    private boolean autoPipeline = true;
+    private boolean autoPipeline = false;
     private Pipelines pipeline = Pipelines.FAR_RANGE;
     private LED led = LED.PIPELINE;
     private CameraMode camera = CameraMode.VISION_PROCESSING;

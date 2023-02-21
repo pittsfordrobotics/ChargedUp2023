@@ -11,19 +11,20 @@ import org.littletonrobotics.junction.Logger;
 public class VisionIOLimelight implements VisionIO {
     public Pose3d lastPose = new Pose3d();
 
-    private final NetworkTable limelight = LimelightHelpers.getLimelightNTTable("limelight");
+    private final NetworkTable limelight = LimelightHelpers.getLimelightNTTable("");;
 
     public VisionIOLimelight() {
+
         setLEDs(LED.OFF);
     }
 
     @Override
-    public synchronized void updateInputs(VisionIOInputs inputs) {
+    public void updateInputs(VisionIOInputs inputs) {
         NetworkTableEntry heartbeatEntry = limelight.getEntry("hb");
         NetworkTableEntry botposeEntry = limelight.getEntry("botpose_wpiblue");
 
-        double pipelineLatency = LimelightHelpers.getLatency_Pipeline("limelight");
-        double captureLatency = LimelightHelpers.getLatency_Capture("limelight");
+        double pipelineLatency = LimelightHelpers.getLatency_Pipeline("");
+        double captureLatency = LimelightHelpers.getLatency_Capture("");
         double totalLatency = pipelineLatency + captureLatency; // ms
 
         if (!lastPose.equals(new Pose3d(botposeEntry.getDoubleArray(new double[7])[0], botposeEntry.getDoubleArray(new double[7])[1], botposeEntry.getDoubleArray(new double[7])[2], new Rotation3d()))) {
@@ -34,10 +35,10 @@ public class VisionIOLimelight implements VisionIO {
         }
         inputs.captureLatency = captureLatency;
         inputs.pipelineLatency = pipelineLatency;
-        inputs.hasTarget = LimelightHelpers.getTV("limelight");
-        inputs.connected = heartbeatEntry.getDouble(0.0) > heartbeatEntry.getDouble(0.0);
-        inputs.vAngle = LimelightHelpers.getTY("limelight");
-        inputs.hAngle = LimelightHelpers.getTX("limelight");
+        inputs.hasTarget = LimelightHelpers.getTV("");
+        inputs.connected = heartbeatEntry.getDouble(0.0) > 0.0;
+        inputs.vAngle = LimelightHelpers.getTY("");
+        inputs.hAngle = LimelightHelpers.getTX("");
     }
 
     @Override
