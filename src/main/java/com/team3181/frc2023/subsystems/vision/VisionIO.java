@@ -6,6 +6,8 @@ import org.littletonrobotics.junction.AutoLog;
 public interface VisionIO {
     @AutoLog
     class VisionIOInputs {
+        public double pipelineLatency = 0.0;
+        public double captureLatency = 0.0;
         public double captureTimestamp = 0.0;
         public boolean hasTarget = false;
         public boolean connected = false;

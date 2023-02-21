@@ -85,7 +85,7 @@ public class Swerve extends SubsystemBase {
         gyroIO.updateInputs(gyroInputs);
         Logger.getInstance().processInputs("Gyro", gyroInputs);
 
-        poseEstimator.update(getRobotRelativeAngle(), modulePositions);
+//        poseEstimator.update(getRobotRelativeAngle(), modulePositions);
         lastRotation = getRobotRelativeAngle();
 
         Logger.getInstance().recordOutput("Swerve/Pose", getPose());
@@ -173,6 +173,10 @@ public class Swerve extends SubsystemBase {
 
     public Pose2d getPose() {
         return poseEstimator.getEstimatedPosition();
+    }
+
+    public ChassisSpeeds getChassisSpeeds() {
+        return actualRobotRelativeChassisSpeeds;
     }
 
     public boolean isStopped() {
