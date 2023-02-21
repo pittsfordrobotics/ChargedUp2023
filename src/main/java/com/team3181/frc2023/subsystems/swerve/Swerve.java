@@ -2,7 +2,6 @@ package com.team3181.frc2023.subsystems.swerve;
 
 import com.team3181.frc2023.Constants.RobotConstants;
 import com.team3181.frc2023.Constants.SwerveConstants;
-import com.team3181.frc2023.subsystems.vision.Vision;
 import com.team3181.lib.math.BetterMath;
 import com.team3181.lib.math.GeomUtil;
 import com.team3181.lib.swerve.BetterSwerveKinematics;
@@ -86,7 +85,7 @@ public class Swerve extends SubsystemBase {
         gyroIO.updateInputs(gyroInputs);
         Logger.getInstance().processInputs("Gyro", gyroInputs);
 
-//        poseEstimator.update(getRobotRelativeAngle(), modulePositions);
+        poseEstimator.update(getRobotRelativeAngle(), modulePositions);
         lastRotation = getRobotRelativeAngle();
 
         Logger.getInstance().recordOutput("Swerve/Pose", getPose());

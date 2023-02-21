@@ -2,6 +2,8 @@ package com.team3181.frc2023.subsystems.fourbar;
 
 
 import com.team3181.frc2023.Constants;
+import com.team3181.frc2023.Constants.FourBarConstants;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
@@ -41,27 +43,18 @@ public class FourBar extends SubsystemBase {
     /** Converts joint angles to the end effector position. */
     public Translation2d forward() {
         return new Translation2d(
-                Constants.Dimensions.shoulderJointPositionX
-                        + Constants.Dimensions.arm1 * Math.cos(armInputs[0].armPositionRad)
-                        + Constants.Dimensions.arm2 * Math.cos(armInputs[0].armPositionRad
-                        + armInputs[1].armPositionRad),
-                Constants.Dimensions.shoulderJointPositionY
-                        + Constants.Dimensions.arm1 * Math.sin(armInputs[0].armPositionRad)
-                        + Constants.Dimensions.arm2 * Math.sin(armInputs[0].armPositionRad
-                        + armInputs[1].armPositionRad)
+                FourBarConstants.SHOULDER_JOINT_POSITION_X
+                        + FourBarConstants.ARM_1_LENGTH * Math.cos(armInputs[0].armPositionRad)
+                        + FourBarConstants.ARM_2_LENGTH * Math.cos(armInputs[0].armPositionRad + armInputs[1].armPositionRad),
+                FourBarConstants.SHOULDER_JOINT_POSITION_Y
+                        + FourBarConstants.ARM_1_LENGTH * Math.sin(armInputs[0].armPositionRad)
+                        + FourBarConstants.ARM_2_LENGTH * Math.sin(armInputs[0].armPositionRad + armInputs[1].armPositionRad)
         );
     }
 
-    public void solve(Translation2d position) {
-//        return new Translation2d(
-//                Constants.Dimensions.shoulderJointPositionX
-//                        + Constants.Dimensions.arm1 * Math.cos(armInputs[0].armPositionRad)
-//                        + Constants.Dimensions.arm2 * Math.cos(armInputs[0].armPositionRad
-//                        + armInputs[1].armPositionRad),
-//                Constants.Dimensions.shoulderJointPositionY
-//                        + Constants.Dimensions.arm1 * Math.sin(armInputs[0].armPositionRad)
-//                        + Constants.Dimensions.arm2 * Math.sin(armInputs[0].armPositionRad
-//                        + armInputs[1].armPositionRad)
-//        );
+    public Rotation2d[] solve(Translation2d position) {
+        double rotElbow = - 1 * Math.acos((Math.pow(position.getX(), 2) + Math.pow(position.getY(), 2) - Math.pow(FourBarConstants.ARM_1_LENGTH, 2) - Math.pow(FourBarConstants.ARM_2_LENGTH, 2))/(2 * FourBarConstants.ARM_1_LENGTH * FourBarConstants.ARM_2_LENGTH));
+        double rotShoulder = Math.atan(position.getY()/position.getX()) + Math.atan((FourBarConstants.ARM_2_LENGTH * Math.sin(rotElbow))/(FourBarConstants.ARM_1_LENGTH + FourBarConstants.ARM_2_LENGTH * Math.cos(rotElbow)));
+        return new Rotation2d[] {Rotation2d.fromRadians(rotShoulder), Rotation2d.fromRadians(rotElbow)};
     }
 }

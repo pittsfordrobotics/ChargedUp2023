@@ -31,7 +31,7 @@ public class NodeSelectorIOServer implements NodeSelectorIO {
             config -> {
               config.staticFiles.add(
                   Paths.get(
-                          Filesystem.getDeployDirectory().getAbsolutePath().toString(),
+                                  Filesystem.getDeployDirectory().getAbsolutePath(),
                           "nodeselector")
                       .toString(),
                   Location.EXTERNAL);

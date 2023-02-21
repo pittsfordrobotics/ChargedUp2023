@@ -92,14 +92,6 @@ public final class Constants {
         }
     }
 
-    public static final class FourBarConstants {
-        public static final int CAN_SHOULDER_MASTER = 10; // TODO: Change
-        public static final int CAN_SHOULDER_FOLLOWER = 11; // TODO: Change
-        public static final int CAN_ELBOW = 12;
-
-        public static final double BELT_RATIO = 7.0 / 3.0;
-    }
-
     public static final class SwerveConstants {
         public static final int CAN_PIGEON = 0;
         public static final Pigeon2Configuration PIGEON_CONFIG = new Pigeon2Configuration();
@@ -228,23 +220,12 @@ public final class Constants {
         public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 5;
     }
 
-    // TODO: Determine these constants
-    public static final class EndEffectorConstants {
-        public static final double EXHAUST_POWER = -12.0;
-        public static final double INTAKE_POWER = 5.0;
-        public static final double GEARING = 4 * 4 * 4; // TODO: Set this value
-        // public static final double CUBE_CLAW_POSITION = 0.0; // radians
-        // public static final double CONE_CLAW_POSITION = 0.0; // radians
-
-        public static final int INTAKE_CAN_MAIN = 9;
-    }
-
     public static final class AutoConstants {
         // PID values for trajectory follower
         public static final double LINEAR_P = 8;
         public static final double ROT_P = 5;
 
-//        numbers from 1678
+        //        numbers from 1678
         public static final double SLOW_LINEAR_VELOCITY_METERS_PER_SECOND = 2.0;
         public static final double SLOW_LINEAR_ACCELERATION_METERS_PER_SECOND_SQUARED = 2.0;
 
@@ -263,15 +244,32 @@ public final class Constants {
         public static final TrapezoidProfile.Constraints MAX_ROT_CONSTRAINTS = new TrapezoidProfile.Constraints(MAX_ANGULAR_VELOCITY_METERS_PER_SECOND, MAX_ANGULAR_ACCELERATION_METERS_PER_SECOND_SQUARED);
     }
 
-    public static final class Dimensions {
-        public static double wheelToChassis = Units.inchesToMeters(4.75);
-        public static double chassisToArm = Units.inchesToMeters(28.9);
-        public static double arm1 = Units.inchesToMeters(29);
-        public static double arm2 = Units.inchesToMeters(26.875);
-        public static double endEffector = Units.inchesToMeters(7.15);
-        public static double endEffectorCube = Units.inchesToMeters(6.275);
-        public static double endEffectorCone = Units.inchesToMeters(3.6);
-        public static double shoulderJointPositionX = 0; // TODO: Set this
-        public static double shoulderJointPositionY = 0;
+    public static final class FourBarConstants {
+        public static final int CAN_SHOULDER_MASTER = 10;
+        public static final int CAN_SHOULDER_FOLLOWER = 11;
+        public static final int CAN_ELBOW = 12;
+
+        public static final double BELT_RATIO = 7.0 / 3.0;
+
+        public static final Rotation2d SHOULDER_OFFSET = Rotation2d.fromRadians(0);
+        public static final Rotation2d ELBOW_OFFSET = Rotation2d.fromRadians(0);
+
+        public static double WHEEL_TO_CHASSIS = Units.inchesToMeters(4.75);
+        public static double CHASSIS_TO_ARM = Units.inchesToMeters(28.9);
+        public static double ARM_1_LENGTH = Units.inchesToMeters(29);
+        public static double ARM_2_LENGTH = Units.inchesToMeters(26.875);
+        public static double END_EFFECTOR_LENGTH = Units.inchesToMeters(7.15);
+        public static double END_EFFECTOR_CUBE_CENTER = Units.inchesToMeters(6.275);
+        public static double END_EFFECTOR_CONE_CENTER = Units.inchesToMeters(3.6);
+        public static double SHOULDER_JOINT_POSITION_X = 0; // TODO: Set this
+        public static double SHOULDER_JOINT_POSITION_Y = 0;
+    }
+
+    public static final class EndEffectorConstants {
+        public static final double EXHAUST_POWER = -12.0;
+        public static final double INTAKE_POWER = 7.0;
+        public static final double GEARING = 4 * 4 * 4;
+
+        public static final int INTAKE_CAN_MAIN = 9;
     }
 }

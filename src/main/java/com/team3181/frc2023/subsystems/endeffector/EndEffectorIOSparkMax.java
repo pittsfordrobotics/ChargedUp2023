@@ -7,12 +7,13 @@ import com.team3181.lib.drivers.LazySparkMax;
 import edu.wpi.first.math.util.Units;
 
 public class EndEffectorIOSparkMax implements EndEffectorIO {
-    private final LazySparkMax motor = new LazySparkMax(Constants.EndEffectorConstants.INTAKE_CAN_MAIN, CANSparkMax.IdleMode.kBrake, 30, true, true); // currentlimit stolen from 2022 intake
+    private final LazySparkMax motor = new LazySparkMax(Constants.EndEffectorConstants.INTAKE_CAN_MAIN, CANSparkMax.IdleMode.kBrake, 30, true, false); // currentlimit stolen from 2022 intake
     private final RelativeEncoder encoder = motor.getEncoder();
 
     public EndEffectorIOSparkMax() {
         encoder.setPositionConversionFactor(Constants.EndEffectorConstants.GEARING);
         encoder.setVelocityConversionFactor(Constants.EndEffectorConstants.GEARING / 60.0);
+        motor.burnFlash();
     }
 
     @Override

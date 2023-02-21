@@ -27,7 +27,7 @@ public class ArmIOShoulderSparkMax implements ArmIO {
 
     @Override
     public void updateInputs(ArmIOInputs inputs) {
-        inputs.armPositionRad = absoluteEncoder.getPosition();
+        inputs.armPositionRad = absoluteEncoder.getPosition() - FourBarConstants.SHOULDER_OFFSET.getRadians();
         inputs.armVelocityRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(absoluteEncoder.getVelocity());
         inputs.armAppliedVolts = mainMotor.getAppliedOutput() * mainMotor.getBusVoltage();
         inputs.armCurrentAmps = mainMotor.getOutputCurrent();

@@ -101,7 +101,6 @@ public class EndEffector extends SubsystemBase {
         if (actualState == ActualState.CONE_OBTAINED || actualState == ActualState.CUBE_OBTAINED) {
             return actualState;
         }
-
         double sum = 0;
         for (int i = 0; i < currentCycles; i++) {
             sum += intakeCurrents.get(i);
