@@ -34,8 +34,8 @@ public class FourBar extends SubsystemBase {
         Logger.getInstance().processInputs("Elbow", armInputs[1]);
     }
 
-    public static void setArmVoltage(ArmIO io, double voltage) {
-        io.setVoltage(voltage);
+    public void setArmVoltage(int index, double voltage) {
+        armIO[index].setVoltage(voltage);
     }
 
     /** Converts joint angles to the end effector position. */
@@ -50,5 +50,18 @@ public class FourBar extends SubsystemBase {
                         + Constants.Dimensions.arm2 * Math.sin(armInputs[0].armPositionRad
                         + armInputs[1].armPositionRad)
         );
+    }
+
+    public void solve(Translation2d position) {
+//        return new Translation2d(
+//                Constants.Dimensions.shoulderJointPositionX
+//                        + Constants.Dimensions.arm1 * Math.cos(armInputs[0].armPositionRad)
+//                        + Constants.Dimensions.arm2 * Math.cos(armInputs[0].armPositionRad
+//                        + armInputs[1].armPositionRad),
+//                Constants.Dimensions.shoulderJointPositionY
+//                        + Constants.Dimensions.arm1 * Math.sin(armInputs[0].armPositionRad)
+//                        + Constants.Dimensions.arm2 * Math.sin(armInputs[0].armPositionRad
+//                        + armInputs[1].armPositionRad)
+//        );
     }
 }

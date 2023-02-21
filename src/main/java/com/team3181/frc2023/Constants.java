@@ -9,7 +9,8 @@ import com.pathplanner.lib.PathConstraints;
 import com.team3181.frc2023.subsystems.endeffector.EndEffectorIO;
 import com.team3181.frc2023.subsystems.endeffector.EndEffectorIOSparkMax;
 import com.team3181.frc2023.subsystems.fourbar.ArmIO;
-import com.team3181.frc2023.subsystems.fourbar.ArmIOSparkMax;
+import com.team3181.frc2023.subsystems.fourbar.ArmIOElbowSparkMax;
+import com.team3181.frc2023.subsystems.fourbar.ArmIOShoulderSparkMax;
 import com.team3181.frc2023.subsystems.objectivetracker.NodeSelectorIO;
 import com.team3181.frc2023.subsystems.objectivetracker.NodeSelectorIOServer;
 import com.team3181.frc2023.subsystems.swerve.*;
@@ -59,10 +60,13 @@ public final class Constants {
             SPARKMAX_HASHMAP.put(SwerveConstants.CAN_BR_DRIVE, "Back Right Drive");
             SPARKMAX_HASHMAP.put(SwerveConstants.CAN_BR_STEER, "Back Right Steer");
             SPARKMAX_HASHMAP.put(EndEffectorConstants.INTAKE_CAN_MAIN, "Intake");
+            SPARKMAX_HASHMAP.put(FourBarConstants.CAN_SHOULDER_MASTER, "Shoulder Master");
+            SPARKMAX_HASHMAP.put(FourBarConstants.CAN_SHOULDER_FOLLOWER, "Shoulder Follower");
+            SPARKMAX_HASHMAP.put(FourBarConstants.CAN_ELBOW, "Elbow");
 
             if (RobotBase.isReal()) {
-                SHOULDER = new ArmIOSparkMax(FourBarConstants.CAN_SHOULDER);
-                ELBOW = new ArmIOSparkMax(FourBarConstants.CAN_ELBOW);
+                SHOULDER = new ArmIOShoulderSparkMax();
+                ELBOW = new ArmIOElbowSparkMax();
                 TANK = RobotConstants.IS_TANK ? new TankIOSparkMax() : new TankIO(){};
                 FL_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSparkMax(SwerveConstants.CAN_FL_DRIVE, SwerveConstants.CAN_FL_STEER, SwerveConstants.FL_OFFSET);
                 FR_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSparkMax(SwerveConstants.CAN_FR_DRIVE, SwerveConstants.CAN_FR_STEER, SwerveConstants.FR_OFFSET);
@@ -89,8 +93,11 @@ public final class Constants {
     }
 
     public static final class FourBarConstants {
-        public static final int CAN_SHOULDER = 10; // TODO: Change
-        public static final int CAN_ELBOW = 11;
+        public static final int CAN_SHOULDER_MASTER = 10; // TODO: Change
+        public static final int CAN_SHOULDER_FOLLOWER = 11; // TODO: Change
+        public static final int CAN_ELBOW = 12;
+
+        public static final double BELT_RATIO = 7.0 / 3.0;
     }
 
     public static final class SwerveConstants {
@@ -225,7 +232,7 @@ public final class Constants {
     public static final class EndEffectorConstants {
         public static final double EXHAUST_POWER = -12.0;
         public static final double INTAKE_POWER = 5.0;
-        public static final double GEARING = 1.0; // TODO: Set this value
+        public static final double GEARING = 4 * 4 * 4; // TODO: Set this value
         // public static final double CUBE_CLAW_POSITION = 0.0; // radians
         // public static final double CONE_CLAW_POSITION = 0.0; // radians
 

@@ -10,12 +10,15 @@ public class EndEffectorIOSparkMax implements EndEffectorIO {
     private final LazySparkMax motor = new LazySparkMax(Constants.EndEffectorConstants.INTAKE_CAN_MAIN, CANSparkMax.IdleMode.kBrake, 30, true, true); // currentlimit stolen from 2022 intake
     private final RelativeEncoder encoder = motor.getEncoder();
 
-    public EndEffectorIOSparkMax() {}
+    public EndEffectorIOSparkMax() {
+        encoder.setPositionConversionFactor(Constants.EndEffectorConstants.GEARING);
+        encoder.setVelocityConversionFactor(Constants.EndEffectorConstants.GEARING / 60.0);
+    }
 
     @Override
     public void updateInputs(EndEffectorIOInputs inputs) {
         inputs.positionRad = encoder.getPosition();
-        inputs.velocityRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(encoder.getVelocity()) / Constants.EndEffectorConstants.GEARING;
+        inputs.velocityRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(encoder.getVelocity());
         inputs.appliedVolts = motor.getAppliedOutput() * motor.getBusVoltage();
         inputs.currentAmps = motor.getOutputCurrent();
         inputs.tempCelsius = motor.getMotorTemperature();

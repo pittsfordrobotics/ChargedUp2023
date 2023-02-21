@@ -17,6 +17,7 @@ public class EndEffector extends SubsystemBase {
     private WantedState wantedState = WantedState.IDLE;
     private ActualState actualState = ActualState.IDLE;
     private Vector<Double> intakeCurrents = new Vector<>();
+    private final int currentCycles = 20;
 
     private final static EndEffector INSTANCE = new EndEffector(Constants.RobotConstants.END_EFFECTOR);
     public static EndEffector getInstance() {
@@ -31,7 +32,7 @@ public class EndEffector extends SubsystemBase {
     }
     private EndEffector(EndEffectorIO io) {
         this.io = io;
-        for (int i = 0; i < 5; i++) intakeCurrents.add(0.0);
+        for (int i = 0; i < currentCycles; i++) intakeCurrents.add(0.0);
     }
 
     @Override
@@ -91,7 +92,7 @@ public class EndEffector extends SubsystemBase {
             case IDLE:
             default:
                 intakeCurrents.clear();
-                for (int i = 0; i < 5; i++) intakeCurrents.add(0.0);
+                for (int i = 0; i < currentCycles; i++) intakeCurrents.add(0.0);
                 return ((actualState != ActualState.CONE_OBTAINED) && (actualState != ActualState.CUBE_OBTAINED)) ? ActualState.IDLE : actualState;
         }
     }
@@ -102,15 +103,16 @@ public class EndEffector extends SubsystemBase {
         }
 
         double sum = 0;
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < currentCycles; i++) {
             sum += intakeCurrents.get(i);
         }
-        double avg = sum / 5;
+        double avg = sum / currentCycles;
         Logger.getInstance().recordOutput("End Effector/Avg Current", avg);
-        if (avg > 30) {
-            return ActualState.CONE_OBTAINED;
+        System.out.println(avg);
+        if (avg > 11) {
+            return ActualState.CUBE_OBTAINED;
         }
-        else if (avg > 20) {
+        else if (avg > 10) {
             return ActualState.CONE_OBTAINED;
         }
         else {

@@ -18,7 +18,7 @@ public class SwerveDriveFieldXbox extends CommandBase {
     private double m_prevTime = WPIUtilJNI.now() * 1e-6;
     private double m_currentTranslationDir = 0.0;
     private double m_currentTranslationMag = 0.0;
-    private boolean rateLimit = false;
+    private final boolean rateLimit = false;
 
     public SwerveDriveFieldXbox() {
         addRequirements(this.swerve);
