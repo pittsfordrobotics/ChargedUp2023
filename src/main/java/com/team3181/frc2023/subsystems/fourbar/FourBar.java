@@ -44,17 +44,17 @@ public class FourBar extends SubsystemBase {
     public Translation2d forward() {
         return new Translation2d(
                 FourBarConstants.SHOULDER_JOINT_POSITION_X
-                        + FourBarConstants.ARM_1_LENGTH * Math.cos(armInputs[0].armPositionRad)
-                        + FourBarConstants.ARM_2_LENGTH * Math.cos(armInputs[0].armPositionRad + armInputs[1].armPositionRad),
+                        + FourBarConstants.SHOULDER_LENGTH * Math.cos(armInputs[0].armPositionRad)
+                        + FourBarConstants.ELBOW_LENGTH * Math.cos(armInputs[0].armPositionRad + armInputs[1].armPositionRad),
                 FourBarConstants.SHOULDER_JOINT_POSITION_Y
-                        + FourBarConstants.ARM_1_LENGTH * Math.sin(armInputs[0].armPositionRad)
-                        + FourBarConstants.ARM_2_LENGTH * Math.sin(armInputs[0].armPositionRad + armInputs[1].armPositionRad)
+                        + FourBarConstants.SHOULDER_LENGTH * Math.sin(armInputs[0].armPositionRad)
+                        + FourBarConstants.ELBOW_LENGTH * Math.sin(armInputs[0].armPositionRad + armInputs[1].armPositionRad)
         );
     }
 
     public Rotation2d[] solve(Translation2d position) {
-        double rotElbow = - 1 * Math.acos((Math.pow(position.getX(), 2) + Math.pow(position.getY(), 2) - Math.pow(FourBarConstants.ARM_1_LENGTH, 2) - Math.pow(FourBarConstants.ARM_2_LENGTH, 2))/(2 * FourBarConstants.ARM_1_LENGTH * FourBarConstants.ARM_2_LENGTH));
-        double rotShoulder = Math.atan(position.getY()/position.getX()) + Math.atan((FourBarConstants.ARM_2_LENGTH * Math.sin(rotElbow))/(FourBarConstants.ARM_1_LENGTH + FourBarConstants.ARM_2_LENGTH * Math.cos(rotElbow)));
+        double rotElbow = - 1 * Math.acos((Math.pow(position.getX(), 2) + Math.pow(position.getY(), 2) - Math.pow(FourBarConstants.SHOULDER_LENGTH, 2) - Math.pow(FourBarConstants.ELBOW_LENGTH, 2))/(2 * FourBarConstants.SHOULDER_LENGTH * FourBarConstants.ELBOW_LENGTH));
+        double rotShoulder = Math.atan(position.getY()/position.getX()) + Math.atan((FourBarConstants.ELBOW_LENGTH * Math.sin(rotElbow))/(FourBarConstants.SHOULDER_LENGTH + FourBarConstants.ELBOW_LENGTH * Math.cos(rotElbow)));
         return new Rotation2d[] {Rotation2d.fromRadians(rotShoulder), Rotation2d.fromRadians(rotElbow)};
     }
 }

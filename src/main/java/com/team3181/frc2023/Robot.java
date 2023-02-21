@@ -76,7 +76,6 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void robotPeriodic() {
-    // Threads.setCurrentThreadPriority(true, 99);
     CommandScheduler.getInstance().run();
 
     // Log scheduled commands
@@ -93,7 +92,6 @@ public class Robot extends LoggedRobot {
     driverControllerAlert.set(!DriverStation.isJoystickConnected(0));
     operatorControllerAlert.set(!DriverStation.isJoystickConnected(1));
     LazySparkMax.checkAlive();
-//    Threads.setCurrentThreadPriority(false, 10);
   }
 
   @Override

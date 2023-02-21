@@ -251,24 +251,42 @@ public final class Constants {
 
         public static final double BELT_RATIO = 7.0 / 3.0;
 
+        public static final double ELBOW_P = 0.0;
+        public static final double ELBOW_I = 0.0;
+        public static final double ELBOW_D = 0.0;
+
+        public static final double SHOULDER_P = 0.0;
+        public static final double SHOULDER_I = 0.0;
+        public static final double SHOULDER_D = 0.0;
+
         public static final Rotation2d SHOULDER_OFFSET = Rotation2d.fromRadians(0);
         public static final Rotation2d ELBOW_OFFSET = Rotation2d.fromRadians(0);
 
+        public static final Rotation2d ELBOW_MIN = Rotation2d.fromRadians(7);
+        public static final Rotation2d ELBOW_MAX = Rotation2d.fromRadians(7);
+
+        public static final Rotation2d SHOULDER_MIN = Rotation2d.fromRadians(7);
+        public static final Rotation2d SHOULDER_MAX = Rotation2d.fromRadians(7);
+
         public static double WHEEL_TO_CHASSIS = Units.inchesToMeters(4.75);
         public static double CHASSIS_TO_ARM = Units.inchesToMeters(28.9);
-        public static double ARM_1_LENGTH = Units.inchesToMeters(29);
-        public static double ARM_2_LENGTH = Units.inchesToMeters(26.875);
+        public static double SHOULDER_LENGTH = Units.inchesToMeters(29);
+        public static double ELBOW_LENGTH = Units.inchesToMeters(26.875);
+        public static double SHOULDER_PIVOT = Units.inchesToMeters(12);
         public static double END_EFFECTOR_LENGTH = Units.inchesToMeters(7.15);
         public static double END_EFFECTOR_CUBE_CENTER = Units.inchesToMeters(6.275);
         public static double END_EFFECTOR_CONE_CENTER = Units.inchesToMeters(3.6);
-        public static double SHOULDER_JOINT_POSITION_X = 0; // TODO: Set this
-        public static double SHOULDER_JOINT_POSITION_Y = 0;
+        public static double SHOULDER_MASS = Units.lbsToKilograms(2.34+1.6);
+        public static double ELBOW_MASS = Units.lbsToKilograms(0.8*2);
+        public static double END_EFFECTOR_MASS = Units.lbsToKilograms(93.0 / 16.0);
+        public static double SHOULDER_JOINT_POSITION_X = Units.inchesToMeters(14);
+        public static double SHOULDER_JOINT_POSITION_Y = WHEEL_TO_CHASSIS + CHASSIS_TO_ARM;
     }
 
     public static final class EndEffectorConstants {
         public static final double EXHAUST_POWER = -12.0;
         public static final double INTAKE_POWER = 7.0;
-        public static final double GEARING = 4 * 4 * 4;
+        public static final double GEARING = 4 * 3 * 3;
 
         public static final int INTAKE_CAN_MAIN = 9;
     }

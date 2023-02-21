@@ -21,8 +21,6 @@ import com.team3181.lib.controller.BetterXboxController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -45,17 +43,12 @@ public class RobotContainer {
 
   public RobotContainer() {
     autoConfig();
-    driverDashboardSetup();
 
 //      competitionButtons();
       testButtons();
 
     if (!RobotConstants.IS_TANK) swerve.setDefaultCommand(new SwerveDriveFieldXbox());
     if (RobotConstants.IS_TANK) Tank.getInstance().setDefaultCommand(new TankXbox());
-  }
-
-  private void driverDashboardSetup() {
-    ShuffleboardTab driverTab = Shuffleboard.getTab("Driver");
   }
 
   private void testButtons() {

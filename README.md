@@ -9,6 +9,7 @@
 - FRC 6328's [AdvantageKit](https://github.com/Mechanical-Advantage/AdvantageKit)
 - FRC 6328's [Field Constants](https://github.com/Mechanical-Advantage/AdvantageKit)
 - FRC 6328's [Node Selector Server](https://github.com/Mechanical-Advantage/RobotCode2023/tree/main/src/main/deploy/nodeselector) and [Node Selector Subsystem](https://github.com/Mechanical-Advantage/RobotCode2023/tree/main/src/main/java/org/littletonrobotics/frc2023/subsystems/objectivetracker)
+- FRC 6328's [Arm Dynamics](https://github.com/Mechanical-Advantage/RobotCode2023/blob/main/src/main/java/org/littletonrobotics/frc2023/subsystems/arm/ArmDynamics.java)
 - FRC 6328's [Util Folder](https://github.com/Mechanical-Advantage/RobotCode2022/tree/main/src/main/java/frc/robot/util)
 - FRC 3015's [InterpolatingTreeMap](https://github.com/3015RangerRobotics/RobotCode2021/blob/main/src/main/java/lib/LookupTable.java)
 - FRC 3015's [PathPlanner](https://github.com/mjansen4857/pathplanner)
