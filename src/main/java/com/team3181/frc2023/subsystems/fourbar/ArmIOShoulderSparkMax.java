@@ -13,15 +13,12 @@ public class ArmIOShoulderSparkMax implements ArmIO {
     private final LazySparkMax mainMotor;
     private final LazySparkMax followerMotor;
     private final AbsoluteEncoder absoluteEncoder;
-    private final SparkMaxPIDController pidController;
-    private double lastPos = 0;
-    private double counter = 0;
 
     public ArmIOShoulderSparkMax() {
         mainMotor = new LazySparkMax(FourBarConstants.CAN_SHOULDER_MASTER, IdleMode.kBrake, 80, false, false);
         followerMotor = new LazySparkMax(FourBarConstants.CAN_SHOULDER_FOLLOWER, IdleMode.kBrake, 80, mainMotor, false, true);
         absoluteEncoder = mainMotor.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle);
-        pidController = mainMotor.getPIDController();
+        SparkMaxPIDController pidController = mainMotor.getPIDController();
 
         absoluteEncoder.setInverted(true);
         absoluteEncoder.setPositionConversionFactor(2 * Math.PI * FourBarConstants.BELT_RATIO);
@@ -41,15 +38,7 @@ public class ArmIOShoulderSparkMax implements ArmIO {
 
     @Override
     public void updateInputs(ArmIOInputs inputs) {
-//        if (lastPos < 0.1 && absoluteEncoder.getPosition() > 0.9) {
-//            counter--;
-//        }
-//        else if (lastPos > 0.9 && absoluteEncoder.getPosition() < 0.1) {
-//            counter++;
-//        }
-
-        inputs.armPositionRad = absoluteEncoder.getPosition() + counter;
-        lastPos = absoluteEncoder.getPosition();
+        inputs.armPositionRad = absoluteEncoder.getPosition();
         inputs.armVelocityRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(absoluteEncoder.getVelocity());
         inputs.armAppliedVolts = mainMotor.getAppliedOutput() * mainMotor.getBusVoltage();
         inputs.armCurrentAmps = mainMotor.getOutputCurrent();
@@ -58,7 +47,9 @@ public class ArmIOShoulderSparkMax implements ArmIO {
 
     @Override
     public void setVoltage(double volts) {
-        mainMotor.setVoltage(volts);
+        if (absoluteEncoder.getPosition() < FourBarConstants.SHOULDER_MAX.getRadians() && absoluteEncoder.getPosition() > FourBarConstants.SHOULDER_MIN.getRadians()) {
+            mainMotor.setVoltage(volts);
+        }
     }
 
     @Override

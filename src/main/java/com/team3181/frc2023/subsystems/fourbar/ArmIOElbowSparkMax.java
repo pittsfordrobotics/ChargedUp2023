@@ -12,14 +12,11 @@ import edu.wpi.first.math.util.Units;
 public class ArmIOElbowSparkMax implements ArmIO {
     private final LazySparkMax motor;
     private final AbsoluteEncoder absoluteEncoder;
-    private final SparkMaxPIDController pidController;
-    private double lastPos = 0;
-    private double counter = 0;
 
     public ArmIOElbowSparkMax() {
         motor = new LazySparkMax(FourBarConstants.CAN_ELBOW, IdleMode.kBrake, 80, false,false);
         absoluteEncoder = motor.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle);
-        pidController = motor.getPIDController();
+        SparkMaxPIDController pidController = motor.getPIDController();
 
         absoluteEncoder.setInverted(true);
         absoluteEncoder.setPositionConversionFactor(2 * Math.PI * FourBarConstants.BELT_RATIO);
@@ -39,15 +36,7 @@ public class ArmIOElbowSparkMax implements ArmIO {
 
     @Override
     public void updateInputs(ArmIOInputs inputs) {
-//        if (lastPos < 0.1 && absoluteEncoder.getPosition() > 0.9) {
-//            counter--;
-//        }
-//        else if (lastPos > 0.9 && absoluteEncoder.getPosition() < 0.1) {
-//            counter++;
-//        }
-
-        inputs.armPositionRad = absoluteEncoder.getPosition() + counter;
-        lastPos = absoluteEncoder.getPosition();
+        inputs.armPositionRad = absoluteEncoder.getPosition();
         inputs.armVelocityRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(absoluteEncoder.getVelocity());
         inputs.armAppliedVolts = motor.getAppliedOutput() * motor.getBusVoltage();
         inputs.armCurrentAmps = motor.getOutputCurrent();
@@ -56,8 +45,9 @@ public class ArmIOElbowSparkMax implements ArmIO {
 
     @Override
     public void setVoltage(double volts) {
-//        if (absoluteEncoder.getPosition())
-        motor.setVoltage(volts);
+        if (absoluteEncoder.getPosition() < FourBarConstants.ELBOW_MAX.getRadians() && absoluteEncoder.getPosition() > FourBarConstants.ELBOW_MIN.getRadians()) {
+            motor.setVoltage(volts);
+        }
     }
 
     @Override

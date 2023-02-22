@@ -75,7 +75,7 @@ public class RobotContainer {
     driverController.x().whileTrue(new InstantCommand(() -> fourBar.setArmVoltage(1, 2))).whileFalse(new InstantCommand(() -> fourBar.setArmVoltage(1, 0)));
     driverController.y().whileTrue(new InstantCommand(() -> fourBar.setArmVoltage(1, -2))).whileFalse(new InstantCommand(() -> fourBar.setArmVoltage(1, 0)));
     driverController.leftBumper().whileTrue(new InstantCommand(endEffector::intake)).whileFalse(new InstantCommand(endEffector::idle));
-    driverController.rightBumper().whileTrue(new InstantCommand(endEffector::exhaust)).whileFalse(new InstantCommand(endEffector::idle));
+//    driverController.rightBumper().whileTrue(new InstantCommand(endEffector::exhaust)).whileFalse(new InstantCommand(endEffector::idle));
 
     operatorController.povUp().whileTrue(objectiveTracker.shiftNodeCommand(Direction.UP));
     operatorController.povRight().whileTrue(objectiveTracker.shiftNodeCommand(Direction.RIGHT));

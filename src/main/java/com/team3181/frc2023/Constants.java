@@ -150,7 +150,7 @@ public final class Constants {
         public static final BetterSwerveKinematics DRIVE_KINEMATICS = new BetterSwerveKinematics(MODULE_OFFSETS);
 
         public static final Rotation2d FL_OFFSET = Rotation2d.fromRadians(0.1715);
-        public static final Rotation2d FR_OFFSET = Rotation2d.fromRadians(5.167658);
+        public static final Rotation2d FR_OFFSET = Rotation2d.fromRadians(5.167658 + Math.PI);
         public static final Rotation2d BL_OFFSET = Rotation2d.fromRadians(3.11452428);
         public static final Rotation2d BR_OFFSET = Rotation2d.fromRadians(4.138);
 
@@ -222,7 +222,7 @@ public final class Constants {
 
     public static final class AutoConstants {
         // PID values for trajectory follower
-        public static final double LINEAR_P = 8;
+        public static final double LINEAR_P = 1.5;
         public static final double ROT_P = 5;
 
         //        numbers from 1678
@@ -259,14 +259,14 @@ public final class Constants {
         public static final double SHOULDER_I = 0.0;
         public static final double SHOULDER_D = 0.0;
 
-        public static final Rotation2d SHOULDER_OFFSET = Rotation2d.fromRadians(0);
-        public static final Rotation2d ELBOW_OFFSET = Rotation2d.fromRadians(0);
+        public static final Rotation2d SHOULDER_OFFSET = Rotation2d.fromRadians(1.716);
+        public static final Rotation2d ELBOW_OFFSET = Rotation2d.fromRadians(9.5);
 
-        public static final Rotation2d ELBOW_MIN = Rotation2d.fromRadians(7);
-        public static final Rotation2d ELBOW_MAX = Rotation2d.fromRadians(7);
+        public static final Rotation2d ELBOW_MIN = Rotation2d.fromRadians(0.5);
+        public static final Rotation2d ELBOW_MAX = Rotation2d.fromRadians(13.5);
 
-        public static final Rotation2d SHOULDER_MIN = Rotation2d.fromRadians(7);
-        public static final Rotation2d SHOULDER_MAX = Rotation2d.fromRadians(7);
+        public static final Rotation2d SHOULDER_MIN = Rotation2d.fromRadians(0.5);
+        public static final Rotation2d SHOULDER_MAX = Rotation2d.fromRadians(12.5);
 
         public static double WHEEL_TO_CHASSIS = Units.inchesToMeters(4.75);
         public static double CHASSIS_TO_ARM = Units.inchesToMeters(28.9);
