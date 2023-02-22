@@ -45,6 +45,7 @@ public final class Constants {
 
         public final static boolean IS_TANK = false;
         public static final boolean LOGGING_ENABLED = true;
+        public static final boolean REPLAY_ENABLED = false;
         public static final String LOGGING_PATH = "/media/sda2/";
         public static final boolean PID_TUNER_ENABLED = false;
         public static final double LOOP_TIME_SECONDS = 0.02;

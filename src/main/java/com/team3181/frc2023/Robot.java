@@ -17,10 +17,12 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.inputs.LoggedPowerDistribution;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
+import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
 public class Robot extends LoggedRobot {
@@ -64,6 +66,11 @@ public class Robot extends LoggedRobot {
     if (RobotBase.isReal()) {
       logger.addDataReceiver(new WPILOGWriter(RobotConstants.LOGGING_PATH));
       LoggedPowerDistribution.getInstance();
+    }
+    else if (RobotConstants.REPLAY_ENABLED) {
+      String path = LogFileUtil.findReplayLog();
+      logger.setReplaySource(new WPILOGReader(path));
+      logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(path, "_replayed")));
     }
     if (RobotConstants.LOGGING_ENABLED) {
       logger.start();
