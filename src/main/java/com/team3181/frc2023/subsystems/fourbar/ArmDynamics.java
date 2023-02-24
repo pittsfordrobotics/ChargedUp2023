@@ -8,16 +8,14 @@
 package com.team3181.frc2023.subsystems.fourbar;
 
 import com.team3181.frc2023.Constants.FourBarConstants;
-import edu.wpi.first.math.MatBuilder;
-import edu.wpi.first.math.Matrix;
-import edu.wpi.first.math.Nat;
-import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.Vector;
+import com.team3181.frc2023.subsystems.fourbar.ArmConfig.MotorConfig;
+import edu.wpi.first.math.*;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N2;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.numbers.N4;
 import edu.wpi.first.math.system.NumericalIntegration;
+import edu.wpi.first.math.system.plant.DCMotor;
 
 /**
  * Converts between the system state and motor voltages for a double jointed arm.
@@ -31,26 +29,49 @@ public class ArmDynamics {
     private final ArmConfig.JointConfig shoulder;
     private final ArmConfig.JointConfig elbow;
 
-    public ArmDynamics(ArmConfig config) {
-        shoulder = config.shoulder();
+    public ArmDynamics() {
+        double shoulderMOI = (4 * FourBarConstants.SHOULDER_LENGTH *
+                (FourBarConstants.TUBE_X_RADIUS * FourBarConstants.TUBE_Y_RADIUS
+                        - (FourBarConstants.TUBE_Y_RADIUS - FourBarConstants.TUBE_THICKNESS) * (FourBarConstants.TUBE_X_RADIUS - FourBarConstants.TUBE_THICKNESS)
+                        * (FourBarConstants.TUBE_THICKNESS)
+                        * (-2 * (FourBarConstants.TUBE_X_RADIUS - FourBarConstants.TUBE_THICKNESS))
+                )) / FourBarConstants.SHOULDER_MASS + (FourBarConstants.SHOULDER_MASS * (Math.pow((FourBarConstants.SHOULDER_LENGTH / 2) - FourBarConstants.SHOULDER_PIVOT_LENGTH, 2)));
+        System.out.println(shoulderMOI);
 
-        // Combine elbow and wrist constants
-        var elbowCgRadius = (config.elbow().cgRadius() * config.elbow().mass()
-                        + (FourBarConstants.ELBOW_LENGTH + config.wrist().cgRadius()) * config.wrist().mass())
-                        / (config.elbow().mass() + config.wrist().mass());
-        var elbowMoi =
-                config.elbow().mass() * Math.pow(config.elbow().cgRadius() - elbowCgRadius, 2.0)
-                        + config.wrist().mass()
-                        * Math.pow(
-                        config.elbow().length() + config.wrist().cgRadius() - elbowCgRadius, 2.0);
         elbow = new ArmConfig.JointConfig(
-                        config.elbow().mass() + config.wrist().mass(),
-                        config.elbow().length() + config.wrist().length(),
-                        elbowMoi,
-                        elbowCgRadius,
-                        config.elbow().minAngle(),
-                        config.elbow().maxAngle(),
-                        config.elbow().motor());
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                new MotorConfig(DCMotor.getNEO(2), FourBarConstants.ELBOW_GEAR_RATIO * FourBarConstants.BELT_RATIO));
+        shoulder = elbow;
+//        shoulder = new JointConfig(
+//                FourBarConstants.SHOULDER_MASS,
+//                FourBarConstants.SHOULDER_LENGTH,
+//                shoulderMOI,
+//
+//
+//        );
+//
+//        // Combine elbow and wrist constants
+//        var elbowCgRadius = (config.elbow().cgRadius() * config.elbow().mass()
+//                        + (FourBarConstants.ELBOW_LENGTH + config.wrist().cgRadius()) * config.wrist().mass())
+//                        / (config.elbow().mass() + config.wrist().mass());
+//        var elbowMoi =
+//                FourBarConstants.ELBOW_MASS * Math.pow(config.elbow().cgRadius() - elbowCgRadius, 2.0)
+//                        + config.wrist().mass()
+//                        * Math.pow(
+//                        config.elbow().length() + config.wrist().cgRadius() - elbowCgRadius, 2.0);
+//        elbow = new ArmConfig.JointConfig(
+//                        config.elbow().mass() + config.wrist().mass(),
+//                        config.elbow().length() + config.wrist().length(),
+//                        elbowMoi,
+//                        elbowCgRadius,
+//                        config.elbow().minAngle(),
+//                        config.elbow().maxAngle(),
+//                        new MotorConfig(DCMotor.getNEO(2), FourBarConstants.ELBOW_GEAR_RATIO * FourBarConstants.BELT_RATIO));
     }
 
     /** Calculates the joint voltages based on the joint positions (feedforward). */

@@ -11,8 +11,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import java.util.List;
 
 public class Paths {
-    public static final PathPlannerTrajectory DROP_CLIMB_HIGH = PathPlanner.loadPath("Drop and Climb High", AutoConstants.MAX_SPEED);
-    public static final PathPlannerTrajectory DROP_CLIMB_LOW = PathPlanner.loadPath("Drop and Climb Low", AutoConstants.MAX_SPEED);
     public static final PathPlannerTrajectory TEST_ON_THE_FLY = PathPlanner.generatePath(
             AutoConstants.MAX_SPEED,
                 new PathPoint(Swerve.getInstance().getPose().getTranslation(), Swerve.getInstance().getPose().getRotation(), Swerve.getInstance().getPose().getRotation()),

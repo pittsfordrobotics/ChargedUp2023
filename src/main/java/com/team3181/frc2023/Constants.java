@@ -6,6 +6,7 @@ package com.team3181.frc2023;
 
 import com.ctre.phoenix.sensors.Pigeon2Configuration;
 import com.pathplanner.lib.PathConstraints;
+import com.team3181.frc2023.subsystems.Superstructure.SuperstructurePosition;
 import com.team3181.frc2023.subsystems.endeffector.EndEffectorIO;
 import com.team3181.frc2023.subsystems.endeffector.EndEffectorIOSparkMax;
 import com.team3181.frc2023.subsystems.fourbar.ArmIO;
@@ -250,6 +251,8 @@ public final class Constants {
         public static final int CAN_SHOULDER_FOLLOWER = 11;
         public static final int CAN_ELBOW = 12;
 
+        public static final double SHOULDER_GEAR_RATIO = 5 * 4 * 4;
+        public static final double ELBOW_GEAR_RATIO = 5 * 5 * 3;
         public static final double BELT_RATIO = 7.0 / 3.0;
 
         public static final double ELBOW_P = 0.0;
@@ -271,15 +274,27 @@ public final class Constants {
 
         public static double WHEEL_TO_CHASSIS = Units.inchesToMeters(4.75);
         public static double CHASSIS_TO_ARM = Units.inchesToMeters(28.9);
-        public static double SHOULDER_LENGTH = Units.inchesToMeters(29);
-        public static double ELBOW_LENGTH = Units.inchesToMeters(26.875);
-        public static double SHOULDER_PIVOT = Units.inchesToMeters(12);
+
+        public static final double TUBE_THICKNESS = Units.inchesToMeters(0.04);
+        public static final double TUBE_X_RADIUS = Units.inchesToMeters(0.5);
+        public static final double TUBE_Y_RADIUS = Units.inchesToMeters(0.5);
+
+        public static double SHOULDER_FULL_LENGTH = Units.inchesToMeters(41.5);
+        public static double SHOULDER_PIVOT_LENGTH = Units.inchesToMeters(13);
+        public static double SHOULDER_LENGTH = SHOULDER_FULL_LENGTH - SHOULDER_PIVOT_LENGTH;
+
+        public static double ELBOW_FULL_LENGTH = Units.inchesToMeters(28);
+        public static double ELBOW_PIVOT_LENGTH = Units.inchesToMeters(1.5 + (1.0/16.0));
+        public static double ELBOW_LENGTH = ELBOW_FULL_LENGTH - ELBOW_PIVOT_LENGTH;
+
         public static double END_EFFECTOR_LENGTH = Units.inchesToMeters(7.15);
         public static double END_EFFECTOR_CUBE_CENTER = Units.inchesToMeters(6.275);
         public static double END_EFFECTOR_CONE_CENTER = Units.inchesToMeters(3.6);
-        public static double SHOULDER_MASS = Units.lbsToKilograms(2.34+1.6);
-        public static double ELBOW_MASS = Units.lbsToKilograms(0.8*2);
+
+        public static double SHOULDER_MASS = Units.lbsToKilograms(1.28 * 2 * (SHOULDER_LENGTH / 47.0)); // thickness: 1/32
+        public static double ELBOW_MASS = Units.lbsToKilograms(1.28 * 2 * (ELBOW_LENGTH / 47.0)); // thickness: 1/32
         public static double END_EFFECTOR_MASS = Units.lbsToKilograms(93.0 / 16.0);
+
         public static double SHOULDER_JOINT_POSITION_X = Units.inchesToMeters(14);
         public static double SHOULDER_JOINT_POSITION_Y = WHEEL_TO_CHASSIS + CHASSIS_TO_ARM;
     }
@@ -290,5 +305,9 @@ public final class Constants {
         public static final double GEARING = 4 * 3 * 3;
 
         public static final int INTAKE_CAN_MAIN = 9;
+    }
+
+    public static final class SuperstructureConstants {
+        public static final SuperstructurePosition GROUND_INTAKE = new SuperstructurePosition(Rotation2d.fromRadians(0), Rotation2d.fromRadians(0));
     }
 }

@@ -24,7 +24,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
-/** Represents all of the arm config data shared between the robot code and solver. */
+/** Represents all the arm config data shared between the robot code and solver. */
 public record ArmConfig(
         Translation2d origin,
         JointConfig shoulder,
@@ -34,7 +34,7 @@ public record ArmConfig(
         Map<String, Constraint> constraints) {
 
     /** Physics constants for a single joint. */
-    public static record JointConfig(
+    public record JointConfig(
             double mass,
             double length,
             double moi,
@@ -44,14 +44,14 @@ public record ArmConfig(
             MotorConfig motor) {}
 
     /** Physics constants for a joint motor. */
-    public static record MotorConfig(DCMotor physics, double reduction) {}
+    public record MotorConfig(DCMotor physics, double reduction) {}
 
     /** Config fields for solver. */
-    public static record SolverConfig(
+    public record SolverConfig(
             int interiorPoints, double maxVoltageShoulder, double maxVoltageElbow, double maxJerk) {}
 
     /** Arbitrary solver constraint. */
-    public static record Constraint(String type, double[] args) {}
+    public record Constraint(String type, double[] args) {}
 
     /** Converts double array to Translation2d instance. */
     private static class Translation2dDeserializer extends StdDeserializer<Translation2d> {

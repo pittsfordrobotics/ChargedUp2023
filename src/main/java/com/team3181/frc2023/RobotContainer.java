@@ -4,18 +4,14 @@
 
 package com.team3181.frc2023;
 
-import com.team3181.frc2023.Constants.RobotConstants;
 import com.team3181.frc2023.commands.AutoCollectAndGo;
 import com.team3181.frc2023.commands.DropClimb;
-import com.team3181.frc2023.commands.SwerveDriveFieldXbox;
-import com.team3181.frc2023.commands.TankXbox;
 import com.team3181.frc2023.subsystems.Superstructure;
 import com.team3181.frc2023.subsystems.endeffector.EndEffector;
 import com.team3181.frc2023.subsystems.fourbar.FourBar;
 import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker;
 import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker.Direction;
 import com.team3181.frc2023.subsystems.swerve.Swerve;
-import com.team3181.frc2023.subsystems.tank.Tank;
 import com.team3181.frc2023.subsystems.vision.Vision;
 import com.team3181.lib.controller.BetterXboxController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -47,8 +43,8 @@ public class RobotContainer {
 //      competitionButtons();
       testButtons();
 
-    if (!RobotConstants.IS_TANK) swerve.setDefaultCommand(new SwerveDriveFieldXbox());
-    if (RobotConstants.IS_TANK) Tank.getInstance().setDefaultCommand(new TankXbox());
+//    if (!RobotConstants.IS_TANK) swerve.setDefaultCommand(new SwerveDriveFieldXbox());
+//    if (RobotConstants.IS_TANK) Tank.getInstance().setDefaultCommand(new TankXbox());
   }
 
   private void testButtons() {

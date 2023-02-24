@@ -3,10 +3,21 @@ package com.team3181.frc2023.subsystems;
 import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker;
 import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker.Objective;
 import com.team3181.frc2023.subsystems.swerve.Swerve;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 
 public class Superstructure extends SubsystemBase {
+
+    public static class SuperstructurePosition {
+        public Rotation2d elbow;
+        public Rotation2d shoulder;
+
+        public SuperstructurePosition(Rotation2d elbow, Rotation2d shoulder) {
+            this.elbow = elbow;
+            this.shoulder = shoulder;
+        }
+    }
 
     enum StructureState {
         IDLE, INTAKE_GROUND, INTAKE_MID, EXPEL, MOVING, OBJECTIVE
@@ -45,13 +56,18 @@ public class Superstructure extends SubsystemBase {
             case OBJECTIVE:
                 state = StructureState.OBJECTIVE;
                 break;
+            case INTAKE_GROUND:
+            case INTAKE_MID:
+            case EXPEL:
+            case MOVING:
             case IDLE:
             default:
                 state = StructureState.IDLE;
+                break;
         }
-//        if (state != systemState) {
-//            systemState = state;
-//        }
+        if (state != systemState) {
+            systemState = state;
+        }
 
 //        switch (systemState) {
 //            case Objective:

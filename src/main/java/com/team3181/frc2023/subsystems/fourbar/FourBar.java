@@ -5,8 +5,11 @@ import com.team3181.frc2023.Constants;
 import com.team3181.frc2023.Constants.FourBarConstants;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
+
+import java.util.Arrays;
 
 public class FourBar extends SubsystemBase {
 
@@ -21,7 +24,8 @@ public class FourBar extends SubsystemBase {
 
     private FourBar(ArmIO shoulderIO, ArmIO elbowIO) {
         armIO = new ArmIO[]{shoulderIO, elbowIO};
-
+        SmartDashboard.putNumber("number x", 0);
+        SmartDashboard.putNumber("number y", 0);
         for(int i = 0; i < 2; i++) {
            armIO[i].updateInputs(armInputs[i]);
         }
@@ -34,6 +38,8 @@ public class FourBar extends SubsystemBase {
         }
         Logger.getInstance().processInputs("Shoulder", armInputs[0]);
         Logger.getInstance().processInputs("Elbow", armInputs[1]);
+
+        System.out.println(Arrays.toString(solve(new Translation2d(SmartDashboard.getNumber("number x", 0), SmartDashboard.getNumber("number y", 0)))));
     }
 
     public void setArmVoltage(int index, double voltage) {
@@ -53,8 +59,15 @@ public class FourBar extends SubsystemBase {
     }
 
     public Rotation2d[] solve(Translation2d position) {
-        double rotElbow = - 1 * Math.acos((Math.pow(position.getX(), 2) + Math.pow(position.getY(), 2) - Math.pow(FourBarConstants.SHOULDER_LENGTH, 2) - Math.pow(FourBarConstants.ELBOW_LENGTH, 2))/(2 * FourBarConstants.SHOULDER_LENGTH * FourBarConstants.ELBOW_LENGTH));
-        double rotShoulder = Math.atan(position.getY()/position.getX()) + Math.atan((FourBarConstants.ELBOW_LENGTH * Math.sin(rotElbow))/(FourBarConstants.SHOULDER_LENGTH + FourBarConstants.ELBOW_LENGTH * Math.cos(rotElbow)));
+//        double newX = position.getX() + SwerveConstants.X_LENGTH_METERS / 2;
+//        double newY = position.getY() - FourBarConstants.CHASSIS_TO_ARM - FourBarConstants.WHEEL_TO_CHASSIS;
+//        Translation2d updatedPos = new Translation2d(newX, newY);
+        Translation2d updatedPos = new Translation2d(position.getX(), position.getY());
+//        double rotElbow = - 1 * Math.acos((Math.pow(updatedPos.getX(), 2) + Math.pow(updatedPos.getY(), 2) - Math.pow(FourBarConstants.SHOULDER_LENGTH, 2) - Math.pow(FourBarConstants.ELBOW_LENGTH, 2))/(2 * FourBarConstants.SHOULDER_LENGTH * FourBarConstants.ELBOW_LENGTH));
+//        double rotShoulder = Math.atan(updatedPos.getY()/updatedPos.getX()) + Math.atan((FourBarConstants.ELBOW_LENGTH * Math.sin(rotElbow))/(FourBarConstants.SHOULDER_LENGTH + FourBarConstants.ELBOW_LENGTH * Math.cos(rotElbow)));
+
+        double rotElbow = 1 * Math.acos((Math.pow(updatedPos.getX(), 2) + Math.pow(updatedPos.getY(), 2) - Math.pow(FourBarConstants.SHOULDER_LENGTH, 2) - Math.pow(FourBarConstants.ELBOW_LENGTH, 2))/(2 * FourBarConstants.SHOULDER_LENGTH * FourBarConstants.ELBOW_LENGTH));
+        double rotShoulder = Math.atan(updatedPos.getY()/updatedPos.getX()) - Math.atan((FourBarConstants.ELBOW_LENGTH * Math.sin(rotElbow))/(FourBarConstants.SHOULDER_LENGTH + FourBarConstants.ELBOW_LENGTH * Math.cos(rotElbow)));
         return new Rotation2d[] {Rotation2d.fromRadians(rotShoulder), Rotation2d.fromRadians(rotElbow)};
     }
 }
