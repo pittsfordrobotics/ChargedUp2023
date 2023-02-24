@@ -81,6 +81,10 @@ public class EndEffector extends SubsystemBase {
         wantedState = WantedState.IDLE;
     }
 
+    public boolean hasPiece() {
+        return actualState == ActualState.CONE_OBTAINED || actualState == ActualState.CUBE_OBTAINED;
+    }
+
     private ActualState handleAll() {
         switch(wantedState) {
             case EXHAUSTING:

@@ -24,7 +24,7 @@ public interface VisionIO {
      * RETRO: uses the green lights
      */
     enum Pipelines {
-        FAR_RANGE(0), MID_RANGE(1), CLOSE_RANGE(2), RETRO(3);
+        FAR_RANGE(0), MID_RANGE(1), CLOSE_RANGE(2), RETRO(3), CONE(4), CUBE(5);
 
         private final int num;
         Pipelines(int num) {

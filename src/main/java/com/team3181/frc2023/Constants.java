@@ -263,14 +263,16 @@ public final class Constants {
         public static final double SHOULDER_I = 0.0;
         public static final double SHOULDER_D = 0.0;
 
-        public static final Rotation2d SHOULDER_OFFSET = Rotation2d.fromRadians(1.716);
-        public static final Rotation2d ELBOW_OFFSET = Rotation2d.fromRadians(9.5);
+        public static final Rotation2d SHOULDER_ABSOLUTE_OFFSET = Rotation2d.fromRadians(0);
+        public static final Rotation2d ELBOW_ABSOLUTE_OFFSET = Rotation2d.fromRadians(0);
+        public static final Rotation2d SHOULDER_MATH_OFFSET = Rotation2d.fromRadians(0); // zero needs to be at shoulder parallel to ground
+        public static final Rotation2d ELBOW_MATH_OFFSET = Rotation2d.fromRadians(0); // zero is in line with shoulder
 
-        public static final Rotation2d ELBOW_MIN = Rotation2d.fromRadians(0.5);
-        public static final Rotation2d ELBOW_MAX = Rotation2d.fromRadians(13.5);
+        public static final Rotation2d ELBOW_MIN = Rotation2d.fromRadians(0.17); // est: 2.79 rad;
+        public static final Rotation2d ELBOW_MAX = Rotation2d.fromRadians(2.79); // est: 0.17 rad;
 
-        public static final Rotation2d SHOULDER_MIN = Rotation2d.fromRadians(0.5);
-        public static final Rotation2d SHOULDER_MAX = Rotation2d.fromRadians(12.5);
+        public static final Rotation2d SHOULDER_MIN = Rotation2d.fromRadians(-1.4); // est -1.22 rad
+        public static final Rotation2d SHOULDER_MAX = Rotation2d.fromRadians(0.96);
 
         public static double WHEEL_TO_CHASSIS = Units.inchesToMeters(4.75);
         public static double CHASSIS_TO_ARM = Units.inchesToMeters(28.9);
@@ -297,6 +299,14 @@ public final class Constants {
 
         public static double SHOULDER_JOINT_POSITION_X = Units.inchesToMeters(14);
         public static double SHOULDER_JOINT_POSITION_Y = WHEEL_TO_CHASSIS + CHASSIS_TO_ARM;
+
+        public static final class ArmPositions {
+            public static Rotation2d STORAGE_SHOULDER = Rotation2d.fromDegrees(-70);
+            public static Rotation2d STORAGE_ELBOW = Rotation2d.fromDegrees(160);
+
+            public static Translation2d SWEEP_MIN = new Translation2d(0.44, 0.15);
+            public static Translation2d SWEEP_MAX = new Translation2d(0.84, 0.15);
+        }
     }
 
     public static final class EndEffectorConstants {
