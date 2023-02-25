@@ -6,14 +6,13 @@ package com.team3181.frc2023;
 
 import com.ctre.phoenix.sensors.Pigeon2Configuration;
 import com.pathplanner.lib.PathConstraints;
-import com.team3181.frc2023.subsystems.leds.LEDStripIO;
-import com.team3181.frc2023.subsystems.leds.LEDStripIORio;
-import com.team3181.frc2023.subsystems.Superstructure.SuperstructurePosition;
 import com.team3181.frc2023.subsystems.endeffector.EndEffectorIO;
 import com.team3181.frc2023.subsystems.endeffector.EndEffectorIOSparkMax;
 import com.team3181.frc2023.subsystems.fourbar.ArmIO;
 import com.team3181.frc2023.subsystems.fourbar.ArmIOElbowSparkMax;
 import com.team3181.frc2023.subsystems.fourbar.ArmIOShoulderSparkMax;
+import com.team3181.frc2023.subsystems.leds.LEDStripIO;
+import com.team3181.frc2023.subsystems.leds.LEDStripIORio;
 import com.team3181.frc2023.subsystems.objectivetracker.NodeSelectorIO;
 import com.team3181.frc2023.subsystems.objectivetracker.NodeSelectorIOServer;
 import com.team3181.frc2023.subsystems.swerve.*;
@@ -260,24 +259,26 @@ public final class Constants {
         public static final double ELBOW_GEAR_RATIO = 5 * 5 * 3;
         public static final double CHAIN_RATIO = 1.0 / 3.0;
 
-        public static final double ELBOW_P = 0.0;
+        public static final double ELBOW_P = 2.0;
         public static final double ELBOW_I = 0.0;
         public static final double ELBOW_D = 0.0;
+        public static final double ELBOW_FF = 0.10994761512128838 * -2;
 
-        public static final double SHOULDER_P = 0.0;
+        public static final double SHOULDER_P = 2.0;
         public static final double SHOULDER_I = 0.0;
         public static final double SHOULDER_D = 0.0;
+        public static final double SHOULDER_FF = 0.13338725687737377 * 2;
 
-        public static final Rotation2d SHOULDER_ABSOLUTE_OFFSET = Rotation2d.fromRadians(0);
-        public static final Rotation2d ELBOW_ABSOLUTE_OFFSET = Rotation2d.fromRadians(0);
-        public static final Rotation2d SHOULDER_MATH_OFFSET = Rotation2d.fromRadians(0); // zero needs to be at shoulder parallel to ground
-        public static final Rotation2d ELBOW_MATH_OFFSET = Rotation2d.fromRadians(0); // zero is in line with shoulder
+        public static final Rotation2d SHOULDER_ABSOLUTE_OFFSET = Rotation2d.fromRadians(0.337);
+        public static final Rotation2d ELBOW_ABSOLUTE_OFFSET = Rotation2d.fromRadians(0.255);
+        public static final Rotation2d SHOULDER_MATH_OFFSET = Rotation2d.fromRadians(-1.22); // zero needs to be at shoulder parallel to ground
+        public static final Rotation2d ELBOW_MATH_OFFSET = Rotation2d.fromRadians(-0.62); // zero is in line with shoulder
 
-        public static final Rotation2d ELBOW_MIN = Rotation2d.fromRadians(-2.79); // est: 2.79 rad;
-        public static final Rotation2d ELBOW_MAX = Rotation2d.fromRadians(2.79); // est: 0.17 rad;
+        public static final Rotation2d ELBOW_MIN = Rotation2d.fromRadians(0); // est: 2.79 rad;
+        public static final Rotation2d ELBOW_MAX = Rotation2d.fromRadians(1.11); // est: 0.17 rad;
 
-        public static final Rotation2d SHOULDER_MIN = Rotation2d.fromRadians(-1.4); // est -1.22 rad
-        public static final Rotation2d SHOULDER_MAX = Rotation2d.fromRadians(1.09);
+        public static final Rotation2d SHOULDER_MIN = Rotation2d.fromRadians(0); // est -1.22 rad
+        public static final Rotation2d SHOULDER_MAX = Rotation2d.fromRadians(2);
 
         public static double WHEEL_TO_CHASSIS = Units.inchesToMeters(4.75);
         public static double CHASSIS_TO_ARM = Units.inchesToMeters(28.9);
@@ -290,8 +291,8 @@ public final class Constants {
         public static double ELBOW_PIVOT_LENGTH = Units.inchesToMeters(1.5 + (1.0/16.0));
         public static double ELBOW_LENGTH = ELBOW_FULL_LENGTH - ELBOW_PIVOT_LENGTH;
 
-        public static double SHOULDER_MOI_CENTER = 0.090879665 * 2; // kg m^2
-        public static double ELBOW_MOI_CENTER = 0.028003 * 2; // kg m^2
+        public static double SHOULDER_MOI = 0.22952; // kg m^2
+        public static double ELBOW_MOI = 1.417864996; // kg m^2
 
         public static double SHOULDER_CG = Units.inchesToMeters(20.74886);
         public static double ELBOW_CG = Units.inchesToMeters(13.998858);
@@ -299,8 +300,8 @@ public final class Constants {
         public static double SHOULDER_CG_RADIUS = SHOULDER_CG - SHOULDER_PIVOT_LENGTH;
         public static double ELBOW_CG_RADIUS = ELBOW_CG - ELBOW_PIVOT_LENGTH;
 
-        public static double SHOULDER_MASS = Units.lbsToKilograms(0.6721969 * 2);
-        public static double ELBOW_MASS = Units.lbsToKilograms(0.6604 * 2);
+        public static double SHOULDER_MASS = Units.lbsToKilograms(5.45192);
+        public static double ELBOW_MASS = Units.lbsToKilograms(8.745 - 6); // elbow + end effector
 
         public static double SHOULDER_JOINT_POSITION_X = Units.inchesToMeters(-14); // zero is front of chassis at ground level
         public static double SHOULDER_JOINT_POSITION_Y = WHEEL_TO_CHASSIS + CHASSIS_TO_ARM;
@@ -341,9 +342,5 @@ public final class Constants {
     public static final class LEDConstants {
         public static final int PWM_PORT = 0;
         public static final int NUMBER = 20;
-    }
-
-    public static final class SuperstructureConstants {
-        public static final SuperstructurePosition GROUND_INTAKE = new SuperstructurePosition(Rotation2d.fromRadians(0), Rotation2d.fromRadians(0));
     }
 }

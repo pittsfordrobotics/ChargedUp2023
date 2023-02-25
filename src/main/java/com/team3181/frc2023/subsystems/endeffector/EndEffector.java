@@ -15,6 +15,7 @@ public class EndEffector extends SubsystemBase {
     private final EndEffectorIOInputsAutoLogged inputs = new EndEffectorIOInputsAutoLogged();
 
     private WantedState wantedState = WantedState.IDLE;
+    private WantedState lastWantedState = WantedState.IDLE;
     private ActualState actualState = ActualState.IDLE;
     private final Vector<Double> intakeCurrents = new Vector<>();
     private final int currentCycles = 20;
@@ -61,6 +62,7 @@ public class EndEffector extends SubsystemBase {
                     // last thing command to do is call back and set state here, removes need for
                     break;
             }
+            lastWantedState = wantedState;
 
             Logger.getInstance().recordOutput("End Effector/Wanted State", wantedState.toString());
             Logger.getInstance().recordOutput("End Effector/Actual State", actualState.toString());
@@ -91,7 +93,7 @@ public class EndEffector extends SubsystemBase {
             case INTAKING:
                 intakeCurrents.remove(0);
                 intakeCurrents.add(inputs.currentAmps);
-                return checkCurrent();
+                return checkCurrent(lastWantedState == WantedState.IDLE);
             case IDLE:
             default:
                 intakeCurrents.clear();
@@ -100,8 +102,8 @@ public class EndEffector extends SubsystemBase {
         }
     }
 
-    private ActualState checkCurrent() {
-        if (actualState == ActualState.OBTAINED) {
+    private ActualState checkCurrent(boolean newCycle) {
+        if (actualState == ActualState.OBTAINED && !newCycle) {
             return actualState;
         }
         double sum = 0;

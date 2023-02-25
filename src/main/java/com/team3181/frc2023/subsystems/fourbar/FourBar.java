@@ -5,12 +5,9 @@ import com.team3181.frc2023.Constants;
 import com.team3181.frc2023.Constants.EndEffectorConstants;
 import com.team3181.frc2023.Constants.FourBarConstants;
 import com.team3181.frc2023.Constants.SwerveConstants;
-import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.numbers.N2;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -47,37 +44,37 @@ public class FourBar extends SubsystemBase {
         Logger.getInstance().processInputs("Shoulder", inputs[0]);
         Logger.getInstance().processInputs("Elbow", inputs[1]);
 
-        System.out.println(forwardWithEndEffector(new Rotation2d[] {
-                Rotation2d.fromRadians(SmartDashboard.getNumber("number x", 0)),
-                Rotation2d.fromRadians(SmartDashboard.getNumber("number y", 0))
-        }).toString());
+        setRotations(new Rotation2d[] {
+                Rotation2d.fromRadians(SmartDashboard.getNumber("shoulder", 0)),
+                Rotation2d.fromRadians(SmartDashboard.getNumber("elbow", 0))
+        });
 
     }
 
     public void hold() {
-        Vector<N2> pos = new Vector<N2>(VecBuilder.fill(inputs[0].armPositionRad, inputs[1].armPositionRad));
-        Vector<N2> ff = ArmDynamics.getInstance().feedforward(pos);
-        setArmVoltage(0, ff.get(0, 0));
-        setArmVoltage(1, ff.get(1, 0));
+        setArmVoltage(0, FourBarConstants.SHOULDER_FF);
+        setArmVoltage(1, FourBarConstants.ELBOW_FF);
     }
 
     public void setArmVoltage(int index, double voltage) {
-        armIO[index].setVoltage(voltage);
+        if (index == 0) {
+            armIO[index].setVoltage(voltage + FourBarConstants.SHOULDER_FF);
+        }
+        else if (index == 1) {
+            armIO[index].setVoltage(voltage + FourBarConstants.ELBOW_FF);
+        }
     }
 
     public void setRotations(Rotation2d[] rotations) {
-        Vector<N2> pos = new Vector<N2>(VecBuilder.fill(inputs[0].armPositionRad, inputs[1].armPositionRad));
-        Vector<N2> ff = ArmDynamics.getInstance().feedforward(pos);
-
         Boolean[] illegal = checkIllegal(rotations);
 
         if (!illegal[0]) {
             shoulderPID.setSetpoint(rotations[0].getRadians());
-            armIO[0].setVoltage(shoulderPID.calculate(inputs[0].armPositionRad) + ff.get(0, 0));
+            armIO[0].setVoltage(shoulderPID.calculate(inputs[0].armPositionRad) + FourBarConstants.SHOULDER_FF);
         }
         if (!illegal[1]) {
             elbowPID.setSetpoint(rotations[1].getRadians());
-            armIO[1].setVoltage(shoulderPID.calculate(inputs[1].armPositionRad) + ff.get(1, 0));
+            armIO[1].setVoltage(shoulderPID.calculate(inputs[1].armPositionRad) + FourBarConstants.ELBOW_FF);
         }
     }
 

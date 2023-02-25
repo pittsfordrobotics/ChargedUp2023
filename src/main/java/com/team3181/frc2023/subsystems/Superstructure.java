@@ -1,5 +1,6 @@
 package com.team3181.frc2023.subsystems;
 
+import com.team3181.frc2023.Constants.FourBarConstants.ArmPositions;
 import com.team3181.frc2023.subsystems.endeffector.EndEffector;
 import com.team3181.frc2023.subsystems.fourbar.FourBar;
 import com.team3181.frc2023.subsystems.leds.LEDs;
@@ -9,6 +10,7 @@ import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker.NodeLev
 import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker.Objective;
 import com.team3181.frc2023.subsystems.swerve.Swerve;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
@@ -26,13 +28,16 @@ public class Superstructure extends SubsystemBase {
     }
 
     enum StructureState {
-        IDLE, INTAKE_GROUND, INTAKE_MID, EXPEL, MOVING, OBJECTIVE
+        IDLE, HOME, INTAKE_GROUND, INTAKE_MID, EXHAUST, OBJECTIVE
+    }
+
+    enum GamePiece {
+        CONE, CUBE
     }
 
     private StructureState systemState = StructureState.IDLE;
     private StructureState wantedState = StructureState.IDLE;
-    private boolean wantLunge = false;
-    private boolean aligned = false;
+    private double sweepGlobal = 0;
     private Objective objective;
 
     private final static Superstructure INSTANCE = new Superstructure();
@@ -48,52 +53,12 @@ public class Superstructure extends SubsystemBase {
     @Override
     public void periodic() {
         boolean shouldAutoRetract = shouldAutoRetract();
-        boolean shouldLunge = wantLunge;
         objective = ObjectiveTracker.getInstance().getObjective();
         FourBar fourBar = FourBar.getInstance();
         EndEffector endEffector = EndEffector.getInstance();
         StructureState state = StructureState.IDLE;
-
-        switch (wantedState) {
-            case OBJECTIVE:
-                state = StructureState.OBJECTIVE;
-                break;
-            case INTAKE_GROUND:
-                state = StructureState.INTAKE_GROUND;
-                break;
-            case INTAKE_MID:
-                state = StructureState.INTAKE_MID;
-                break;
-            case EXPEL:
-                state = StructureState.EXPEL;
-                break;
-            case MOVING:
-                state = StructureState.MOVING;
-                break;
-            case IDLE:
-            default:
-                state = StructureState.IDLE;
-                break;
-        }
-        if (state != systemState) {
-            systemState = state;
-        }
-
-        switch (systemState) {
-            case OBJECTIVE:
-                switch (objective.nodeLevel) {
-                    case HYBRID:
-                    case MID:
-                    case HIGH:
-                    default:
-                }
-                break;
-            case MOVING:
-                break;
-            case IDLE:
-            default:
-                state = StructureState.IDLE;
-        }
+        GamePiece gamePiece = GamePiece.CONE;
+        double sweepLocal = sweepGlobal;
 
         // update LEDs
         {
@@ -108,35 +73,121 @@ public class Superstructure extends SubsystemBase {
                 } else {
                     leds.setLEDMode(LEDModes.FLASH_CUBE);
                 }
+                gamePiece = GamePiece.CUBE;
             } else if (objective.nodeRow == 0 || objective.nodeRow == 3 || objective.nodeRow == 6) {
                 if (endEffector.hasPiece()) {
                     leds.setLEDMode(LEDModes.CONE);
                 } else {
                     leds.setLEDMode(LEDModes.FLASH_CONE);
                 }
+                gamePiece = GamePiece.CONE;
             } else {
                 if (endEffector.hasPiece()) {
                     leds.setLEDMode(LEDModes.CONE);
                 } else {
                     leds.setLEDMode(LEDModes.FLASH_CONE);
                 }
+                gamePiece = GamePiece.CONE;
             }
+        }
+
+        switch (wantedState) {
+            case OBJECTIVE:
+                state = StructureState.OBJECTIVE;
+                break;
+            case INTAKE_GROUND:
+                state = StructureState.INTAKE_GROUND;
+                break;
+            case INTAKE_MID:
+                state = StructureState.INTAKE_MID;
+                break;
+            case HOME:
+                state = StructureState.HOME;
+                break;
+            case EXHAUST:
+                state = StructureState.EXHAUST;
+                break;
+            case IDLE:
+            default:
+                state = shouldAutoRetract ? StructureState.HOME : StructureState.IDLE;
+                break;
+        }
+        if (state != systemState) {
+            if (systemState == StructureState.INTAKE_GROUND || systemState == StructureState.INTAKE_MID) {
+                endEffector.idle();
+            }
+            systemState = state;
+        }
+
+        switch (systemState) {
+            case OBJECTIVE:
+                switch (objective.nodeLevel) {
+                    case HYBRID:
+                        fourBar.setRotations(fourBar.solve(ArmPositions.HYBRID, true));
+                        break;
+                    case MID:
+                        if (gamePiece == GamePiece.CONE) {
+                            fourBar.setRotations(fourBar.solve(ArmPositions.MID_CONE, true));
+                        }
+                        else {
+                            fourBar.setRotations(fourBar.solve(ArmPositions.MID_CUBE, true));
+                        }
+                        break;
+                    case HIGH:
+                        if (gamePiece == GamePiece.CONE) {
+                            fourBar.setRotations(fourBar.solve(ArmPositions.HIGH_CONE, true));
+                        }
+                        else {
+                            fourBar.setRotations(fourBar.solve(ArmPositions.HIGH_CUBE, true));
+                        }
+                }
+                break;
+            case INTAKE_GROUND:
+                Translation2d pos = new Translation2d(ArmPositions.SWEEP_MIN.getX() + sweepLocal * (ArmPositions.SWEEP_MAX.getX() - ArmPositions.SWEEP_MIN.getX()), ArmPositions.SWEEP_MIN.getY());
+                fourBar.setRotations(FourBar.getInstance().solve(pos, true));
+                endEffector.intake();
+                break;
+            case INTAKE_MID:
+                fourBar.setRotations(FourBar.getInstance().solve(ArmPositions.MID_INTAKE, true));
+                endEffector.intake();
+            case EXHAUST:
+                endEffector.exhaust();
+                break;
+            case IDLE:
+                fourBar.hold();
+                break;
+            case HOME:
+            default:
+                fourBar.setRotations(new Rotation2d[] {ArmPositions.STORAGE_SHOULDER, ArmPositions.STORAGE_ELBOW});
+                break;
         }
 
         Logger.getInstance().recordOutput("Superstructure/Wanted State", wantedState.toString());
         Logger.getInstance().recordOutput("Superstructure/System State", systemState.toString());
     }
 
-    public void setWantedState(StructureState state) {
-        wantedState = state;
+    public void idle() {
+        wantedState = StructureState.IDLE;
     }
 
-    public void collectGround() {
+    public void setObjective() {
+        wantedState = StructureState.OBJECTIVE;
+    }
+
+    /**
+     *
+     * @param sweep from 0-1
+     */
+    public void collectGround(double sweep) {
         wantedState = StructureState.INTAKE_GROUND;
     }
 
     public void collectMid() {
         wantedState = StructureState.INTAKE_MID;
+    }
+
+    public void home() {
+        wantedState = StructureState.HOME;
     }
 
     private boolean shouldAutoRetract() {
