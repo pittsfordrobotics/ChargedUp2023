@@ -315,7 +315,7 @@ public final class Constants {
         public static double SHOULDER_MASS = Units.lbsToKilograms(0.6721969 * 2);
         public static double ELBOW_MASS = Units.lbsToKilograms(0.6604 * 2);
 
-        public static double SHOULDER_JOINT_POSITION_X = Units.inchesToMeters(14);
+        public static double SHOULDER_JOINT_POSITION_X = Units.inchesToMeters(-14); // zero is front of chassis at ground level
         public static double SHOULDER_JOINT_POSITION_Y = WHEEL_TO_CHASSIS + CHASSIS_TO_ARM;
 
         public static final class ArmPositions {

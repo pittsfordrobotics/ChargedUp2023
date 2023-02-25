@@ -4,7 +4,6 @@ import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.SparkMaxAbsoluteEncoder;
-import com.revrobotics.SparkMaxPIDController;
 import com.team3181.frc2023.Constants.FourBarConstants;
 import com.team3181.lib.drivers.LazySparkMax;
 import edu.wpi.first.math.util.Units;
@@ -18,20 +17,11 @@ public class ArmIOShoulderSparkMax implements ArmIO {
         mainMotor = new LazySparkMax(FourBarConstants.CAN_SHOULDER_MASTER, IdleMode.kBrake, 80, false, false);
         followerMotor = new LazySparkMax(FourBarConstants.CAN_SHOULDER_FOLLOWER, IdleMode.kBrake, 80, mainMotor, false, true);
         absoluteEncoder = mainMotor.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle);
-        SparkMaxPIDController pidController = mainMotor.getPIDController();
 
         absoluteEncoder.setInverted(true);
         absoluteEncoder.setPositionConversionFactor(2 * Math.PI * FourBarConstants.CHAIN_RATIO);
         absoluteEncoder.setVelocityConversionFactor(2 * Math.PI * FourBarConstants.CHAIN_RATIO / 60.0);
         absoluteEncoder.setZeroOffset(FourBarConstants.SHOULDER_ABSOLUTE_OFFSET.getRadians());
-
-        pidController.setP(FourBarConstants.SHOULDER_P);
-        pidController.setI(FourBarConstants.SHOULDER_I);
-        pidController.setD(FourBarConstants.SHOULDER_D);
-        pidController.setFeedbackDevice(absoluteEncoder);
-        pidController.setPositionPIDWrappingMinInput(0);
-        pidController.setPositionPIDWrappingMaxInput(2 * Math.PI / FourBarConstants.CHAIN_RATIO);
-        pidController.setPositionPIDWrappingEnabled(true);
 
         mainMotor.burnFlash();
     }
@@ -47,9 +37,7 @@ public class ArmIOShoulderSparkMax implements ArmIO {
 
     @Override
     public void setVoltage(double volts) {
-//        if (absoluteEncoder.getPosition() < FourBarConstants.SHOULDER_MAX.getRadians() && absoluteEncoder.getPosition() > FourBarConstants.SHOULDER_MIN.getRadians()) {
-            mainMotor.setVoltage(volts);
-//        }
+        mainMotor.setVoltage(volts);
     }
 
     @Override

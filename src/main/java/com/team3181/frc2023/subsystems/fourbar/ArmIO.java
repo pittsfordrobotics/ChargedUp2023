@@ -16,7 +16,5 @@ public interface ArmIO {
 
     default void setVoltage(double volts) {}
 
-    default void setPosition(double position) {}
-
     default void setBrakeMode(boolean enable) {}
 }
