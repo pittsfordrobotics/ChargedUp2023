@@ -2,11 +2,15 @@ package com.team3181.frc2023.subsystems.fourbar;
 
 
 import com.team3181.frc2023.Constants;
+import com.team3181.frc2023.Constants.EndEffectorConstants;
 import com.team3181.frc2023.Constants.FourBarConstants;
 import com.team3181.frc2023.Constants.SwerveConstants;
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.numbers.N2;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -43,10 +47,18 @@ public class FourBar extends SubsystemBase {
         Logger.getInstance().processInputs("Shoulder", inputs[0]);
         Logger.getInstance().processInputs("Elbow", inputs[1]);
 
-        System.out.println(forward(new Rotation2d[] {
+        System.out.println(forwardWithEndEffector(new Rotation2d[] {
                 Rotation2d.fromRadians(SmartDashboard.getNumber("number x", 0)),
                 Rotation2d.fromRadians(SmartDashboard.getNumber("number y", 0))
         }).toString());
+
+    }
+
+    public void hold() {
+        Vector<N2> pos = new Vector<N2>(VecBuilder.fill(inputs[0].armPositionRad, inputs[1].armPositionRad));
+        Vector<N2> ff = ArmDynamics.getInstance().feedforward(pos);
+        setArmVoltage(0, ff.get(0, 0));
+        setArmVoltage(1, ff.get(1, 0));
     }
 
     public void setArmVoltage(int index, double voltage) {
@@ -54,11 +66,19 @@ public class FourBar extends SubsystemBase {
     }
 
     public void setRotations(Rotation2d[] rotations) {
-        shoulderPID.setSetpoint(rotations[0].getRadians());
-        armIO[0].setVoltage(shoulderPID.calculate(inputs[0].armPositionRad));
+        Vector<N2> pos = new Vector<N2>(VecBuilder.fill(inputs[0].armPositionRad, inputs[1].armPositionRad));
+        Vector<N2> ff = ArmDynamics.getInstance().feedforward(pos);
 
-        elbowPID.setSetpoint(rotations[1].getRadians());
-        armIO[1].setVoltage(shoulderPID.calculate(inputs[1].armPositionRad));
+        Boolean[] illegal = checkIllegal(rotations);
+
+        if (!illegal[0]) {
+            shoulderPID.setSetpoint(rotations[0].getRadians());
+            armIO[0].setVoltage(shoulderPID.calculate(inputs[0].armPositionRad) + ff.get(0, 0));
+        }
+        if (!illegal[1]) {
+            elbowPID.setSetpoint(rotations[1].getRadians());
+            armIO[1].setVoltage(shoulderPID.calculate(inputs[1].armPositionRad) + ff.get(1, 0));
+        }
     }
 
     /** Converts joint angles to the end effector position. */
@@ -88,10 +108,10 @@ public class FourBar extends SubsystemBase {
         return new Translation2d(
                 FourBarConstants.SHOULDER_JOINT_POSITION_X
                         + FourBarConstants.SHOULDER_LENGTH * Math.cos(rotations[0].getRadians())
-                        + (FourBarConstants.ELBOW_LENGTH) * Math.cos(rotations[0].getRadians() + rotations[1].getRadians()),
+                        + (FourBarConstants.ELBOW_LENGTH + EndEffectorConstants.LENGTH) * Math.cos(rotations[0].getRadians() + rotations[1].getRadians()),
                 FourBarConstants.SHOULDER_JOINT_POSITION_Y
                         + FourBarConstants.SHOULDER_LENGTH * Math.sin(rotations[0].getRadians())
-                        + FourBarConstants.ELBOW_LENGTH * Math.sin(rotations[0].getRadians() + rotations[1].getRadians())
+                        + (FourBarConstants.ELBOW_LENGTH + EndEffectorConstants.LENGTH) * Math.sin(rotations[0].getRadians() + rotations[1].getRadians())
         );
     }
 
@@ -122,11 +142,33 @@ public class FourBar extends SubsystemBase {
         return new Rotation2d[] {Rotation2d.fromRadians(rotShoulder), Rotation2d.fromRadians(rotElbow)};
     }
 
-//    private Boolean[] checkIllegal(Rotation2d[] rotations) {
-//        Rotation2d[] shoulderConstant = new Rotation2d[] {Rotation2d.fromRadians(inputs[0].armPositionRad), rotations[1]};
-//        Rotation2d[] elbowConstant = new Rotation2d[] {rotations[0], Rotation2d.fromRadians(inputs[1].armPositionRad)};
-////        if (forward()) {
-////
-////        }
-//    }
+    /**
+     *
+     * @param rotations
+     * @return whether it is illegal to move for {shoulder, elbow}
+     */
+    private Boolean[] checkIllegal(Rotation2d[] rotations) {
+        Rotation2d[] shoulderConstant = new Rotation2d[] {Rotation2d.fromRadians(inputs[0].armPositionRad), rotations[1]};
+        Rotation2d[] elbowConstant = new Rotation2d[] {rotations[0], Rotation2d.fromRadians(inputs[1].armPositionRad)};
+
+        Translation2d endPositionShoulder = forwardWithEndEffector(elbowConstant);
+        Translation2d endPositionElbow = forwardWithEndEffector(shoulderConstant);
+
+        return new Boolean[] {checkIllegal(endPositionShoulder), checkIllegal(endPositionElbow)};
+    }
+
+    /**
+     *
+     * @param endEffectorPos
+     * @return whether it is illegal to move there
+     */
+    private boolean checkIllegal(Translation2d endEffectorPos) {
+        if (endEffectorPos.getX() < 0 && endEffectorPos.getY() < FourBarConstants.WHEEL_TO_CHASSIS) {
+            return true;
+        }
+        else if (endEffectorPos.getY() < 0) {
+            return true;
+        }
+        return false;
+    }
 }

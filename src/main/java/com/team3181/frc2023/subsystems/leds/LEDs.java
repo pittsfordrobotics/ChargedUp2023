@@ -7,25 +7,22 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 
 public class LEDs extends SubsystemBase {
-    private final LEDStripIO leftLEDs;
-    private final LEDStripIO rightLEDs;
+    private final LEDStripIO leds;
     private final Timer timer = new Timer();
     private int initialRainbowHue = 0;
 
     public enum LEDModes {
-        CONE, CUBE, FLASH_CONE, FLASH_CUBE, RAINBOW, GOOD, BAD, ERROR, IDLE
+        CONE, CUBE, FLASH_CONE, FLASH_CUBE, RAINBOW, GOOD, BAD, HAPPY, ERROR, IDLE
     }
     private LEDModes ledMode = LEDModes.IDLE;
 
-    private final static LEDs INSTANCE = new LEDs(RobotConstants.LEFT_LEDS, RobotConstants.RIGHT_LEDS);
+    private final static LEDs INSTANCE = new LEDs(RobotConstants.LEDS);
 
     public static LEDs getInstance() {
         return INSTANCE;
     }
-
-    private LEDs(LEDStripIO leftLEDs, LEDStripIO rightLEDs) {
-        this.leftLEDs = leftLEDs;
-        this.rightLEDs = rightLEDs;
+    private LEDs(LEDStripIO leds) {
+        this.leds = leds;
         timer.start();
     }
 
@@ -39,33 +36,25 @@ public class LEDs extends SubsystemBase {
             case GOOD -> setColor(Color.kGreen);
             case BAD -> setColor(Color.kRed);
             case RAINBOW -> setRainbow();
+            case HAPPY -> flashColor(Color.kGreen);
             case ERROR -> flashColor(Color.kRed);
-            case IDLE -> setOff();
             default -> setOff();
         }
-        leftLEDs.setBuffer();
-        rightLEDs.setBuffer();
+        leds.setBuffer();
 
         Logger.getInstance().recordOutput("LEDS/Current Mode", ledMode.toString());
     }
 
     private void setOff() {
-        for (int i = 0; i < leftLEDs.getLength(); i++) {
-            leftLEDs.setRGB(i, 0, 0, 0);
-        }
-        for (int i = 0; i < rightLEDs.getLength(); i++) {
-            rightLEDs.setRGB(i, 0, 0, 0);
+        for (int i = 0; i < leds.getLength(); i++) {
+            leds.setRGB(i, 0, 0, 0);
         }
     }
 
     private void setRainbow() {
-        for (var i = 0; i < leftLEDs.getLength(); i++) {
-            final int hue = (initialRainbowHue + (i * 180 / leftLEDs.getLength())) % 180;
-            leftLEDs.setHSV(i, hue, 255, 128);
-        }
-        for (var i = 0; i < rightLEDs.getLength(); i++) {
-            final int hue = (initialRainbowHue + (i * 180 / rightLEDs.getLength())) % 180;
-            rightLEDs.setHSV(i, hue, 255, 128);
+        for (var i = 0; i < leds.getLength(); i++) {
+            final int hue = (initialRainbowHue + (i * 180 / leds.getLength())) % 180;
+            leds.setHSV(i, hue, 255, 128);
         }
         initialRainbowHue += 3;
         initialRainbowHue %= 180;
@@ -84,11 +73,8 @@ public class LEDs extends SubsystemBase {
     }
 
     private void setColor(Color color) {
-        for (int i = 0; i < leftLEDs.getLength(); i++) {
-            leftLEDs.setRGB(i, (int)(color.red * 255), (int)(color.green * 255), (int)(color.blue * 255));
-        }
-        for (int i = 0; i < rightLEDs.getLength(); i++) {
-            rightLEDs.setRGB(i, (int)(color.red * 255), (int)(color.green * 255), (int)(color.blue * 255));
+        for (int i = 0; i < leds.getLength(); i++) {
+            leds.setRGB(i, (int)(color.red * 255), (int)(color.green * 255), (int)(color.blue * 255));
         }
     }
 

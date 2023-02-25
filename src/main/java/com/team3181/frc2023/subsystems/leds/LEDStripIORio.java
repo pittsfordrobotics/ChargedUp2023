@@ -4,8 +4,8 @@ import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 
 public class LEDStripIORio implements LEDStripIO {
-    private AddressableLED ledStrip;
-    private AddressableLEDBuffer ledBuffer;
+    private final AddressableLED ledStrip;
+    private final AddressableLEDBuffer ledBuffer;
 
     public LEDStripIORio(int pwmPort, int ledNumber) {
         ledStrip = new AddressableLED(pwmPort);

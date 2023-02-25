@@ -42,8 +42,7 @@ public final class Constants {
         public final static GyroIO GYRO;
         public final static TankIO TANK;
         public final static VisionIO VISION;
-        public final static LEDStripIO LEFT_LEDS;
-        public final static LEDStripIO RIGHT_LEDS;
+        public final static LEDStripIO LEDS;
         public final static ArmIO SHOULDER;
         public final static ArmIO ELBOW;
         public final static NodeSelectorIO NODE_SELECTOR;
@@ -80,10 +79,7 @@ public final class Constants {
                 BR_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSparkMax(SwerveConstants.CAN_BR_DRIVE, SwerveConstants.CAN_BR_STEER, SwerveConstants.BR_OFFSET);
                 GYRO = RobotConstants.IS_TANK ? new GyroIO(){} : new GyroIOPigeon();
                 VISION = RobotConstants.IS_TANK ? new VisionIO() {} : new VisionIOLimelight();
-                LEFT_LEDS = RobotConstants.IS_TANK ? new LEDStripIO(){} : new LEDStripIORio(LEDConstants.LEFT_PWM, LEDConstants.LEFT_NUMBER);
-                RIGHT_LEDS = new LEDStripIO() {};
-//                RIGHT_LEDS = RobotConstants.IS_TANK ? new LEDStripIO(){} : new LEDStripIORio(LEDConstants.RIGHT_PWM, LEDConstants.RIGHT_NUMBER);
-                VISION = new VisionIOLimelight();
+                LEDS = RobotConstants.IS_TANK ? new LEDStripIO(){} : new LEDStripIORio(LEDConstants.PWM_PORT, LEDConstants.NUMBER);
                 END_EFFECTOR = new EndEffectorIOSparkMax();
             }
             else {
@@ -96,8 +92,7 @@ public final class Constants {
                 BR_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSim();
                 GYRO = RobotConstants.IS_TANK ? new GyroIO(){} : new GyroIOSim();
                 VISION = new VisionIOSim();
-                LEFT_LEDS = new LEDStripIO() {};
-                RIGHT_LEDS = new LEDStripIO() {};
+                LEDS = new LEDStripIO() {};
                 END_EFFECTOR = new EndEffectorIO() {};
             }
             NODE_SELECTOR = new NodeSelectorIOServer();
@@ -256,14 +251,6 @@ public final class Constants {
         public static final TrapezoidProfile.Constraints MAX_ROT_CONSTRAINTS = new TrapezoidProfile.Constraints(MAX_ANGULAR_VELOCITY_METERS_PER_SECOND, MAX_ANGULAR_ACCELERATION_METERS_PER_SECOND_SQUARED);
     }
 
-    public static final class LEDConstants {
-        public static final int LEFT_PWM = 0;
-        public static final int LEFT_NUMBER = 180;
-
-        public static final int RIGHT_PWM = 1;
-        public static final int RIGHT_NUMBER = 10;
-    }
-
     public static final class FourBarConstants {
         public static final int CAN_SHOULDER_MASTER = 10;
         public static final int CAN_SHOULDER_FOLLOWER = 11;
@@ -349,6 +336,11 @@ public final class Constants {
         public static double LENGTH = Units.inchesToMeters(7.15);
         public static double CUBE_CENTER = Units.inchesToMeters(6.275);
         public static double CONE_CENTER = Units.inchesToMeters(3.6);
+    }
+
+    public static final class LEDConstants {
+        public static final int PWM_PORT = 0;
+        public static final int NUMBER = 20;
     }
 
     public static final class SuperstructureConstants {

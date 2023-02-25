@@ -6,11 +6,10 @@ package com.team3181.frc2023;
 
 import com.team3181.frc2023.commands.AutoCollectAndGo;
 import com.team3181.frc2023.commands.DropClimb;
-import com.team3181.frc2023.subsystems.leds.LEDs;
-import com.team3181.frc2023.subsystems.leds.LEDs.LEDModes;
 import com.team3181.frc2023.subsystems.Superstructure;
 import com.team3181.frc2023.subsystems.endeffector.EndEffector;
 import com.team3181.frc2023.subsystems.fourbar.FourBar;
+import com.team3181.frc2023.subsystems.leds.LEDs;
 import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker;
 import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker.Direction;
 import com.team3181.frc2023.subsystems.swerve.Swerve;
@@ -54,7 +53,6 @@ public class RobotContainer {
 //    driverController.a().onTrue(new InstantCommand(endEffector::intake)).onFalse(new InstantCommand(endEffector::idle));
 //    driverController.x().onTrue(new InstantCommand(endEffector::exhaust)).onFalse(new InstantCommand(endEffector::idle));
     driverController.rightTrigger().whileTrue(new InstantCommand(swerve::zeroGyro));
-//    driverController.back().whileTrue(new InstantCommand(swerve::driveX));
 //    driverController.a().whileTrue(new SwervePathing(Paths.TEST_ON_THE_FLY, false));
 //    driverController.a().whileTrue(new SwervePathingOnTheFly(
 //            AutoDrivePoints.LOADING_STATION_TOP_INNER,
@@ -74,7 +72,7 @@ public class RobotContainer {
     driverController.x().whileTrue(new InstantCommand(() -> fourBar.setArmVoltage(1, 2))).whileFalse(new InstantCommand(() -> fourBar.setArmVoltage(1, 0)));
     driverController.y().whileTrue(new InstantCommand(() -> fourBar.setArmVoltage(1, -2))).whileFalse(new InstantCommand(() -> fourBar.setArmVoltage(1, 0)));
     driverController.leftBumper().whileTrue(new InstantCommand(endEffector::intake)).whileFalse(new InstantCommand(endEffector::idle));
-//    driverController.rightBumper().whileTrue(new InstantCommand(endEffector::exhaust)).whileFalse(new InstantCommand(endEffector::idle));
+    driverController.rightBumper().whileTrue(new InstantCommand(endEffector::exhaust)).whileFalse(new InstantCommand(endEffector::idle));
 
     operatorController.povUp().whileTrue(objectiveTracker.shiftNodeCommand(Direction.UP));
     operatorController.povRight().whileTrue(objectiveTracker.shiftNodeCommand(Direction.RIGHT));

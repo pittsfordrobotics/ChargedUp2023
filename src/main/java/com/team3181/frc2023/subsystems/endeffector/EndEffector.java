@@ -16,7 +16,7 @@ public class EndEffector extends SubsystemBase {
 
     private WantedState wantedState = WantedState.IDLE;
     private ActualState actualState = ActualState.IDLE;
-    private Vector<Double> intakeCurrents = new Vector<>();
+    private final Vector<Double> intakeCurrents = new Vector<>();
     private final int currentCycles = 20;
 
     private final static EndEffector INSTANCE = new EndEffector(Constants.RobotConstants.END_EFFECTOR);
@@ -28,7 +28,7 @@ public class EndEffector extends SubsystemBase {
         IDLE, INTAKING, EXHAUSTING
     }
     public enum ActualState {
-        IDLE, INTAKING, CONE_OBTAINED, CUBE_OBTAINED, EXHAUSTING
+        IDLE, INTAKING, OBTAINED, EXHAUSTING
     }
     private EndEffector(EndEffectorIO io) {
         this.io = io;
@@ -54,8 +54,7 @@ public class EndEffector extends SubsystemBase {
                 case EXHAUSTING: // may need to be 2 different values if we need to shoot cone and cube at different speeds
                     io.setVoltage(Constants.EndEffectorConstants.EXHAUST_POWER);
                     break;
-                case CONE_OBTAINED:
-                case CUBE_OBTAINED:
+                case OBTAINED:
                 case IDLE:
                 default:
                     io.setVoltage(0.0);
@@ -82,7 +81,7 @@ public class EndEffector extends SubsystemBase {
     }
 
     public boolean hasPiece() {
-        return actualState == ActualState.CONE_OBTAINED || actualState == ActualState.CUBE_OBTAINED;
+        return actualState == ActualState.OBTAINED;
     }
 
     private ActualState handleAll() {
@@ -97,12 +96,12 @@ public class EndEffector extends SubsystemBase {
             default:
                 intakeCurrents.clear();
                 for (int i = 0; i < currentCycles; i++) intakeCurrents.add(0.0);
-                return ((actualState != ActualState.CONE_OBTAINED) && (actualState != ActualState.CUBE_OBTAINED)) ? ActualState.IDLE : actualState;
+                return (actualState != ActualState.OBTAINED) ? ActualState.IDLE : actualState;
         }
     }
 
     private ActualState checkCurrent() {
-        if (actualState == ActualState.CONE_OBTAINED || actualState == ActualState.CUBE_OBTAINED) {
+        if (actualState == ActualState.OBTAINED) {
             return actualState;
         }
         double sum = 0;
@@ -111,11 +110,8 @@ public class EndEffector extends SubsystemBase {
         }
         double avg = sum / currentCycles;
         Logger.getInstance().recordOutput("End Effector/Avg Current", avg);
-        if (avg > 11) {
-            return ActualState.CUBE_OBTAINED;
-        }
-        else if (avg > 10) {
-            return ActualState.CONE_OBTAINED;
+        if (avg > 13) {
+            return ActualState.OBTAINED;
         }
         else {
             return ActualState.INTAKING;

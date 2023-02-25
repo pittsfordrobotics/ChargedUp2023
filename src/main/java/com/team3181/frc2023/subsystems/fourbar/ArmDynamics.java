@@ -31,7 +31,13 @@ public class ArmDynamics {
     private final ArmConfig.JointConfig shoulder;
     private final ArmConfig.JointConfig elbow;
 
-    public ArmDynamics() {
+    private final static ArmDynamics INSTANCE = new ArmDynamics();
+
+    public static ArmDynamics getInstance() {
+        return INSTANCE;
+    }
+
+    private ArmDynamics() {
         shoulder = new JointConfig(
                 FourBarConstants.SHOULDER_MASS,
                 FourBarConstants.SHOULDER_LENGTH,
