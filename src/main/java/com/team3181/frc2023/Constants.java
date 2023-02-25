@@ -308,6 +308,14 @@ public final class Constants {
             public static Translation2d SWEEP_MAX = new Translation2d(0.84, 0.15);
 
             public static Translation2d MID_INTAKE = new Translation2d(1, 1.1);
+
+            public static Translation2d HYBRID = new Translation2d(0, 0);
+
+            public static Translation2d MID_CONE = new Translation2d(0, 0);
+            public static Translation2d HIGH_CONE = new Translation2d(0, 0);
+
+            public static Translation2d MID_CUBE = new Translation2d(0, 0);
+            public static Translation2d HIGH_CUBE = new Translation2d(0, 0);
         }
     }
 
