@@ -19,8 +19,8 @@ public class ArmIOElbowSparkMax implements ArmIO {
         SparkMaxPIDController pidController = motor.getPIDController();
 
         absoluteEncoder.setInverted(true);
-        absoluteEncoder.setPositionConversionFactor(2 * Math.PI * FourBarConstants.BELT_RATIO);
-        absoluteEncoder.setVelocityConversionFactor(2 * Math.PI * FourBarConstants.BELT_RATIO / 60.0);
+        absoluteEncoder.setPositionConversionFactor(2 * Math.PI * FourBarConstants.CHAIN_RATIO);
+        absoluteEncoder.setVelocityConversionFactor(2 * Math.PI * FourBarConstants.CHAIN_RATIO / 60.0);
         absoluteEncoder.setZeroOffset(FourBarConstants.ELBOW_ABSOLUTE_OFFSET.getRadians());
 
         pidController.setP(FourBarConstants.ELBOW_P);
@@ -28,7 +28,7 @@ public class ArmIOElbowSparkMax implements ArmIO {
         pidController.setD(FourBarConstants.ELBOW_D);
         pidController.setFeedbackDevice(absoluteEncoder);
         pidController.setPositionPIDWrappingMinInput(0);
-        pidController.setPositionPIDWrappingMaxInput(2 * Math.PI / FourBarConstants.BELT_RATIO);
+        pidController.setPositionPIDWrappingMaxInput(2 * Math.PI / FourBarConstants.CHAIN_RATIO);
         pidController.setPositionPIDWrappingEnabled(true);
 
         motor.burnFlash();

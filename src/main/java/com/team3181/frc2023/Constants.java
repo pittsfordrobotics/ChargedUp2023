@@ -65,7 +65,7 @@ public final class Constants {
             SPARKMAX_HASHMAP.put(SwerveConstants.CAN_BL_STEER, "Back Left Steer");
             SPARKMAX_HASHMAP.put(SwerveConstants.CAN_BR_DRIVE, "Back Right Drive");
             SPARKMAX_HASHMAP.put(SwerveConstants.CAN_BR_STEER, "Back Right Steer");
-            SPARKMAX_HASHMAP.put(EndEffectorConstants.INTAKE_CAN_MAIN, "Intake");
+            SPARKMAX_HASHMAP.put(EndEffectorConstants.CAN_MAIN, "Intake");
             SPARKMAX_HASHMAP.put(FourBarConstants.CAN_SHOULDER_MASTER, "Shoulder Master");
             SPARKMAX_HASHMAP.put(FourBarConstants.CAN_SHOULDER_FOLLOWER, "Shoulder Follower");
             SPARKMAX_HASHMAP.put(FourBarConstants.CAN_ELBOW, "Elbow");
@@ -271,7 +271,7 @@ public final class Constants {
 
         public static final double SHOULDER_GEAR_RATIO = 5 * 4 * 4;
         public static final double ELBOW_GEAR_RATIO = 5 * 5 * 3;
-        public static final double BELT_RATIO = 7.0 / 3.0;
+        public static final double CHAIN_RATIO = 1.0 / 3.0;
 
         public static final double ELBOW_P = 0.0;
         public static final double ELBOW_I = 0.0;
@@ -295,10 +295,6 @@ public final class Constants {
         public static double WHEEL_TO_CHASSIS = Units.inchesToMeters(4.75);
         public static double CHASSIS_TO_ARM = Units.inchesToMeters(28.9);
 
-        public static final double TUBE_THICKNESS = Units.inchesToMeters(0.04);
-        public static final double TUBE_X_RADIUS = Units.inchesToMeters(0.5);
-        public static final double TUBE_Y_RADIUS = Units.inchesToMeters(0.5);
-
         public static double SHOULDER_FULL_LENGTH = Units.inchesToMeters(41.5);
         public static double SHOULDER_PIVOT_LENGTH = Units.inchesToMeters(13);
         public static double SHOULDER_LENGTH = SHOULDER_FULL_LENGTH - SHOULDER_PIVOT_LENGTH;
@@ -307,13 +303,17 @@ public final class Constants {
         public static double ELBOW_PIVOT_LENGTH = Units.inchesToMeters(1.5 + (1.0/16.0));
         public static double ELBOW_LENGTH = ELBOW_FULL_LENGTH - ELBOW_PIVOT_LENGTH;
 
-        public static double END_EFFECTOR_LENGTH = Units.inchesToMeters(7.15);
-        public static double END_EFFECTOR_CUBE_CENTER = Units.inchesToMeters(6.275);
-        public static double END_EFFECTOR_CONE_CENTER = Units.inchesToMeters(3.6);
+        public static double SHOULDER_MOI_CENTER = 0.090879665 * 2; // kg m^2
+        public static double ELBOW_MOI_CENTER = 0.028003 * 2; // kg m^2
 
-        public static double SHOULDER_MASS = Units.lbsToKilograms(1.28 * 2 * (SHOULDER_LENGTH / 47.0)); // thickness: 1/32
-        public static double ELBOW_MASS = Units.lbsToKilograms(1.28 * 2 * (ELBOW_LENGTH / 47.0)); // thickness: 1/32
-        public static double END_EFFECTOR_MASS = Units.lbsToKilograms(93.0 / 16.0);
+        public static double SHOULDER_CG = Units.inchesToMeters(20.74886);
+        public static double ELBOW_CG = Units.inchesToMeters(13.998858);
+
+        public static double SHOULDER_CG_RADIUS = SHOULDER_CG - SHOULDER_PIVOT_LENGTH;
+        public static double ELBOW_CG_RADIUS = ELBOW_CG - ELBOW_PIVOT_LENGTH;
+
+        public static double SHOULDER_MASS = Units.lbsToKilograms(0.6721969 * 2);
+        public static double ELBOW_MASS = Units.lbsToKilograms(0.6604 * 2);
 
         public static double SHOULDER_JOINT_POSITION_X = Units.inchesToMeters(14);
         public static double SHOULDER_JOINT_POSITION_Y = WHEEL_TO_CHASSIS + CHASSIS_TO_ARM;
@@ -342,7 +342,13 @@ public final class Constants {
         public static final double INTAKE_POWER = 7.0;
         public static final double GEARING = 4 * 3 * 3;
 
-        public static final int INTAKE_CAN_MAIN = 9;
+        public static final int CAN_MAIN = 9;
+        public static double MASS = Units.lbsToKilograms(6 +  5.2/ 16.0);
+        public static double CG_RADIUS = Units.inchesToMeters(1.5);
+
+        public static double LENGTH = Units.inchesToMeters(7.15);
+        public static double CUBE_CENTER = Units.inchesToMeters(6.275);
+        public static double CONE_CENTER = Units.inchesToMeters(3.6);
     }
 
     public static final class SuperstructureConstants {

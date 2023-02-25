@@ -21,8 +21,8 @@ public class ArmIOShoulderSparkMax implements ArmIO {
         SparkMaxPIDController pidController = mainMotor.getPIDController();
 
         absoluteEncoder.setInverted(true);
-        absoluteEncoder.setPositionConversionFactor(2 * Math.PI * FourBarConstants.BELT_RATIO);
-        absoluteEncoder.setVelocityConversionFactor(2 * Math.PI * FourBarConstants.BELT_RATIO / 60.0);
+        absoluteEncoder.setPositionConversionFactor(2 * Math.PI * FourBarConstants.CHAIN_RATIO);
+        absoluteEncoder.setVelocityConversionFactor(2 * Math.PI * FourBarConstants.CHAIN_RATIO / 60.0);
         absoluteEncoder.setZeroOffset(FourBarConstants.SHOULDER_ABSOLUTE_OFFSET.getRadians());
 
         pidController.setP(FourBarConstants.SHOULDER_P);
@@ -30,7 +30,7 @@ public class ArmIOShoulderSparkMax implements ArmIO {
         pidController.setD(FourBarConstants.SHOULDER_D);
         pidController.setFeedbackDevice(absoluteEncoder);
         pidController.setPositionPIDWrappingMinInput(0);
-        pidController.setPositionPIDWrappingMaxInput(2 * Math.PI / FourBarConstants.BELT_RATIO);
+        pidController.setPositionPIDWrappingMaxInput(2 * Math.PI / FourBarConstants.CHAIN_RATIO);
         pidController.setPositionPIDWrappingEnabled(true);
 
         mainMotor.burnFlash();
