@@ -268,11 +268,11 @@ public final class Constants {
         public static final Rotation2d SHOULDER_MATH_OFFSET = Rotation2d.fromRadians(0); // zero needs to be at shoulder parallel to ground
         public static final Rotation2d ELBOW_MATH_OFFSET = Rotation2d.fromRadians(0); // zero is in line with shoulder
 
-        public static final Rotation2d ELBOW_MIN = Rotation2d.fromRadians(-1.57); // est: 2.79 rad;
+        public static final Rotation2d ELBOW_MIN = Rotation2d.fromRadians(-2.79); // est: 2.79 rad;
         public static final Rotation2d ELBOW_MAX = Rotation2d.fromRadians(2.79); // est: 0.17 rad;
 
         public static final Rotation2d SHOULDER_MIN = Rotation2d.fromRadians(-1.4); // est -1.22 rad
-        public static final Rotation2d SHOULDER_MAX = Rotation2d.fromRadians(0.96);
+        public static final Rotation2d SHOULDER_MAX = Rotation2d.fromRadians(1.09);
 
         public static double WHEEL_TO_CHASSIS = Units.inchesToMeters(4.75);
         public static double CHASSIS_TO_ARM = Units.inchesToMeters(28.9);
@@ -314,8 +314,8 @@ public final class Constants {
             public static Translation2d MID_CONE = new Translation2d(0, 0);
             public static Translation2d HIGH_CONE = new Translation2d(0, 0);
 
-            public static Translation2d MID_CUBE = new Translation2d(0, 0);
-            public static Translation2d HIGH_CUBE = new Translation2d(0, 0);
+            public static Translation2d MID_CUBE = new Translation2d(Units.inchesToMeters(20.905), Units.inchesToMeters(28-FieldConstants.Grids.cubeEdgeHighInches)); // THIS ONE WORKS
+            public static Translation2d HIGH_CUBE = new Translation2d(Units.inchesToMeters(38), Units.inchesToMeters(40.1-FieldConstants.Grids.cubeEdgeHighInches)); // TODO: THIS DOES NOT WORK FIX IT
         }
     }
 

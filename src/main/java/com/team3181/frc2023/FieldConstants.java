@@ -130,6 +130,7 @@ public final class FieldConstants {
 
         // Z layout
         public static final double cubeEdgeHigh = Units.inchesToMeters(3.0);
+        public static final double cubeEdgeHighInches = 3.0;
         public static final double highCubeZ = Units.inchesToMeters(35.5) - cubeEdgeHigh;
         public static final double midCubeZ = Units.inchesToMeters(23.5) - cubeEdgeHigh;
         public static final double highConeZ = Units.inchesToMeters(46.0);
