@@ -268,7 +268,7 @@ public final class Constants {
         public static final Rotation2d SHOULDER_MATH_OFFSET = Rotation2d.fromRadians(0); // zero needs to be at shoulder parallel to ground
         public static final Rotation2d ELBOW_MATH_OFFSET = Rotation2d.fromRadians(0); // zero is in line with shoulder
 
-        public static final Rotation2d ELBOW_MIN = Rotation2d.fromRadians(0.17); // est: 2.79 rad;
+        public static final Rotation2d ELBOW_MIN = Rotation2d.fromRadians(-1.57); // est: 2.79 rad;
         public static final Rotation2d ELBOW_MAX = Rotation2d.fromRadians(2.79); // est: 0.17 rad;
 
         public static final Rotation2d SHOULDER_MIN = Rotation2d.fromRadians(-1.4); // est -1.22 rad
@@ -306,6 +306,8 @@ public final class Constants {
 
             public static Translation2d SWEEP_MIN = new Translation2d(0.44, 0.15);
             public static Translation2d SWEEP_MAX = new Translation2d(0.84, 0.15);
+
+            public static Translation2d MID_INTAKE = new Translation2d(1, 1.1);
         }
     }
 
