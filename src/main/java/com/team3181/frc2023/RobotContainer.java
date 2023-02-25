@@ -6,6 +6,8 @@ package com.team3181.frc2023;
 
 import com.team3181.frc2023.commands.AutoCollectAndGo;
 import com.team3181.frc2023.commands.DropClimb;
+import com.team3181.frc2023.subsystems.leds.LEDs;
+import com.team3181.frc2023.subsystems.leds.LEDs.LEDModes;
 import com.team3181.frc2023.subsystems.Superstructure;
 import com.team3181.frc2023.subsystems.endeffector.EndEffector;
 import com.team3181.frc2023.subsystems.fourbar.FourBar;
@@ -30,6 +32,7 @@ public class RobotContainer {
   private final Vision vision = Vision.getInstance();
   private final ObjectiveTracker objectiveTracker = ObjectiveTracker.getInstance();
   private final Superstructure superstructure = Superstructure.getInstance();
+  private final LEDs leds = LEDs.getInstance();
 
   private final BetterXboxController driverController = new BetterXboxController(0, BetterXboxController.Humans.DRIVER);
   private final BetterXboxController operatorController = new BetterXboxController(1, BetterXboxController.Humans.OPERATOR);
