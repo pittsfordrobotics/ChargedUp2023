@@ -4,10 +4,10 @@
 
 package com.team3181.frc2023;
 
-import com.team3181.frc2023.Constants.RobotConstants;
-import com.team3181.frc2023.commands.*;
-import com.team3181.frc2023.subsystems.swerve.Swerve;
-import com.team3181.frc2023.subsystems.tank.Tank;
+import com.team3181.frc2023.commands.AutoCollectAndGo;
+import com.team3181.frc2023.commands.DropClimb;
+import com.team3181.frc2023.subsystems.leds.LEDs;
+import com.team3181.frc2023.subsystems.leds.LEDs.LEDModes;
 import com.team3181.lib.controller.BetterXboxController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -21,6 +21,8 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 public class RobotContainer {
+  private final LEDs leds = LEDs.getInstance();
+
   private final BetterXboxController driverController = new BetterXboxController(0, BetterXboxController.Humans.DRIVER);
   private final BetterXboxController operatorController = new BetterXboxController(1, BetterXboxController.Humans.OPERATOR);
 
@@ -34,8 +36,8 @@ public class RobotContainer {
 //      competitionButtons();
       testButtons();
 
-    if (!RobotConstants.IS_TANK) Swerve.getInstance().setDefaultCommand(new SwerveDriveFieldXbox());
-    if (RobotConstants.IS_TANK) Tank.getInstance().setDefaultCommand(new TankXbox());
+//    if (!RobotConstants.IS_TANK) Swerve.getInstance().setDefaultCommand(new SwerveDriveFieldXbox());
+//    if (RobotConstants.IS_TANK) Tank.getInstance().setDefaultCommand(new TankXbox());
   }
 
   private void driverDashboardSetup() {
@@ -43,8 +45,14 @@ public class RobotContainer {
   }
 
   private void testButtons() {
-    driverController.a().whileTrue(new InstantCommand(Swerve.getInstance()::zeroGyro));
-    driverController.x().whileTrue(new InstantCommand(Swerve.getInstance()::driveX));
+    driverController.a().whileTrue(new InstantCommand(() -> LEDs.getInstance().setLEDMode(LEDModes.FLASH_CUBE)));
+    driverController.b().whileTrue(new InstantCommand(() -> LEDs.getInstance().setLEDMode(LEDModes.FLASH_CONE)));
+    driverController.x().whileTrue(new InstantCommand(() -> LEDs.getInstance().setLEDMode(LEDModes.IDLE)));
+    driverController.y().whileTrue(new InstantCommand(() -> LEDs.getInstance().setLEDMode(LEDModes.RAINBOW)));
+    driverController.leftBumper().whileTrue(new InstantCommand(() -> LEDs.getInstance().setLEDMode(LEDModes.GOOD)));
+    driverController.rightBumper().whileTrue(new InstantCommand(() -> LEDs.getInstance().setLEDMode(LEDModes.ERROR)));
+//    driverController.a().whileTrue(new InstantCommand(Swerve.getInstance()::zeroGyro));
+//    driverController.x().whileTrue(new InstantCommand(Swerve.getInstance()::driveX));
 //    driverContxroller.a().whileTrue(new SwervePathing(Paths.TEST_ON_THE_FLY, false));
   }
 

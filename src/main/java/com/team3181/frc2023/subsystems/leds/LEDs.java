@@ -43,6 +43,8 @@ public class LEDs extends SubsystemBase {
             case IDLE -> setOff();
             default -> setOff();
         }
+        leftLEDs.setBuffer();
+        rightLEDs.setBuffer();
 
         Logger.getInstance().recordOutput("LEDS/Current Mode", ledMode.toString());
     }
@@ -54,8 +56,6 @@ public class LEDs extends SubsystemBase {
         for (int i = 0; i < rightLEDs.getLength(); i++) {
             rightLEDs.setRGB(i, 0, 0, 0);
         }
-        leftLEDs.setBuffer();
-        rightLEDs.setBuffer();
     }
 
     private void setRainbow() {
@@ -90,8 +90,6 @@ public class LEDs extends SubsystemBase {
         for (int i = 0; i < rightLEDs.getLength(); i++) {
             rightLEDs.setRGB(i, (int)(color.red * 255), (int)(color.green * 255), (int)(color.blue * 255));
         }
-        leftLEDs.setBuffer();
-        rightLEDs.setBuffer();
     }
 
     public void setLEDMode(LEDModes ledMode) {

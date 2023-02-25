@@ -62,7 +62,8 @@ public final class Constants {
                 GYRO = RobotConstants.IS_TANK ? new GyroIO(){} : new GyroIOPigeon();
                 VISION = RobotConstants.IS_TANK ? new VisionIO() {} : new VisionIOLimelight();
                 LEFT_LEDS = RobotConstants.IS_TANK ? new LEDStripIO(){} : new LEDStripIORio(LEDConstants.LEFT_PWM, LEDConstants.LEFT_NUMBER);
-                RIGHT_LEDS = RobotConstants.IS_TANK ? new LEDStripIO(){} : new LEDStripIORio(LEDConstants.RIGHT_PWM, LEDConstants.RIGHT_NUMBER);
+                RIGHT_LEDS = new LEDStripIO() {};
+//                RIGHT_LEDS = RobotConstants.IS_TANK ? new LEDStripIO(){} : new LEDStripIORio(LEDConstants.RIGHT_PWM, LEDConstants.RIGHT_NUMBER);
             }
             else {
                 TANK = RobotConstants.IS_TANK ? new TankIOSim() : new TankIO(){};
@@ -232,9 +233,9 @@ public final class Constants {
 
     public static final class LEDConstants {
         public static final int LEFT_PWM = 0;
-        public static final int LEFT_NUMBER = 0;
+        public static final int LEFT_NUMBER = 180;
 
-        public static final int RIGHT_PWM = 0;
-        public static final int RIGHT_NUMBER = 0;
+        public static final int RIGHT_PWM = 1;
+        public static final int RIGHT_NUMBER = 10;
     }
 }
