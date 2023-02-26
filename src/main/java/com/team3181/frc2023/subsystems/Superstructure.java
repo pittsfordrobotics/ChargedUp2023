@@ -30,7 +30,7 @@ public class Superstructure extends SubsystemBase {
     }
 
     enum StructureState {
-        IDLE, HOME, INTAKE_GROUND, INTAKE_MID, EXHAUST, OBJECTIVE, MANUAL
+        IDLE, HOME, INTAKE_GROUND, INTAKE_MID, EXHAUST, OBJECTIVE, OBJECTIVE_GLOBAL, MANUAL
     }
 
     enum GamePiece {
@@ -40,7 +40,8 @@ public class Superstructure extends SubsystemBase {
     private StructureState systemState = StructureState.IDLE;
     private StructureState wantedState = StructureState.IDLE;
     private double sweepGlobal = 0;
-    private Objective objective;
+    private Objective objectiveGlobal;
+    private GamePiece gamePieceGlobal;
 
     private final static Superstructure INSTANCE = new Superstructure();
 
@@ -48,18 +49,16 @@ public class Superstructure extends SubsystemBase {
         return INSTANCE;
     }
 
-    private Superstructure() {
-        objective = ObjectiveTracker.getInstance().getObjective();
-    }
+    private Superstructure() {}
 
     @Override
     public void periodic() {
         boolean shouldAutoRetract = shouldAutoRetract();
-        objective = ObjectiveTracker.getInstance().getObjective();
+        Objective objectiveLocal = ObjectiveTracker.getInstance().getObjective();
         FourBar fourBar = FourBar.getInstance();
         EndEffector endEffector = EndEffector.getInstance();
         StructureState state = StructureState.IDLE;
-        GamePiece gamePiece = GamePiece.NONE;
+        GamePiece gamePieceLocal = GamePiece.NONE;
         double sweepLocal = sweepGlobal;
 
         // update LEDs
@@ -69,32 +68,37 @@ public class Superstructure extends SubsystemBase {
                 leds.setLEDMode(LEDModes.IDLE);
             } else if (DriverStation.isAutonomous()) {
                 leds.setLEDMode(LEDModes.RAINBOW);
-            } else if (objective.nodeRow == 1 || objective.nodeRow == 4 || objective.nodeRow == 7 || objective.nodeLevel == NodeLevel.HYBRID) {
+            } else if (objectiveLocal.nodeRow == 1 || objectiveLocal.nodeRow == 4 || objectiveLocal.nodeRow == 7 || objectiveLocal.nodeLevel == NodeLevel.HYBRID) {
                 if (endEffector.hasPiece()) {
                     leds.setLEDMode(LEDModes.CUBE);
                 } else {
                     leds.setLEDMode(LEDModes.FLASH_CUBE);
                 }
-                gamePiece = GamePiece.CUBE;
-            } else if (objective.nodeRow == 0 || objective.nodeRow == 3 || objective.nodeRow == 6) {
+                gamePieceLocal = GamePiece.CUBE;
+            } else if (objectiveLocal.nodeRow == 0 || objectiveLocal.nodeRow == 3 || objectiveLocal.nodeRow == 6) {
                 if (endEffector.hasPiece()) {
                     leds.setLEDMode(LEDModes.CONE);
                 } else {
                     leds.setLEDMode(LEDModes.FLASH_CONE);
                 }
-                gamePiece = GamePiece.CONE;
+                gamePieceLocal = GamePiece.CONE;
             } else {
                 if (endEffector.hasPiece()) {
                     leds.setLEDMode(LEDModes.CONE);
                 } else {
                     leds.setLEDMode(LEDModes.FLASH_CONE);
                 }
-                gamePiece = GamePiece.CONE;
+                gamePieceLocal = GamePiece.CONE;
             }
         }
 
         switch (wantedState) {
             case OBJECTIVE:
+                state = StructureState.OBJECTIVE;
+                break;
+            case OBJECTIVE_GLOBAL:
+                objectiveLocal = objectiveGlobal;
+                gamePieceLocal = gamePieceGlobal;
                 state = StructureState.OBJECTIVE;
                 break;
             case INTAKE_GROUND:
@@ -126,24 +130,24 @@ public class Superstructure extends SubsystemBase {
 
         switch (systemState) {
             case OBJECTIVE:
-                switch (objective.nodeLevel) {
+                switch (objectiveLocal.nodeLevel) {
                     case HYBRID:
-                        fourBar.setRotations(fourBar.solve(ArmPositions.HYBRID, true));
+                        fourBar.setRotations(fourBar.solve(ArmPositions.HYBRID, false, true));
                         break;
                     case MID:
-                        if (gamePiece == GamePiece.CONE) {
-                            fourBar.setRotations(fourBar.solve(ArmPositions.MID_CONE, true));
+                        if (gamePieceLocal == GamePiece.CONE) {
+                            fourBar.setRotations(fourBar.solve(ArmPositions.MID_CONE, true, true));
                         }
                         else {
-                            fourBar.setRotations(fourBar.solve(ArmPositions.MID_CUBE, true));
+                            fourBar.setRotations(fourBar.solve(ArmPositions.MID_CUBE, false, true));
                         }
                         break;
                     case HIGH:
-                        if (gamePiece == GamePiece.CONE) {
-                            fourBar.setRotations(fourBar.solve(ArmPositions.HIGH_CONE, true));
+                        if (gamePieceLocal == GamePiece.CONE) {
+                            fourBar.setRotations(fourBar.solve(ArmPositions.HIGH_CONE, true,true));
                         }
                         else {
-                            fourBar.setRotations(fourBar.solve(ArmPositions.HIGH_CUBE, true));
+                            fourBar.setRotations(fourBar.solve(ArmPositions.HIGH_CUBE, false,true));
                         }
                 }
                 if (shouldAutoScore() && fourBar.atSetpoint()) {
@@ -156,11 +160,11 @@ public class Superstructure extends SubsystemBase {
                 break;
             case INTAKE_GROUND:
                 Translation2d pos = new Translation2d(ArmPositions.SWEEP_MIN.getX() + sweepLocal * (ArmPositions.SWEEP_MAX.getX() - ArmPositions.SWEEP_MIN.getX()), ArmPositions.SWEEP_MIN.getY());
-                fourBar.setRotations(FourBar.getInstance().solve(pos, true));
+                fourBar.setRotations(FourBar.getInstance().solve(pos, false, true));
                 endEffector.intake();
                 break;
             case INTAKE_MID:
-                fourBar.setRotations(FourBar.getInstance().solve(ArmPositions.MID_INTAKE, true));
+                fourBar.setRotations(FourBar.getInstance().solve(ArmPositions.MID_INTAKE, false,true));
                 endEffector.intake();
             case EXHAUST:
                 fourBar.hold();
@@ -200,6 +204,12 @@ public class Superstructure extends SubsystemBase {
 
     public void objective() {
         wantedState = StructureState.OBJECTIVE;
+    }
+
+    public void objective(Objective objective, GamePiece gamePiece) {
+        objectiveGlobal = objective;
+        gamePieceGlobal = gamePiece;
+        wantedState = StructureState.OBJECTIVE_GLOBAL;
     }
 
     public void collectGround() {

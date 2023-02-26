@@ -259,6 +259,8 @@ public final class Constants {
         public static final double ELBOW_GEAR_RATIO = 5 * 5 * 3;
         public static final double CHAIN_RATIO = 1.0 / 3.0;
 
+        public static final double PID_CLAMP_VOLTAGE = 5;
+
         public static final double ELBOW_P = -10.0;
         public static final double ELBOW_I = 0.0;
         public static final double ELBOW_D = 0.0;
@@ -274,8 +276,8 @@ public final class Constants {
         public static final Rotation2d SHOULDER_MATH_OFFSET = Rotation2d.fromRadians(-1.3); // zero needs to be at shoulder parallel to ground
         public static final Rotation2d ELBOW_MATH_OFFSET = Rotation2d.fromRadians(-3.52); // zero is in line with shoulder
 
-        public static final Rotation2d ELBOW_MIN = Rotation2d.fromRadians(-1.8); // est: 2.79 rad;
-        public static final Rotation2d ELBOW_MAX = Rotation2d.fromRadians(1.11); // est: 0.17 rad;
+        public static final Rotation2d ELBOW_MIN = Rotation2d.fromDegrees(-140); // est: 2.79 rad;
+        public static final Rotation2d ELBOW_MAX = Rotation2d.fromDegrees(140); // est: 0.17 rad;
 
         public static final Rotation2d SHOULDER_MIN = Rotation2d.fromRadians(-1.3); // est -1.22 rad
         public static final Rotation2d SHOULDER_MAX = Rotation2d.fromRadians(0.78);
@@ -323,8 +325,8 @@ public final class Constants {
             public static Translation2d MID_CONE = new Translation2d(0, 0);
             public static Translation2d HIGH_CONE = new Translation2d(0, 0);
 
-            public static Translation2d MID_CUBE = new Translation2d(Units.inchesToMeters(20.905), Units.inchesToMeters(28-FieldConstants.Grids.cubeEdgeHighInches)); // THIS ONE WORKS
-            public static Translation2d HIGH_CUBE = new Translation2d(Units.inchesToMeters(38), Units.inchesToMeters(40.1-FieldConstants.Grids.cubeEdgeHighInches)); // TODO: THIS DOES NOT WORK FIX IT
+            public static Translation2d MID_CUBE = new Translation2d(0.35, 0.68);
+            public static Translation2d HIGH_CUBE = new Translation2d(0.9, 1);
         }
     }
 

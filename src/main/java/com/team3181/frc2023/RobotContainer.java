@@ -75,7 +75,7 @@ public class RobotContainer {
 //    );
 //driverController.getRightTriggerAxis()
     driverController.leftBumper()
-            .whileTrue(new RepeatCommand(new InstantCommand(() -> fourBar.setRotations(FourBar.getInstance().solve(new Translation2d(ArmPositions.SWEEP_MAX.getX(), ArmPositions.SWEEP_MIN.getY()), true)))))
+            .whileTrue(new RepeatCommand(new InstantCommand(() -> fourBar.setRotations(FourBar.getInstance().solve(new Translation2d(ArmPositions.SWEEP_MAX.getX(), ArmPositions.SWEEP_MIN.getY()), false, true)))))
             .whileFalse(new InstantCommand(fourBar::hold));
     driverController.rightTrigger()
             .whileTrue(new RepeatCommand(new InstantCommand(() -> fourBar.setRotations(new Rotation2d[] {ArmPositions.STORAGE_SHOULDER, ArmPositions.STORAGE_ELBOW}))))
