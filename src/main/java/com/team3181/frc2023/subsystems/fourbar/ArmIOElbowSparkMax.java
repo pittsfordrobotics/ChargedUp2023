@@ -17,8 +17,8 @@ public class ArmIOElbowSparkMax implements ArmIO {
         absoluteEncoder = motor.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle);
 
         absoluteEncoder.setInverted(true);
-        absoluteEncoder.setPositionConversionFactor(2 * Math.PI * FourBarConstants.CHAIN_RATIO);
-        absoluteEncoder.setVelocityConversionFactor(2 * Math.PI * FourBarConstants.CHAIN_RATIO / 60.0);
+        absoluteEncoder.setPositionConversionFactor(2 * Math.PI);
+        absoluteEncoder.setVelocityConversionFactor(2 * Math.PI / 60.0);
         absoluteEncoder.setZeroOffset(FourBarConstants.ELBOW_ABSOLUTE_OFFSET.getRadians());
 
         motor.burnFlash();

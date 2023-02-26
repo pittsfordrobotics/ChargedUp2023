@@ -9,6 +9,8 @@ import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker;
 import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker.NodeLevel;
 import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker.Objective;
 import com.team3181.frc2023.subsystems.swerve.Swerve;
+import com.team3181.lib.controller.BetterXboxController;
+import com.team3181.lib.controller.BetterXboxController.Humans;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -28,11 +30,11 @@ public class Superstructure extends SubsystemBase {
     }
 
     enum StructureState {
-        IDLE, HOME, INTAKE_GROUND, INTAKE_MID, EXHAUST, OBJECTIVE
+        IDLE, HOME, INTAKE_GROUND, INTAKE_MID, EXHAUST, OBJECTIVE, MANUAL
     }
 
     enum GamePiece {
-        CONE, CUBE
+        CONE, CUBE, NONE
     }
 
     private StructureState systemState = StructureState.IDLE;
@@ -57,7 +59,7 @@ public class Superstructure extends SubsystemBase {
         FourBar fourBar = FourBar.getInstance();
         EndEffector endEffector = EndEffector.getInstance();
         StructureState state = StructureState.IDLE;
-        GamePiece gamePiece = GamePiece.CONE;
+        GamePiece gamePiece = GamePiece.NONE;
         double sweepLocal = sweepGlobal;
 
         // update LEDs
@@ -107,13 +109,16 @@ public class Superstructure extends SubsystemBase {
             case EXHAUST:
                 state = StructureState.EXHAUST;
                 break;
+            case MANUAL:
+                state = StructureState.MANUAL;
+                break;
             case IDLE:
             default:
                 state = shouldAutoRetract ? StructureState.HOME : StructureState.IDLE;
                 break;
         }
         if (state != systemState) {
-            if (systemState == StructureState.INTAKE_GROUND || systemState == StructureState.INTAKE_MID) {
+            if (systemState == StructureState.OBJECTIVE || systemState == StructureState.INTAKE_GROUND || systemState == StructureState.INTAKE_MID || systemState == StructureState.EXHAUST) {
                 endEffector.idle();
             }
             systemState = state;
@@ -141,6 +146,13 @@ public class Superstructure extends SubsystemBase {
                             fourBar.setRotations(fourBar.solve(ArmPositions.HIGH_CUBE, true));
                         }
                 }
+                if (shouldAutoScore() && fourBar.atSetpoint()) {
+                    endEffector.exhaust();
+                }
+                else {
+//                    TODO: maybe add swerve pathing on the fly
+                    endEffector.idle();
+                }
                 break;
             case INTAKE_GROUND:
                 Translation2d pos = new Translation2d(ArmPositions.SWEEP_MIN.getX() + sweepLocal * (ArmPositions.SWEEP_MAX.getX() - ArmPositions.SWEEP_MIN.getX()), ArmPositions.SWEEP_MIN.getY());
@@ -151,14 +163,22 @@ public class Superstructure extends SubsystemBase {
                 fourBar.setRotations(FourBar.getInstance().solve(ArmPositions.MID_INTAKE, true));
                 endEffector.intake();
             case EXHAUST:
+                fourBar.hold();
                 endEffector.exhaust();
                 break;
             case IDLE:
                 fourBar.hold();
+                endEffector.idle();
+                break;
+            case MANUAL:
+                fourBar.setArmVoltage(0, -3 * BetterXboxController.getController(Humans.OPERATOR).getLeftY());
+                fourBar.setArmVoltage(1, -3 * BetterXboxController.getController(Humans.OPERATOR).getRightY());
+                endEffector.idle();
                 break;
             case HOME:
             default:
                 fourBar.setRotations(new Rotation2d[] {ArmPositions.STORAGE_SHOULDER, ArmPositions.STORAGE_ELBOW});
+                endEffector.idle();
                 break;
         }
 
@@ -170,8 +190,21 @@ public class Superstructure extends SubsystemBase {
         wantedState = StructureState.IDLE;
     }
 
-    public void setObjective() {
+    public void manual() {
+        wantedState = StructureState.MANUAL;
+    }
+
+    public void exhaust() {
+        wantedState = StructureState.EXHAUST;
+    }
+
+    public void objective() {
         wantedState = StructureState.OBJECTIVE;
+    }
+
+    public void collectGround() {
+        sweepGlobal = 0;
+        wantedState = StructureState.INTAKE_GROUND;
     }
 
     /**
@@ -179,6 +212,7 @@ public class Superstructure extends SubsystemBase {
      * @param sweep from 0-1
      */
     public void collectGround(double sweep) {
+        sweepGlobal = sweep;
         wantedState = StructureState.INTAKE_GROUND;
     }
 
@@ -193,5 +227,10 @@ public class Superstructure extends SubsystemBase {
     private boolean shouldAutoRetract() {
 //        check if in center of field
         return Swerve.getInstance().getPose().getX() > 5.3 && Swerve.getInstance().getPose().getX() < 11.25;
+    }
+
+    private boolean shouldAutoScore() {
+//        check if at correct pose for current node
+        return false;
     }
 }
