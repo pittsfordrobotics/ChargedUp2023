@@ -4,8 +4,11 @@
 
 package com.team3181.frc2023;
 
+import com.team3181.frc2023.Constants.RobotConstants;
 import com.team3181.frc2023.commands.AutoCollectAndGo;
 import com.team3181.frc2023.commands.DropClimb;
+import com.team3181.frc2023.commands.SwerveDriveFieldXbox;
+import com.team3181.frc2023.commands.TankXbox;
 import com.team3181.frc2023.subsystems.Superstructure;
 import com.team3181.frc2023.subsystems.endeffector.EndEffector;
 import com.team3181.frc2023.subsystems.fourbar.FourBar;
@@ -13,6 +16,7 @@ import com.team3181.frc2023.subsystems.leds.LEDs;
 import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker;
 import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker.Direction;
 import com.team3181.frc2023.subsystems.swerve.Swerve;
+import com.team3181.frc2023.subsystems.tank.Tank;
 import com.team3181.frc2023.subsystems.vision.Vision;
 import com.team3181.lib.controller.BetterXboxController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -43,11 +47,11 @@ public class RobotContainer {
   public RobotContainer() {
     autoConfig();
 
-//      competitionButtons();
-      testButtons();
+      competitionButtons();
+//      testButtons();
 
-//    if (!RobotConstants.IS_TANK) swerve.setDefaultCommand(new SwerveDriveFieldXbox());
-//    if (RobotConstants.IS_TANK) Tank.getInstance().setDefaultCommand(new TankXbox());
+    if (!RobotConstants.IS_TANK) swerve.setDefaultCommand(new SwerveDriveFieldXbox());
+    if (RobotConstants.IS_TANK) Tank.getInstance().setDefaultCommand(new TankXbox());
   }
 
   private void testButtons() {
@@ -115,18 +119,20 @@ public class RobotContainer {
      OPERATOR
      */
     operatorController.rightBumper()
-            .whileTrue(new RepeatCommand(new InstantCommand(Superstructure.getInstance()::exhaust)));
+            .whileTrue(new RepeatCommand(new InstantCommand(Superstructure.getInstance()::exhaust)))
+            .whileFalse(new InstantCommand(Superstructure.getInstance()::idle));
     operatorController.leftBumper()
-            .whileTrue(new RepeatCommand(new InstantCommand(Superstructure.getInstance()::manual)));
+            .whileTrue(new RepeatCommand(new InstantCommand(Superstructure.getInstance()::manual)))
+            .whileFalse(new RepeatCommand(new InstantCommand(Superstructure.getInstance()::idle)));
     operatorController.a()
             .whileTrue(new RepeatCommand(new InstantCommand(Superstructure.getInstance()::collectGround)))
-            .whileFalse(new InstantCommand(Superstructure.getInstance()::home));
+            .whileFalse(new RepeatCommand(new InstantCommand(Superstructure.getInstance()::home)));
     operatorController.b()
             .whileTrue(new RepeatCommand(new InstantCommand(Superstructure.getInstance()::collectMid)))
-            .whileFalse(new InstantCommand(Superstructure.getInstance()::home));
+            .whileFalse(new RepeatCommand(new InstantCommand(Superstructure.getInstance()::home)));
     operatorController.x()
             .whileTrue(new RepeatCommand(new InstantCommand(Superstructure.getInstance()::objective)))
-            .whileFalse(new InstantCommand(Superstructure.getInstance()::home));
+            .whileFalse(new RepeatCommand(new InstantCommand(Superstructure.getInstance()::home)));
 
 
     operatorController.povUp()

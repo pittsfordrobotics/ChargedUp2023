@@ -273,7 +273,7 @@ public final class Constants {
 
         public static final Rotation2d SHOULDER_ABSOLUTE_OFFSET = Rotation2d.fromRadians(0.11);
         public static final Rotation2d ELBOW_ABSOLUTE_OFFSET = Rotation2d.fromRadians(5.46);
-        public static final Rotation2d SHOULDER_MATH_OFFSET = Rotation2d.fromRadians(0); // zero needs to be at shoulder parallel to ground
+        public static final Rotation2d SHOULDER_MATH_OFFSET = Rotation2d.fromRadians(-1.55); // zero needs to be at shoulder parallel to ground
         public static final Rotation2d ELBOW_MATH_OFFSET = Rotation2d.fromRadians(-3.52); // zero is in line with shoulder
 
         public static final Rotation2d ELBOW_MIN = Rotation2d.fromDegrees(-140);
@@ -282,8 +282,8 @@ public final class Constants {
         public static final Rotation2d SHOULDER_MIN = Rotation2d.fromRadians(-1.3); // est -1.22 rad
         public static final Rotation2d SHOULDER_MAX = Rotation2d.fromDegrees(70); // est 170 deg
 
-//        public static final Rotation2d SHOULDER_FLIP_MIN = Rotation2d.fromDegrees();
-//        public static final Rotation2d SHOULDER_FLIP_MAX = Rotation2d.fromDegrees();
+        public static final Rotation2d SHOULDER_FLIP_MIN = Rotation2d.fromRadians(-1.55);
+        public static final Rotation2d SHOULDER_FLIP_MAX = Rotation2d.fromRadians(0.53);
 
         public static double WHEEL_TO_CHASSIS = Units.inchesToMeters(4.75);
         public static double CHASSIS_TO_ARM = Units.inchesToMeters(28.9);
@@ -315,13 +315,13 @@ public final class Constants {
 
         public static final class ArmPositions {
             public static Rotation2d STORAGE_SHOULDER = Rotation2d.fromRadians(-1.22);
-            public static Rotation2d STORAGE_ELBOW = Rotation2d.fromRadians(1.6);
+            public static Rotation2d STORAGE_ELBOW = Rotation2d.fromRadians(1.58);
 
             public static Rotation2d GROUND_PICKUP_SHOULDER = Rotation2d.fromRadians(-1.15);
             public static Rotation2d GROUND_PICKUP_ELBOW = Rotation2d.fromRadians(-0.1);
 
             public static Translation2d SWEEP_MIN = new Translation2d(0.66, 0.3);
-            public static Translation2d SWEEP_MAX = new Translation2d(1.05, 0.3);
+            public static Translation2d SWEEP_MAX = new Translation2d(1.05, 0.15);
 
             public static Translation2d MID_INTAKE = new Translation2d(1, 1.1);
 

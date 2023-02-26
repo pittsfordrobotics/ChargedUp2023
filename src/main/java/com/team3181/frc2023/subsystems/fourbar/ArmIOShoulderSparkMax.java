@@ -32,16 +32,16 @@ public class ArmIOShoulderSparkMax implements ArmIO {
 
     @Override
     public void updateInputs(ArmIOInputs inputs) {
-//        if (lastPos < FourBarConstants.SHOULDER_FLIP_MIN.getRadians() + 0.1 && absoluteEncoder.getPosition() > FourBarConstants.SHOULDER_FLIP_MAX.getRadians() - 0.1) {
-//            counter--;
-//        }
-//        else if (lastPos > FourBarConstants.SHOULDER_FLIP_MAX.getRadians() - 0.1 && absoluteEncoder.getPosition() < FourBarConstants.SHOULDER_FLIP_MIN.getRadians() + 0.1) {
-//            counter++;
-//        }
+        if (lastPos < FourBarConstants.SHOULDER_FLIP_MIN.getRadians() + 0.1 && (absoluteEncoder.getPosition() + FourBarConstants.SHOULDER_MATH_OFFSET.getRadians()) > FourBarConstants.SHOULDER_FLIP_MAX.getRadians() - 0.1 && counter == 1) {
+            counter--;
+        }
+        else if (lastPos > FourBarConstants.SHOULDER_FLIP_MAX.getRadians() - 0.1 && (absoluteEncoder.getPosition() + FourBarConstants.SHOULDER_MATH_OFFSET.getRadians()) < FourBarConstants.SHOULDER_FLIP_MIN.getRadians() + 0.1 && counter == 0) {
+            counter++;
+        }
 
-        inputs.armPositionRad = absoluteEncoder.getPosition() + FourBarConstants.SHOULDER_MATH_OFFSET.getRadians() + counter;
+        inputs.armPositionRad = absoluteEncoder.getPosition() + FourBarConstants.SHOULDER_MATH_OFFSET.getRadians() + counter * (FourBarConstants.SHOULDER_FLIP_MIN.getRadians() * -1 + FourBarConstants.SHOULDER_FLIP_MAX.getRadians());
         inputs.armVelocityRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(absoluteEncoder.getVelocity());
-        lastPos = absoluteEncoder.getPosition();
+        lastPos = absoluteEncoder.getPosition() + FourBarConstants.SHOULDER_MATH_OFFSET.getRadians();
         inputs.armAppliedVolts = mainMotor.getAppliedOutput() * mainMotor.getBusVoltage();
         inputs.armCurrentAmps = mainMotor.getOutputCurrent();
         inputs.armTempCelsius = mainMotor.getMotorTemperature();

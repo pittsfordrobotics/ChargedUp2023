@@ -18,6 +18,6 @@ public class Paths {
             );
 
     public static final List<PathPlannerTrajectory> PIECE_AUTO_HIGH = PathPlanner.loadPathGroup("3 Item High", AutoConstants.MAX_SPEED);
-    public static final PathPlannerTrajectory PIECE_AUTO_HIGH_NOTGROUP = PathPlanner.loadPath("3 Item High", AutoConstants.MAX_SPEED);
+    public static final PathPlannerTrajectory PIECE_AUTO_HIGH_NOTGROUP = PathPlanner.loadPath("3 Item Low", AutoConstants.MAX_SPEED);
     public static final List<PathPlannerTrajectory>  PIECE_AUTO_LOW = PathPlanner.loadPathGroup("3 Item Low", AutoConstants.MAX_SPEED);
 }

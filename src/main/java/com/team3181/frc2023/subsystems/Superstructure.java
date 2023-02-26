@@ -132,22 +132,22 @@ public class Superstructure extends SubsystemBase {
             case OBJECTIVE:
                 switch (objectiveLocal.nodeLevel) {
                     case HYBRID:
-                        fourBar.setRotations(fourBar.solve(ArmPositions.HYBRID, false, true));
+                        fourBar.setRotations(fourBar.solve(ArmPositions.HYBRID, false, true), false);
                         break;
                     case MID:
                         if (gamePieceLocal == GamePiece.CONE) {
-                            fourBar.setRotations(fourBar.solve(ArmPositions.MID_CONE, true, true));
+                            fourBar.setRotations(fourBar.solve(ArmPositions.MID_CONE, true, true), false);
                         }
                         else {
-                            fourBar.setRotations(fourBar.solve(ArmPositions.MID_CUBE, false, true));
+                            fourBar.setRotations(fourBar.solve(ArmPositions.MID_CUBE, false, true), false);
                         }
                         break;
                     case HIGH:
                         if (gamePieceLocal == GamePiece.CONE) {
-                            fourBar.setRotations(fourBar.solve(ArmPositions.HIGH_CONE, true,true));
+                            fourBar.setRotations(fourBar.solve(ArmPositions.HIGH_CONE, true,true), false);
                         }
                         else {
-                            fourBar.setRotations(fourBar.solve(ArmPositions.HIGH_CUBE, false,true));
+                            fourBar.setRotations(fourBar.solve(ArmPositions.HIGH_CUBE, false,true), false);
                         }
                 }
                 if (shouldAutoScore() && fourBar.atSetpoint()) {
@@ -160,11 +160,11 @@ public class Superstructure extends SubsystemBase {
                 break;
             case INTAKE_GROUND:
                 Translation2d pos = new Translation2d(ArmPositions.SWEEP_MIN.getX() + sweepLocal * (ArmPositions.SWEEP_MAX.getX() - ArmPositions.SWEEP_MIN.getX()), ArmPositions.SWEEP_MIN.getY());
-                fourBar.setRotations(FourBar.getInstance().solve(pos, false, true));
+                fourBar.setRotations(FourBar.getInstance().solve(pos, false, true), false);
                 endEffector.intake();
                 break;
             case INTAKE_MID:
-                fourBar.setRotations(FourBar.getInstance().solve(ArmPositions.MID_INTAKE, false,true));
+                fourBar.setRotations(FourBar.getInstance().solve(ArmPositions.MID_INTAKE, false,true), false);
                 endEffector.intake();
             case EXHAUST:
                 fourBar.hold();
@@ -175,13 +175,13 @@ public class Superstructure extends SubsystemBase {
                 endEffector.idle();
                 break;
             case MANUAL:
-                fourBar.setArmVoltage(0, -3 * BetterXboxController.getController(Humans.OPERATOR).getLeftY());
-                fourBar.setArmVoltage(1, -3 * BetterXboxController.getController(Humans.OPERATOR).getRightY());
-                endEffector.idle();
+                fourBar.setArmVoltage(0, -5 * BetterXboxController.getController(Humans.OPERATOR).getLeftY());
+                fourBar.setArmVoltage(1, -5 * BetterXboxController.getController(Humans.OPERATOR).getRightY());
+                endEffector.intake();
                 break;
             case HOME:
             default:
-                fourBar.setRotations(new Rotation2d[] {ArmPositions.STORAGE_SHOULDER, ArmPositions.STORAGE_ELBOW});
+                fourBar.setRotations(new Rotation2d[] {ArmPositions.STORAGE_SHOULDER, ArmPositions.STORAGE_ELBOW}, false);
                 endEffector.idle();
                 break;
         }

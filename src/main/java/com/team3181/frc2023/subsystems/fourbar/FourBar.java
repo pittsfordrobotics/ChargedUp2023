@@ -19,6 +19,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 
+import java.util.Arrays;
+
 public class FourBar extends SubsystemBase {
     private final ArmIO[] armIO;
     private final ArmIOInputsAutoLogged[] inputs = new ArmIOInputsAutoLogged[]{new ArmIOInputsAutoLogged(), new ArmIOInputsAutoLogged()};
@@ -55,11 +57,13 @@ public class FourBar extends SubsystemBase {
 
         shoulderTooLow.set(DriverStation.isDisabled() && inputs[0].armPositionRad > 0);
 
-//        System.out.println(Arrays.toString(
-//                solve(
-//                        new Translation2d(
-//                                SmartDashboard.getNumber("shoulder", 0),
-//                                SmartDashboard.getNumber("elbow", 0)), false, true)));
+        System.out.println(Arrays.toString(
+                solve(
+                        new Translation2d(
+                                SmartDashboard.getNumber("shoulder", 0),
+                                SmartDashboard.getNumber("elbow", 0)), false, true)));
+
+        Logger.getInstance().recordOutput("Arm/Math Elbow", inputs[1].armPositionRad - inputs[0].armPositionRad);
 //        setRotations(new Rotation2d[] {
 //                Rotation2d.fromRadians(SmartDashboard.getNumber("shoulder", 0)),
 //                Rotation2d.fromRadians(SmartDashboard.getNumber("elbow", 0))
@@ -85,7 +89,7 @@ public class FourBar extends SubsystemBase {
         }
     }
 
-    public void setRotations(Rotation2d[] rotations) {
+    public void setRotations(Rotation2d[] rotations, boolean mathElbow) {
         Boolean[] illegal = checkIllegal(rotations);
         Vector<N2> pos = new Vector<N2>(VecBuilder.fill(inputs[0].armPositionRad, inputs[1].armPositionRad));
         Vector<N2> ff = ArmDynamics.getInstance().feedforward(pos);
@@ -94,7 +98,7 @@ public class FourBar extends SubsystemBase {
             armIO[0].setVoltage(MathUtil.clamp(shoulderPID.calculate(inputs[0].armPositionRad), -FourBarConstants.PID_CLAMP_VOLTAGE, FourBarConstants.PID_CLAMP_VOLTAGE) + ff.get(0, 0));
 //        if (!illegal[1]) {
             elbowPID.setSetpoint(rotations[1].getRadians());
-            armIO[1].setVoltage(MathUtil.clamp(elbowPID.calculate(inputs[1].armPositionRad - inputs[0].armPositionRad), -FourBarConstants.PID_CLAMP_VOLTAGE, FourBarConstants.PID_CLAMP_VOLTAGE) + ff.get(1, 0));
+            armIO[1].setVoltage(MathUtil.clamp(elbowPID.calculate(mathElbow ? inputs[1].armPositionRad - inputs[0].armPositionRad : inputs[1].armPositionRad), -FourBarConstants.PID_CLAMP_VOLTAGE, FourBarConstants.PID_CLAMP_VOLTAGE) + ff.get(1, 0));
 //        }
     }
 
