@@ -4,12 +4,8 @@
 
 package com.team3181.frc2023;
 
-import com.team3181.frc2023.Constants.FourBarConstants.ArmPositions;
-import com.team3181.frc2023.Constants.RobotConstants;
 import com.team3181.frc2023.commands.AutoCollectAndGo;
 import com.team3181.frc2023.commands.DropClimb;
-import com.team3181.frc2023.commands.SwerveDriveFieldXbox;
-import com.team3181.frc2023.commands.TankXbox;
 import com.team3181.frc2023.subsystems.Superstructure;
 import com.team3181.frc2023.subsystems.endeffector.EndEffector;
 import com.team3181.frc2023.subsystems.fourbar.FourBar;
@@ -17,7 +13,6 @@ import com.team3181.frc2023.subsystems.leds.LEDs;
 import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker;
 import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker.Direction;
 import com.team3181.frc2023.subsystems.swerve.Swerve;
-import com.team3181.frc2023.subsystems.tank.Tank;
 import com.team3181.frc2023.subsystems.vision.Vision;
 import com.team3181.lib.controller.BetterXboxController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -48,11 +43,11 @@ public class RobotContainer {
   public RobotContainer() {
     autoConfig();
 
-      competitionButtons();
-//      testButtons();
+//      competitionButtons();
+      testButtons();
 
-    if (!RobotConstants.IS_TANK) swerve.setDefaultCommand(new SwerveDriveFieldXbox());
-    if (RobotConstants.IS_TANK) Tank.getInstance().setDefaultCommand(new TankXbox());
+//    if (!RobotConstants.IS_TANK) swerve.setDefaultCommand(new SwerveDriveFieldXbox());
+//    if (RobotConstants.IS_TANK) Tank.getInstance().setDefaultCommand(new TankXbox());
   }
 
   private void testButtons() {
@@ -74,29 +69,32 @@ public class RobotContainer {
 //            AutoDrivePoints.leavingCommunity(AutoDrivePoints.LOADING_STATION_TOP_INNER))
 //    );
 //driverController.getRightTriggerAxis()
-    driverController.leftBumper()
-            .whileTrue(new RepeatCommand(new InstantCommand(() -> fourBar.setRotations(FourBar.getInstance().solve(new Translation2d(ArmPositions.SWEEP_MAX.getX(), ArmPositions.SWEEP_MIN.getY()), false, true)))))
-            .whileFalse(new InstantCommand(fourBar::hold));
-    driverController.rightTrigger()
-            .whileTrue(new RepeatCommand(new InstantCommand(() -> fourBar.setRotations(new Rotation2d[] {ArmPositions.STORAGE_SHOULDER, ArmPositions.STORAGE_ELBOW}))))
-            .whileFalse(new InstantCommand(fourBar::hold));
+//    driverController.leftBumper()
+//            .whileTrue(new RepeatCommand(new InstantCommand(() -> fourBar.setRotations(FourBar.getInstance().solve(new Translation2d(ArmPositions.SWEEP_MAX.getX(), ArmPositions.SWEEP_MIN.getY()), false, true)))))
+//            .whileFalse(new InstantCommand(fourBar::hold));
+//    driverController.rightTrigger()
+//            .whileTrue(new RepeatCommand(new InstantCommand(() -> fourBar.setRotations(new Rotation2d[] {ArmPositions.STORAGE_SHOULDER, ArmPositions.STORAGE_ELBOW}))))
+//            .whileFalse(new InstantCommand(fourBar::hold));
 //    driverController.leftBumper().whileTrue(new RepeatCommand(new InstantCommand(() -> fourBar.setRotations(new Rotation2d[] {ArmPositions.GROUND_PICKUP_SHOULDER, ArmPositions.GROUND_PICKUP_ELBOW}))));
 //    driverController.b().whileTrue(new InstantCommand(() -> fourBar.setRotations(new Rotation2d[] {ArmPositions.STORAGE_SHOULDER, ArmPositions.STORAGE_ELBOW})));
 
     driverController.a()
-            .whileTrue(new InstantCommand(() -> fourBar.setArmVoltage(0, 2)))
+            .whileTrue(new RepeatCommand(new InstantCommand(() -> fourBar.setArmVoltage(0, 2))))
             .whileFalse(new InstantCommand(() -> fourBar.setArmVoltage(0, 0)));
     driverController.b()
-            .whileTrue(new InstantCommand(() -> fourBar.setArmVoltage(0, -2)))
+            .whileTrue(new RepeatCommand(new InstantCommand(() -> fourBar.setArmVoltage(0, -2))))
             .whileFalse(new InstantCommand(() -> fourBar.setArmVoltage(0, 0)));
     driverController.x()
-            .whileTrue(new InstantCommand(() -> fourBar.setArmVoltage(1, 2)))
+            .whileTrue(new RepeatCommand(new InstantCommand(() -> fourBar.setArmVoltage(1, 2))))
             .whileFalse(new InstantCommand(() -> fourBar.setArmVoltage(1, 0)));
     driverController.y()
-            .whileTrue(new InstantCommand(() -> fourBar.setArmVoltage(1, -2)))
+            .whileTrue(new RepeatCommand(new InstantCommand(() -> fourBar.setArmVoltage(1, -2))))
             .whileFalse(new InstantCommand(() -> fourBar.setArmVoltage(1, 0)));
     driverController.rightBumper()
-            .whileTrue(new InstantCommand(endEffector::intake))
+            .whileTrue(new RepeatCommand(new InstantCommand(endEffector::intake)))
+            .whileFalse(new InstantCommand(endEffector::idle));
+    driverController.leftBumper()
+            .whileTrue(new RepeatCommand(new InstantCommand(endEffector::exhaust)))
             .whileFalse(new InstantCommand(endEffector::idle));
 //    driverController.rightBumper().whileTrue(new InstantCommand(endEffector::exhaust)).whileFalse(new InstantCommand(endEffector::idle));
 

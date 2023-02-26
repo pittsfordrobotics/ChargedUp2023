@@ -61,7 +61,7 @@ public class FourBar extends SubsystemBase {
                 solve(
                         new Translation2d(
                                 SmartDashboard.getNumber("shoulder", 0),
-                                SmartDashboard.getNumber("elbow", 0)), true, true)));
+                                SmartDashboard.getNumber("elbow", 0)), false, true)));
 //        setRotations(new Rotation2d[] {
 //                Rotation2d.fromRadians(SmartDashboard.getNumber("shoulder", 0)),
 //                Rotation2d.fromRadians(SmartDashboard.getNumber("elbow", 0))
@@ -145,19 +145,20 @@ public class FourBar extends SubsystemBase {
 
         double rotElbow;
         double rotShoulder;
+        double elbowEndEffector = FourBarConstants.ELBOW_LENGTH + (cone ? EndEffectorConstants.CONE_CENTER : EndEffectorConstants.CUBE_CENTER);
 
         if (cone) {
-            rotElbow = -1 * Math.acos((Math.pow(updatedPos.getX(), 2) + Math.pow(updatedPos.getY(), 2) - Math.pow(FourBarConstants.SHOULDER_LENGTH, 2) - Math.pow(FourBarConstants.ELBOW_LENGTH, 2))/(2 * FourBarConstants.SHOULDER_LENGTH * FourBarConstants.ELBOW_LENGTH));
+            rotElbow = -1 * Math.acos((Math.pow(updatedPos.getX(), 2) + Math.pow(updatedPos.getY(), 2) - Math.pow(FourBarConstants.SHOULDER_LENGTH, 2) - Math.pow(elbowEndEffector, 2))/(2 * FourBarConstants.SHOULDER_LENGTH * elbowEndEffector));
         }
         else {
-            rotElbow = 1 * Math.acos((Math.pow(updatedPos.getX(), 2) + Math.pow(updatedPos.getY(), 2) - Math.pow(FourBarConstants.SHOULDER_LENGTH, 2) - Math.pow(FourBarConstants.ELBOW_LENGTH, 2))/(2 * FourBarConstants.SHOULDER_LENGTH * FourBarConstants.ELBOW_LENGTH));
+            rotElbow = 1 * Math.acos((Math.pow(updatedPos.getX(), 2) + Math.pow(updatedPos.getY(), 2) - Math.pow(FourBarConstants.SHOULDER_LENGTH, 2) - Math.pow(elbowEndEffector, 2))/(2 * FourBarConstants.SHOULDER_LENGTH * elbowEndEffector));
         }
-        rotShoulder = Math.atan(updatedPos.getY()/updatedPos.getX()) - Math.atan((FourBarConstants.ELBOW_LENGTH * Math.sin(rotElbow))/(FourBarConstants.SHOULDER_LENGTH + FourBarConstants.ELBOW_LENGTH * Math.cos(rotElbow)));
+        rotShoulder = Math.atan(updatedPos.getY()/updatedPos.getX()) - Math.atan((elbowEndEffector * Math.sin(rotElbow))/(FourBarConstants.SHOULDER_LENGTH + elbowEndEffector * Math.cos(rotElbow)));
         System.out.println(rotShoulder);
         System.out.println(rotElbow);
         if (Double.isNaN(rotElbow) || Double.isNaN(rotShoulder) || rotElbow > FourBarConstants.ELBOW_MAX.getRadians() || rotElbow < FourBarConstants.ELBOW_MIN.getRadians() || rotShoulder > FourBarConstants.SHOULDER_MAX.getRadians() || rotShoulder < FourBarConstants.SHOULDER_MIN.getRadians()) {
             rotElbow *= -1;
-            rotShoulder = Math.atan(updatedPos.getY()/updatedPos.getX()) - Math.atan((FourBarConstants.ELBOW_LENGTH * Math.sin(rotElbow))/(FourBarConstants.SHOULDER_LENGTH + FourBarConstants.ELBOW_LENGTH * Math.cos(rotElbow)));
+            rotShoulder = Math.atan(updatedPos.getY()/updatedPos.getX()) - Math.atan((elbowEndEffector * Math.sin(rotElbow))/(FourBarConstants.SHOULDER_LENGTH + elbowEndEffector * Math.cos(rotElbow)));
             if (Double.isNaN(rotElbow) || Double.isNaN(rotShoulder) || rotElbow > FourBarConstants.ELBOW_MAX.getRadians() || rotElbow < FourBarConstants.ELBOW_MIN.getRadians() || rotShoulder > FourBarConstants.SHOULDER_MAX.getRadians() || rotShoulder < FourBarConstants.SHOULDER_MIN.getRadians()) {
                 return new Rotation2d[] {null, null};
             }
