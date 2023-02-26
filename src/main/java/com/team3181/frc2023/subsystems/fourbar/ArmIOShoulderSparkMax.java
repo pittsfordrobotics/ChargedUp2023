@@ -32,12 +32,12 @@ public class ArmIOShoulderSparkMax implements ArmIO {
 
     @Override
     public void updateInputs(ArmIOInputs inputs) {
-        if (lastPos < FourBarConstants.SHOULDER_MIN.getRadians() + 0.1 && absoluteEncoder.getPosition() > FourBarConstants.SHOULDER_MAX.getRadians() - 0.1) {
-            counter--;
-        }
-        else if (lastPos > FourBarConstants.SHOULDER_MAX.getRadians() - 0.1 && absoluteEncoder.getPosition() < FourBarConstants.SHOULDER_MIN.getRadians() + 0.1) {
-            counter++;
-        }
+//        if (lastPos < FourBarConstants.SHOULDER_FLIP_MIN.getRadians() + 0.1 && absoluteEncoder.getPosition() > FourBarConstants.SHOULDER_FLIP_MAX.getRadians() - 0.1) {
+//            counter--;
+//        }
+//        else if (lastPos > FourBarConstants.SHOULDER_FLIP_MAX.getRadians() - 0.1 && absoluteEncoder.getPosition() < FourBarConstants.SHOULDER_FLIP_MIN.getRadians() + 0.1) {
+//            counter++;
+//        }
 
         inputs.armPositionRad = absoluteEncoder.getPosition() + FourBarConstants.SHOULDER_MATH_OFFSET.getRadians() + counter;
         inputs.armVelocityRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(absoluteEncoder.getVelocity());

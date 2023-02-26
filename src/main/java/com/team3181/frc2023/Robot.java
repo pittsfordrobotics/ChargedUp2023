@@ -11,6 +11,7 @@ import com.team3181.lib.drivers.LazySparkMax;
 import com.team3181.lib.util.Alert;
 import com.team3181.lib.util.Alert.AlertType;
 import com.team3181.lib.util.PIDTuner;
+import com.team3181.lib.util.VirtualSubsystem;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -84,6 +85,7 @@ public class Robot extends LoggedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
+    VirtualSubsystem.periodicAll();
 
     // Log scheduled commands
     Logger.getInstance().recordOutput("ActiveCommands/Scheduler",
