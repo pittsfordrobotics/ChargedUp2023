@@ -3,6 +3,7 @@ package com.team3181.frc2023.subsystems.fourbar;
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.team3181.frc2023.Constants.FourBarConstants;
 import com.team3181.lib.drivers.LazySparkMax;
@@ -20,6 +21,7 @@ public class ArmIOElbowSparkMax implements ArmIO {
         absoluteEncoder.setPositionConversionFactor(2 * Math.PI);
         absoluteEncoder.setVelocityConversionFactor(2 * Math.PI / 60.0);
         absoluteEncoder.setZeroOffset(FourBarConstants.ELBOW_ABSOLUTE_OFFSET.getRadians());
+        motor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
 
         motor.burnFlash();
     }
