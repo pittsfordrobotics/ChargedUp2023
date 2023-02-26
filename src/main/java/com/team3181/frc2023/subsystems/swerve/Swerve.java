@@ -175,6 +175,10 @@ public class Swerve extends SubsystemBase {
         return poseEstimator.getEstimatedPosition();
     }
 
+    public ChassisSpeeds getChassisSpeeds() {
+        return actualRobotRelativeChassisSpeeds;
+    }
+
     public boolean isStopped() {
         boolean module0 = BetterMath.epsilonEquals(moduleInputs[0].driveVelocityMetersPerSec, 0);
         boolean module1 = BetterMath.epsilonEquals(moduleInputs[1].driveVelocityMetersPerSec, 0);
