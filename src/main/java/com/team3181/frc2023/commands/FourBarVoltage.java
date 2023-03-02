@@ -1,7 +1,7 @@
 package com.team3181.frc2023.commands;
 
-import com.team3181.frc2023.subsystems.fourbar.ArmIO;
-import com.team3181.frc2023.subsystems.fourbar.FourBar;
+import com.team3181.frc2023.subsystems.oldarm.ArmIO;
+import com.team3181.frc2023.subsystems.oldarm.FourBar;
 import com.team3181.lib.controller.BetterXboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 

@@ -2,7 +2,7 @@ package com.team3181.frc2023.subsystems;
 
 import com.team3181.frc2023.Constants.FourBarConstants.ArmPositions;
 import com.team3181.frc2023.subsystems.endeffector.EndEffector;
-import com.team3181.frc2023.subsystems.fourbar.FourBar;
+import com.team3181.frc2023.subsystems.oldarm.FourBar;
 import com.team3181.frc2023.subsystems.leds.LEDs;
 import com.team3181.frc2023.subsystems.leds.LEDs.LEDModes;
 import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker;

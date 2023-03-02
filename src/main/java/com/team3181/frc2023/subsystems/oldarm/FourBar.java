@@ -1,4 +1,4 @@
-package com.team3181.frc2023.subsystems.fourbar;
+package com.team3181.frc2023.subsystems.oldarm;
 
 
 import com.team3181.frc2023.Constants;
@@ -44,6 +44,10 @@ public class FourBar extends SubsystemBase {
         Logger.getInstance().processInputs("Shoulder", inputs[0]);
         Logger.getInstance().processInputs("Elbow", inputs[1]);
 
+        System.out.println(forwardWithEndEffector(new Rotation2d[] {
+                Rotation2d.fromRadians(SmartDashboard.getNumber("number x", 0)),
+                Rotation2d.fromRadians(SmartDashboard.getNumber("number y", 0))
+        }).toString());
         setRotations(new Rotation2d[] {
                 Rotation2d.fromRadians(SmartDashboard.getNumber("shoulder", 0)),
                 Rotation2d.fromRadians(SmartDashboard.getNumber("elbow", 0))

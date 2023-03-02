@@ -2,7 +2,7 @@ package com.team3181.frc2023.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import com.team3181.frc2023.subsystems.endeffector.EndEffector;
-import com.team3181.frc2023.subsystems.fourbar.FourBar;
+import com.team3181.frc2023.subsystems.oldarm.FourBar;
 
 
 public class ArmSweepGround extends CommandBase {

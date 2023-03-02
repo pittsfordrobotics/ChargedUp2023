@@ -8,7 +8,7 @@ import com.team3181.frc2023.commands.AutoCollectAndGo;
 import com.team3181.frc2023.commands.DropClimb;
 import com.team3181.frc2023.subsystems.Superstructure;
 import com.team3181.frc2023.subsystems.endeffector.EndEffector;
-import com.team3181.frc2023.subsystems.fourbar.FourBar;
+import com.team3181.frc2023.subsystems.oldarm.FourBar;
 import com.team3181.frc2023.subsystems.leds.LEDs;
 import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker;
 import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker.Direction;

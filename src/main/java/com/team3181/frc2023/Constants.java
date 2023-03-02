@@ -8,9 +8,9 @@ import com.ctre.phoenix.sensors.Pigeon2Configuration;
 import com.pathplanner.lib.PathConstraints;
 import com.team3181.frc2023.subsystems.endeffector.EndEffectorIO;
 import com.team3181.frc2023.subsystems.endeffector.EndEffectorIOSparkMax;
-import com.team3181.frc2023.subsystems.fourbar.ArmIO;
-import com.team3181.frc2023.subsystems.fourbar.ArmIOElbowSparkMax;
-import com.team3181.frc2023.subsystems.fourbar.ArmIOShoulderSparkMax;
+import com.team3181.frc2023.subsystems.oldarm.ArmIO;
+import com.team3181.frc2023.subsystems.oldarm.ArmIOElbowSparkMax;
+import com.team3181.frc2023.subsystems.oldarm.ArmIOShoulderSparkMax;
 import com.team3181.frc2023.subsystems.leds.LEDStripIO;
 import com.team3181.frc2023.subsystems.leds.LEDStripIORio;
 import com.team3181.frc2023.subsystems.objectivetracker.NodeSelectorIO;
@@ -320,8 +320,8 @@ public final class Constants {
             public static Translation2d MID_CONE = new Translation2d(0, 0);
             public static Translation2d HIGH_CONE = new Translation2d(0, 0);
 
-            public static Translation2d MID_CUBE = new Translation2d(Units.inchesToMeters(20.905), Units.inchesToMeters(28-FieldConstants.Grids.cubeEdgeHighInches)); // THIS ONE WORKS
-            public static Translation2d HIGH_CUBE = new Translation2d(Units.inchesToMeters(38), Units.inchesToMeters(40.1-FieldConstants.Grids.cubeEdgeHighInches)); // TODO: THIS DOES NOT WORK FIX IT
+            public static Translation2d MID_CUBE = new Translation2d(Units.inchesToMeters(20.2), Units.inchesToMeters(29)); // goes inside the thing
+            public static Translation2d HIGH_CUBE = new Translation2d(Units.inchesToMeters(37.5), Units.inchesToMeters(38)); //
         }
     }
 
