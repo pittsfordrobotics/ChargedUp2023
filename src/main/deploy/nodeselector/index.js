@@ -9,6 +9,8 @@ import { NT4_Client } from "./NT4.js";
 
 const robotToDashboardTopic = "/nodeselector/robot_to_dashboard";
 const dashboardToRobotTopic = "/nodeselector/dashboard_to_robot";
+var timer;
+const timeout = 250;
 
 function setActive(index) {
   Array.from(document.getElementsByClassName("active")).forEach((element) => {
@@ -18,6 +20,17 @@ function setActive(index) {
     document.getElementsByTagName("td")[index].classList.add("active");
   }
 }
+
+function toggleFilled (index) {
+  timer = null;
+  if (index !== null) {
+    if (document.getElementsByTagName("td")[index].classList.contains("filled")) {
+      document.getElementsByTagName("td")[index].classList.remove("filled");
+    } else {
+      document.getElementsByTagName("td")[index].classList.add("filled");
+    }
+  }
+};
 
 let client = new NT4_Client(
   window.location.hostname,
@@ -31,7 +44,7 @@ let client = new NT4_Client(
   (topic, timestamp, value) => {
     // New data
     if (topic.name === robotToDashboardTopic) {
-      document.body.style.backgroundColor = "white";
+      document.body.style.backgroundColor = "black";
       setActive(value);
     }
   },
@@ -42,6 +55,7 @@ let client = new NT4_Client(
     // Disconnected
     document.body.style.backgroundColor = "red";
     setActive(null);
+    toggleFilled(null);
   }
 );
 
@@ -53,8 +67,27 @@ window.addEventListener("load", () => {
 
   // Add click listeners
   Array.from(document.getElementsByTagName("td")).forEach((cell, index) => {
+    cell.addEventListener("mousedown", () => {
+      if (!timer) {
+        timer = setTimeout(function() { toggleFilled(index) }, timeout);
+      }
+    });
+    cell.addEventListener("mouseup", () => {
+      if (timer) {
+        clearTimeout(timer);
+        timer = null;
+      }
+    });
+    cell.addEventListener("mousemove", () => {
+      if (timer) {
+        clearTimeout(timer);
+        timer = null;
+      }
+    });
     cell.addEventListener("click", () => {
-      client.addSample(dashboardToRobotTopic, index);
+      if (!timer) {
+        client.addSample(dashboardToRobotTopic, index);
+      }
     });
     cell.addEventListener("contextmenu", (event) => {
       event.preventDefault();
@@ -63,7 +96,7 @@ window.addEventListener("load", () => {
   });
 
   // Add touch listeners
-  ["touchstart", "touchmove"].forEach((eventString) => {
+  ["touchstart"].forEach((eventString) => {
     document.body.addEventListener(eventString, (event) => {
       event.preventDefault();
       if (event.touches.length > 0) {
@@ -78,6 +111,7 @@ window.addEventListener("load", () => {
               y >= rect.top &&
               y <= rect.bottom
             ) {
+              timer = setTimeout(function() { toggleFilled(index) }, timeout);
               client.addSample(dashboardToRobotTopic, index);
             }
           }
@@ -85,4 +119,13 @@ window.addEventListener("load", () => {
       }
     });
   });
+
+  ["touchend", "touchmove"].forEach((eventString) => {
+    document.body.addEventListener(eventString, (event) => {
+      if (timer){
+        clearTimeout(timer);
+      }
+    });
+  });
+
 });
