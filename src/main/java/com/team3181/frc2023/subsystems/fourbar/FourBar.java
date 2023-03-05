@@ -57,11 +57,11 @@ public class FourBar extends SubsystemBase {
 
         shoulderTooLow.set(DriverStation.isDisabled() && inputs[0].armPositionRad > 0);
 
-        System.out.println(Arrays.toString(
-                solve(
-                        new Translation2d(
-                                SmartDashboard.getNumber("shoulder", 0),
-                                SmartDashboard.getNumber("elbow", 0)), false, true)));
+        // System.out.println(Arrays.toString(
+        //         solve(
+        //                 new Translation2d(
+        //                         SmartDashboard.getNumber("shoulder", 0),
+        //                         SmartDashboard.getNumber("elbow", 0)), false, true)));
 
         Logger.getInstance().recordOutput("Arm/Math Elbow", inputs[1].armPositionRad - inputs[0].armPositionRad);
 //        setRotations(new Rotation2d[] {
