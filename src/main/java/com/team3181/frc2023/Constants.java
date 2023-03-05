@@ -155,10 +155,10 @@ public final class Constants {
         };
         public static final BetterSwerveKinematics DRIVE_KINEMATICS = new BetterSwerveKinematics(MODULE_OFFSETS);
 
-        public static final Rotation2d FL_OFFSET = Rotation2d.fromRadians(0.1715);
-        public static final Rotation2d FR_OFFSET = Rotation2d.fromRadians(5.167658 + Math.PI);
-        public static final Rotation2d BL_OFFSET = Rotation2d.fromRadians(3.11452428);
-        public static final Rotation2d BR_OFFSET = Rotation2d.fromRadians(4.138);
+        public static final Rotation2d FL_OFFSET = Rotation2d.fromRadians(0.196);
+        public static final Rotation2d FR_OFFSET = Rotation2d.fromRadians(2.109);
+        public static final Rotation2d BL_OFFSET = Rotation2d.fromRadians(3.120);
+        public static final Rotation2d BR_OFFSET = Rotation2d.fromRadians(6.241);
 
         // controlling module wheel speed
         // read this later: https://github.com/Team364/BaseFalconSwerve
@@ -271,6 +271,8 @@ public final class Constants {
 
         public static final double PID_TOLERANCE = 0.05;
 
+        // Set zero points to be the initial "stowed" position?
+        // The Absolute offsets appear to be arbitrary?
         public static final Rotation2d SHOULDER_ABSOLUTE_OFFSET = Rotation2d.fromRadians(0.11);
         public static final Rotation2d ELBOW_ABSOLUTE_OFFSET = Rotation2d.fromRadians(5.46);
         public static final Rotation2d SHOULDER_MATH_OFFSET = Rotation2d.fromRadians(-1.55); // zero needs to be at shoulder parallel to ground
