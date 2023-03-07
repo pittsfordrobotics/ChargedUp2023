@@ -1,6 +1,8 @@
 package com.team3181.frc2023.subsystems;
 
-import com.team3181.frc2023.Constants.FourBarConstants.ArmPositions;
+import com.pathplanner.lib.PathPoint;
+import com.team3181.frc2023.Constants.SuperstructureConstants;
+import com.team3181.frc2023.FieldConstants.AutoDrivePoints;
 import com.team3181.frc2023.subsystems.endeffector.EndEffector;
 import com.team3181.frc2023.subsystems.fourbar.FourBar;
 import com.team3181.frc2023.subsystems.leds.LEDs;
@@ -11,6 +13,9 @@ import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker.Objecti
 import com.team3181.frc2023.subsystems.swerve.Swerve;
 import com.team3181.lib.controller.BetterXboxController;
 import com.team3181.lib.controller.BetterXboxController.Humans;
+import com.team3181.lib.math.GeomUtil;
+import com.team3181.lib.swerve.BetterPathPoint;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -132,22 +137,22 @@ public class Superstructure extends SubsystemBase {
             case OBJECTIVE:
                 switch (objectiveLocal.nodeLevel) {
                     case HYBRID:
-                        fourBar.setRotations(fourBar.solve(ArmPositions.HYBRID, false, true), false);
+                        fourBar.setRotations(fourBar.solve(SuperstructureConstants.ArmPositions.HYBRID, false, true), false);
                         break;
                     case MID:
                         if (gamePieceLocal == GamePiece.CONE) {
-                            fourBar.setRotations(fourBar.solve(ArmPositions.MID_CONE, true, true), false);
+                            fourBar.setRotations(fourBar.solve(SuperstructureConstants.ArmPositions.MID_CONE, true, true), false);
                         }
                         else {
-                            fourBar.setRotations(fourBar.solve(ArmPositions.MID_CUBE, false, true), false);
+                            fourBar.setRotations(fourBar.solve(SuperstructureConstants.ArmPositions.MID_CUBE, false, true), false);
                         }
                         break;
                     case HIGH:
                         if (gamePieceLocal == GamePiece.CONE) {
-                            fourBar.setRotations(fourBar.solve(ArmPositions.HIGH_CONE, true,true), false);
+                            fourBar.setRotations(fourBar.solve(SuperstructureConstants.ArmPositions.HIGH_CONE, true,true), false);
                         }
                         else {
-                            fourBar.setRotations(fourBar.solve(ArmPositions.HIGH_CUBE, false,true), false);
+                            fourBar.setRotations(fourBar.solve(SuperstructureConstants.ArmPositions.HIGH_CUBE, false,true), false);
                         }
                         break;
                 }
@@ -160,12 +165,12 @@ public class Superstructure extends SubsystemBase {
                 }
                 break;
             case INTAKE_GROUND:
-                Translation2d pos = new Translation2d(ArmPositions.SWEEP_MIN.getX() + sweepLocal * (ArmPositions.SWEEP_MAX.getX() - ArmPositions.SWEEP_MIN.getX()), ArmPositions.SWEEP_MIN.getY());
+                Translation2d pos = new Translation2d(SuperstructureConstants.ArmPositions.SWEEP_MIN.getX() + sweepLocal * (SuperstructureConstants.ArmPositions.SWEEP_MAX.getX() - SuperstructureConstants.ArmPositions.SWEEP_MIN.getX()), SuperstructureConstants.ArmPositions.SWEEP_MIN.getY());
                 fourBar.setRotations(FourBar.getInstance().solve(pos, false, true), false);
                 endEffector.intake();
                 break;
             case INTAKE_MID:
-                fourBar.setRotations(FourBar.getInstance().solve(ArmPositions.MID_INTAKE, false,true), false);
+                fourBar.setRotations(FourBar.getInstance().solve(SuperstructureConstants.ArmPositions.MID_INTAKE, false,true), false);
                 endEffector.intake();
                 break;
             case EXHAUST:
@@ -183,7 +188,7 @@ public class Superstructure extends SubsystemBase {
                 break;
             case HOME:
             default:
-                fourBar.setRotations(new Rotation2d[] {ArmPositions.STORAGE_SHOULDER, ArmPositions.STORAGE_ELBOW}, false);
+                fourBar.setRotations(new Rotation2d[] {SuperstructureConstants.ArmPositions.STORAGE_SHOULDER, SuperstructureConstants.ArmPositions.STORAGE_ELBOW}, false);
                 endEffector.idle();
                 break;
         }
@@ -243,6 +248,9 @@ public class Superstructure extends SubsystemBase {
 
     private boolean shouldAutoScore() {
 //        check if at correct pose for current node
-        return false;
+        BetterPathPoint wantedNode = AutoDrivePoints.nodeSelector(ObjectiveTracker.getInstance().getObjective().nodeRow);
+        boolean rot = Math.abs(Swerve.getInstance().getPose().getRotation().getRadians() - wantedNode.getHolonomicRotation().getRadians()) < SuperstructureConstants.AUTO_SCORE_ROTATION_TOLERANCE;
+        boolean position = GeomUtil.distance(Swerve.getInstance().getPose(), new Pose2d(wantedNode.getPosition(), wantedNode.getHolonomicRotation())) < SuperstructureConstants.AUTO_SCORE_POSITION_TOLERANCE;
+        return rot && position;
     }
 }

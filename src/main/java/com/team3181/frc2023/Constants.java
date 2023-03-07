@@ -315,6 +315,12 @@ public final class Constants {
 
         public static double BUMPER_THICKNESS = Units.inchesToMeters(4);
 
+    }
+
+    public static final class SuperstructureConstants {
+        public static final double AUTO_SCORE_POSITION_TOLERANCE = 0.1;
+        public static final double AUTO_SCORE_ROTATION_TOLERANCE = 1;
+
         public static final class ArmPositions {
             public static Rotation2d STORAGE_SHOULDER = Rotation2d.fromRadians(-1.22);
             public static Rotation2d STORAGE_ELBOW = Rotation2d.fromRadians(1.58);
@@ -329,11 +335,11 @@ public final class Constants {
 
             public static Translation2d HYBRID = new Translation2d(0, 0);
 
-            public static Translation2d MID_CONE = new Translation2d(0.6 + BUMPER_THICKNESS, 0.9);
-            public static Translation2d HIGH_CONE = new Translation2d(1 + BUMPER_THICKNESS, 1.25);
+            public static Translation2d MID_CONE = new Translation2d(0.6 + FourBarConstants.BUMPER_THICKNESS, 0.9);
+            public static Translation2d HIGH_CONE = new Translation2d(1 + FourBarConstants.BUMPER_THICKNESS, 1.25);
 
-            public static Translation2d MID_CUBE = new Translation2d(0.35 + BUMPER_THICKNESS, 0.68);
-            public static Translation2d HIGH_CUBE = new Translation2d(0.9 + BUMPER_THICKNESS, 1);
+            public static Translation2d MID_CUBE = new Translation2d(0.35 + FourBarConstants.BUMPER_THICKNESS, 0.68);
+            public static Translation2d HIGH_CUBE = new Translation2d(0.9 + FourBarConstants.BUMPER_THICKNESS, 1);
         }
     }
 

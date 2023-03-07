@@ -1,38 +1,34 @@
 package com.team3181.frc2023.commands;
 
+import com.team3181.frc2023.subsystems.Superstructure;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import com.team3181.frc2023.subsystems.endeffector.EndEffector;
 import com.team3181.frc2023.subsystems.fourbar.FourBar;
 
 
 public class SuperstructurePosition extends CommandBase {
-    private final EndEffector endEffector = EndEffector.getInstance();
-    private final FourBar fourBar = FourBar.getInstance();
+    private final Superstructure superstructure = Superstructure.getInstance();
 
     public SuperstructurePosition() {
-        // each subsystem used by the command must be passed into the
-        // addRequirements() method (which takes a vararg of Subsystem)
-        addRequirements(this.endEffector, this.fourBar);
+        addRequirements(this.superstructure);
     }
 
     @Override
     public void initialize() {
-
+        superstructure.objective();
     }
 
     @Override
     public void execute() {
-
     }
 
     @Override
     public boolean isFinished() {
-        // TODO: Make this return true when this Command no longer needs to run execute()
-        return false;
+        return ;
     }
 
     @Override
     public void end(boolean interrupted) {
-
+        superstructure.home();
     }
 }
