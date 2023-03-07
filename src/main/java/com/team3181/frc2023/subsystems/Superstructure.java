@@ -149,6 +149,7 @@ public class Superstructure extends SubsystemBase {
                         else {
                             fourBar.setRotations(fourBar.solve(ArmPositions.HIGH_CUBE, false,true), false);
                         }
+                        break;
                 }
                 if (shouldAutoScore() && fourBar.atSetpoint()) {
                     endEffector.exhaust();
@@ -166,6 +167,7 @@ public class Superstructure extends SubsystemBase {
             case INTAKE_MID:
                 fourBar.setRotations(FourBar.getInstance().solve(ArmPositions.MID_INTAKE, false,true), false);
                 endEffector.intake();
+                break;
             case EXHAUST:
                 fourBar.hold();
                 endEffector.exhaust();
