@@ -16,12 +16,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import kotlin.ULong;
 import org.littletonrobotics.junction.Logger;
 
 public class ObjectiveTracker extends VirtualSubsystem {
   private final NodeSelectorIO selectorIO;
   private final NodeSelectorIOInputsAutoLogged selectorInputs = new NodeSelectorIOInputsAutoLogged();
   private final Objective objective = new Objective();
+  private boolean manualSelection = true;
+  private boolean[] filled = {};
 
   public static class Objective {
     public int nodeRow; // The row of the selected target node
@@ -70,8 +73,16 @@ public class ObjectiveTracker extends VirtualSubsystem {
       selectorInputs.selected = -1;
     }
 
-    Logger.getInstance().recordOutput("NodeSelector/Node Level", objective.nodeLevel.toString());
-    Logger.getInstance().recordOutput("NodeSelector/Node Row", objective.nodeRow);
+    // Read updates from node filled
+    if (selectorInputs.filled.length != 0) {
+      filled = selectorInputs.filled;
+      selectorInputs.filled = new boolean[]{};
+    }
+
+    if (selectorInputs.active != -1) {
+      manualSelection = selectorInputs.active == 1;
+      selectorInputs.active = -1;
+    }
 
     // Send current node to selector
     {
@@ -87,6 +98,8 @@ public class ObjectiveTracker extends VirtualSubsystem {
         case HIGH -> selected += 18;
       }
       selectorIO.setSelected(selected);
+      selectorIO.setFilled(filled);
+      selectorIO.setActive(manualSelection ? 1 : 0);
     }
 
     // Send current node as text
@@ -120,8 +133,8 @@ public class ObjectiveTracker extends VirtualSubsystem {
     }
 
     // Log state
-    Logger.getInstance().recordOutput("ObjectiveTracker/NodeRow", objective.nodeRow);
-    Logger.getInstance().recordOutput("ObjectiveTracker/NodeLevel", objective.nodeLevel.toString());
+    Logger.getInstance().recordOutput("ObjectiveTracker/Node Level", objective.nodeLevel.toString());
+    Logger.getInstance().recordOutput("ObjectiveTracker/Node Row", objective.nodeRow);
   }
 
   public Objective getObjective() {
