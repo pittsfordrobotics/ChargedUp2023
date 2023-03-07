@@ -13,9 +13,15 @@ public interface NodeSelectorIO {
   @AutoLog
   class NodeSelectorIOInputs {
     public long selected = -1;
+    public boolean[] filled = {};
+    public long active = -1;
   }
 
   default void updateInputs(NodeSelectorIOInputs inputs) {}
 
   default void setSelected(long selected) {}
+
+  default void setFilled(boolean[] selected) {}
+
+  default void setActive(long active) {}
 }

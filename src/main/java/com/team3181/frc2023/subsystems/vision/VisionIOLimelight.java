@@ -13,7 +13,7 @@ public class VisionIOLimelight implements VisionIO {
     private final NetworkTable limelight = LimelightHelpers.getLimelightNTTable("");;
 
     public VisionIOLimelight() {
-//        setLEDs(LED.OFF);
+        setLEDs(LED.OFF);
     }
 
     public void updateInputs(VisionIOInputs inputs) {

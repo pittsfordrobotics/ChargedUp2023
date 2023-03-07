@@ -139,7 +139,7 @@ public final class Constants {
 
         public static final MAX_SWERVE_GEARS GEAR_CONSTANTS = MAX_SWERVE_GEARS.FAST;
         public static final double MAX_LINEAR_VELOCITY_METERS_PER_SECOND = GEAR_CONSTANTS.maxSpeed; // 1678 ran 4.5 m/s in 2022
-        public static final double MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND = 10.0; // from 1678
+        public static final double MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND = 5.0; // from 1678
 
         public static final double DRIVE_GEAR_RATIO = GEAR_CONSTANTS.gearRatio;
         public static final double STEER_GEAR_RATIO = 46.2962962963;
@@ -155,10 +155,10 @@ public final class Constants {
         };
         public static final BetterSwerveKinematics DRIVE_KINEMATICS = new BetterSwerveKinematics(MODULE_OFFSETS);
 
-        public static final Rotation2d FL_OFFSET = Rotation2d.fromRadians(0.1715);
-        public static final Rotation2d FR_OFFSET = Rotation2d.fromRadians(5.167658 + Math.PI);
-        public static final Rotation2d BL_OFFSET = Rotation2d.fromRadians(3.11452428);
-        public static final Rotation2d BR_OFFSET = Rotation2d.fromRadians(4.138);
+        public static final Rotation2d FL_OFFSET = Rotation2d.fromRadians(0.14085696637630463);
+        public static final Rotation2d FR_OFFSET = Rotation2d.fromRadians(2.041490316390991);
+        public static final Rotation2d BL_OFFSET = Rotation2d.fromRadians(3.114173173904419);
+        public static final Rotation2d BR_OFFSET = Rotation2d.fromRadians(6.234853267669678);
 
         // controlling module wheel speed
         // read this later: https://github.com/Team364/BaseFalconSwerve
@@ -259,26 +259,33 @@ public final class Constants {
         public static final double ELBOW_GEAR_RATIO = 5 * 5 * 3;
         public static final double CHAIN_RATIO = 1.0 / 3.0;
 
-        public static final double ELBOW_P = 2.0;
+        public static final double PID_CLAMP_VOLTAGE = 5;
+
+        public static final double ELBOW_P = -10.0;
         public static final double ELBOW_I = 0.0;
         public static final double ELBOW_D = 0.0;
-        public static final double ELBOW_FF = 0.10994761512128838 * -2;
 
-        public static final double SHOULDER_P = 2.0;
+        public static final double SHOULDER_P = 10.0;
         public static final double SHOULDER_I = 0.0;
         public static final double SHOULDER_D = 0.0;
-        public static final double SHOULDER_FF = 0.13338725687737377 * 2;
 
-        public static final Rotation2d SHOULDER_ABSOLUTE_OFFSET = Rotation2d.fromRadians(0.337);
-        public static final Rotation2d ELBOW_ABSOLUTE_OFFSET = Rotation2d.fromRadians(0.255);
-        public static final Rotation2d SHOULDER_MATH_OFFSET = Rotation2d.fromRadians(-1.22); // zero needs to be at shoulder parallel to ground
-        public static final Rotation2d ELBOW_MATH_OFFSET = Rotation2d.fromRadians(-0.62); // zero is in line with shoulder
+        public static final double PID_TOLERANCE = 0.05;
 
-        public static final Rotation2d ELBOW_MIN = Rotation2d.fromRadians(0); // est: 2.79 rad;
-        public static final Rotation2d ELBOW_MAX = Rotation2d.fromRadians(1.11); // est: 0.17 rad;
+        // Set zero points to be the initial "stowed" position?
+        // The Absolute offsets appear to be arbitrary?
+        public static final Rotation2d SHOULDER_ABSOLUTE_OFFSET = Rotation2d.fromRadians(0.11);
+        public static final Rotation2d ELBOW_ABSOLUTE_OFFSET = Rotation2d.fromRadians(5.46);
+        public static final Rotation2d SHOULDER_MATH_OFFSET = Rotation2d.fromRadians(-1.55); // zero needs to be at shoulder parallel to ground
+        public static final Rotation2d ELBOW_MATH_OFFSET = Rotation2d.fromRadians(-3.52); // zero is in line with shoulder
 
-        public static final Rotation2d SHOULDER_MIN = Rotation2d.fromRadians(0); // est -1.22 rad
-        public static final Rotation2d SHOULDER_MAX = Rotation2d.fromRadians(2);
+        public static final Rotation2d ELBOW_MIN = Rotation2d.fromDegrees(-140);
+        public static final Rotation2d ELBOW_MAX = Rotation2d.fromDegrees(140);
+
+        public static final Rotation2d SHOULDER_MIN = Rotation2d.fromRadians(-1.3); // est -1.22 rad
+        public static final Rotation2d SHOULDER_MAX = Rotation2d.fromDegrees(70); // est 170 deg
+
+        public static final Rotation2d SHOULDER_FLIP_MIN = Rotation2d.fromRadians(-1.55);
+        public static final Rotation2d SHOULDER_FLIP_MAX = Rotation2d.fromRadians(0.53);
 
         public static double WHEEL_TO_CHASSIS = Units.inchesToMeters(4.75);
         public static double CHASSIS_TO_ARM = Units.inchesToMeters(28.9);
@@ -306,28 +313,33 @@ public final class Constants {
         public static double SHOULDER_JOINT_POSITION_X = Units.inchesToMeters(-14); // zero is front of chassis at ground level
         public static double SHOULDER_JOINT_POSITION_Y = WHEEL_TO_CHASSIS + CHASSIS_TO_ARM;
 
-        public static final class ArmPositions {
-            public static Rotation2d STORAGE_SHOULDER = Rotation2d.fromDegrees(-70);
-            public static Rotation2d STORAGE_ELBOW = Rotation2d.fromDegrees(160);
+        public static double BUMPER_THICKNESS = Units.inchesToMeters(4);
 
-            public static Translation2d SWEEP_MIN = new Translation2d(0.44, 0.15);
-            public static Translation2d SWEEP_MAX = new Translation2d(0.84, 0.15);
+        public static final class ArmPositions {
+            public static Rotation2d STORAGE_SHOULDER = Rotation2d.fromRadians(-1.22);
+            public static Rotation2d STORAGE_ELBOW = Rotation2d.fromRadians(1.58);
+
+            public static Rotation2d GROUND_PICKUP_SHOULDER = Rotation2d.fromRadians(-1.15);
+            public static Rotation2d GROUND_PICKUP_ELBOW = Rotation2d.fromRadians(-0.1);
+
+            public static Translation2d SWEEP_MIN = new Translation2d(0.66, 0.3);
+            public static Translation2d SWEEP_MAX = new Translation2d(1.05, 0.15);
 
             public static Translation2d MID_INTAKE = new Translation2d(1, 1.1);
 
             public static Translation2d HYBRID = new Translation2d(0, 0);
 
-            public static Translation2d MID_CONE = new Translation2d(0, 0);
-            public static Translation2d HIGH_CONE = new Translation2d(0, 0);
+            public static Translation2d MID_CONE = new Translation2d(0.6 + BUMPER_THICKNESS, 0.9);
+            public static Translation2d HIGH_CONE = new Translation2d(1 + BUMPER_THICKNESS, 1.25);
 
-            public static Translation2d MID_CUBE = new Translation2d(Units.inchesToMeters(20.905), Units.inchesToMeters(28-FieldConstants.Grids.cubeEdgeHighInches)); // THIS ONE WORKS
-            public static Translation2d HIGH_CUBE = new Translation2d(Units.inchesToMeters(38), Units.inchesToMeters(40.1-FieldConstants.Grids.cubeEdgeHighInches)); // TODO: THIS DOES NOT WORK FIX IT
+            public static Translation2d MID_CUBE = new Translation2d(0.35 + BUMPER_THICKNESS, 0.68);
+            public static Translation2d HIGH_CUBE = new Translation2d(0.9 + BUMPER_THICKNESS, 1);
         }
     }
 
     public static final class EndEffectorConstants {
         public static final double EXHAUST_POWER = -12.0;
-        public static final double INTAKE_POWER = 7.0;
+        public static final double INTAKE_POWER = 12.0;
         public static final double GEARING = 4 * 3 * 3;
 
         public static final int CAN_MAIN = 9;

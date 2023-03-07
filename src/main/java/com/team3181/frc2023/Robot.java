@@ -11,10 +11,12 @@ import com.team3181.lib.drivers.LazySparkMax;
 import com.team3181.lib.util.Alert;
 import com.team3181.lib.util.Alert.AlertType;
 import com.team3181.lib.util.PIDTuner;
+import com.team3181.lib.util.VirtualSubsystem;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import org.littletonrobotics.junction.LogFileUtil;
@@ -78,12 +80,14 @@ public class Robot extends LoggedRobot {
     PIDTuner.enable(RobotConstants.PID_TUNER_ENABLED);
 
     DriverStation.silenceJoystickConnectionWarning(true);
+    LiveWindow.disableAllTelemetry();
     robotContainer = new RobotContainer();
   }
 
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
+    VirtualSubsystem.periodicAll();
 
     // Log scheduled commands
     Logger.getInstance().recordOutput("ActiveCommands/Scheduler",

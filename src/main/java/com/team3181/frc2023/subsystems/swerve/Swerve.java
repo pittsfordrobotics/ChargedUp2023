@@ -199,4 +199,8 @@ public class Swerve extends SubsystemBase {
             return Rotation2d.fromRadians(actualRobotRelativeChassisSpeeds.omegaRadiansPerSecond * RobotConstants.LOOP_TIME_SECONDS + lastRotation.getRadians());
         }
     }
+
+    public Rotation2d getPitch() {
+        return Rotation2d.fromRadians(gyroInputs.pitchPositionRad);
+    }
 }
