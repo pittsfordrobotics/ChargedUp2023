@@ -13,6 +13,7 @@ public class GoToNearestNode extends CommandBase {
 
     @Override
     public void initialize() {
+        // make command group, add this command and another to place at node to that command group
         new SwervePathingOnTheFly(FieldConstants.AutoDrivePoints.nodeSelector(ObjectiveTracker.getInstance().getObjective().nodeRow));
     }
 
