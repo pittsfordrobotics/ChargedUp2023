@@ -253,7 +253,11 @@ public class Superstructure extends SubsystemBase {
         return rot && position && EndEffector.getInstance().hasPiece();
     }
 
-    public boolean shouldGoHome() {
-        return !EndEffector.getInstance().hasPiece();
+    public boolean atSetpoint() {
+        return shouldAutoScore() && FourBar.getInstance().atSetpoint();
+    }
+
+    public boolean hasGamePiece() {
+        return EndEffector.getInstance().hasPiece();
     }
 }

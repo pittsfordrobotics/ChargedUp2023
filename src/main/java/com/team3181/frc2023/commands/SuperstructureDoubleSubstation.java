@@ -5,34 +5,29 @@ import com.team3181.frc2023.subsystems.Superstructure;
 import com.team3181.frc2023.subsystems.swerve.Swerve;
 
 
-public class SwerveDoubleSubstation extends CommandBase {
+public class SuperstructureDoubleSubstation extends CommandBase {
     private final Superstructure superstructure = Superstructure.getInstance();
     private final Swerve swerve = Swerve.getInstance();
 
-    public SwerveDoubleSubstation() {
-        // each subsystem used by the command must be passed into the
-        // addRequirements() method (which takes a vararg of Subsystem)
+    public SuperstructureDoubleSubstation() {
         addRequirements(this.superstructure, this.swerve);
     }
 
     @Override
     public void initialize() {
-
+        superstructure.collectMid();
     }
 
     @Override
-    public void execute() {
-
-    }
+    public void execute() {}
 
     @Override
     public boolean isFinished() {
-        // TODO: Make this return true when this Command no longer needs to run execute()
-        return false;
+        return superstructure.hasGamePiece();
     }
 
     @Override
     public void end(boolean interrupted) {
-
+        superstructure.home();
     }
 }

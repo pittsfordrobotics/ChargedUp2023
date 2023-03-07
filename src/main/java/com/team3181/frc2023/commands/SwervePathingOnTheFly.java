@@ -1,5 +1,6 @@
 package com.team3181.frc2023.commands;
 
+import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
@@ -24,6 +25,7 @@ public class SwervePathingOnTheFly extends CommandBase {
     private PathPlannerTrajectory trajectory;
     private final BetterPathPoint[] pathPoint;
     private final Timer timer = new Timer();
+    private PathConstraints pathConstraints;
 
     private final PIDController xController = new PIDController(AutoConstants.LINEAR_P, 0, 0);
     private final PIDController yController = new PIDController(AutoConstants.LINEAR_P, 0, 0);
@@ -33,6 +35,14 @@ public class SwervePathingOnTheFly extends CommandBase {
     public SwervePathingOnTheFly(BetterPathPoint... pathPoint) {
         addRequirements(this.swerve);
         this.pathPoint = pathPoint;
+        rotController.enableContinuousInput(-Math.PI, Math.PI);
+        pathConstraints = AutoConstants.MAX_SPEED;
+    }
+
+    public SwervePathingOnTheFly(PathConstraints pathConstraints, BetterPathPoint... pathPoint) {
+        addRequirements(this.swerve);
+        this.pathPoint = pathPoint;
+        this.pathConstraints = pathConstraints;
         rotController.enableContinuousInput(-Math.PI, Math.PI);
     }
 
@@ -45,7 +55,7 @@ public class SwervePathingOnTheFly extends CommandBase {
             adjustedPathPoints.add(AutoDrivePoints.pathPointFlipper(pathPoint[i-1], DriverStation.getAlliance()));
         }
         this.trajectory = PathPlanner.generatePath(
-                AutoConstants.MAX_SPEED,
+                pathConstraints,
                 adjustedPathPoints
         );
 //        PathPlannerState adjustedState = PathPlannerTrajectory.transformStateForAlliance(trajectory.getInitialState(), DriverStation.getAlliance());
