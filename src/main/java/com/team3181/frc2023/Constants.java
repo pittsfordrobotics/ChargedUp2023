@@ -273,10 +273,10 @@ public final class Constants {
 
         // Set zero points to be the initial "stowed" position?
         // The Absolute offsets appear to be arbitrary?
-        public static final Rotation2d SHOULDER_ABSOLUTE_OFFSET = Rotation2d.fromRadians(0.11);
-        public static final Rotation2d ELBOW_ABSOLUTE_OFFSET = Rotation2d.fromRadians(5.46);
-        public static final Rotation2d SHOULDER_MATH_OFFSET = Rotation2d.fromRadians(-1.55); // zero needs to be at shoulder parallel to ground
-        public static final Rotation2d ELBOW_MATH_OFFSET = Rotation2d.fromRadians(-3.52); // zero is in line with shoulder
+        public static final Rotation2d SHOULDER_ABSOLUTE_OFFSET = Rotation2d.fromRadians(1.702175259590149);
+        public static final Rotation2d ELBOW_ABSOLUTE_OFFSET = Rotation2d.fromRadians(3.2243828773498535);
+        public static final Rotation2d SHOULDER_MATH_OFFSET = Rotation2d.fromRadians(-1.569104790687561); // zero needs to be at shoulder parallel to ground
+        public static final Rotation2d ELBOW_MATH_OFFSET = Rotation2d.fromRadians(-4.720415115356445); // zero is in line with shoulder
 
         public static final Rotation2d ELBOW_MIN = Rotation2d.fromDegrees(-140);
         public static final Rotation2d ELBOW_MAX = Rotation2d.fromDegrees(140);
@@ -284,8 +284,8 @@ public final class Constants {
         public static final Rotation2d SHOULDER_MIN = Rotation2d.fromRadians(-1.3); // est -1.22 rad
         public static final Rotation2d SHOULDER_MAX = Rotation2d.fromDegrees(70); // est 170 deg
 
-        public static final Rotation2d SHOULDER_FLIP_MIN = Rotation2d.fromRadians(-1.55);
-        public static final Rotation2d SHOULDER_FLIP_MAX = Rotation2d.fromRadians(0.53);
+        public static final Rotation2d SHOULDER_FLIP_MIN = Rotation2d.fromRadians(-1.5628726813010871);
+        public static final Rotation2d SHOULDER_FLIP_MAX = Rotation2d.fromRadians(0.5233587026596069);
 
         public static double WHEEL_TO_CHASSIS = Units.inchesToMeters(4.75);
         public static double CHASSIS_TO_ARM = Units.inchesToMeters(28.9);
