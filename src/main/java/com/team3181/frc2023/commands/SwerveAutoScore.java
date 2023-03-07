@@ -8,8 +8,8 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 public class SwerveAutoScore extends SequentialCommandGroup {
     public SwerveAutoScore() {
         super(
-                new SwervePathingOnTheFly(AutoDrivePoints.nodeSelector(ObjectiveTracker.getInstance().getObjective().nodeRow))
-
+                new SwervePathingOnTheFly(AutoDrivePoints.nodeSelector(ObjectiveTracker.getInstance().getObjective().nodeRow)),
+                new SuperstructureObjective()
         );
     }
 }

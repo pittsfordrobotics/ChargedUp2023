@@ -160,7 +160,6 @@ public class Superstructure extends SubsystemBase {
                     endEffector.exhaust();
                 }
                 else {
-//                    TODO: maybe add swerve pathing on the fly
                     endEffector.idle();
                 }
                 break;
@@ -251,6 +250,10 @@ public class Superstructure extends SubsystemBase {
         BetterPathPoint wantedNode = AutoDrivePoints.nodeSelector(ObjectiveTracker.getInstance().getObjective().nodeRow);
         boolean rot = Math.abs(Swerve.getInstance().getPose().getRotation().getRadians() - wantedNode.getHolonomicRotation().getRadians()) < SuperstructureConstants.AUTO_SCORE_ROTATION_TOLERANCE;
         boolean position = GeomUtil.distance(Swerve.getInstance().getPose(), new Pose2d(wantedNode.getPosition(), wantedNode.getHolonomicRotation())) < SuperstructureConstants.AUTO_SCORE_POSITION_TOLERANCE;
-        return rot && position;
+        return rot && position && EndEffector.getInstance().hasPiece();
+    }
+
+    public boolean shouldGoHome() {
+        return !EndEffector.getInstance().hasPiece();
     }
 }
