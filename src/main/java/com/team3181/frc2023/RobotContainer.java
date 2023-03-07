@@ -47,8 +47,8 @@ public class RobotContainer {
   public RobotContainer() {
     autoConfig();
 
-      competitionButtons();
-//      testButtons();
+//      competitionButtons();
+      testButtons();
 
     if (!RobotConstants.IS_TANK) swerve.setDefaultCommand(new SwerveDriveFieldXbox());
     if (RobotConstants.IS_TANK) Tank.getInstance().setDefaultCommand(new TankXbox());
@@ -57,7 +57,7 @@ public class RobotContainer {
   private void testButtons() {
 //    driverController.a().onTrue(new InstantCommand(endEffector::intake)).onFalse(new InstantCommand(endEffector::idle));
 //    driverController.x().onTrue(new InstantCommand(endEffector::exhaust)).onFalse(new InstantCommand(endEffector::idle));
-//    driverController.rightTrigger().whileTrue(new InstantCommand(swerve::zeroGyro));
+    driverController.rightTrigger().whileTrue(new InstantCommand(swerve::zeroGyro));
 //    driverController.a().whileTrue(new SwervePathing(Paths.TEST_ON_THE_FLY, false));
 //    driverController.a().whileTrue(new SwervePathingOnTheFly(
 //            AutoDrivePoints.LOADING_STATION_TOP_INNER,
