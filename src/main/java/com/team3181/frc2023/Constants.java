@@ -139,7 +139,7 @@ public final class Constants {
 
         public static final MAX_SWERVE_GEARS GEAR_CONSTANTS = MAX_SWERVE_GEARS.FAST;
         public static final double MAX_LINEAR_VELOCITY_METERS_PER_SECOND = GEAR_CONSTANTS.maxSpeed; // 1678 ran 4.5 m/s in 2022
-        public static final double MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND = 10.0; // from 1678
+        public static final double MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND = 5.0; // from 1678
 
         public static final double DRIVE_GEAR_RATIO = GEAR_CONSTANTS.gearRatio;
         public static final double STEER_GEAR_RATIO = 46.2962962963;
@@ -155,10 +155,10 @@ public final class Constants {
         };
         public static final BetterSwerveKinematics DRIVE_KINEMATICS = new BetterSwerveKinematics(MODULE_OFFSETS);
 
-        public static final Rotation2d FL_OFFSET = Rotation2d.fromRadians(0.196);
-        public static final Rotation2d FR_OFFSET = Rotation2d.fromRadians(2.109);
-        public static final Rotation2d BL_OFFSET = Rotation2d.fromRadians(3.120);
-        public static final Rotation2d BR_OFFSET = Rotation2d.fromRadians(6.241);
+        public static final Rotation2d FL_OFFSET = Rotation2d.fromRadians(0.14085696637630463);
+        public static final Rotation2d FR_OFFSET = Rotation2d.fromRadians(2.041490316390991);
+        public static final Rotation2d BL_OFFSET = Rotation2d.fromRadians(3.114173173904419);
+        public static final Rotation2d BR_OFFSET = Rotation2d.fromRadians(6.234853267669678);
 
         // controlling module wheel speed
         // read this later: https://github.com/Team364/BaseFalconSwerve
