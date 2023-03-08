@@ -145,6 +145,7 @@ public final class Constants {
         public static final double STEER_GEAR_RATIO = 46.2962962963;
         public static final double X_LENGTH_METERS = Units.inchesToMeters(28);
         public static final double Y_LENGTH_METERS = Units.inchesToMeters(28);
+        public static final double BUMPER_WIDTH = Units.inchesToMeters(3.5);
         public static final double WHEEL_DIAMETER_METERS = Units.inchesToMeters(3);
 
         public static final Translation2d[] MODULE_OFFSETS = {
@@ -227,6 +228,10 @@ public final class Constants {
     }
 
     public static final class AutoConstants {
+        public enum AutoDrivePosition {
+            NODE, SINGLE_SUBSTATION, DOUBLE_SUBSTATION_HIGH, DOUBLE_SUBSTATION_LOW
+        }
+
         // PID values for trajectory follower
         public static final double LINEAR_P = 1.5;
         public static final double ROT_P = 5;

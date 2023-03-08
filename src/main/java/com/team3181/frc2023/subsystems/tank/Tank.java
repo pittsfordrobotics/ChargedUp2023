@@ -186,7 +186,6 @@ public class Tank extends SubsystemBase {
 
     public Pose2d getPose() {
         return pose;
-//        TODO: use this sucks (don't fix this) (its magic from other teams)
 //        return RobotState.getInstance().getLatestPose()
     }
 

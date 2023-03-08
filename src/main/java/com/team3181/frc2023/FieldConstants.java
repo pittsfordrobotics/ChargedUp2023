@@ -1,6 +1,5 @@
 package com.team3181.frc2023;
 
-import com.pathplanner.lib.PathPoint;
 import com.team3181.frc2023.Constants.SwerveConstants;
 import com.team3181.lib.swerve.BetterPathPoint;
 import edu.wpi.first.math.geometry.*;
@@ -28,7 +27,7 @@ public final class FieldConstants {
      * ALL DEFINED IN BLUE, YOU MUST USE PATHPOINTFLIPPER!!!!!
      */
     public static final class AutoDrivePoints {
-        public static final BetterPathPoint BOTTOM_NODE = new BetterPathPoint(new Translation2d(Grids.outerX + SwerveConstants.X_LENGTH_METERS / 2, Grids.nodeFirstY), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(-180));
+        public static final BetterPathPoint BOTTOM_NODE = new BetterPathPoint(new Translation2d(SwerveConstants.BUMPER_WIDTH + Grids.outerX + SwerveConstants.X_LENGTH_METERS / 2, Grids.nodeFirstY), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(-180));
         public static final BetterPathPoint COMMUNITY_TOP_EXIT = new BetterPathPoint(new Translation2d(Community.midX + SwerveConstants.X_LENGTH_METERS / 2, Community.leftY - Units.inchesToMeters(59.39) / 2), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(-180));
         public static final BetterPathPoint COMMUNITY_BOTTOM_EXIT = new BetterPathPoint(new Translation2d(Community.outerX + SwerveConstants.X_LENGTH_METERS / 2, 0.8), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(-180));
 
@@ -38,27 +37,71 @@ public final class FieldConstants {
         public static final BetterPathPoint LOADING_STATION_TOP_EXIT = new BetterPathPoint(new Translation2d(0.5 * LoadingZone.midX + LoadingZone.outerX * 0.5, LoadingZone.midY + Units.inchesToMeters(50.5) / 2), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(-180));
         public static final BetterPathPoint LOADING_STATION_BOTTOM_EXIT = new BetterPathPoint(new Translation2d(0.5 * LoadingZone.midX + LoadingZone.outerX * 0.5, LoadingZone.midY - Units.inchesToMeters(50.5)/ 2), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(-180));
 
-        public static final BetterPathPoint LOADING_STATION_TOP_INNER = new BetterPathPoint(new Translation2d(LoadingZone.doubleSubstationX - SwerveConstants.X_LENGTH_METERS / 2 - 0.2, LoadingZone.midY + Units.inchesToMeters(50.5) / 2), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(0));
-        public static final BetterPathPoint LOADING_STATION_BOTTOM_INNER = new BetterPathPoint(new Translation2d(LoadingZone.doubleSubstationX - SwerveConstants.X_LENGTH_METERS / 2 - 0.2, LoadingZone.midY - Units.inchesToMeters(50.5) / 2), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(0));
+        public static final BetterPathPoint LOADING_STATION_TOP_INNER = new BetterPathPoint(new Translation2d(-SwerveConstants.BUMPER_WIDTH + LoadingZone.doubleSubstationX - SwerveConstants.X_LENGTH_METERS / 2 - 0.2, LoadingZone.midY + Units.inchesToMeters(50.5) / 2), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(0));
+        public static final BetterPathPoint LOADING_STATION_BOTTOM_INNER = new BetterPathPoint(new Translation2d(-SwerveConstants.BUMPER_WIDTH + LoadingZone.doubleSubstationX - SwerveConstants.X_LENGTH_METERS / 2 - 0.2, LoadingZone.midY - Units.inchesToMeters(50.5) / 2), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(0));
+
+        /**
+         * @param startingPoint point 1
+         * @param endingPoint point 2
+         * @return Point 1 with updated heading to point at ending point
+         */
+        public static BetterPathPoint updateHeading(BetterPathPoint startingPoint, BetterPathPoint endingPoint) {
+            double deltaX = endingPoint.getPosition().getX() - startingPoint.getPosition().getX();
+            double deltaY = endingPoint.getPosition().getY() - startingPoint.getPosition().getY();
+            Rotation2d updatedHeading;
+            if (deltaY == 0) {
+                updatedHeading = Rotation2d.fromDegrees(180 * deltaX > 0 ? 0 : 1);
+            }
+            else {
+                updatedHeading = Rotation2d.fromRadians(Math.atan((deltaX)/(deltaY)));
+            }
+            if (deltaX > 0 && deltaY > 0) {
+                updatedHeading = updatedHeading.times(-1);
+                updatedHeading = updatedHeading.plus(Rotation2d.fromDegrees(90));
+            }
+            else if (deltaX < 0 && deltaY > 0) {
+                updatedHeading = updatedHeading.plus(Rotation2d.fromDegrees(90));
+            }
+            else if (deltaX < 0 && deltaY < 0) {
+                updatedHeading = updatedHeading.times(-1);
+                updatedHeading = updatedHeading.plus(Rotation2d.fromDegrees(-90));
+            }
+            else if (deltaX > 0 && deltaY < 0) {
+                updatedHeading = updatedHeading.plus(Rotation2d.fromDegrees(-90));
+            }
+            else if (deltaX == 0) {
+                updatedHeading = updatedHeading.plus(Rotation2d.fromDegrees(90 * deltaY > 0 ? 1 : -1));
+            }
+            return new BetterPathPoint(startingPoint.getPosition(), updatedHeading, startingPoint.getHolonomicRotation());
+        }
 
         /**
          * @param node Select a node (0-8): starting at the bottom
          * @return PathPoint to the selected node on the Blue Alliance
          */
         public static BetterPathPoint nodeSelector(int node) {
-            return new BetterPathPoint(new Translation2d(Grids.outerX + SwerveConstants.X_LENGTH_METERS / 2, Grids.nodeFirstY + Grids.nodeSeparationY * (node)), BOTTOM_NODE.getHeading(), BOTTOM_NODE.getHolonomicRotation());
+            return new BetterPathPoint(new Translation2d(BOTTOM_NODE.getPosition().getX(), BOTTOM_NODE.getPosition().getY() + Grids.nodeSeparationY * (node)), BOTTOM_NODE.getHeading(), BOTTOM_NODE.getHolonomicRotation());
         }
 
+        /**
+         * @param betterPathPoint path point to be flipped
+         * @return changes the heading as if you were leaving the community
+         */
         public static BetterPathPoint leavingCommunity(BetterPathPoint betterPathPoint) {
             return new BetterPathPoint(betterPathPoint.getPosition(), betterPathPoint.getHeading().plus(Rotation2d.fromDegrees(180)), betterPathPoint.getHolonomicRotation());
         }
 
-        public static PathPoint pathPointFlipper(BetterPathPoint betterPathPoint, Alliance alliance) {
+        /**
+         * @param betterPathPoint path point to be flipped
+         * @param alliance current alliance
+         * @return a flipped path point to math current alliance
+         */
+        public static BetterPathPoint pathPointFlipper(BetterPathPoint betterPathPoint, Alliance alliance) {
             if (alliance == Alliance.Blue) {
                 return betterPathPoint;
             } else if (alliance == Alliance.Red) {
                 Translation2d transformedTranslation = new Translation2d(betterPathPoint.getPosition().getX(), fieldWidth - betterPathPoint.getPosition().getY());
-                return new PathPoint(transformedTranslation, betterPathPoint.getHeading().times(-1), betterPathPoint.getHolonomicRotation().times(-1));
+                return new BetterPathPoint(transformedTranslation, betterPathPoint.getHeading().times(-1), betterPathPoint.getHolonomicRotation().times(-1));
             }
             return betterPathPoint;
         }

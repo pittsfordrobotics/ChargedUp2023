@@ -4,11 +4,9 @@
 
 package com.team3181.frc2023;
 
+import com.team3181.frc2023.Constants.AutoConstants.AutoDrivePosition;
 import com.team3181.frc2023.Constants.RobotConstants;
-import com.team3181.frc2023.commands.AutoCollectAndGo;
-import com.team3181.frc2023.commands.DropClimb;
-import com.team3181.frc2023.commands.SwerveDriveFieldXbox;
-import com.team3181.frc2023.commands.TankXbox;
+import com.team3181.frc2023.commands.*;
 import com.team3181.frc2023.subsystems.Superstructure;
 import com.team3181.frc2023.subsystems.endeffector.EndEffector;
 import com.team3181.frc2023.subsystems.fourbar.FourBar;
@@ -55,9 +53,10 @@ public class RobotContainer {
   }
 
   private void testButtons() {
+    driverController.a().whileTrue(new SwervePathingOnTheFly(AutoDrivePosition.NODE, true));
 //    driverController.a().onTrue(new InstantCommand(endEffector::intake)).onFalse(new InstantCommand(endEffector::idle));
 //    driverController.x().onTrue(new InstantCommand(endEffector::exhaust)).onFalse(new InstantCommand(endEffector::idle));
-    driverController.rightTrigger().whileTrue(new InstantCommand(swerve::zeroGyro));
+//    driverController.rightTrigger().whileTrue(new InstantCommand(swerve::zeroGyro));
 //    driverController.a().whileTrue(new SwervePathing(Paths.TEST_ON_THE_FLY, false));
 //    driverController.a().whileTrue(new SwervePathingOnTheFly(
 //            AutoDrivePoints.LOADING_STATION_TOP_INNER,
