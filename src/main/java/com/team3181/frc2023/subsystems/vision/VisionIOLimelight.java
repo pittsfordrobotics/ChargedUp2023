@@ -5,6 +5,8 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import org.littletonrobotics.junction.Logger;
 
 public class VisionIOLimelight implements VisionIO {
@@ -18,7 +20,7 @@ public class VisionIOLimelight implements VisionIO {
 
     public void updateInputs(VisionIOInputs inputs) {
         NetworkTableEntry heartbeatEntry = limelight.getEntry("hb");
-        NetworkTableEntry botposeEntry = limelight.getEntry("botpose_wpiblue");
+        NetworkTableEntry botposeEntry = DriverStation.getAlliance() == Alliance.Blue ? limelight.getEntry("botpose_wpiblue") : limelight.getEntry("botpose_wpired");
 
         double pipelineLatency = LimelightHelpers.getLatency_Pipeline("");
         double captureLatency = LimelightHelpers.getLatency_Capture("");

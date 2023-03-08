@@ -35,12 +35,6 @@ public class Vision extends SubsystemBase {
 
     private Vision(VisionIO io) {
         this.io = io;
-        ShuffleboardTab visionTab = Shuffleboard.getTab("Vision");
-        visionTab.addBoolean("Has Target", this::hasTarget);
-        visionTab.addNumber("Horizontal", this::getHorizontal);
-        visionTab.addNumber("Vertical", this::getVertical);
-        visionTab.addNumber("LED", led::getNum);
-        visionTab.addBoolean("Heartbeat", () -> inputs.connected);
     }
 
     @Override

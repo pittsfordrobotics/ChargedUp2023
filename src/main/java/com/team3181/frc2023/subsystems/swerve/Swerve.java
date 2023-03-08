@@ -59,10 +59,6 @@ public class Swerve extends SubsystemBase {
         }
 
         poseEstimator = new SwerveDrivePoseEstimator(SwerveConstants.DRIVE_KINEMATICS, new Rotation2d(), modulePositions, new Pose2d());
-
-        if (!RobotConstants.IS_TANK) {
-            ShuffleboardTab driveTab = Shuffleboard.getTab("Swerve");
-        }
     }
 
     @Override

@@ -68,6 +68,7 @@ public class SwervePathingOnTheFly extends CommandBase {
         ArrayList<PathPoint> adjustedPathPoints = new ArrayList<>();
         // adds path points and flips for correct alliance
         BetterPathPoint robotPoint = new BetterPathPoint(Swerve.getInstance().getPose().getTranslation(), Swerve.getInstance().getPose().getRotation(), Swerve.getInstance().getPose().getRotation());
+//        BetterPathPoint robotPoint = new BetterPathPoint(Swerve.getInstance().getPose().getTranslation(), Swerve.getInstance().getPose().getRotation(), Swerve.getInstance().getPose().getRotation());
         switch (position) {
             case NODE:
                 BetterPathPoint node = AutoDrivePoints.nodeSelector(ObjectiveTracker.getInstance().getObjective().nodeRow);
@@ -75,6 +76,9 @@ public class SwervePathingOnTheFly extends CommandBase {
                     BetterPathPoint headingCorrection = AutoDrivePoints.updateHeading(robotPoint, AutoDrivePoints.pathPointFlipper(node, DriverStation.getAlliance()));
                     adjustedPathPoints.add(headingCorrection);
                     adjustedPathPoints.add(AutoDrivePoints.pathPointFlipper(node, DriverStation.getAlliance()));
+                }
+                else {
+//                    if
                 }
                 break;
             case SINGLE_SUBSTATION:
