@@ -11,10 +11,13 @@ import com.team3181.frc2023.FieldConstants.AutoDrivePoints;
 import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker;
 import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker.Objective;
 import com.team3181.frc2023.subsystems.swerve.Swerve;
+import com.team3181.lib.math.GeomUtil;
 import com.team3181.lib.swerve.BetterPathPoint;
 import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -91,22 +94,55 @@ public class SwervePathingOnTheFly extends CommandBase {
                         adjustedPathPoints.add(headingCorrection);
                         adjustedPathPoints.add(AutoDrivePoints.pathPointFlipper(AutoDrivePoints.LOADING_STATION_BOTTOM_EXIT, DriverStation.getAlliance()));
                     }
+                    BetterPathPoint inner = objective.nodeRow > 3 ? AutoDrivePoints.pathPointFlipper(AutoDrivePoints.COMMUNITY_TOP_INNER, DriverStation.getAlliance()) : AutoDrivePoints.pathPointFlipper(AutoDrivePoints.COMMUNITY_BOTTOM_INNER, DriverStation.getAlliance());
                     if (robotPointBlue.getPosition().getX() > 5.26) {
-                        BetterPathPoint entrance = objective.nodeRow > 3 ? AutoDrivePoints.pathPointFlipper(AutoDrivePoints.COMMUNITY_TOP_EXIT, DriverStation.getAlliance()) : AutoDrivePoints.pathPointFlipper(AutoDrivePoints.COMMUNITY_BOTTOM_EXIT, DriverStation.getAlliance());
+                        double distanceTop = GeomUtil.distance(new Pose2d(AutoDrivePoints.COMMUNITY_TOP_EXIT.getPosition(), new Rotation2d()), new Pose2d(robotPointBlue.getPosition(), new Rotation2d()));
+                        double distanceBottom = GeomUtil.distance(new Pose2d(AutoDrivePoints.COMMUNITY_BOTTOM_EXIT.getPosition(), new Rotation2d()), new Pose2d(robotPointBlue.getPosition(), new Rotation2d()));
+                        BetterPathPoint entrance;
+                        if (distanceTop - distanceBottom > 1) {
+                            entrance = AutoDrivePoints.pathPointFlipper(AutoDrivePoints.COMMUNITY_BOTTOM_EXIT, DriverStation.getAlliance());
+                            inner = AutoDrivePoints.pathPointFlipper(AutoDrivePoints.COMMUNITY_BOTTOM_INNER, DriverStation.getAlliance());
+                        }
+                        else if (distanceBottom - distanceTop > 1) {
+                            entrance = AutoDrivePoints.pathPointFlipper(AutoDrivePoints.COMMUNITY_TOP_EXIT, DriverStation.getAlliance());
+                            inner = AutoDrivePoints.pathPointFlipper(AutoDrivePoints.COMMUNITY_TOP_INNER, DriverStation.getAlliance());
+                        }
+                        else {
+                            entrance = objective.nodeRow > 3 ? AutoDrivePoints.pathPointFlipper(AutoDrivePoints.COMMUNITY_TOP_EXIT, DriverStation.getAlliance()) : AutoDrivePoints.pathPointFlipper(AutoDrivePoints.COMMUNITY_BOTTOM_EXIT, DriverStation.getAlliance());
+                            inner = objective.nodeRow > 3 ? AutoDrivePoints.pathPointFlipper(AutoDrivePoints.COMMUNITY_TOP_INNER, DriverStation.getAlliance()) : AutoDrivePoints.pathPointFlipper(AutoDrivePoints.COMMUNITY_BOTTOM_INNER, DriverStation.getAlliance());
+                        }
                         if (adjustedPathPoints.size() == 0) {
                             BetterPathPoint headingCorrection = AutoDrivePoints.updateHeading(robotPoint, entrance);
                             adjustedPathPoints.add(headingCorrection);
                         }
                         adjustedPathPoints.add(entrance);
                     }
-                    if (robotPointBlue.getPosition().getX() > 1.8) {
-                        BetterPathPoint inner = objective.nodeRow > 3 ? AutoDrivePoints.pathPointFlipper(AutoDrivePoints.COMMUNITY_TOP_INNER, DriverStation.getAlliance()) : AutoDrivePoints.pathPointFlipper(AutoDrivePoints.COMMUNITY_BOTTOM_INNER, DriverStation.getAlliance());
+
+                    if (robotPointBlue.getPosition().getX() > 2) {
                         if (adjustedPathPoints.size() == 0 && robotPointBlue.getPosition().getY() < 5.5) {
+                            double distanceTop = GeomUtil.distance(new Pose2d(AutoDrivePoints.COMMUNITY_TOP_INNER.getPosition(), new Rotation2d()), new Pose2d(robotPointBlue.getPosition(), new Rotation2d()));
+                            double distanceBottom = GeomUtil.distance(new Pose2d(AutoDrivePoints.COMMUNITY_BOTTOM_INNER.getPosition(), new Rotation2d()), new Pose2d(robotPointBlue.getPosition(), new Rotation2d()));
+                            if (distanceTop - distanceBottom > 1) {
+                                inner = AutoDrivePoints.pathPointFlipper(AutoDrivePoints.COMMUNITY_BOTTOM_INNER, DriverStation.getAlliance());
+                            }
+                            else if (distanceBottom - distanceTop > 1) {
+                                inner = AutoDrivePoints.pathPointFlipper(AutoDrivePoints.COMMUNITY_TOP_INNER, DriverStation.getAlliance());
+                            }
+                            else {
+                                inner = objective.nodeRow > 3 ? AutoDrivePoints.pathPointFlipper(AutoDrivePoints.COMMUNITY_TOP_INNER, DriverStation.getAlliance()) : AutoDrivePoints.pathPointFlipper(AutoDrivePoints.COMMUNITY_BOTTOM_INNER, DriverStation.getAlliance());
+                            }
                             BetterPathPoint headingCorrection = AutoDrivePoints.updateHeading(robotPoint, inner);
                             adjustedPathPoints.add(headingCorrection);
                         }
                         BetterPathPoint headingCorrection2 = AutoDrivePoints.updateHeading(inner, node);
                         adjustedPathPoints.add(headingCorrection2);
+                    }
+                    if (robotPointBlue.getPosition().getX() > 1.7) {
+                        if (adjustedPathPoints.size() == 0 && robotPointBlue.getPosition().getY() < 5.5) {
+                            BetterPathPoint headingCorrection = AutoDrivePoints.updateHeading(robotPoint, node);
+                            adjustedPathPoints.add(headingCorrection);
+                            System.out.println(headingCorrection.getHeading());
+                        }
                         adjustedPathPoints.add(node);
                     }
 
