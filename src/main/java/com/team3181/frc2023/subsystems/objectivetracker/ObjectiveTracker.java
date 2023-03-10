@@ -84,7 +84,7 @@ public class ObjectiveTracker extends VirtualSubsystem {
       selectorInputs.active = -1;
     }
 
-    // Send current node to selector
+    // Send current data to selector
     {
       int selected;
       if (DriverStation.getAlliance() == Alliance.Blue) {
@@ -143,6 +143,7 @@ public class ObjectiveTracker extends VirtualSubsystem {
 
   /** Shifts the selected node in the selector by one position. */
   public void shiftNode(Direction direction) {
+    manualSelection = true;
     switch (direction) {
       case LEFT:
         if (DriverStation.getAlliance() == Alliance.Blue) {
@@ -184,6 +185,16 @@ public class ObjectiveTracker extends VirtualSubsystem {
         }
         break;
     }
+  }
+
+  /** Toggle whether current cell is filled */
+  public void toggleFilled() {
+    filled[(int)selectorInputs.selected] = !filled[(int)selectorInputs.selected];
+  }
+
+  /** Toggle whether automation is enabled */
+  public void toggleActive() {
+    manualSelection = !manualSelection;
   }
 
   /** Command factory to shift the selected node in the selector by one position. */
