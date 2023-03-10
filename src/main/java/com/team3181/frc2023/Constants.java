@@ -63,10 +63,11 @@ public final class Constants {
             SPARKMAX_HASHMAP.put(SwerveConstants.CAN_BL_STEER, "Back Left Steer");
             SPARKMAX_HASHMAP.put(SwerveConstants.CAN_BR_DRIVE, "Back Right Drive");
             SPARKMAX_HASHMAP.put(SwerveConstants.CAN_BR_STEER, "Back Right Steer");
-            SPARKMAX_HASHMAP.put(EndEffectorConstants.CAN_MAIN, "Intake");
+            SPARKMAX_HASHMAP.put(EndEffectorConstants.CAN_LEFT, "Intake Left");
             SPARKMAX_HASHMAP.put(FourBarConstants.CAN_SHOULDER_MASTER, "Shoulder Master");
             SPARKMAX_HASHMAP.put(FourBarConstants.CAN_SHOULDER_FOLLOWER, "Shoulder Follower");
             SPARKMAX_HASHMAP.put(FourBarConstants.CAN_ELBOW, "Elbow");
+            SPARKMAX_HASHMAP.put(EndEffectorConstants.CAN_RIGHT, "Intake Right");
 
             if (RobotBase.isReal()) {
                 SHOULDER = new ArmIOShoulderSparkMax();
@@ -355,7 +356,8 @@ public final class Constants {
         public static final double INTAKE_POWER = 12.0;
         public static final double GEARING = 4 * 3 * 3;
 
-        public static final int CAN_MAIN = 9;
+        public static final int CAN_LEFT = 9;
+        public static final int CAN_RIGHT = 13;
         public static double MASS = Units.lbsToKilograms(6 +  5.2/ 16.0);
         public static double CG_RADIUS = Units.inchesToMeters(1.5);
 
