@@ -38,7 +38,7 @@ public class Superstructure extends SubsystemBase {
         IDLE, HOME, INTAKE_GROUND, INTAKE_MID, EXHAUST, OBJECTIVE, OBJECTIVE_GLOBAL, MANUAL
     }
 
-    enum GamePiece {
+    public enum GamePiece {
         CONE, CUBE, NONE
     }
 
