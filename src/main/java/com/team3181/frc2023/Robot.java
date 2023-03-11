@@ -15,6 +15,7 @@ import com.team3181.lib.util.VirtualSubsystem;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -36,6 +37,7 @@ public class Robot extends LoggedRobot {
 
   private final Timer disabledTimer = new Timer();
   private boolean stopped = false;
+  private final Alert lowBatteryAlert = new Alert("Battery is at a LOW voltage! The battery MUST be replaced before playing a match!", AlertType.WARNING);
 
   private RobotContainer robotContainer;
 
@@ -113,6 +115,7 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void disabledPeriodic() {
+    lowBatteryAlert.set(RobotController.getBatteryVoltage() < 12.6);
     if (Swerve.getInstance().isStopped() && disabledTimer.hasElapsed(5) && !stopped) {
       Swerve.getInstance().setCoastMode();
       stopped = true;
@@ -121,6 +124,7 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void autonomousInit() {
+    lowBatteryAlert.set(false);
     Swerve.getInstance().setBrakeMode();
     autonomousCommand = robotContainer.getAutonomousCommand();
 
@@ -134,6 +138,7 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void teleopInit() {
+    lowBatteryAlert.set(false);
     Swerve.getInstance().setBrakeMode();
     if (autonomousCommand != null) {
       autonomousCommand.cancel();

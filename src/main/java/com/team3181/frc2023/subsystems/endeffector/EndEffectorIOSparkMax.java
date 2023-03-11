@@ -7,31 +7,32 @@ import com.team3181.lib.drivers.LazySparkMax;
 import edu.wpi.first.math.util.Units;
 
 public class EndEffectorIOSparkMax implements EndEffectorIO {
-    private final LazySparkMax motor = new LazySparkMax(Constants.EndEffectorConstants.CAN_MAIN, CANSparkMax.IdleMode.kBrake, 30, true, false); // currentlimit stolen from 2022 intake
-    private final RelativeEncoder encoder = motor.getEncoder();
+    private final LazySparkMax motorLeft = new LazySparkMax(Constants.EndEffectorConstants.CAN_LEFT, CANSparkMax.IdleMode.kBrake, 30, true, false);
+    private final LazySparkMax motorRight = new LazySparkMax(Constants.EndEffectorConstants.CAN_LEFT, CANSparkMax.IdleMode.kBrake, 30, motorLeft, true, false);
+    private final RelativeEncoder encoder = motorLeft.getEncoder();
 
     public EndEffectorIOSparkMax() {
         encoder.setPositionConversionFactor(Constants.EndEffectorConstants.GEARING);
         encoder.setVelocityConversionFactor(Constants.EndEffectorConstants.GEARING / 60.0);
-        motor.burnFlash();
+        motorLeft.burnFlash();
     }
 
     @Override
     public void updateInputs(EndEffectorIOInputs inputs) {
         inputs.positionRad = encoder.getPosition();
         inputs.velocityRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(encoder.getVelocity());
-        inputs.appliedVolts = motor.getAppliedOutput() * motor.getBusVoltage();
-        inputs.currentAmps = motor.getOutputCurrent();
-        inputs.tempCelsius = motor.getMotorTemperature();
+        inputs.appliedVolts = motorLeft.getAppliedOutput() * motorLeft.getBusVoltage();
+        inputs.currentAmps = motorLeft.getOutputCurrent();
+        inputs.tempCelsius = motorLeft.getMotorTemperature();
     }
 
     @Override
     public void setVoltage(double volts) {
-        motor.setVoltage(volts);
+        motorLeft.setVoltage(volts);
     }
 
     @Override
     public void setBrakeMode(boolean enable) {
-        motor.setIdleMode(enable ? CANSparkMax.IdleMode.kBrake : CANSparkMax.IdleMode.kCoast);
+        motorLeft.setIdleMode(enable ? CANSparkMax.IdleMode.kBrake : CANSparkMax.IdleMode.kCoast);
     }
 }

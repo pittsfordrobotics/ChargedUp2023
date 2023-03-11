@@ -55,10 +55,10 @@ public final class FieldConstants {
             if (deltaY == 0) {
                 updatedHeading = Rotation2d.fromDegrees(180 * deltaX > 0 ? 0 : 1);
             }
-            //else if(deltaY > 0){
-            //    updatedHeading = Rotation2d.fromRadians(Math.atan((deltaY)/(deltaX)));
-            else {
+            else if(deltaY > 0){
                 updatedHeading = Rotation2d.fromRadians(Math.atan((deltaY)/(deltaX)));
+            } else {
+                updatedHeading = Rotation2d.fromRadians(Math.atan((deltaX)/(deltaY)));
             }
             if (deltaX > 0 && deltaY > 0) {
                 updatedHeading = updatedHeading.times(-1);

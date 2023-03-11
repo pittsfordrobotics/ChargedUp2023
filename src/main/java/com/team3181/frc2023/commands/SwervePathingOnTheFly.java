@@ -62,7 +62,7 @@ public class SwervePathingOnTheFly extends CommandBase {
     public SwervePathingOnTheFly(AutoDrivePosition position, boolean simple) {
         addRequirements(this.swerve);
         this.pathPoint = null;
-        this.pathConstraints = AutoConstants.MAX_SPEED;
+        this.pathConstraints = AutoConstants.SLOW_SPEED;
         this.simple = simple;
         this.position = position;
         rotController.enableContinuousInput(-Math.PI, Math.PI);
@@ -99,11 +99,11 @@ public class SwervePathingOnTheFly extends CommandBase {
                         double distanceTop = GeomUtil.distance(new Pose2d(AutoDrivePoints.COMMUNITY_TOP_EXIT.getPosition(), new Rotation2d()), new Pose2d(robotPointBlue.getPosition(), new Rotation2d()));
                         double distanceBottom = GeomUtil.distance(new Pose2d(AutoDrivePoints.COMMUNITY_BOTTOM_EXIT.getPosition(), new Rotation2d()), new Pose2d(robotPointBlue.getPosition(), new Rotation2d()));
                         BetterPathPoint entrance;
-                        if (distanceTop - distanceBottom > 1) {
+                        if (Math.abs(distanceTop - distanceBottom) > 1) {
                             entrance = AutoDrivePoints.pathPointFlipper(AutoDrivePoints.COMMUNITY_BOTTOM_EXIT, DriverStation.getAlliance());
                             inner = AutoDrivePoints.pathPointFlipper(AutoDrivePoints.COMMUNITY_BOTTOM_INNER, DriverStation.getAlliance());
                         }
-                        else if (distanceBottom - distanceTop > 1) {
+                        else if (Math.abs(distanceBottom - distanceTop) > 1) {
                             entrance = AutoDrivePoints.pathPointFlipper(AutoDrivePoints.COMMUNITY_TOP_EXIT, DriverStation.getAlliance());
                             inner = AutoDrivePoints.pathPointFlipper(AutoDrivePoints.COMMUNITY_TOP_INNER, DriverStation.getAlliance());
                         }
@@ -153,16 +153,61 @@ public class SwervePathingOnTheFly extends CommandBase {
                 break;
             case DOUBLE_SUBSTATION_HIGH:
                 if (simple) {
-                    BetterPathPoint headingCorrection = AutoDrivePoints.updateHeading(robotPoint, AutoDrivePoints.pathPointFlipper(AutoDrivePoints.LOADING_STATION_TOP_INNER, DriverStation.getAlliance()));
+                    BetterPathPoint headingCorrection = AutoDrivePoints.updateHeading(robotPoint, AutoDrivePoints.pathPointFlipper(AutoDrivePoints.leavingCommunity(AutoDrivePoints.LOADING_STATION_TOP_INNER), DriverStation.getAlliance()));
                     adjustedPathPoints.add(headingCorrection);
-                    adjustedPathPoints.add(AutoDrivePoints.pathPointFlipper(AutoDrivePoints.LOADING_STATION_TOP_INNER, DriverStation.getAlliance()));
+                    adjustedPathPoints.add(AutoDrivePoints.pathPointFlipper(AutoDrivePoints.leavingCommunity(AutoDrivePoints.LOADING_STATION_TOP_INNER), DriverStation.getAlliance()));
+                }
+                else {
+                    BetterPathPoint entrance = AutoDrivePoints.pathPointFlipper(AutoDrivePoints.leavingCommunity(AutoDrivePoints.COMMUNITY_BOTTOM_EXIT), DriverStation.getAlliance());;
+                    if (robotPointBlue.getPosition().getX() < 2 && robotPointBlue.getPosition().getY() < 5.5) {
+                        double distanceTop = GeomUtil.distance(new Pose2d(AutoDrivePoints.leavingCommunity(AutoDrivePoints.COMMUNITY_TOP_INNER).getPosition(), new Rotation2d()), new Pose2d(robotPointBlue.getPosition(), new Rotation2d()));
+                        double distanceBottom = GeomUtil.distance(new Pose2d(AutoDrivePoints.leavingCommunity(AutoDrivePoints.COMMUNITY_BOTTOM_INNER).getPosition(), new Rotation2d()), new Pose2d(robotPointBlue.getPosition(), new Rotation2d()));
+                        BetterPathPoint inner;
+                        if (distanceTop > distanceBottom) {
+                            inner = AutoDrivePoints.pathPointFlipper(AutoDrivePoints.leavingCommunity(AutoDrivePoints.COMMUNITY_BOTTOM_INNER), DriverStation.getAlliance());
+                            entrance = AutoDrivePoints.pathPointFlipper(AutoDrivePoints.leavingCommunity(AutoDrivePoints.COMMUNITY_BOTTOM_EXIT), DriverStation.getAlliance());
+                        } else {
+                            inner = AutoDrivePoints.pathPointFlipper(AutoDrivePoints.leavingCommunity(AutoDrivePoints.COMMUNITY_TOP_INNER), DriverStation.getAlliance());
+                            entrance = AutoDrivePoints.pathPointFlipper(AutoDrivePoints.leavingCommunity(AutoDrivePoints.COMMUNITY_TOP_EXIT), DriverStation.getAlliance());
+                        }
+                        BetterPathPoint headingCorrection = AutoDrivePoints.updateHeading(robotPoint, inner);
+                        adjustedPathPoints.add(headingCorrection);
+                    }
+                    if (robotPointBlue.getPosition().getX() < 5.26) {
+                        if (adjustedPathPoints.size() == 0) {
+                            double distanceTop = GeomUtil.distance(new Pose2d(AutoDrivePoints.leavingCommunity(AutoDrivePoints.COMMUNITY_TOP_EXIT).getPosition(), new Rotation2d()), new Pose2d(robotPointBlue.getPosition(), new Rotation2d()));
+                            double distanceBottom = GeomUtil.distance(new Pose2d(AutoDrivePoints.leavingCommunity(AutoDrivePoints.COMMUNITY_BOTTOM_EXIT).getPosition(), new Rotation2d()), new Pose2d(robotPointBlue.getPosition(), new Rotation2d()));
+                            if (Math.abs(distanceTop) > Math.abs(distanceBottom)) {
+                                entrance = AutoDrivePoints.pathPointFlipper(AutoDrivePoints.leavingCommunity(AutoDrivePoints.COMMUNITY_BOTTOM_EXIT), DriverStation.getAlliance());
+                            } else {
+                                entrance = AutoDrivePoints.pathPointFlipper(AutoDrivePoints.leavingCommunity(AutoDrivePoints.COMMUNITY_TOP_EXIT), DriverStation.getAlliance());
+                            }
+                            BetterPathPoint headingCorrection = AutoDrivePoints.updateHeading(robotPoint, entrance);
+                            adjustedPathPoints.add(headingCorrection);
+                        }
+                        adjustedPathPoints.add(entrance);
+                    }
+                    if (robotPointBlue.getPosition().getY() > 7.2 && robotPointBlue.getPosition().getX() > 10.25) {
+                        if (adjustedPathPoints.size() == 0) {
+                            BetterPathPoint headingCorrection = AutoDrivePoints.updateHeading(robotPoint, AutoDrivePoints.pathPointFlipper(AutoDrivePoints.leavingCommunity(AutoDrivePoints.LOADING_STATION_TOP_INNER), DriverStation.getAlliance()));
+                            adjustedPathPoints.add(headingCorrection);
+                        }
+                        adjustedPathPoints.add(AutoDrivePoints.pathPointFlipper(AutoDrivePoints.leavingCommunity(AutoDrivePoints.LOADING_STATION_TOP_INNER), DriverStation.getAlliance()));
+                    }
+                    else if (robotPointBlue.getPosition().getY() > 5.9 && robotPointBlue.getPosition().getX() > 10.25) {
+                        if (adjustedPathPoints.size() == 0) {
+                            BetterPathPoint headingCorrection = AutoDrivePoints.updateHeading(robotPoint, AutoDrivePoints.pathPointFlipper(AutoDrivePoints.leavingCommunity(AutoDrivePoints.LOADING_STATION_BOTTOM_INNER), DriverStation.getAlliance()));
+                            adjustedPathPoints.add(headingCorrection);
+                        }
+                        adjustedPathPoints.add(AutoDrivePoints.pathPointFlipper(AutoDrivePoints.leavingCommunity(AutoDrivePoints.LOADING_STATION_BOTTOM_INNER), DriverStation.getAlliance()));
+                    }
                 }
                 break;
             case DOUBLE_SUBSTATION_LOW:
                 if (simple) {
-                    BetterPathPoint headingCorrection = AutoDrivePoints.updateHeading(robotPoint, AutoDrivePoints.pathPointFlipper(AutoDrivePoints.LOADING_STATION_BOTTOM_INNER, DriverStation.getAlliance()));
+                    BetterPathPoint headingCorrection = AutoDrivePoints.updateHeading(robotPoint, AutoDrivePoints.pathPointFlipper(AutoDrivePoints.leavingCommunity(AutoDrivePoints.LOADING_STATION_BOTTOM_INNER), DriverStation.getAlliance()));
                     adjustedPathPoints.add(headingCorrection);
-                    adjustedPathPoints.add(AutoDrivePoints.pathPointFlipper(AutoDrivePoints.LOADING_STATION_BOTTOM_INNER, DriverStation.getAlliance()));
+                    adjustedPathPoints.add(AutoDrivePoints.pathPointFlipper(AutoDrivePoints.leavingCommunity(AutoDrivePoints.LOADING_STATION_BOTTOM_INNER), DriverStation.getAlliance()));
                 }
                 break;
             default:

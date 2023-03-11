@@ -105,12 +105,16 @@ public class RobotContainer {
     operatorController.povRight().whileTrue(objectiveTracker.shiftNodeCommand(Direction.RIGHT));
     operatorController.povDown().whileTrue(objectiveTracker.shiftNodeCommand(Direction.DOWN));
     operatorController.povLeft().whileTrue(objectiveTracker.shiftNodeCommand(Direction.LEFT));
+    operatorController.rightBumper().whileTrue(new InstantCommand(objectiveTracker::toggleFilled));
+    operatorController.leftBumper().whileTrue(new InstantCommand(objectiveTracker::toggleActive));
   }
 
   private void competitionButtons() {
     /*
      DRIVER
      */
+    driverController.x()
+            .whileTrue(new InstantCommand(swerve::driveX));
     driverController.rightBumper()
             .whileTrue(new InstantCommand(swerve::zeroGyro));
 
@@ -142,6 +146,10 @@ public class RobotContainer {
             .whileTrue(objectiveTracker.shiftNodeCommand(Direction.DOWN));
     operatorController.povLeft()
             .whileTrue(objectiveTracker.shiftNodeCommand(Direction.LEFT));
+    operatorController.rightBumper().
+            whileTrue(new InstantCommand(objectiveTracker::toggleFilled));
+    operatorController.leftBumper().
+            whileTrue(new InstantCommand(objectiveTracker::toggleActive));
   }
 
   private void demoButtons() {}
