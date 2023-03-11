@@ -157,10 +157,10 @@ public final class Constants {
         };
         public static final BetterSwerveKinematics DRIVE_KINEMATICS = new BetterSwerveKinematics(MODULE_OFFSETS);
 
-        public static final Rotation2d FL_OFFSET = Rotation2d.fromRadians(0.14085696637630463);
-        public static final Rotation2d FR_OFFSET = Rotation2d.fromRadians(2.041490316390991);
-        public static final Rotation2d BL_OFFSET = Rotation2d.fromRadians(3.114173173904419);
-        public static final Rotation2d BR_OFFSET = Rotation2d.fromRadians(6.234853267669678);
+        public static final Rotation2d FL_OFFSET = Rotation2d.fromRadians(3.353266477584839);
+        public static final Rotation2d FR_OFFSET = Rotation2d.fromRadians(3.1570088863372803);
+        public static final Rotation2d BL_OFFSET = Rotation2d.fromRadians(6.259188175201416);
+        public static final Rotation2d BR_OFFSET = Rotation2d.fromRadians(1.2565010786056519);
 
         // controlling module wheel speed
         // read this later: https://github.com/Team364/BaseFalconSwerve
