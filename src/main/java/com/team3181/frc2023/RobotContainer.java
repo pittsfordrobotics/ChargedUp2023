@@ -112,10 +112,10 @@ public class RobotContainer {
     /*
      OPERATOR
      */
-    operatorController.rightBumper()
+    operatorController.rightTrigger()
             .whileTrue(new RepeatCommand(new InstantCommand(Superstructure.getInstance()::exhaust)))
             .whileFalse(new InstantCommand(Superstructure.getInstance()::idle));
-    operatorController.leftBumper()
+    operatorController.leftTrigger()
             .whileTrue(new RepeatCommand(new InstantCommand(Superstructure.getInstance()::manual)))
             .whileFalse(new RepeatCommand(new InstantCommand(Superstructure.getInstance()::idle)));
     operatorController.a()
@@ -127,7 +127,8 @@ public class RobotContainer {
     operatorController.x()
             .whileTrue(new RepeatCommand(new InstantCommand(Superstructure.getInstance()::objective)))
             .whileFalse(new RepeatCommand(new InstantCommand(Superstructure.getInstance()::home)));
-
+    operatorController.y()
+            .whileTrue(new RepeatCommand(new InstantCommand(Superstructure.getInstance()::setDemandLEDs)));
 
     operatorController.povUp()
             .whileTrue(objectiveTracker.shiftNodeCommand(Direction.UP));
@@ -142,8 +143,6 @@ public class RobotContainer {
     operatorController.leftBumper().
             whileTrue(new InstantCommand(objectiveTracker::toggleActive));
   }
-
-  private void demoButtons() {}
 
   private void autoConfig() {
     balanceChooser.setDefaultOption("No Balance", false);
@@ -219,8 +218,6 @@ public class RobotContainer {
     SmartDashboard.putData("Should Balance", balanceChooser);
     SmartDashboard.putData("Position", positionChooser);
   }
-
-  private void configureButtonBindings() {}
 
   public boolean canBalance() {
     return canBalanceMap.get(autoChooser.getSelected()) != null && canBalanceMap.get(autoChooser.getSelected());

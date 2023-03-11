@@ -61,7 +61,7 @@ public class LEDs extends SubsystemBase {
     }
 
     private void flashColor(Color color) {
-        if (timer.get() < 0.5) {
+        if (timer.get() < 0.2) {
             setColor(color);
         }
         else if (timer.get() < 1) {
