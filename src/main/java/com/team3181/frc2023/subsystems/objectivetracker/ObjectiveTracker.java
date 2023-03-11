@@ -16,7 +16,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import kotlin.ULong;
 import org.littletonrobotics.junction.Logger;
 
 public class ObjectiveTracker extends VirtualSubsystem {
@@ -79,9 +78,15 @@ public class ObjectiveTracker extends VirtualSubsystem {
       selectorInputs.filled = new boolean[]{};
     }
 
+    // updates manualSelection
     if (selectorInputs.active != -1) {
       manualSelection = selectorInputs.active == 1;
       selectorInputs.active = -1;
+    }
+
+    // automatically chooses optimal place to place game piece
+    if (!manualSelection) {
+//      TODO: for a
     }
 
     // Send current data to selector
