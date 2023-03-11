@@ -8,7 +8,7 @@ import edu.wpi.first.math.util.Units;
 
 public class EndEffectorIOSparkMax implements EndEffectorIO {
     private final LazySparkMax motorLeft = new LazySparkMax(Constants.EndEffectorConstants.CAN_LEFT, CANSparkMax.IdleMode.kBrake, 30, true, false);
-    private final LazySparkMax motorRight = new LazySparkMax(Constants.EndEffectorConstants.CAN_LEFT, CANSparkMax.IdleMode.kBrake, 30, motorLeft, true, false);
+    private final LazySparkMax motorRight = new LazySparkMax(Constants.EndEffectorConstants.CAN_RIGHT, CANSparkMax.IdleMode.kBrake, 30, motorLeft, true, false);
     private final RelativeEncoder encoder = motorLeft.getEncoder();
 
     public EndEffectorIOSparkMax() {
