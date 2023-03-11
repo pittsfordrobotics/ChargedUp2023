@@ -197,6 +197,17 @@ public class ObjectiveTracker extends VirtualSubsystem {
     manualSelection = !manualSelection;
   }
 
+  /** Set automation enabled */
+  public void setAutomated() {
+    manualSelection = false;
+  }
+
+  /** Use automation to update objective */
+  public void updateObjective(Objective objective) {
+    this.objective.nodeRow = objective.nodeRow;
+    this.objective.nodeLevel = objective.nodeLevel;
+  }
+
   /** Command factory to shift the selected node in the selector by one position. */
   public Command shiftNodeCommand(Direction direction) {
     return new InstantCommand(() -> shiftNode(direction))

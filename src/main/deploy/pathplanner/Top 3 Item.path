@@ -214,7 +214,7 @@
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
-      "isStopPoint": true,
+      "isStopPoint": false,
       "stopEvent": {
         "names": [],
         "executionBehavior": "parallel",
@@ -253,12 +253,6 @@
       ]
     },
     {
-      "position": 2.4320035067471597,
-      "names": [
-        "home"
-      ]
-    },
-    {
       "position": 3.7,
       "names": [
         "objectiveConeTop"
@@ -286,12 +280,6 @@
       "position": 5.7861594460227295,
       "names": [
         "intakeGround"
-      ]
-    },
-    {
-      "position": 6.481114612926137,
-      "names": [
-        "home"
       ]
     }
   ]

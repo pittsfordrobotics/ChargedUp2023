@@ -1,6 +1,5 @@
 package com.team3181.frc2023.subsystems;
 
-import com.pathplanner.lib.PathPoint;
 import com.team3181.frc2023.Constants.SuperstructureConstants;
 import com.team3181.frc2023.FieldConstants.AutoDrivePoints;
 import com.team3181.frc2023.subsystems.endeffector.EndEffector;
@@ -46,7 +45,7 @@ public class Superstructure extends SubsystemBase {
     private StructureState wantedState = StructureState.IDLE;
     private double sweepGlobal = 0;
     private Objective objectiveGlobal;
-    private GamePiece gamePieceGlobal;
+    private boolean alternateLaw = false;
 
     private final static Superstructure INSTANCE = new Superstructure();
 
@@ -66,44 +65,12 @@ public class Superstructure extends SubsystemBase {
         GamePiece gamePieceLocal = GamePiece.NONE;
         double sweepLocal = sweepGlobal;
 
-        // update LEDs
-        {
-            LEDs leds = LEDs.getInstance();
-            if (DriverStation.isDisabled()) {
-                leds.setLEDMode(LEDModes.IDLE);
-            } else if (DriverStation.isAutonomous()) {
-                leds.setLEDMode(LEDModes.RAINBOW);
-            } else if (objectiveLocal.nodeRow == 1 || objectiveLocal.nodeRow == 4 || objectiveLocal.nodeRow == 7 || objectiveLocal.nodeLevel == NodeLevel.HYBRID) {
-                if (endEffector.hasPiece()) {
-                    leds.setLEDMode(LEDModes.CUBE);
-                } else {
-                    leds.setLEDMode(LEDModes.FLASH_CUBE);
-                }
-                gamePieceLocal = GamePiece.CUBE;
-            } else if (objectiveLocal.nodeRow == 0 || objectiveLocal.nodeRow == 3 || objectiveLocal.nodeRow == 6) {
-                if (endEffector.hasPiece()) {
-                    leds.setLEDMode(LEDModes.CONE);
-                } else {
-                    leds.setLEDMode(LEDModes.FLASH_CONE);
-                }
-                gamePieceLocal = GamePiece.CONE;
-            } else {
-                if (endEffector.hasPiece()) {
-                    leds.setLEDMode(LEDModes.CONE);
-                } else {
-                    leds.setLEDMode(LEDModes.FLASH_CONE);
-                }
-                gamePieceLocal = GamePiece.CONE;
-            }
-        }
-
         switch (wantedState) {
             case OBJECTIVE:
                 state = StructureState.OBJECTIVE;
                 break;
             case OBJECTIVE_GLOBAL:
                 objectiveLocal = objectiveGlobal;
-                gamePieceLocal = gamePieceGlobal;
                 state = StructureState.OBJECTIVE;
                 break;
             case INTAKE_GROUND:
@@ -139,6 +106,37 @@ public class Superstructure extends SubsystemBase {
             systemState = state;
         }
 
+        // update LEDs and gamePieceLocal
+        {
+            LEDs leds = LEDs.getInstance();
+            if (DriverStation.isDisabled()) {
+                leds.setLEDMode(LEDModes.IDLE);
+            } else if (DriverStation.isAutonomous()) {
+                leds.setLEDMode(LEDModes.RAINBOW);
+            } else if (objectiveLocal.nodeRow == 1 || objectiveLocal.nodeRow == 4 || objectiveLocal.nodeRow == 7 || objectiveLocal.nodeLevel == NodeLevel.HYBRID) {
+                if (endEffector.hasPiece()) {
+                    leds.setLEDMode(LEDModes.CUBE);
+                } else {
+                    leds.setLEDMode(LEDModes.FLASH_CUBE);
+                }
+                gamePieceLocal = GamePiece.CUBE;
+            } else if (objectiveLocal.nodeRow == 0 || objectiveLocal.nodeRow == 3 || objectiveLocal.nodeRow == 6) {
+                if (endEffector.hasPiece()) {
+                    leds.setLEDMode(LEDModes.CONE);
+                } else {
+                    leds.setLEDMode(LEDModes.FLASH_CONE);
+                }
+                gamePieceLocal = GamePiece.CONE;
+            } else {
+                if (endEffector.hasPiece()) {
+                    leds.setLEDMode(LEDModes.CONE);
+                } else {
+                    leds.setLEDMode(LEDModes.FLASH_CONE);
+                }
+                gamePieceLocal = GamePiece.CONE;
+            }
+        }
+
         switch (systemState) {
             case OBJECTIVE:
                 switch (objectiveLocal.nodeLevel) {
@@ -149,7 +147,7 @@ public class Superstructure extends SubsystemBase {
                         if (gamePieceLocal == GamePiece.CONE) {
                             fourBar.setRotations(fourBar.solve(SuperstructureConstants.ArmPositions.MID_CONE, true, true), false);
                         }
-                        else {
+                        else if (gamePieceLocal == GamePiece.CUBE) {
                             fourBar.setRotations(fourBar.solve(SuperstructureConstants.ArmPositions.MID_CUBE, false, true), false);
                         }
                         break;
@@ -157,7 +155,7 @@ public class Superstructure extends SubsystemBase {
                         if (gamePieceLocal == GamePiece.CONE) {
                             fourBar.setRotations(fourBar.solve(SuperstructureConstants.ArmPositions.HIGH_CONE, true,true), false);
                         }
-                        else {
+                        else if (gamePieceLocal == GamePiece.CUBE) {
                             fourBar.setRotations(fourBar.solve(SuperstructureConstants.ArmPositions.HIGH_CUBE, false,true), false);
                         }
                         break;
@@ -218,9 +216,8 @@ public class Superstructure extends SubsystemBase {
         wantedState = StructureState.OBJECTIVE;
     }
 
-    public void objective(Objective objective, GamePiece gamePiece) {
+    public void objective(Objective objective) {
         objectiveGlobal = objective;
-        gamePieceGlobal = gamePiece;
         wantedState = StructureState.OBJECTIVE_GLOBAL;
     }
 
