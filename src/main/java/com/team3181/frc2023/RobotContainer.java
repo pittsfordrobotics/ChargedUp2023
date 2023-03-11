@@ -6,6 +6,7 @@ package com.team3181.frc2023;
 
 import com.team3181.frc2023.Constants.AutoConstants.AutoDrivePosition;
 import com.team3181.frc2023.Constants.RobotConstants;
+import com.team3181.frc2023.FieldConstants.AutoDrivePoints;
 import com.team3181.frc2023.commands.*;
 import com.team3181.frc2023.subsystems.Superstructure;
 import com.team3181.frc2023.subsystems.endeffector.EndEffector;
@@ -17,15 +18,18 @@ import com.team3181.frc2023.subsystems.swerve.Swerve;
 import com.team3181.frc2023.subsystems.tank.Tank;
 import com.team3181.frc2023.subsystems.vision.Vision;
 import com.team3181.lib.controller.BetterXboxController;
+import com.team3181.lib.swerve.BetterPathPoint;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+
+import java.util.HashMap;
 
 public class RobotContainer {
   private final Swerve swerve = Swerve.getInstance();
@@ -40,7 +44,10 @@ public class RobotContainer {
   private final BetterXboxController operatorController = new BetterXboxController(1, BetterXboxController.Humans.OPERATOR);
 
   private final SendableChooser<Command> autoChooser = new SendableChooser<>();
-  private final SendableChooser<Pose2d> positionChooser = new SendableChooser<>();
+  private final SendableChooser<BetterPathPoint> positionChooser = new SendableChooser<>();
+  private final SendableChooser<Boolean> balanceChooser = new SendableChooser<>();
+  private final HashMap<Command, Boolean> canBalanceMap = new HashMap<>();
+  private final HashMap<Command, Boolean> needPositionMap = new HashMap<>();
 
   public RobotContainer() {
     autoConfig();
@@ -155,17 +162,48 @@ public class RobotContainer {
   private void demoButtons() {}
 
   private void autoConfig() {
+    balanceChooser.setDefaultOption("No Balance", false);
+    balanceChooser.addOption("Yes Balance", true);
+
+    positionChooser.setDefaultOption("Bottom Node", AutoDrivePoints.nodeSelector(0));
+
     autoChooser.setDefaultOption("No auto", new WaitCommand(0));
-//    autoChooser.addOption("Test", new SwervePathing(Paths., true));
-    autoChooser.addOption("Drop Climb", new DropClimb(new Pose2d(new Translation2d(1.78,2.55), Rotation2d.fromDegrees(180))));
-    autoChooser.addOption("3 thing", new AutoCollectAndGo());
+    canBalanceMap.put(new WaitCommand(0), false);
+    needPositionMap.put(new WaitCommand(0), true);
+
+    autoChooser.addOption("Place and Balance Climb", new AutoSwerveBalance());
+    canBalanceMap.put(new AutoSwerveBalance(), true);
+    needPositionMap.put(new AutoSwerveBalance(), true);
+
+    autoChooser.addOption("3 Thing High", new AutoSwerveHighThree());
+    canBalanceMap.put(new AutoSwerveHighThree(), true);
+    needPositionMap.put(new AutoSwerveHighThree(), false);
 
     SmartDashboard.putData("Auto Command", autoChooser);
+    SmartDashboard.putData("Should Balance", balanceChooser);
+    SmartDashboard.putData("Position", positionChooser);
   }
 
   private void configureButtonBindings() {}
 
+  public boolean canBalance() {
+    return canBalanceMap.get(autoChooser.getSelected()) != null && canBalanceMap.get(autoChooser.getSelected());
+  }
+
+  public boolean needPosition() {
+    return needPositionMap.get(autoChooser.getSelected()) != null && needPositionMap.get(autoChooser.getSelected());
+  }
+
   public Command getAutonomousCommand() {
+    if (needPosition()) {
+      swerve.resetPose(new Pose2d(AutoDrivePoints.pathPointFlipper(positionChooser.getSelected(), DriverStation.getAlliance()).getPosition(), Rotation2d.fromDegrees(-180)));
+    }
+    if (canBalance() && balanceChooser.getSelected()) {
+      Paths.EVENT_MAP = Paths.EVENT_MAP_BALANCE;
+    }
+    else {
+      Paths.EVENT_MAP = Paths.EVENT_MAP_NO_BALANCE;
+    }
     return autoChooser.getSelected();
   }
 }
