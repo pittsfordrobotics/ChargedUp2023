@@ -1,53 +1,43 @@
 package com.team3181.frc2023.subsystems.vision;
-
+import com.team3181.lib.util.LimelightHelpers;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import org.littletonrobotics.junction.Logger;
 
 public class VisionIOLimelight implements VisionIO {
-    public double captureTimestamp = 0.0;
-    public boolean hasTarget = false;
-    public boolean connected = false;
-    public double heartbeat = 0.0;
-    public double vAngle = 0.0;
-    public double hAngle = 0.0;
-    public double[] botXYZ = new double[]{};
-    public double[] botYPR = new double[]{};
+    public Pose3d lastPose = new Pose3d();
 
-    private final NetworkTable limelight = NetworkTableInstance.getDefault().getTable("limelight");
+    private final NetworkTable limelight = LimelightHelpers.getLimelightNTTable("");;
 
     public VisionIOLimelight() {
         setLEDs(LED.OFF);
     }
 
-    @Override
-    public synchronized void updateInputs(VisionIOInputs inputs) {
-        NetworkTableEntry validEntry = limelight.getEntry("tv");
-        NetworkTableEntry latencyEntry = limelight.getEntry("tl");
-        NetworkTableEntry hAngleEntry = limelight.getEntry("tx");
-        NetworkTableEntry vAngleEntry = limelight.getEntry("ty");
+    public void updateInputs(VisionIOInputs inputs) {
         NetworkTableEntry heartbeatEntry = limelight.getEntry("hb");
-        NetworkTableEntry botposeEntry = limelight.getEntry("botpose");
+        NetworkTableEntry botposeEntry = DriverStation.getAlliance() == Alliance.Blue ? limelight.getEntry("botpose_wpiblue") : limelight.getEntry("botpose_wpired");
 
-        if (latencyEntry.getLastChange() >= (Logger.getInstance().getRealTimestamp() - 20000)) {
-            captureTimestamp = (Logger.getInstance().getRealTimestamp() / 1000000.0) - Units.millisecondsToSeconds(latencyEntry.getDouble(0.0));
-            hasTarget = validEntry.getDouble(0.0) == 1.0;
-            connected = heartbeat > heartbeatEntry.getDouble(0.0) && heartbeatEntry.getDouble(0.0) != 0;
-            heartbeat = heartbeatEntry.getDouble(0.0);
-            vAngle = vAngleEntry.getDouble(0.0);
-            hAngle = hAngleEntry.getDouble(0.0);
-            botXYZ = new double[]{botposeEntry.getDoubleArray(new double[]{})[0], botposeEntry.getDoubleArray(new double[]{})[1], botposeEntry.getDoubleArray(new double[]{})[2]};
-            botYPR = new double[]{botposeEntry.getDoubleArray(new double[]{})[3], botposeEntry.getDoubleArray(new double[]{})[4], botposeEntry.getDoubleArray(new double[]{})[5]};
+        double pipelineLatency = LimelightHelpers.getLatency_Pipeline("");
+        double captureLatency = LimelightHelpers.getLatency_Capture("");
+        double totalLatency = pipelineLatency + captureLatency; // ms
+
+        if (!lastPose.equals(new Pose3d(botposeEntry.getDoubleArray(new double[7])[0], botposeEntry.getDoubleArray(new double[7])[1], botposeEntry.getDoubleArray(new double[7])[2], new Rotation3d()))) {
+            inputs.captureTimestamp = (Logger.getInstance().getRealTimestamp() / 1000000.0) - Units.millisecondsToSeconds(totalLatency);
+            inputs.botXYZ = new double[]{botposeEntry.getDoubleArray(new double[7])[0], botposeEntry.getDoubleArray(new double[7])[1], botposeEntry.getDoubleArray(new double[7])[2]};
+            inputs.botYPR = new double[]{botposeEntry.getDoubleArray(new double[7])[3], botposeEntry.getDoubleArray(new double[7])[4], botposeEntry.getDoubleArray(new double[7])[5]};
+            lastPose = new Pose3d(botposeEntry.getDoubleArray(new double[7])[0], botposeEntry.getDoubleArray(new double[7])[1], botposeEntry.getDoubleArray(new double[7])[2], new Rotation3d());
         }
-        inputs.captureTimestamp = captureTimestamp;
-        inputs.hasTarget = hasTarget;
-        inputs.connected = connected;
-        inputs.vAngle = vAngle;
-        inputs.hAngle = hAngle;
-        inputs.botXYZ = botXYZ;
-        inputs.botYPR = botYPR;
+        inputs.captureLatency = captureLatency;
+        inputs.pipelineLatency = pipelineLatency;
+        inputs.hasTarget = LimelightHelpers.getTV("");
+        inputs.connected = heartbeatEntry.getDouble(0.0) > 0.0;
+        inputs.vAngle = LimelightHelpers.getTY("");
+        inputs.hAngle = LimelightHelpers.getTX("");
     }
 
     @Override
