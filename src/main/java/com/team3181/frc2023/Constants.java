@@ -157,10 +157,10 @@ public final class Constants {
         };
         public static final BetterSwerveKinematics DRIVE_KINEMATICS = new BetterSwerveKinematics(MODULE_OFFSETS);
 
-        public static final Rotation2d FL_OFFSET = Rotation2d.fromRadians(0.2570425271987915);
-        public static final Rotation2d FR_OFFSET = Rotation2d.fromRadians(0.19037915766239166);
-        public static final Rotation2d BL_OFFSET = Rotation2d.fromRadians(3.0158467292785645);
-        public static final Rotation2d BR_OFFSET = Rotation2d.fromRadians(4.438068866729736);
+        public static final Rotation2d FL_OFFSET = Rotation2d.fromRadians(0.2570425271987915 + 0.0793775);
+        public static final Rotation2d FR_OFFSET = Rotation2d.fromRadians(0.19037915766239166 + 0.09789);
+        public static final Rotation2d BL_OFFSET = Rotation2d.fromRadians(3.0158467292785645 - 0.0860052);
+        public static final Rotation2d BR_OFFSET = Rotation2d.fromRadians(4.438068866729736 - 0.0435109);
 
         // controlling module wheel speed
         // read this later: https://github.com/Team364/BaseFalconSwerve
@@ -188,7 +188,7 @@ public final class Constants {
         public static final double MODULE_STEER_FF_CL = Robot.isReal() ? 0.9 : 0.33;
 
         public static final double DIRECTION_RATE_LIMIT = 15; // radians per second
-        public static final double MAGNITUDE_RATE_LIMIT = 10.7; // percent per second (1 = 100%)
+        public static final double MAGNITUDE_RATE_LIMIT = 8.7; // percent per second (1 = 100%)
         public static final double ROTATION_RATE_LIMIT = 16.0; // percent per second (1 = 100%)
     }
 
