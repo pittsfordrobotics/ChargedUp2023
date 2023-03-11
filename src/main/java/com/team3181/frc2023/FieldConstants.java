@@ -28,11 +28,14 @@ public final class FieldConstants {
      */
     public static final class AutoDrivePoints {
         public static final BetterPathPoint BOTTOM_NODE = new BetterPathPoint(new Translation2d(SwerveConstants.BUMPER_WIDTH + Grids.outerX + SwerveConstants.X_LENGTH_METERS / 2, Grids.nodeFirstY), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(-180));
+
+        // exit is closer to the inside of the arena and farther from the nodes
         public static final BetterPathPoint COMMUNITY_TOP_EXIT = new BetterPathPoint(new Translation2d(Community.midX + SwerveConstants.X_LENGTH_METERS, Community.leftY - Units.inchesToMeters(65) / 2), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(-180));
         public static final BetterPathPoint COMMUNITY_BOTTOM_EXIT = new BetterPathPoint(new Translation2d(Community.outerX + SwerveConstants.X_LENGTH_METERS, 0.5), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(-180));
 
-        public static final BetterPathPoint COMMUNITY_TOP_INNER = new BetterPathPoint(new Translation2d(Grids.outerX + 0.473, Community.leftY - 0.9), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(-180));
-        public static final BetterPathPoint COMMUNITY_BOTTOM_INNER = new BetterPathPoint(new Translation2d(Grids.outerX + 0.473, 0.5), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(-180));
+        // inner is toward the outside of the arena closer to the nodes
+        public static final BetterPathPoint COMMUNITY_TOP_INNER = new BetterPathPoint(new Translation2d(Grids.outerX + 0.573, Community.leftY - 0.9), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(-180));
+        public static final BetterPathPoint COMMUNITY_BOTTOM_INNER = new BetterPathPoint(new Translation2d(Grids.outerX +0.473, 0.55), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(-180));
 
         public static final BetterPathPoint LOADING_STATION_TOP_EXIT = new BetterPathPoint(new Translation2d(0.5 * LoadingZone.midX + LoadingZone.outerX * 0.5, LoadingZone.midY + Units.inchesToMeters(50.5) / 2), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(-180));
         public static final BetterPathPoint LOADING_STATION_BOTTOM_EXIT = new BetterPathPoint(new Translation2d(0.5 * LoadingZone.midX + LoadingZone.outerX * 0.5, LoadingZone.midY - Units.inchesToMeters(50.5)/ 2), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(-180));
