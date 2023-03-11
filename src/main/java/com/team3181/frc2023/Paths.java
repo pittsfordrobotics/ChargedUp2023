@@ -4,7 +4,6 @@ import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.team3181.frc2023.Constants.AutoConstants;
 import com.team3181.frc2023.commands.*;
-import com.team3181.frc2023.subsystems.Superstructure.GamePiece;
 import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker.NodeLevel;
 import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker.Objective;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -54,7 +53,10 @@ public class Paths {
         EVENT_MAP_BALANCE.put("maybeStop", new WaitCommand(0));
         EVENT_MAP_NO_BALANCE.put("maybeStop", new SwerveStop());
 
-        EVENT_MAP_BALANCE.put("balance", new SwerveAutoBalance());
-        EVENT_MAP_NO_BALANCE.put("balance", new SwerveStop());
+        EVENT_MAP_BALANCE.put("balanceBackward", new SwerveAutoBalance(false));
+        EVENT_MAP_NO_BALANCE.put("balanceBackward", new SwerveStop());
+
+        EVENT_MAP_BALANCE.put("balanceForward", new SwerveAutoBalance(true));
+        EVENT_MAP_NO_BALANCE.put("balanceForward", new SwerveStop());
     }
 }
