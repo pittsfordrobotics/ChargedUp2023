@@ -281,6 +281,24 @@
       "names": [
         "intakeGround"
       ]
+    },
+    {
+      "position": 2.3157381924715916,
+      "names": [
+        "home"
+      ]
+    },
+    {
+      "position": 6.471186967329544,
+      "names": [
+        "home"
+      ]
+    },
+    {
+      "position": 9.0,
+      "names": [
+        "balanceForward"
+      ]
     }
   ]
 }

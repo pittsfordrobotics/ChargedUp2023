@@ -76,6 +76,24 @@
       "names": [
         "maybeStop"
       ]
+    },
+    {
+      "position": 0.6352228338068183,
+      "names": [
+        "intakeGround"
+      ]
+    },
+    {
+      "position": 1.2449662642045463,
+      "names": [
+        "home"
+      ]
+    },
+    {
+      "position": 2.0,
+      "names": [
+        "balanceBackward"
+      ]
     }
   ]
 }
