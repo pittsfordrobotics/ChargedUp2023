@@ -70,6 +70,10 @@ public class EndEffector extends SubsystemBase {
         }
     }
 
+    public void addGamePiece() {
+        actualState = ActualState.OBTAINED;
+    }
+
     public void intake() {
         wantedState = WantedState.INTAKING;
     }

@@ -76,6 +76,12 @@
       "names": [
         "maybeStop"
       ]
+    },
+    {
+      "position": 1.9142422762784082,
+      "names": [
+        "balance"
+      ]
     }
   ]
 }

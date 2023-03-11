@@ -7,18 +7,25 @@ package com.team3181.frc2023;
 import com.team3181.frc2023.Constants.AutoConstants.AutoDrivePosition;
 import com.team3181.frc2023.Constants.RobotConstants;
 import com.team3181.frc2023.FieldConstants.AutoDrivePoints;
-import com.team3181.frc2023.commands.*;
+import com.team3181.frc2023.commands.SwerveDriveFieldXbox;
+import com.team3181.frc2023.commands.SwervePathingOnTheFly;
+import com.team3181.frc2023.commands.TankXbox;
+import com.team3181.frc2023.commands.autos.AutoSwerveBalance;
+import com.team3181.frc2023.commands.autos.AutoSwervePath;
+import com.team3181.frc2023.commands.autos.AutoSwerveThree;
+import com.team3181.frc2023.commands.autos.AutoSwerveTwo;
 import com.team3181.frc2023.subsystems.Superstructure;
 import com.team3181.frc2023.subsystems.endeffector.EndEffector;
 import com.team3181.frc2023.subsystems.fourbar.FourBar;
 import com.team3181.frc2023.subsystems.leds.LEDs;
 import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker;
 import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker.Direction;
+import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker.NodeLevel;
+import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker.Objective;
 import com.team3181.frc2023.subsystems.swerve.Swerve;
 import com.team3181.frc2023.subsystems.tank.Tank;
 import com.team3181.frc2023.subsystems.vision.Vision;
 import com.team3181.lib.controller.BetterXboxController;
-import com.team3181.lib.swerve.BetterPathPoint;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -44,7 +51,7 @@ public class RobotContainer {
   private final BetterXboxController operatorController = new BetterXboxController(1, BetterXboxController.Humans.OPERATOR);
 
   private final SendableChooser<Command> autoChooser = new SendableChooser<>();
-  private final SendableChooser<BetterPathPoint> positionChooser = new SendableChooser<>();
+  private final SendableChooser<Integer> positionChooser = new SendableChooser<>();
   private final SendableChooser<Boolean> balanceChooser = new SendableChooser<>();
   private final HashMap<Command, Boolean> canBalanceMap = new HashMap<>();
   private final HashMap<Command, Boolean> needPositionMap = new HashMap<>();
@@ -64,29 +71,6 @@ public class RobotContainer {
 //    driverController.a().onTrue(new InstantCommand(endEffector::intake)).onFalse(new InstantCommand(endEffector::idle));
 //    driverController.x().onTrue(new InstantCommand(endEffector::exhaust)).onFalse(new InstantCommand(endEffector::idle));
 //    driverController.rightTrigger().whileTrue(new InstantCommand(swerve::zeroGyro));
-//    driverController.a().whileTrue(new SwervePathing(Paths.TEST_ON_THE_FLY, false));
-//    driverController.a().whileTrue(new SwervePathingOnTheFly(
-//            AutoDrivePoints.LOADING_STATION_TOP_INNER,
-//            AutoDrivePoints.LOADING_STATION_TOP_EXIT,
-//            AutoDrivePoints.COMMUNITY_TOP_EXIT,
-//            AutoDrivePoints.COMMUNITY_TOP_INNER,
-//            AutoDrivePoints.nodeSelector(5))
-//    );
-//    driverController.b().whileTrue(new SwervePathingOnTheFly(
-//            AutoDrivePoints.leavingCommunity(AutoDrivePoints.COMMUNITY_BOTTOM_INNER),
-//            AutoDrivePoints.leavingCommunity(AutoDrivePoints.COMMUNITY_BOTTOM_EXIT),
-//            AutoDrivePoints.leavingCommunity(AutoDrivePoints.LOADING_STATION_TOP_EXIT),
-//            AutoDrivePoints.leavingCommunity(AutoDrivePoints.LOADING_STATION_TOP_INNER))
-//    );
-//driverController.getRightTriggerAxis()
-//    driverController.leftBumper()
-//            .whileTrue(new RepeatCommand(new InstantCommand(() -> fourBar.setRotations(FourBar.getInstance().solve(new Translation2d(ArmPositions.SWEEP_MAX.getX(), ArmPositions.SWEEP_MIN.getY()), false, true)))))
-//            .whileFalse(new InstantCommand(fourBar::hold));
-//    driverController.rightTrigger()
-//            .whileTrue(new RepeatCommand(new InstantCommand(() -> fourBar.setRotations(new Rotation2d[] {ArmPositions.STORAGE_SHOULDER, ArmPositions.STORAGE_ELBOW}))))
-//            .whileFalse(new InstantCommand(fourBar::hold));
-//    driverController.leftBumper().whileTrue(new RepeatCommand(new InstantCommand(() -> fourBar.setRotations(new Rotation2d[] {ArmPositions.GROUND_PICKUP_SHOULDER, ArmPositions.GROUND_PICKUP_ELBOW}))));
-//    driverController.b().whileTrue(new InstantCommand(() -> fourBar.setRotations(new Rotation2d[] {ArmPositions.STORAGE_SHOULDER, ArmPositions.STORAGE_ELBOW})));
 
     driverController.a()
             .whileTrue(new RepeatCommand(new InstantCommand(() -> fourBar.setArmVoltage(0, 2))))
@@ -165,7 +149,15 @@ public class RobotContainer {
     balanceChooser.setDefaultOption("No Balance", false);
     balanceChooser.addOption("Yes Balance", true);
 
-    positionChooser.setDefaultOption("Bottom Node", AutoDrivePoints.nodeSelector(0));
+    positionChooser.setDefaultOption("Bottom Node", 0);
+    positionChooser.setDefaultOption("Bottom Node + 1", 1);
+    positionChooser.setDefaultOption("Bottom Node + 2", 2);
+    positionChooser.setDefaultOption("Co-op Node", 3);
+    positionChooser.setDefaultOption("Co-op Node + 1", 4);
+    positionChooser.setDefaultOption("Co-op Node + 2", 5);
+    positionChooser.setDefaultOption("Top Node", 6);
+    positionChooser.setDefaultOption("Top Node + 1", 7);
+    positionChooser.setDefaultOption("Top Node + 2", 8);
 
     autoChooser.setDefaultOption("No auto", new WaitCommand(0));
     canBalanceMap.put(new WaitCommand(0), false);
@@ -175,9 +167,53 @@ public class RobotContainer {
     canBalanceMap.put(new AutoSwerveBalance(), true);
     needPositionMap.put(new AutoSwerveBalance(), true);
 
-    autoChooser.addOption("3 Thing High", new AutoSwerveHighThree());
-    canBalanceMap.put(new AutoSwerveHighThree(), true);
-    needPositionMap.put(new AutoSwerveHighThree(), false);
+    autoChooser.addOption("3 Thing Top", new AutoSwerveThree(true));
+    canBalanceMap.put(new AutoSwerveThree(true), true);
+    needPositionMap.put(new AutoSwerveThree(true), false);
+
+    autoChooser.addOption("3 Thing Bottom", new AutoSwerveThree(false));
+    canBalanceMap.put(new AutoSwerveThree(false), true);
+    needPositionMap.put(new AutoSwerveThree(false), false);
+
+    autoChooser.addOption("2 Thing Top", new AutoSwerveTwo(true));
+    canBalanceMap.put(new AutoSwerveTwo(true), false);
+    needPositionMap.put(new AutoSwerveTwo(true), false);
+
+    autoChooser.addOption("2 Thing Bottom", new AutoSwerveTwo(false));
+    canBalanceMap.put(new AutoSwerveTwo(false), false);
+    needPositionMap.put(new AutoSwerveTwo(false), false);
+
+    autoChooser.addOption("1 Cone Top", new AutoSwervePath(Paths.TOP_CONE, new Objective(8, NodeLevel.HIGH)));
+    canBalanceMap.put(new AutoSwervePath(Paths.TOP_CONE, new Objective(8, NodeLevel.HIGH)), true);
+    needPositionMap.put(new AutoSwervePath(Paths.TOP_CONE, new Objective(8, NodeLevel.HIGH)), false);
+
+    autoChooser.addOption("1 Cone Top + 1", new AutoSwervePath(Paths.TOP_CONE_PLUS_ONE, new Objective(8, NodeLevel.HIGH)));
+    canBalanceMap.put(new AutoSwervePath(Paths.TOP_CONE_PLUS_ONE, new Objective(8, NodeLevel.HIGH)), true);
+    needPositionMap.put(new AutoSwervePath(Paths.TOP_CONE_PLUS_ONE, new Objective(8, NodeLevel.HIGH)), false);
+
+    autoChooser.addOption("1 Cube Top", new AutoSwervePath(Paths.TOP_CUBE, new Objective(7, NodeLevel.HIGH)));
+    canBalanceMap.put(new AutoSwervePath(Paths.TOP_CUBE, new Objective(7, NodeLevel.HIGH)), true);
+    needPositionMap.put(new AutoSwervePath(Paths.TOP_CUBE, new Objective(7, NodeLevel.HIGH)), false);
+
+    autoChooser.addOption("1 Cube Top + 1", new AutoSwervePath(Paths.TOP_CUBE_PLUS_ONE, new Objective(7, NodeLevel.HIGH)));
+    canBalanceMap.put(new AutoSwervePath(Paths.TOP_CUBE_PLUS_ONE, new Objective(7, NodeLevel.HIGH)), true);
+    needPositionMap.put(new AutoSwervePath(Paths.TOP_CUBE_PLUS_ONE, new Objective(7, NodeLevel.HIGH)), false);
+
+    autoChooser.addOption("1 Cone Bottom", new AutoSwervePath(Paths.BOTTOM_CONE, new Objective(0, NodeLevel.HIGH)));
+    canBalanceMap.put(new AutoSwervePath(Paths.BOTTOM_CONE, new Objective(0, NodeLevel.HIGH)), true);
+    needPositionMap.put(new AutoSwervePath(Paths.BOTTOM_CONE, new Objective(0, NodeLevel.HIGH)), false);
+
+    autoChooser.addOption("1 Cone Bottom + 1", new AutoSwervePath(Paths.BOTTOM_CONE_PLUS_ONE, new Objective(1, NodeLevel.HIGH)));
+    canBalanceMap.put(new AutoSwervePath(Paths.BOTTOM_CONE_PLUS_ONE, new Objective(1, NodeLevel.HIGH)), true);
+    needPositionMap.put(new AutoSwervePath(Paths.BOTTOM_CONE_PLUS_ONE, new Objective(1, NodeLevel.HIGH)), false);
+
+    autoChooser.addOption("1 Cube Bottom", new AutoSwervePath(Paths.BOTTOM_CUBE, new Objective(1, NodeLevel.HIGH)));
+    canBalanceMap.put(new AutoSwervePath(Paths.BOTTOM_CUBE, new Objective(1, NodeLevel.HIGH)), true);
+    needPositionMap.put(new AutoSwervePath(Paths.BOTTOM_CUBE, new Objective(1, NodeLevel.HIGH)), false);
+
+    autoChooser.addOption("1 Cube Bottom + 1", new AutoSwervePath(Paths.BOTTOM_CUBE_PLUS_ONE, new Objective(1, NodeLevel.HIGH)));
+    canBalanceMap.put(new AutoSwervePath(Paths.BOTTOM_CUBE_PLUS_ONE, new Objective(1, NodeLevel.HIGH)), true);
+    needPositionMap.put(new AutoSwervePath(Paths.BOTTOM_CUBE_PLUS_ONE, new Objective(1, NodeLevel.HIGH)), false);
 
     SmartDashboard.putData("Auto Command", autoChooser);
     SmartDashboard.putData("Should Balance", balanceChooser);
@@ -195,8 +231,10 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
+    objectiveTracker.setAutomated();
+    objectiveTracker.updateObjective(new Objective(positionChooser.getSelected(), NodeLevel.HIGH));
     if (needPosition()) {
-      swerve.resetPose(new Pose2d(AutoDrivePoints.pathPointFlipper(positionChooser.getSelected(), DriverStation.getAlliance()).getPosition(), Rotation2d.fromDegrees(-180)));
+      swerve.resetPose(new Pose2d(AutoDrivePoints.pathPointFlipper(AutoDrivePoints.nodeSelector(positionChooser.getSelected()), DriverStation.getAlliance()).getPosition(), Rotation2d.fromDegrees(-180)));
     }
     if (canBalance() && balanceChooser.getSelected()) {
       Paths.EVENT_MAP = Paths.EVENT_MAP_BALANCE;

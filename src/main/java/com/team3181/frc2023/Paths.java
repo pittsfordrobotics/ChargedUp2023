@@ -7,18 +7,15 @@ import com.team3181.frc2023.commands.*;
 import com.team3181.frc2023.subsystems.Superstructure.GamePiece;
 import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker.NodeLevel;
 import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker.Objective;
-import com.team3181.frc2023.subsystems.swerve.Swerve;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 import java.util.HashMap;
 import java.util.List;
 
 public class Paths {
-    public static final List<PathPlannerTrajectory> THREE_TOP = PathPlanner.loadPathGroup("Top 3 Item", AutoConstants.MAX_SPEED);
-    public static final List<PathPlannerTrajectory> THREE_BOTTOM = PathPlanner.loadPathGroup("Bottom 3 Item", AutoConstants.MAX_SPEED);
+    public static final List<PathPlannerTrajectory> TOP_THREE = PathPlanner.loadPathGroup("Top 3 Item", AutoConstants.MAX_SPEED);
+    public static final List<PathPlannerTrajectory> BOTTOM_THREE = PathPlanner.loadPathGroup("Bottom 3 Item", AutoConstants.MAX_SPEED);
     public static final PathPlannerTrajectory BOTTOM_CUBE = PathPlanner.loadPath("Bottom Cube", AutoConstants.MAX_SPEED);
     public static final PathPlannerTrajectory BOTTOM_CONE = PathPlanner.loadPath("Bottom Cone", AutoConstants.MAX_SPEED);
     public static final PathPlannerTrajectory BOTTOM_CUBE_PLUS_ONE = PathPlanner.loadPath("Bottom Cube + 1", AutoConstants.MAX_SPEED);
@@ -36,17 +33,17 @@ public class Paths {
         EVENT_MAP_BALANCE.put("intakeGround", new SuperstructureGround());
         EVENT_MAP_NO_BALANCE.put("intakeGround", new SuperstructureGround());
 
-        EVENT_MAP_BALANCE.put("objectiveConeTop", new SuperstructureObjectiveGlobal(new Objective(6, NodeLevel.HIGH), GamePiece.CONE));
-        EVENT_MAP_NO_BALANCE.put("objectiveConeTop", new SuperstructureObjectiveGlobal(new Objective(6, NodeLevel.HIGH), GamePiece.CONE));
+        EVENT_MAP_BALANCE.put("objectiveConeTop", new SuperstructureObjectiveGlobal(new Objective(6, NodeLevel.HIGH)));
+        EVENT_MAP_NO_BALANCE.put("objectiveConeTop", new SuperstructureObjectiveGlobal(new Objective(6, NodeLevel.HIGH)));
 
-        EVENT_MAP_BALANCE.put("objectiveCubeTop", new SuperstructureObjectiveGlobal(new Objective(7, NodeLevel.HIGH), GamePiece.CUBE));
-        EVENT_MAP_NO_BALANCE.put("objectiveCubeTop", new SuperstructureObjectiveGlobal(new Objective(7, NodeLevel.HIGH), GamePiece.CUBE));
+        EVENT_MAP_BALANCE.put("objectiveCubeTop", new SuperstructureObjectiveGlobal(new Objective(7, NodeLevel.HIGH)));
+        EVENT_MAP_NO_BALANCE.put("objectiveCubeTop", new SuperstructureObjectiveGlobal(new Objective(7, NodeLevel.HIGH)));
 
-        EVENT_MAP_BALANCE.put("objectiveConeBottom", new SuperstructureObjectiveGlobal(new Objective(2, NodeLevel.HIGH), GamePiece.CONE));
-        EVENT_MAP_NO_BALANCE.put("objectiveConeBottom", new SuperstructureObjectiveGlobal(new Objective(2, NodeLevel.HIGH), GamePiece.CONE));
+        EVENT_MAP_BALANCE.put("objectiveConeBottom", new SuperstructureObjectiveGlobal(new Objective(2, NodeLevel.HIGH)));
+        EVENT_MAP_NO_BALANCE.put("objectiveConeBottom", new SuperstructureObjectiveGlobal(new Objective(2, NodeLevel.HIGH)));
 
-        EVENT_MAP_BALANCE.put("objectiveCubeBottom", new SuperstructureObjectiveGlobal(new Objective(1, NodeLevel.HIGH), GamePiece.CUBE));
-        EVENT_MAP_NO_BALANCE.put("objectiveCubeBottom", new SuperstructureObjectiveGlobal(new Objective(1, NodeLevel.HIGH), GamePiece.CUBE));
+        EVENT_MAP_BALANCE.put("objectiveCubeBottom", new SuperstructureObjectiveGlobal(new Objective(1, NodeLevel.HIGH)));
+        EVENT_MAP_NO_BALANCE.put("objectiveCubeBottom", new SuperstructureObjectiveGlobal(new Objective(1, NodeLevel.HIGH)));
 
         EVENT_MAP_BALANCE.put("intakeGround", new SuperstructureGround());
         EVENT_MAP_NO_BALANCE.put("intakeGround", new SuperstructureGround());
