@@ -108,9 +108,15 @@ public class Superstructure extends SubsystemBase {
                 break;
             case INTAKE_GROUND:
                 state = StructureState.INTAKE_GROUND;
+                if (endEffector.hasPiece()) {
+                    state = StructureState.HOME;
+                }
                 break;
             case INTAKE_MID:
                 state = StructureState.INTAKE_MID;
+                if (endEffector.hasPiece()) {
+                    state = StructureState.HOME;
+                }
                 break;
             case HOME:
                 state = StructureState.HOME;
@@ -245,7 +251,7 @@ public class Superstructure extends SubsystemBase {
         return Swerve.getInstance().getPose().getX() > 5.3 && Swerve.getInstance().getPose().getX() < 11.25;
     }
 
-    private boolean shouldAutoScore() {
+    public boolean shouldAutoScore() {
 //        check if at correct pose for current node
         BetterPathPoint wantedNode = AutoDrivePoints.nodeSelector(ObjectiveTracker.getInstance().getObjective().nodeRow);
         boolean rot = Math.abs(Swerve.getInstance().getPose().getRotation().getRadians() - wantedNode.getHolonomicRotation().getRadians()) < SuperstructureConstants.AUTO_SCORE_ROTATION_TOLERANCE;

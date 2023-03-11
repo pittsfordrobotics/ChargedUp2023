@@ -31,7 +31,7 @@ public class SuperstructureObjectiveGlobal extends CommandBase {
 
     @Override
     public void execute() {
-        if (superstructure.atSetpoint()) {
+        if (superstructure.shouldAutoScore()) {
             timer.start();
         }
     }
