@@ -45,8 +45,8 @@ public class RobotContainer {
   public RobotContainer() {
     autoConfig();
 
-//      competitionButtons();
-      testButtons();
+      competitionButtons();
+//      testButtons();
 
     if (!RobotConstants.IS_TANK) swerve.setDefaultCommand(new SwerveDriveFieldXbox());
     if (RobotConstants.IS_TANK) Tank.getInstance().setDefaultCommand(new TankXbox());
