@@ -15,11 +15,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.numbers.N2;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
-
-import java.util.Arrays;
 
 public class FourBar extends SubsystemBase {
     private final ArmIO[] armIO;
@@ -28,6 +25,7 @@ public class FourBar extends SubsystemBase {
     private final PIDController shoulderPID = new PIDController(FourBarConstants.SHOULDER_P, FourBarConstants.SHOULDER_I, FourBarConstants.SHOULDER_D);
     private final PIDController elbowPID = new PIDController(FourBarConstants.ELBOW_P, FourBarConstants.ELBOW_I, FourBarConstants.ELBOW_D);
     private final Alert shoulderTooLow = new Alert("Shoulder needs to be moved forward! THIS WILL BREAK ALOT OF THINGS!", AlertType.ERROR);
+    private Rotation2d[] dropStuff = new Rotation2d[]{};
 
     private final static FourBar INSTANCE = new FourBar(Constants.RobotConstants.SHOULDER, Constants.RobotConstants.ELBOW);
 
@@ -37,8 +35,8 @@ public class FourBar extends SubsystemBase {
 
     private FourBar(ArmIO shoulderIO, ArmIO elbowIO) {
         armIO = new ArmIO[]{shoulderIO, elbowIO};
-        SmartDashboard.putNumber("shoulder", 0);
-        SmartDashboard.putNumber("elbow", 0);
+//        SmartDashboard.putNumber("shoulder", 0);
+//        SmartDashboard.putNumber("elbow", 0);
         shoulderPID.setTolerance(FourBarConstants.PID_TOLERANCE);
         elbowPID.setTolerance(FourBarConstants.PID_TOLERANCE);
 
@@ -79,14 +77,7 @@ public class FourBar extends SubsystemBase {
     }
 
     public void setArmVoltage(int index, double voltage) {
-        Vector<N2> pos = new Vector<N2>(VecBuilder.fill(inputs[0].armPositionRad, inputs[1].armPositionRad));
-        Vector<N2> ff = ArmDynamics. getInstance().feedforward(pos);
-        if (index == 0) {
-            armIO[index].setVoltage(voltage + ff.get(0, 0));
-        }
-        else if (index == 1) {
-            armIO[index].setVoltage(voltage + ff.get(1, 0));
-        }
+        armIO[index].setVoltage(voltage);
     }
 
     public void setRotations(Rotation2d[] rotations, boolean mathElbow) {
@@ -100,6 +91,14 @@ public class FourBar extends SubsystemBase {
             elbowPID.setSetpoint(rotations[1].getRadians());
             armIO[1].setVoltage(MathUtil.clamp(elbowPID.calculate(mathElbow ? inputs[1].armPositionRad - inputs[0].armPositionRad : inputs[1].armPositionRad), -FourBarConstants.PID_CLAMP_VOLTAGE, FourBarConstants.PID_CLAMP_VOLTAGE) + ff.get(1, 0));
 //        }
+    }
+
+    public void dropElbow() {
+        setRotations(dropStuff, false);
+    }
+
+    public void recordDrop() {
+        dropStuff = new Rotation2d[]{Rotation2d.fromRadians(inputs[0].armPositionRad), Rotation2d.fromRadians(inputs[1].armPositionRad - 0.2)};
     }
 
     public boolean atSetpoint() {

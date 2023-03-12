@@ -315,7 +315,7 @@ public class ObjectiveTracker extends VirtualSubsystem {
         text += objective.nodeLevel == NodeLevel.HYBRID ? "" : " CONE";
       }
       text += " node";
-      SmartDashboard.putString("Selected Node", text);
+//      SmartDashboard.putString("Selected Node", text);
     }
 
     // Log state

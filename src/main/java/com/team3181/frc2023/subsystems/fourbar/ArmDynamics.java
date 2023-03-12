@@ -92,7 +92,7 @@ public class ArmDynamics {
                         .plus(Tg(position));
         return VecBuilder.fill(
                 shoulder.motor().physics().getVoltage(torque.get(0, 0), velocity.get(0, 0)) / 500.0,
-                elbow.motor().physics().getVoltage(torque.get(1, 0), velocity.get(1, 0)) / (700.0 * (position.get(1, 0) > 1.5 ? 1 : -1)));
+                elbow.motor().physics().getVoltage(torque.get(1, 0), velocity.get(1, 0)) / (400.0 * (position.get(1, 0) > 1.5 ? 1 : -1)));
     }
 
     /**

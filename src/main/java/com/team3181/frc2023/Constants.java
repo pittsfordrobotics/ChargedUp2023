@@ -257,8 +257,8 @@ public final class Constants {
     }
 
     public static final class FourBarConstants {
-        public static final int CAN_SHOULDER_MASTER = 10;
-        public static final int CAN_SHOULDER_FOLLOWER = 11;
+        public static final int CAN_SHOULDER_MASTER = 11;
+        public static final int CAN_SHOULDER_FOLLOWER = 10;
         public static final int CAN_ELBOW = 12;
 
         public static final double SHOULDER_GEAR_RATIO = 5 * 4 * 4;
@@ -279,10 +279,10 @@ public final class Constants {
 
         // Set zero points to be the initial "stowed" position?
         // The Absolute offsets appear to be arbitrary?
-        public static final Rotation2d SHOULDER_ABSOLUTE_OFFSET = Rotation2d.fromRadians(1.702175259590149);
-        public static final Rotation2d ELBOW_ABSOLUTE_OFFSET = Rotation2d.fromRadians(3.2243828773498535);
-        public static final Rotation2d SHOULDER_MATH_OFFSET = Rotation2d.fromRadians(-1.569104790687561); // zero needs to be at shoulder parallel to ground
-        public static final Rotation2d ELBOW_MATH_OFFSET = Rotation2d.fromRadians(-4.720415115356445); // zero is in line with shoulder
+        public static final Rotation2d SHOULDER_ABSOLUTE_OFFSET = Rotation2d.fromRadians(1.7);
+        public static final Rotation2d SHOULDER_MATH_OFFSET = Rotation2d.fromRadians(-1.55); // zero needs to be at shoulder parallel to ground
+        public static final Rotation2d ELBOW_ABSOLUTE_OFFSET = Rotation2d.fromRadians(1.5760794878005981);
+        public static final Rotation2d ELBOW_MATH_OFFSET = Rotation2d.fromRadians(-3.358858823776245); // zero is in line with shoulder
 
         public static final Rotation2d ELBOW_MIN = Rotation2d.fromDegrees(-140);
         public static final Rotation2d ELBOW_MAX = Rotation2d.fromDegrees(140);
@@ -290,8 +290,8 @@ public final class Constants {
         public static final Rotation2d SHOULDER_MIN = Rotation2d.fromRadians(-1.3); // est -1.22 rad
         public static final Rotation2d SHOULDER_MAX = Rotation2d.fromDegrees(70); // est 170 deg
 
-        public static final Rotation2d SHOULDER_FLIP_MIN = Rotation2d.fromRadians(-1.5628726813010871);
-        public static final Rotation2d SHOULDER_FLIP_MAX = Rotation2d.fromRadians(0.5233587026596069);
+        public static final Rotation2d SHOULDER_FLIP_MIN = Rotation2d.fromRadians(-1.5375333160161972);
+        public static final Rotation2d SHOULDER_FLIP_MAX = Rotation2d.fromRadians(0.5343195915222168);
 
         public static double WHEEL_TO_CHASSIS = Units.inchesToMeters(4.75);
         public static double CHASSIS_TO_ARM = Units.inchesToMeters(28.9);
@@ -333,17 +333,29 @@ public final class Constants {
             public static Rotation2d STORAGE_SHOULDER = Rotation2d.fromRadians(-1.22);
             public static Rotation2d STORAGE_ELBOW = Rotation2d.fromRadians(1.58);
 
-            public static Rotation2d GROUND_PICKUP_SHOULDER = Rotation2d.fromRadians(-1.15);
-            public static Rotation2d GROUND_PICKUP_ELBOW = Rotation2d.fromRadians(-0.1);
+            public static Rotation2d HYBRID_SHOULDER = Rotation2d.fromRadians(-1.233066338300705);
+            public static Rotation2d HYBRID_ELBOW = Rotation2d.fromRadians(0.23718323707580566);
 
-            public static Translation2d SWEEP_MIN = new Translation2d(0.66, 0.3);
-            public static Translation2d SWEEP_MAX = new Translation2d(1.05, 0.15);
+            public static Rotation2d GROUND_PICKUP_SHOULDER = Rotation2d.fromRadians(-1.3148015022277832);
+            public static Rotation2d GROUND_PICKUP_ELBOW = Rotation2d.fromRadians(-0.02468705177307129);
+
+            public static Rotation2d MID_PICKUP_SHOULDER = Rotation2d.fromRadians(0.4);
+            public static Rotation2d MID_PICKUP_ELBOW = Rotation2d.fromRadians(0);
+
+            public static Rotation2d MID_CONE_SHOULDER = Rotation2d.fromRadians(-0.6470000743866);
+            public static Rotation2d MID_CONE_ELBOW = Rotation2d.fromRadians(0.7242125606536865);
+
+            public static Rotation2d HIGH_CONE_SHOULDER = Rotation2d.fromRadians(0.29303767681121822);
+            public static Rotation2d HIGH_CONE_ELBOW = Rotation2d.fromRadians(0.4229857921600342);
+
+            public static Translation2d SWEEP_MIN = new Translation2d(0.66, 0.2);
+            public static Translation2d SWEEP_MAX = new Translation2d(1.05, 0.4);
 
             public static Translation2d MID_INTAKE = new Translation2d(1, 1.1);
 
             public static Translation2d HYBRID = new Translation2d(0, 0);
 
-            public static Translation2d MID_CONE = new Translation2d(0.6 + FourBarConstants.BUMPER_THICKNESS, 0.9);
+            public static Translation2d MID_CONE = new Translation2d(1 + FourBarConstants.BUMPER_THICKNESS, 0.9);
             public static Translation2d HIGH_CONE = new Translation2d(1 + FourBarConstants.BUMPER_THICKNESS, 1.25);
 
             public static Translation2d MID_CUBE = new Translation2d(0.35 + FourBarConstants.BUMPER_THICKNESS, 0.68);
@@ -352,8 +364,8 @@ public final class Constants {
     }
 
     public static final class EndEffectorConstants {
-        public static final double EXHAUST_POWER = -12.0;
-        public static final double INTAKE_POWER = 12.0;
+        public static final double EXHAUST_POWER = -2;
+        public static final double INTAKE_POWER = 6.0;
         public static final double GEARING = 4 * 3 * 3;
 
         public static final int CAN_LEFT = 9;
@@ -368,6 +380,6 @@ public final class Constants {
 
     public static final class LEDConstants {
         public static final int PWM_PORT = 0;
-        public static final int NUMBER = 20;
+        public static final int NUMBER = 40;
     }
 }

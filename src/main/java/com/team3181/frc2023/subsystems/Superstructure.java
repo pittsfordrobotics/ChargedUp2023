@@ -1,6 +1,7 @@
 package com.team3181.frc2023.subsystems;
 
 import com.team3181.frc2023.Constants.SuperstructureConstants;
+import com.team3181.frc2023.Constants.SuperstructureConstants.ArmPositions;
 import com.team3181.frc2023.FieldConstants.AutoDrivePoints;
 import com.team3181.frc2023.subsystems.endeffector.EndEffector;
 import com.team3181.frc2023.subsystems.fourbar.FourBar;
@@ -16,7 +17,6 @@ import com.team3181.lib.math.GeomUtil;
 import com.team3181.lib.swerve.BetterPathPoint;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
@@ -104,6 +104,9 @@ public class Superstructure extends SubsystemBase {
             if (systemState == StructureState.OBJECTIVE || systemState == StructureState.INTAKE_GROUND || systemState == StructureState.INTAKE_MID || systemState == StructureState.EXHAUST) {
                 endEffector.idle();
             }
+            if (state == StructureState.EXHAUST) {
+                fourBar.recordDrop();
+            }
             systemState = state;
         }
 
@@ -141,12 +144,14 @@ public class Superstructure extends SubsystemBase {
                 switch (objectiveLocal.nodeLevel) {
                     case HYBRID:
                         if (gamePieceLocal == GamePiece.CONE || gamePieceLocal == GamePiece.CUBE) {
-                            fourBar.setRotations(fourBar.solve(SuperstructureConstants.ArmPositions.HYBRID, false, true), false);
+                            fourBar.setRotations(new Rotation2d[]{ArmPositions.HYBRID_SHOULDER, ArmPositions.HYBRID_ELBOW}, false);
+//                            fourBar.setRotations(fourBar.solve(SuperstructureConstants.ArmPositions.HYBRID, false, true), false);
                         }
                         break;
                     case MID:
                         if (gamePieceLocal == GamePiece.CONE) {
-                            fourBar.setRotations(fourBar.solve(SuperstructureConstants.ArmPositions.MID_CONE, true, true), false);
+                            fourBar.setRotations(new Rotation2d[]{ArmPositions.MID_CONE_SHOULDER, ArmPositions.MID_CONE_ELBOW}, false);
+//                            fourBar.setRotations(fourBar.solve(SuperstructureConstants.ArmPositions.MID_CONE, true, true), false);
                         }
                         else if (gamePieceLocal == GamePiece.CUBE) {
                             fourBar.setRotations(fourBar.solve(SuperstructureConstants.ArmPositions.MID_CUBE, false, true), false);
@@ -154,7 +159,8 @@ public class Superstructure extends SubsystemBase {
                         break;
                     case HIGH:
                         if (gamePieceLocal == GamePiece.CONE) {
-                            fourBar.setRotations(fourBar.solve(SuperstructureConstants.ArmPositions.HIGH_CONE, true,true), false);
+                            fourBar.setRotations(new Rotation2d[]{ArmPositions.HIGH_CONE_SHOULDER, ArmPositions.HIGH_CONE_ELBOW}, false);
+//                            fourBar.setRotations(fourBar.solve(SuperstructureConstants.ArmPositions.HIGH_CONE, true,true), false);
                         }
                         else if (gamePieceLocal == GamePiece.CUBE) {
                             fourBar.setRotations(fourBar.solve(SuperstructureConstants.ArmPositions.HIGH_CUBE, false,true), false);
@@ -169,17 +175,31 @@ public class Superstructure extends SubsystemBase {
                 }
                 break;
             case INTAKE_GROUND:
-                Translation2d pos = new Translation2d(SuperstructureConstants.ArmPositions.SWEEP_MIN.getX() + sweepLocal * (SuperstructureConstants.ArmPositions.SWEEP_MAX.getX() - SuperstructureConstants.ArmPositions.SWEEP_MIN.getX()), SuperstructureConstants.ArmPositions.SWEEP_MIN.getY());
-                fourBar.setRotations(FourBar.getInstance().solve(pos, false, true), false);
-                endEffector.intake();
+//                Translation2d pos = new Translation2d(SuperstructureConstants.ArmPositions.SWEEP_MIN.getX() + sweepLocal * (SuperstructureConstants.ArmPositions.SWEEP_MAX.getX() - SuperstructureConstants.ArmPositions.SWEEP_MIN.getX()), SuperstructureConstants.ArmPositions.SWEEP_MIN.getY());
+//                fourBar.setRotations(FourBar.getInstance().solve(pos, false, true), true);
+                fourBar.setRotations(new Rotation2d[]{ArmPositions.GROUND_PICKUP_SHOULDER, ArmPositions.GROUND_PICKUP_ELBOW}, false);
+                if (fourBar.atSetpoint()) {
+                    endEffector.intake();
+                }
+                else {
+                    endEffector.idle();
+                }
                 break;
             case INTAKE_MID:
-                fourBar.setRotations(FourBar.getInstance().solve(SuperstructureConstants.ArmPositions.MID_INTAKE, false,true), false);
-                endEffector.intake();
+                fourBar.setRotations(new Rotation2d[]{ArmPositions.MID_PICKUP_SHOULDER, ArmPositions.MID_PICKUP_ELBOW}, false);
+                if (fourBar.atSetpoint()) {
+                    endEffector.intake();
+                }
+                else {
+                    endEffector.idle();
+                }
                 break;
             case EXHAUST:
-                fourBar.hold();
-                endEffector.exhaust();
+                fourBar.dropElbow();
+                if (fourBar.atSetpoint()) {
+                    fourBar.hold();
+                    endEffector.exhaust();
+                }
                 break;
             case IDLE:
                 fourBar.hold();

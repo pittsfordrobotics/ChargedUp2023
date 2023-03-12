@@ -4,11 +4,9 @@
 
 package com.team3181.frc2023;
 
-import com.team3181.frc2023.Constants.AutoConstants.AutoDrivePosition;
 import com.team3181.frc2023.Constants.RobotConstants;
 import com.team3181.frc2023.FieldConstants.AutoDrivePoints;
 import com.team3181.frc2023.commands.SwerveDriveFieldXbox;
-import com.team3181.frc2023.commands.SwervePathingOnTheFly;
 import com.team3181.frc2023.commands.TankXbox;
 import com.team3181.frc2023.commands.autos.AutoSwerveBalance;
 import com.team3181.frc2023.commands.autos.AutoSwervePath;
@@ -31,10 +29,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RepeatCommand;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.*;
 
 import java.util.HashMap;
 
@@ -67,29 +62,36 @@ public class RobotContainer {
   }
 
   private void testButtons() {
-    driverController.a().whileTrue(new SwervePathingOnTheFly(AutoDrivePosition.NODE, false));
+//    driverController.a().whileTrue(new SwervePathingOnTheFly(AutoDrivePosition.NODE, false));
 //    driverController.a().onTrue(new InstantCommand(endEffector::intake)).onFalse(new InstantCommand(endEffector::idle));
 //    driverController.x().onTrue(new InstantCommand(endEffector::exhaust)).onFalse(new InstantCommand(endEffector::idle));
-//    driverController.rightTrigger().whileTrue(new InstantCommand(swerve::zeroGyro));
+    driverController.rightTrigger().whileTrue(new InstantCommand(swerve::zeroGyro));
 
-    driverController.a()
-            .whileTrue(new RepeatCommand(new InstantCommand(() -> fourBar.setArmVoltage(0, 2))))
-            .whileFalse(new InstantCommand(() -> fourBar.setArmVoltage(0, 0)));
-    driverController.b()
-            .whileTrue(new RepeatCommand(new InstantCommand(() -> fourBar.setArmVoltage(0, -2))))
-            .whileFalse(new InstantCommand(() -> fourBar.setArmVoltage(0, 0)));
-    driverController.x()
-            .whileTrue(new RepeatCommand(new InstantCommand(() -> fourBar.setArmVoltage(1, 2))))
-            .whileFalse(new InstantCommand(() -> fourBar.setArmVoltage(1, 0)));
-    driverController.y()
-            .whileTrue(new RepeatCommand(new InstantCommand(() -> fourBar.setArmVoltage(1, -2))))
-            .whileFalse(new InstantCommand(() -> fourBar.setArmVoltage(1, 0)));
-    driverController.rightBumper()
-            .whileTrue(new RepeatCommand(new InstantCommand(endEffector::intake)))
-            .whileFalse(new InstantCommand(endEffector::idle));
-    driverController.leftBumper()
-            .whileTrue(new RepeatCommand(new InstantCommand(endEffector::exhaust)))
-            .whileFalse(new InstantCommand(endEffector::idle));
+    driverController.a().whileTrue(new InstantCommand(superstructure::collectGround))
+            .whileFalse(new InstantCommand(Superstructure.getInstance()::home));
+    driverController.b().whileTrue(new InstantCommand(superstructure::collectMid))
+            .whileFalse(new InstantCommand(Superstructure.getInstance()::home));
+    driverController.x().whileTrue(new InstantCommand(superstructure::objective))
+            .whileFalse(new InstantCommand(Superstructure.getInstance()::home));
+//    driverController.b().whileTrue(new InstantCommand(() -> leds.setLEDMode(LEDModes.RAINBOW)));
+//    driverController.a()
+//            .whileTrue(new RepeatCommand(new InstantCommand(() -> fourBar.setArmVoltage(0, 2))))
+//            .whileFalse(new InstantCommand(() -> fourBar.setArmVoltage(0, 0)));
+//    driverController.b()
+//            .whileTrue(new RepeatCommand(new InstantCommand(() -> fourBar.setArmVoltage(0, -2))))
+//            .whileFalse(new InstantCommand(() -> fourBar.setArmVoltage(0, 0)));
+//    driverController.x()
+//            .whileTrue(new RepeatCommand(new InstantCommand(() -> fourBar.setArmVoltage(1, 2))))
+//            .whileFalse(new InstantCommand(() -> fourBar.setArmVoltage(1, 0)));
+//    driverController.y()
+//            .whileTrue(new RepeatCommand(new InstantCommand(() -> fourBar.setArmVoltage(1, -2))))
+//            .whileFalse(new InstantCommand(() -> fourBar.setArmVoltage(1, 0)));
+//    driverController.rightBumper()
+//            .whileTrue(new RepeatCommand(new InstantCommand(endEffector::intake)))
+//            .whileFalse(new InstantCommand(endEffector::idle));
+//    driverController.leftBumper()
+//            .whileTrue(new RepeatCommand(new InstantCommand(superstructure::exhaust)))
+//            .whileFalse(new InstantCommand(superstructure::home));
 //    driverController.rightBumper().whileTrue(new InstantCommand(endEffector::exhaust)).whileFalse(new InstantCommand(endEffector::idle));
 
     operatorController.povUp().whileTrue(objectiveTracker.shiftNodeCommand(Direction.UP));
@@ -138,10 +140,14 @@ public class RobotContainer {
             .whileTrue(objectiveTracker.shiftNodeCommand(Direction.DOWN));
     operatorController.povLeft()
             .whileTrue(objectiveTracker.shiftNodeCommand(Direction.LEFT));
-    operatorController.rightBumper().
-            whileTrue(new InstantCommand(objectiveTracker::toggleFilled));
-    operatorController.leftBumper().
-            whileTrue(new InstantCommand(objectiveTracker::toggleActive));
+//    operatorController.rightBumper().
+//            whileTrue(new InstantCommand(objectiveTracker::toggleFilled));
+//    operatorController.leftBumper().
+//            whileTrue(
+//                    new SequentialCommandGroup(
+//                        new WaitCommand(0.1),
+//                        new InstantCommand(objectiveTracker::toggleActive)
+//                    ));
   }
 
   private void autoConfig() {
@@ -149,14 +155,14 @@ public class RobotContainer {
     balanceChooser.addOption("Yes Balance", true);
 
     positionChooser.setDefaultOption("Bottom Node", 0);
-    positionChooser.setDefaultOption("Bottom Node + 1", 1);
-    positionChooser.setDefaultOption("Bottom Node + 2", 2);
-    positionChooser.setDefaultOption("Co-op Node", 3);
-    positionChooser.setDefaultOption("Co-op Node + 1", 4);
-    positionChooser.setDefaultOption("Co-op Node + 2", 5);
-    positionChooser.setDefaultOption("Top Node", 6);
-    positionChooser.setDefaultOption("Top Node + 1", 7);
-    positionChooser.setDefaultOption("Top Node + 2", 8);
+    positionChooser.addOption("Bottom Node + 1", 1);
+    positionChooser.addOption("Bottom Node + 2", 2);
+    positionChooser.addOption("Co-op Node", 3);
+    positionChooser.addOption("Co-op Node + 1", 4);
+    positionChooser.addOption("Co-op Node + 2", 5);
+    positionChooser.addOption("Top Node", 6);
+    positionChooser.addOption("Top Node + 1", 7);
+    positionChooser.addOption("Top Node + 2", 8);
 
     autoChooser.setDefaultOption("No auto", new WaitCommand(0));
     canBalanceMap.put(new WaitCommand(0), false);

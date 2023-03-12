@@ -1,14 +1,15 @@
 package com.team3181.frc2023.subsystems.endeffector;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.RelativeEncoder;
 import com.team3181.frc2023.Constants;
 import com.team3181.lib.drivers.LazySparkMax;
 import edu.wpi.first.math.util.Units;
 
 public class EndEffectorIOSparkMax implements EndEffectorIO {
-    private final LazySparkMax motorLeft = new LazySparkMax(Constants.EndEffectorConstants.CAN_LEFT, CANSparkMax.IdleMode.kBrake, 30, true, false);
-    private final LazySparkMax motorRight = new LazySparkMax(Constants.EndEffectorConstants.CAN_RIGHT, CANSparkMax.IdleMode.kBrake, 30, motorLeft, true, false);
+    private final LazySparkMax motorLeft = new LazySparkMax(Constants.EndEffectorConstants.CAN_LEFT, IdleMode.kBrake, 30, true, false);
+    private final LazySparkMax motorRight = new LazySparkMax(Constants.EndEffectorConstants.CAN_RIGHT, IdleMode.kBrake, 30, motorLeft, true, false);
     private final RelativeEncoder encoder = motorLeft.getEncoder();
 
     public EndEffectorIOSparkMax() {

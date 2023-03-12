@@ -116,8 +116,9 @@ public class EndEffector extends SubsystemBase {
         }
         double avg = sum / currentCycles;
         Logger.getInstance().recordOutput("End Effector/Avg Current", avg);
-        if (avg > 13) {
-            return ActualState.OBTAINED;
+        if (avg > 20) {
+            return ActualState.INTAKING;
+//            return ActualState.OBTAINED;
         }
         else {
             return ActualState.INTAKING;
