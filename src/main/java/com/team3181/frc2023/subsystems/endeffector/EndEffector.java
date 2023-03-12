@@ -58,7 +58,7 @@ public class EndEffector extends SubsystemBase {
                 case OBTAINED:
                 case IDLE:
                 default:
-                    io.setVoltage(0.8);
+                    io.setVoltage(0.8); // TODO: add to constants
                     // last thing command to do is call back and set state here, removes need for
                     break;
             }
