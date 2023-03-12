@@ -51,7 +51,6 @@ public class NodeSelectorIOServer implements NodeSelectorIO {
       inputs.selected = value;
     }
     for (var value : filledNodeSubscriber.readQueueValues()) {
-      System.out.println(value);
       inputs.filled = value;
     }
     for (var value : activeSubscriber.readQueueValues()) {

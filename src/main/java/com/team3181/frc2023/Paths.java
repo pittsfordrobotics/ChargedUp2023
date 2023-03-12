@@ -3,11 +3,7 @@ package com.team3181.frc2023;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.team3181.frc2023.Constants.AutoConstants;
-import com.team3181.frc2023.commands.*;
-import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker.NodeLevel;
-import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker.Objective;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 import java.util.HashMap;
 import java.util.List;
@@ -28,35 +24,35 @@ public class Paths {
     public static HashMap<String, Command> EVENT_MAP = new HashMap<>();
     public static final HashMap<String, Command> EVENT_MAP_BALANCE = new HashMap<>();
     public static final HashMap<String, Command> EVENT_MAP_NO_BALANCE = new HashMap<>();
-    static {
-        EVENT_MAP_BALANCE.put("intakeGround", new SuperstructureGround());
-        EVENT_MAP_NO_BALANCE.put("intakeGround", new SuperstructureGround());
-
-        EVENT_MAP_BALANCE.put("objectiveConeTop", new SuperstructureObjectiveGlobal(new Objective(6, NodeLevel.HIGH)));
-        EVENT_MAP_NO_BALANCE.put("objectiveConeTop", new SuperstructureObjectiveGlobal(new Objective(6, NodeLevel.HIGH)));
-
-        EVENT_MAP_BALANCE.put("objectiveCubeTop", new SuperstructureObjectiveGlobal(new Objective(7, NodeLevel.HIGH)));
-        EVENT_MAP_NO_BALANCE.put("objectiveCubeTop", new SuperstructureObjectiveGlobal(new Objective(7, NodeLevel.HIGH)));
-
-        EVENT_MAP_BALANCE.put("objectiveConeBottom", new SuperstructureObjectiveGlobal(new Objective(2, NodeLevel.HIGH)));
-        EVENT_MAP_NO_BALANCE.put("objectiveConeBottom", new SuperstructureObjectiveGlobal(new Objective(2, NodeLevel.HIGH)));
-
-        EVENT_MAP_BALANCE.put("objectiveCubeBottom", new SuperstructureObjectiveGlobal(new Objective(1, NodeLevel.HIGH)));
-        EVENT_MAP_NO_BALANCE.put("objectiveCubeBottom", new SuperstructureObjectiveGlobal(new Objective(1, NodeLevel.HIGH)));
-
-        EVENT_MAP_BALANCE.put("intakeGround", new SuperstructureGround());
-        EVENT_MAP_NO_BALANCE.put("intakeGround", new SuperstructureGround());
-
-        EVENT_MAP_BALANCE.put("home", new SuperstructureHome());
-        EVENT_MAP_NO_BALANCE.put("home", new SuperstructureHome());
-
-        EVENT_MAP_BALANCE.put("maybeStop", new WaitCommand(0));
-        EVENT_MAP_NO_BALANCE.put("maybeStop", new SwerveStop());
-
-        EVENT_MAP_BALANCE.put("balanceBackward", new SwerveAutoBalance(false));
-        EVENT_MAP_NO_BALANCE.put("balanceBackward", new SwerveStop());
-
-        EVENT_MAP_BALANCE.put("balanceForward", new SwerveAutoBalance(true));
-        EVENT_MAP_NO_BALANCE.put("balanceForward", new SwerveStop());
-    }
+//    static {
+//        EVENT_MAP_BALANCE.put("intakeGround", new SuperstructureGround());
+//        EVENT_MAP_NO_BALANCE.put("intakeGround", new SuperstructureGround());
+//
+//        EVENT_MAP_BALANCE.put("objectiveConeTop", new SuperstructureObjectiveGlobal(new Objective(6, NodeLevel.HIGH)));
+//        EVENT_MAP_NO_BALANCE.put("objectiveConeTop", new SuperstructureObjectiveGlobal(new Objective(6, NodeLevel.HIGH)));
+//
+//        EVENT_MAP_BALANCE.put("objectiveCubeTop", new SuperstructureObjectiveGlobal(new Objective(7, NodeLevel.HIGH)));
+//        EVENT_MAP_NO_BALANCE.put("objectiveCubeTop", new SuperstructureObjectiveGlobal(new Objective(7, NodeLevel.HIGH)));
+//
+//        EVENT_MAP_BALANCE.put("objectiveConeBottom", new SuperstructureObjectiveGlobal(new Objective(2, NodeLevel.HIGH)));
+//        EVENT_MAP_NO_BALANCE.put("objectiveConeBottom", new SuperstructureObjectiveGlobal(new Objective(2, NodeLevel.HIGH)));
+//
+//        EVENT_MAP_BALANCE.put("objectiveCubeBottom", new SuperstructureObjectiveGlobal(new Objective(1, NodeLevel.HIGH)));
+//        EVENT_MAP_NO_BALANCE.put("objectiveCubeBottom", new SuperstructureObjectiveGlobal(new Objective(1, NodeLevel.HIGH)));
+//
+//        EVENT_MAP_BALANCE.put("intakeGround", new SuperstructureGround());
+//        EVENT_MAP_NO_BALANCE.put("intakeGround", new SuperstructureGround());
+//
+//        EVENT_MAP_BALANCE.put("home", new SuperstructureHome());
+//        EVENT_MAP_NO_BALANCE.put("home", new SuperstructureHome());
+//
+//        EVENT_MAP_BALANCE.put("maybeStop", new WaitCommand(0));
+//        EVENT_MAP_NO_BALANCE.put("maybeStop", new SwerveStop());
+//
+//        EVENT_MAP_BALANCE.put("balanceBackward", new SwerveAutoBalance(false));
+//        EVENT_MAP_NO_BALANCE.put("balanceBackward", new SwerveStop());
+//
+//        EVENT_MAP_BALANCE.put("balanceForward", new SwerveAutoBalance(true));
+//        EVENT_MAP_NO_BALANCE.put("balanceForward", new SwerveStop());
+//    }
 }

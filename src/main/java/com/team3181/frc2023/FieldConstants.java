@@ -77,7 +77,6 @@ public final class FieldConstants {
             else if (deltaX == 0) {
                 updatedHeading = updatedHeading.plus(Rotation2d.fromDegrees(90 * deltaY > 0 ? 1 : -1));
             }
-            System.out.println("Updated Heading: " + updatedHeading.getDegrees() + " degrees");
             return new BetterPathPoint(startingPoint.getPosition(), updatedHeading, startingPoint.getHolonomicRotation());
         }
 

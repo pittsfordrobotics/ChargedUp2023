@@ -18,7 +18,6 @@ const timeout = 250;
 var active = true;
 var lastIndex = 0;
 
-
 function setActive(index) {
   if (index !== null) {
       Array.from(document.getElementsByClassName("active")).forEach((element) => {
@@ -49,6 +48,7 @@ function toggleFilled(index) {
       }
     }
     client.addSample(filledNodeToRobotTopic, arr);
+    client.addSample(currentNodeToRobotTopic, lastIndex);
   }
 }
 
@@ -123,6 +123,13 @@ window.addEventListener("load", () => {
       if (timer) {
         clearTimeout(timer);
         timer = null;
+        if (document.getElementsByTagName("td")[index].classList.contains("active")) {
+          client.addSample(activeToRobotTopic, 0);
+        }
+        else {
+          client.addSample(activeToRobotTopic, 1);
+          client.addSample(currentNodeToRobotTopic, index);
+        }
       }
     });
     // cell.addEventListener("mousemove", () => {
@@ -131,25 +138,25 @@ window.addEventListener("load", () => {
     //     timer = null;
     //   }
     // });
-    cell.addEventListener("click", () => {
-      if (document.getElementsByTagName("td")[index].classList.contains("active")) {
-        client.addSample(activeToRobotTopic, 0);
-      }
-      else {
-        client.addSample(activeToRobotTopic, 1);
-        client.addSample(currentNodeToRobotTopic, index);
-      }
-    });
-    cell.addEventListener("contextmenu", (event) => {
-      event.preventDefault();
-      if (document.getElementsByTagName("td")[index].classList.contains("active")) {
-        client.addSample(activeToRobotTopic, 0);
-      }
-      else {
-        client.addSample(activeToRobotTopic, 1);
-        client.addSample(currentNodeToRobotTopic, index);
-      }
-    });
+    // cell.addEventListener("click", () => {
+    //   if (document.getElementsByTagName("td")[index].classList.contains("active")) {
+    //     client.addSample(activeToRobotTopic, 0);
+    //   }
+    //   else {
+    //     client.addSample(activeToRobotTopic, 1);
+    //     client.addSample(currentNodeToRobotTopic, index);
+    //   }
+    // });
+    // cell.addEventListener("contextmenu", (event) => {
+    //   event.preventDefault();
+    //   if (document.getElementsByTagName("td")[index].classList.contains("active")) {
+    //     client.addSample(activeToRobotTopic, 0);
+    //   }
+    //   else {
+    //     client.addSample(activeToRobotTopic, 1);
+    //     client.addSample(currentNodeToRobotTopic, index);
+    //   }
+    // });
   });
 
   // Add touch listeners

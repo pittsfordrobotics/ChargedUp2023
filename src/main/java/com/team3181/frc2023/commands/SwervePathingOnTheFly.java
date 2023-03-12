@@ -20,7 +20,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -141,7 +140,6 @@ public class SwervePathingOnTheFly extends CommandBase {
                         if (adjustedPathPoints.size() == 0 && robotPointBlue.getPosition().getY() < 5.5) {
                             BetterPathPoint headingCorrection = AutoDrivePoints.updateHeading(robotPoint, node);
                             adjustedPathPoints.add(headingCorrection);
-                            System.out.println(headingCorrection.getHeading());
                         }
                         adjustedPathPoints.add(node);
                     }
