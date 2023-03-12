@@ -155,6 +155,7 @@ public class Superstructure extends SubsystemBase {
 ////                            fourBar.setRotations(fourBar.solve(SuperstructureConstants.ArmPositions.MID_CONE, true, true), false);
 //                        }
 //                        else if (gamePieceLocal == GamePiece.CUBE) {
+//                            fourBar.setRotations(new Rotation2d[]{ArmPositions.MID_CUBE_SHOULDER, ArmPositions.MID_CUBE_ELBOW}, false);
 //                            fourBar.setRotations(fourBar.solve(SuperstructureConstants.ArmPositions.MID_CUBE, false, true), false);
 //                        }
                         break;
@@ -165,7 +166,8 @@ public class Superstructure extends SubsystemBase {
 ////                            fourBar.setRotations(fourBar.solve(SuperstructureConstants.ArmPositions.HIGH_CONE, true,true), false);
 //                        }
 //                        else if (gamePieceLocal == GamePiece.CUBE) {
-//                            fourBar.setRotations(fourBar.solve(SuperstructureConstants.ArmPositions.HIGH_CUBE, false,true), false);
+//                            fourBar.setRotations(new Rotation2d[]{ArmPositions.HIGH_CUBE_SHOULDER, ArmPositions.HIGH_CUBE_ELBOW}, false);
+////                            fourBar.setRotations(fourBar.solve(SuperstructureConstants.ArmPositions.HIGH_CUBE, false,true), false);
 //                        }
                         break;
                 }
