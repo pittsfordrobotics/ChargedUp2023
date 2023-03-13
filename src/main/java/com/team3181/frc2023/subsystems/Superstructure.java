@@ -143,13 +143,13 @@ public class Superstructure extends SubsystemBase {
             case OBJECTIVE:
                 switch (objectiveLocal.nodeLevel) {
                     case HYBRID:
-                        if (gamePieceLocal == GamePiece.CONE || gamePieceLocal == GamePiece.CUBE) {
+//                        if (gamePieceLocal == GamePiece.CONE || gamePieceLocal == GamePiece.CUBE) {
                             fourBar.setRotations(new Rotation2d[]{ArmPositions.HYBRID_SHOULDER, ArmPositions.HYBRID_ELBOW}, false);
 //                            fourBar.setRotations(fourBar.solve(SuperstructureConstants.ArmPositions.HYBRID, false, true), false);
-                        }
+//                        }
                         break;
                     case MID:
-                        fourBar.setRotations(new Rotation2d[]{ArmPositions.MID_CONE_SHOULDER, ArmPositions.MID_CONE_ELBOW}, false);
+                        fourBar.setRotations(new Rotation2d[]{ArmPositions.MID_SHOULDER, ArmPositions.MID_ELBOW}, false);
 //                        if (gamePieceLocal == GamePiece.CONE) {
 //                            fourBar.setRotations(new Rotation2d[]{ArmPositions.MID_CONE_SHOULDER, ArmPositions.MID_CONE_ELBOW}, false);
 ////                            fourBar.setRotations(fourBar.solve(SuperstructureConstants.ArmPositions.MID_CONE, true, true), false);
@@ -160,7 +160,7 @@ public class Superstructure extends SubsystemBase {
 //                        }
                         break;
                     case HIGH:
-                        fourBar.setRotations(new Rotation2d[]{ArmPositions.HIGH_CONE_SHOULDER, ArmPositions.HIGH_CONE_ELBOW}, false);
+                        fourBar.setRotations(new Rotation2d[]{ArmPositions.HIGH_SHOULDER, ArmPositions.HIGH_ELBOW}, false);
 //                        if (gamePieceLocal == GamePiece.CONE) {
 //                            fourBar.setRotations(new Rotation2d[]{ArmPositions.HIGH_CONE_SHOULDER, ArmPositions.HIGH_CONE_ELBOW}, false);
 ////                            fourBar.setRotations(fourBar.solve(SuperstructureConstants.ArmPositions.HIGH_CONE, true,true), false);

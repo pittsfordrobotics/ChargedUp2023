@@ -342,17 +342,11 @@ public final class Constants {
             public static Rotation2d MID_PICKUP_SHOULDER = Rotation2d.fromRadians(0.4);
             public static Rotation2d MID_PICKUP_ELBOW = Rotation2d.fromRadians(0);
 
-            public static Rotation2d MID_CONE_SHOULDER = Rotation2d.fromRadians(-0.6470000743866);
-            public static Rotation2d MID_CONE_ELBOW = Rotation2d.fromRadians(0.7242125606536865);
+            public static Rotation2d MID_SHOULDER = Rotation2d.fromRadians(-0.6470000743866);
+            public static Rotation2d MID_ELBOW = Rotation2d.fromRadians(0.7242125606536865);
 
-            public static Rotation2d HIGH_CONE_SHOULDER = Rotation2d.fromRadians(0.29303767681121822);
-            public static Rotation2d HIGH_CONE_ELBOW = Rotation2d.fromRadians(0.3829857921600342); //0.4229857921600342
-
-            public static Rotation2d MID_CUBE_SHOULDER = Rotation2d.fromRadians(0);
-            public static Rotation2d MID_CUBE_ELBOW = Rotation2d.fromRadians(0);
-
-            public static Rotation2d HIGH_CUBE_SHOULDER = Rotation2d.fromRadians(0);
-            public static Rotation2d HIGH_CUBE_ELBOW = Rotation2d.fromRadians(0);
+            public static Rotation2d HIGH_SHOULDER = Rotation2d.fromRadians(0.29303767681121822);
+            public static Rotation2d HIGH_ELBOW = Rotation2d.fromRadians(0.3829857921600342); //0.4229857921600342
 
             public static Translation2d SWEEP_MIN = new Translation2d(0.66, 0.2);
             public static Translation2d SWEEP_MAX = new Translation2d(1.05, 0.4);

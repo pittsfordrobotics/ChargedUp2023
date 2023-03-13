@@ -28,17 +28,17 @@ public class Paths {
 //        EVENT_MAP_BALANCE.put("intakeGround", new SuperstructureGround());
 //        EVENT_MAP_NO_BALANCE.put("intakeGround", new SuperstructureGround());
 //
-//        EVENT_MAP_BALANCE.put("objectiveConeTop", new SuperstructureObjectiveGlobal(new Objective(6, NodeLevel.HIGH)));
-//        EVENT_MAP_NO_BALANCE.put("objectiveConeTop", new SuperstructureObjectiveGlobal(new Objective(6, NodeLevel.HIGH)));
+//        EVENT_MAP_BALANCE.put("objectiveConeTop", new SuperstructureObjectiveGlobal(new Objective(6, NodeLevel.MID)));
+//        EVENT_MAP_NO_BALANCE.put("objectiveConeTop", new SuperstructureObjectiveGlobal(new Objective(6, NodeLevel.MID)));
 //
-//        EVENT_MAP_BALANCE.put("objectiveCubeTop", new SuperstructureObjectiveGlobal(new Objective(7, NodeLevel.HIGH)));
-//        EVENT_MAP_NO_BALANCE.put("objectiveCubeTop", new SuperstructureObjectiveGlobal(new Objective(7, NodeLevel.HIGH)));
+//        EVENT_MAP_BALANCE.put("objectiveCubeTop", new SuperstructureObjectiveGlobal(new Objective(7, NodeLevel.MID)));
+//        EVENT_MAP_NO_BALANCE.put("objectiveCubeTop", new SuperstructureObjectiveGlobal(new Objective(7, NodeLevel.MID)));
 //
-//        EVENT_MAP_BALANCE.put("objectiveConeBottom", new SuperstructureObjectiveGlobal(new Objective(2, NodeLevel.HIGH)));
-//        EVENT_MAP_NO_BALANCE.put("objectiveConeBottom", new SuperstructureObjectiveGlobal(new Objective(2, NodeLevel.HIGH)));
+//        EVENT_MAP_BALANCE.put("objectiveConeBottom", new SuperstructureObjectiveGlobal(new Objective(2, NodeLevel.MID)));
+//        EVENT_MAP_NO_BALANCE.put("objectiveConeBottom", new SuperstructureObjectiveGlobal(new Objective(2, NodeLevel.MID)));
 //
-//        EVENT_MAP_BALANCE.put("objectiveCubeBottom", new SuperstructureObjectiveGlobal(new Objective(1, NodeLevel.HIGH)));
-//        EVENT_MAP_NO_BALANCE.put("objectiveCubeBottom", new SuperstructureObjectiveGlobal(new Objective(1, NodeLevel.HIGH)));
+//        EVENT_MAP_BALANCE.put("objectiveCubeBottom", new SuperstructureObjectiveGlobal(new Objective(1, NodeLevel.MID)));
+//        EVENT_MAP_NO_BALANCE.put("objectiveCubeBottom", new SuperstructureObjectiveGlobal(new Objective(1, NodeLevel.MID)));
 //
 //        EVENT_MAP_BALANCE.put("intakeGround", new SuperstructureGround());
 //        EVENT_MAP_NO_BALANCE.put("intakeGround", new SuperstructureGround());
