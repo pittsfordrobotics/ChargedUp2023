@@ -54,8 +54,8 @@ public class RobotContainer {
   public RobotContainer() {
     autoConfig();
 
-      competitionButtons();
-//      testButtons();
+//      competitionButtons();
+      testButtons();
 
     if (!RobotConstants.IS_TANK) swerve.setDefaultCommand(new SwerveDriveFieldXbox());
     if (RobotConstants.IS_TANK) Tank.getInstance().setDefaultCommand(new TankXbox());
@@ -65,14 +65,14 @@ public class RobotContainer {
 //    driverController.a().whileTrue(new SwervePathingOnTheFly(AutoDrivePosition.NODE, false));
 //    driverController.a().onTrue(new InstantCommand(endEffector::intake)).onFalse(new InstantCommand(endEffector::idle));
 //    driverController.x().onTrue(new InstantCommand(endEffector::exhaust)).onFalse(new InstantCommand(endEffector::idle));
-    driverController.rightTrigger().whileTrue(new InstantCommand(swerve::zeroGyro));
-
-    driverController.a().whileTrue(new InstantCommand(superstructure::collectGround))
-            .whileFalse(new InstantCommand(Superstructure.getInstance()::home));
-    driverController.b().whileTrue(new InstantCommand(superstructure::collectMid))
-            .whileFalse(new InstantCommand(Superstructure.getInstance()::home));
-    driverController.x().whileTrue(new InstantCommand(superstructure::objective))
-            .whileFalse(new InstantCommand(Superstructure.getInstance()::home));
+//    driverController.rightTrigger().whileTrue(new InstantCommand(swerve::zeroGyro));
+//
+//    driverController.a().whileTrue(new InstantCommand(superstructure::collectGround))
+//            .whileFalse(new InstantCommand(Superstructure.getInstance()::home));
+//    driverController.b().whileTrue(new InstantCommand(superstructure::collectMid))
+//            .whileFalse(new InstantCommand(Superstructure.getInstance()::home));
+//    driverController.x().whileTrue(new InstantCommand(superstructure::objective))
+//            .whileFalse(new InstantCommand(Superstructure.getInstance()::home));
 //    driverController.b().whileTrue(new InstantCommand(() -> leds.setLEDMode(LEDModes.RAINBOW)));
 //    driverController.a()
 //            .whileTrue(new RepeatCommand(new InstantCommand(() -> fourBar.setArmVoltage(0, 2))))
@@ -98,8 +98,8 @@ public class RobotContainer {
     operatorController.povRight().whileTrue(objectiveTracker.shiftNodeCommand(Direction.RIGHT));
     operatorController.povDown().whileTrue(objectiveTracker.shiftNodeCommand(Direction.DOWN));
     operatorController.povLeft().whileTrue(objectiveTracker.shiftNodeCommand(Direction.LEFT));
-    operatorController.rightBumper().whileTrue(new InstantCommand(objectiveTracker::toggleFilled));
-    operatorController.leftBumper().whileTrue(new InstantCommand(objectiveTracker::toggleActive));
+//    driverController.a().whileTrue(new InstantCommand(objectiveTracker::toggleFilled));
+    driverController.a().whileTrue(new InstantCommand(objectiveTracker::toggleActive));
   }
 
   private void competitionButtons() {
@@ -140,14 +140,10 @@ public class RobotContainer {
             .whileTrue(objectiveTracker.shiftNodeCommand(Direction.DOWN));
     operatorController.povLeft()
             .whileTrue(objectiveTracker.shiftNodeCommand(Direction.LEFT));
-//    operatorController.rightBumper().
-//            whileTrue(new InstantCommand(objectiveTracker::toggleFilled));
-//    operatorController.leftBumper().
-//            whileTrue(
-//                    new SequentialCommandGroup(
-//                        new WaitCommand(0.1),
-//                        new InstantCommand(objectiveTracker::toggleActive)
-//                    ));
+    operatorController.rightBumper().
+            whileTrue(new InstantCommand(objectiveTracker::toggleFilled));
+    operatorController.leftBumper().
+            whileTrue(new InstantCommand(objectiveTracker::toggleActive));
   }
 
   private void autoConfig() {

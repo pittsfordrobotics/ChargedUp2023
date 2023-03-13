@@ -16,7 +16,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -258,18 +257,7 @@ public class ObjectiveTracker extends VirtualSubsystem {
 
     // Send current data to selector
     {
-      int selected;
-      if (DriverStation.getAlliance() == Alliance.Blue) {
-        selected = 8 - objective.nodeRow;
-      } else {
-        selected = objective.nodeRow;
-      }
-      switch (objective.nodeLevel) {
-        case HYBRID -> selected += 0;
-        case MID -> selected += 9;
-        case HIGH -> selected += 18;
-      }
-      selectorIO.setSelected(selected);
+      selectorIO.setSelected(objectiveToSelected());
       boolean[] tempFilled = new boolean[27];
       if (DriverStation.getAlliance() == Alliance.Blue) {
         for (int i = 8; i >= 0; i--) {
@@ -375,7 +363,23 @@ public class ObjectiveTracker extends VirtualSubsystem {
 
   /** Toggle whether current cell is filled */
   public void toggleFilled() {
-    filled[(int)selectorInputs.selected] = !filled[(int)selectorInputs.selected];
+    int selected = objectiveToSelected();
+    filled[selected] = !filled[selected];
+  }
+
+  private int objectiveToSelected() {
+    int selected;
+    if (DriverStation.getAlliance() == Alliance.Blue) {
+      selected = 8 - objective.nodeRow;
+    } else {
+      selected = objective.nodeRow;
+    }
+    switch (objective.nodeLevel) {
+      case HYBRID -> selected += 0;
+      case MID -> selected += 9;
+      case HIGH -> selected += 18;
+    }
+    return selected;
   }
 
   /** Toggle whether automation is enabled */
