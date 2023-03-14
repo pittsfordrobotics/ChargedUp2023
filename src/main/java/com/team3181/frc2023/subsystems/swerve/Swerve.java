@@ -160,10 +160,11 @@ public class Swerve extends SubsystemBase {
         poseEstimator.resetPosition(getRobotRelativeAngle(), modulePositions, pose);
     }
 
-    public void addVisionData(Pose2d pose, double time) {
-//        this is recommended, but I'm not sure if it's needed
-        if (GeomUtil.distance(pose, getPose()) < 1) {
-            poseEstimator.addVisionMeasurement(pose, time);
+    public void addVisionData(Pose2d pose, double time, boolean stable) {
+        if (GeomUtil.distance(pose, getPose()) < 1 || stable) {
+            // remove rotation because its being funky
+            Pose2d noRot = new Pose2d(pose.getTranslation(), getRobotRelativeAngle());
+            poseEstimator.addVisionMeasurement(noRot, time);
         }
     }
 

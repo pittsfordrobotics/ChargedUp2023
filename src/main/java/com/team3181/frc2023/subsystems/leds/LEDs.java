@@ -64,7 +64,7 @@ public class LEDs extends SubsystemBase {
         if (timer.get() < 0.2) {
             setColor(color);
         }
-        else if (timer.get() < 1) {
+        else if (timer.get() < 0.4) {
             setOff();
         }
         else {

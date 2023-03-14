@@ -2,8 +2,10 @@ package com.team3181.frc2023.subsystems.endeffector;
 
 
 import com.team3181.frc2023.Constants;
+import com.team3181.frc2023.Constants.EndEffectorConstants;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
+
 import java.util.Vector;
 
 public class EndEffector extends SubsystemBase {
@@ -50,15 +52,15 @@ public class EndEffector extends SubsystemBase {
             switch(actualState) {
                 // would be nice if this were command based but that's annoying and periodic is easier
                 case INTAKING:
-                    io.setVoltage(Constants.EndEffectorConstants.INTAKE_POWER);
+                    io.setVoltage(EndEffectorConstants.INTAKE_POWER);
                     break;
                 case EXHAUSTING: // may need to be 2 different values if we need to shoot cone and cube at different speeds
-                    io.setVoltage(Constants.EndEffectorConstants.EXHAUST_POWER);
+                    io.setVoltage(EndEffectorConstants.EXHAUST_POWER);
                     break;
                 case OBTAINED:
                 case IDLE:
                 default:
-                    io.setVoltage(0.8); // TODO: add to constants
+                    io.setVoltage(EndEffectorConstants.INTAKE_IDLE_POWER); // TODO: add to constants
                     // last thing command to do is call back and set state here, removes need for
                     break;
             }

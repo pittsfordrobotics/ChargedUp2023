@@ -63,7 +63,6 @@ public class Superstructure extends SubsystemBase {
         FourBar fourBar = FourBar.getInstance();
         EndEffector endEffector = EndEffector.getInstance();
         StructureState state = StructureState.IDLE;
-        GamePiece gamePieceLocal = GamePiece.NONE;
         double sweepLocal = sweepGlobal;
 
         switch (wantedState) {
@@ -124,17 +123,14 @@ public class Superstructure extends SubsystemBase {
                 } else {
                     if (demandLEDs) leds.setLEDMode(LEDModes.CUBE);
                 }
-                gamePieceLocal = GamePiece.CUBE;
-            } else if (objectiveLocal.nodeRow == 0 || objectiveLocal.nodeRow == 3 || objectiveLocal.nodeRow == 6) {
+            } else if (objectiveLocal.nodeRow == 0 || objectiveLocal.nodeRow == 2 || objectiveLocal.nodeRow == 3 || objectiveLocal.nodeRow == 5 || objectiveLocal.nodeRow == 6 || objectiveLocal.nodeRow == 8) {
                 if (endEffector.hasPiece()) {
                     if (demandLEDs) leds.setLEDMode(LEDModes.FLASH_CONE);
                 } else {
                     if (demandLEDs) leds.setLEDMode(LEDModes.CONE);
                 }
-                gamePieceLocal = GamePiece.CONE;
             } else {
                 if (demandLEDs) leds.setLEDMode(LEDModes.ERROR);
-                gamePieceLocal = GamePiece.NONE;
             }
         }
         demandLEDs = false;

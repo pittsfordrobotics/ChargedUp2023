@@ -29,7 +29,10 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.*;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RepeatCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 import java.util.HashMap;
 
@@ -54,15 +57,15 @@ public class RobotContainer {
   public RobotContainer() {
     autoConfig();
 
-//      competitionButtons();
-      testButtons();
+      competitionButtons();
+//      testButtons();
 
     if (!RobotConstants.IS_TANK) swerve.setDefaultCommand(new SwerveDriveFieldXbox());
     if (RobotConstants.IS_TANK) Tank.getInstance().setDefaultCommand(new TankXbox());
   }
 
   private void testButtons() {
-//    driverController.a().whileTrue(new SwervePathingOnTheFly(AutoDrivePosition.NODE, false));
+//    driverController.a().whileTrue(new InstantCommand(()->leds.setLEDMode((LEDModes.FLASH_CUBE))));
 //    driverController.a().onTrue(new InstantCommand(endEffector::intake)).onFalse(new InstantCommand(endEffector::idle));
 //    driverController.x().onTrue(new InstantCommand(endEffector::exhaust)).onFalse(new InstantCommand(endEffector::idle));
 //    driverController.rightTrigger().whileTrue(new InstantCommand(swerve::zeroGyro));

@@ -5,6 +5,7 @@ import com.team3181.frc2023.subsystems.swerve.Swerve;
 import com.team3181.frc2023.subsystems.vision.VisionIO.CameraMode;
 import com.team3181.frc2023.subsystems.vision.VisionIO.LED;
 import com.team3181.frc2023.subsystems.vision.VisionIO.Pipelines;
+import com.team3181.lib.math.GeomUtil;
 import com.team3181.lib.util.Alert;
 import com.team3181.lib.util.Alert.AlertType;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -12,8 +13,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 
@@ -25,6 +25,9 @@ public class Vision extends SubsystemBase {
     private Pipelines pipeline = Pipelines.MID_RANGE;
     private LED led = LED.PIPELINE;
     private CameraMode camera = CameraMode.VISION_PROCESSING;
+    private final Timer timer = new Timer();
+    private boolean timerStarted = false;
+    private final Pose2d lastPose = new Pose2d();
 
     private final Alert limelightAlert = new Alert("Limelight not detected! Vision will NOT work!", AlertType.ERROR);
 
@@ -54,9 +57,24 @@ public class Vision extends SubsystemBase {
         Logger.getInstance().recordOutput("Vision/Camera", camera.toString());
 
         if (getPose() != null) {
-            Swerve.getInstance().addVisionData(Vision.getInstance().getPose(), Vision.getInstance().getLatency());
-            Logger.getInstance().recordOutput("Vision/Pose", Vision.getInstance().getPose());
+            Swerve.getInstance().addVisionData(getPose(), getLatency(), checkStable());
+            Logger.getInstance().recordOutput("Vision/Pose", getPose());
         }
+    }
+
+    public boolean checkStable() {
+        if (getPose() != null) {
+            if (GeomUtil.distance(getPose(), lastPose) < 0.1) {
+                if (!timerStarted) {
+                    timerStarted = true;
+                    timer.restart();
+                }
+            }
+            else {
+                timerStarted = false;
+            }
+        }
+        return timer.hasElapsed(0.5);
     }
 
     public void setAutoPipeline(boolean autoPipeline) {
