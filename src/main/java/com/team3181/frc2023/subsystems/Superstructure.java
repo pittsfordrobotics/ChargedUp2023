@@ -106,6 +106,9 @@ public class Superstructure extends SubsystemBase {
             if (state == StructureState.EXHAUST) {
                 fourBar.recordDrop();
             }
+            else if (state == StructureState.OBJECTIVE && objectiveLocal.nodeLevel == NodeLevel.HIGH) {
+                fourBar.recordHigh(new Rotation2d[]{ArmPositions.HIGH_SHOULDER, ArmPositions.HIGH_ELBOW});
+            }
             systemState = state;
         }
 
@@ -156,7 +159,7 @@ public class Superstructure extends SubsystemBase {
 //                        }
                         break;
                     case HIGH:
-                        fourBar.setRotations(new Rotation2d[]{ArmPositions.HIGH_SHOULDER, ArmPositions.HIGH_ELBOW}, false);
+                        fourBar.runHigh(new Rotation2d[]{ArmPositions.HIGH_SHOULDER, ArmPositions.HIGH_ELBOW});
 //                        if (gamePieceLocal == GamePiece.CONE) {
 //                            fourBar.setRotations(new Rotation2d[]{ArmPositions.HIGH_CONE_SHOULDER, ArmPositions.HIGH_CONE_ELBOW}, false);
 ////                            fourBar.setRotations(fourBar.solve(SuperstructureConstants.ArmPositions.HIGH_CONE, true,true), false);

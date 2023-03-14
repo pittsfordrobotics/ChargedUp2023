@@ -353,8 +353,12 @@ public final class Constants {
             public static Rotation2d MID_PICKUP_SHOULDER = Rotation2d.fromRadians(0.4);
             public static Rotation2d MID_PICKUP_ELBOW = Rotation2d.fromRadians(0);
 
+            // long pos
             public static Rotation2d MID_SHOULDER = Rotation2d.fromRadians(-0.6470000743866);
             public static Rotation2d MID_ELBOW = Rotation2d.fromRadians(0.7242125606536865);
+
+            public static Rotation2d MID_HIGH_SHOULDER = Rotation2d.fromRadians(-0.6470000743866);
+            public static Rotation2d MID_HIGH_ELBOW = Rotation2d.fromRadians(0.7242125606536865);
 
             public static Rotation2d HIGH_SHOULDER = Rotation2d.fromRadians(0.29303767681121822);
             public static Rotation2d HIGH_ELBOW = Rotation2d.fromRadians(0.3829857921600342); //0.4229857921600342

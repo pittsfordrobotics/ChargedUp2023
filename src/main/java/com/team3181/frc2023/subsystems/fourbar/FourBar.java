@@ -26,6 +26,7 @@ public class FourBar extends SubsystemBase {
     private final PIDController elbowPID = new PIDController(FourBarConstants.ELBOW_P, FourBarConstants.ELBOW_I, FourBarConstants.ELBOW_D);
     private final Alert shoulderTooLow = new Alert("Shoulder needs to be moved forward! THIS WILL BREAK ALOT OF THINGS!", AlertType.ERROR);
     private Rotation2d[] dropStuff = new Rotation2d[]{};
+    private Rotation2d waitPos = new Rotation2d();
 
     private final static FourBar INSTANCE = new FourBar(Constants.RobotConstants.SHOULDER, Constants.RobotConstants.ELBOW);
 
@@ -103,6 +104,18 @@ public class FourBar extends SubsystemBase {
 
     public boolean atSetpoint() {
         return shoulderPID.atSetpoint() && elbowPID.atSetpoint();
+    }
+
+    public void recordHigh(Rotation2d[] rotation2ds) {
+        waitPos = Rotation2d.fromRadians((rotation2ds[0].getRadians() - inputs[0].armPositionRad) / 2 + inputs[0].armPositionRad);
+    }
+
+    public void runHigh(Rotation2d[] rotation2ds) {
+        if (inputs[0].armPositionRad < waitPos.getRadians()) {
+            setRotations(new Rotation2d[]{rotation2ds[0], Rotation2d.fromRadians(inputs[1].armPositionRad)}, false);
+        } else {
+            setRotations(rotation2ds, false);
+        }
     }
 
     /** Converts joint angles to the end effector position. */
