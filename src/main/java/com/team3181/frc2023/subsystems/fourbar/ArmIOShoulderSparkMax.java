@@ -45,6 +45,8 @@ public class ArmIOShoulderSparkMax implements ArmIO {
         inputs.armAppliedVolts = mainMotor.getAppliedOutput() * mainMotor.getBusVoltage();
         inputs.armCurrentAmps = mainMotor.getOutputCurrent();
         inputs.armTempCelsius = mainMotor.getMotorTemperature();
+
+        System.out.println(followerMotor.getOutputCurrent());
     }
 
     @Override

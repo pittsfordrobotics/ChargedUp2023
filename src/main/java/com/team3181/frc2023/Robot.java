@@ -16,6 +16,7 @@ import com.team3181.lib.util.PIDTuner;
 import com.team3181.lib.util.VirtualSubsystem;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
@@ -66,7 +67,7 @@ public class Robot extends LoggedRobot {
     logger.addDataReceiver(new NT4Publisher());
     if (RobotBase.isReal()) {
       logger.addDataReceiver(new WPILOGWriter(RobotConstants.LOGGING_PATH));
-      LoggedPowerDistribution.getInstance();
+      LoggedPowerDistribution.getInstance(0, ModuleType.kRev);
     }
     else if (RobotConstants.REPLAY_ENABLED) {
       String path = LogFileUtil.findReplayLog();
