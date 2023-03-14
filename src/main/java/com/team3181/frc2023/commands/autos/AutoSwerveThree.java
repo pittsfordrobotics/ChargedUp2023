@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 public class AutoSwerveThree extends SequentialCommandGroup {
     public AutoSwerveThree(boolean top) {
         super(
-                new SuperstructureObjectiveGlobal(new Objective(8, NodeLevel.MID)),
+                new SuperstructureObjectiveGlobal(new Objective(8, NodeLevel.HIGH)),
                 new FollowPathWithLiveEvents(
                         new SwervePathing((top ? Paths.TOP_THREE : Paths.BOTTOM_THREE).get(0), true),
                         (top ? Paths.TOP_THREE : Paths.BOTTOM_THREE).get(0).getMarkers()
