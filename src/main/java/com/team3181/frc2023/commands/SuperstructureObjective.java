@@ -1,5 +1,6 @@
 package com.team3181.frc2023.commands;
 
+import com.team3181.frc2023.Constants.SuperstructureConstants;
 import com.team3181.frc2023.subsystems.Superstructure;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -29,8 +30,7 @@ public class SuperstructureObjective extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return !superstructure.hasGamePiece();
-//        return timer.hasElapsed(SuperstructureConstants.EXHAUST_TIME);
+        return timer.hasElapsed(SuperstructureConstants.EXHAUST_TIME);
     }
 
     @Override

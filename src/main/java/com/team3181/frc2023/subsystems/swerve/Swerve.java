@@ -162,6 +162,7 @@ public class Swerve extends SubsystemBase {
         if (GeomUtil.distance(pose, getPose()) < 1 || stable) {
             // remove rotation because its being funky
             Pose2d noRot = new Pose2d(pose.getTranslation(), getPose().getRotation());
+            Logger.getInstance().recordOutput("Swerve/Vision Updates", noRot);
             poseEstimator.addVisionMeasurement(noRot, time);
         }
     }

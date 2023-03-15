@@ -3,6 +3,7 @@ package com.team3181.frc2023.subsystems;
 import com.team3181.frc2023.Constants.SuperstructureConstants;
 import com.team3181.frc2023.Constants.SuperstructureConstants.ArmPositions;
 import com.team3181.frc2023.FieldConstants.AutoDrivePoints;
+import com.team3181.frc2023.Robot;
 import com.team3181.frc2023.subsystems.endeffector.EndEffector;
 import com.team3181.frc2023.subsystems.fourbar.FourBar;
 import com.team3181.frc2023.subsystems.leds.LEDs;
@@ -285,7 +286,7 @@ public class Superstructure extends SubsystemBase {
     }
 
     public boolean atSetpoint() {
-        return shouldAutoScore() && FourBar.getInstance().atSetpoint();
+        return shouldAutoScore() && FourBar.getInstance().atSetpoint() || Robot.isSimulation();
     }
 
     public boolean hasGamePiece() {

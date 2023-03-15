@@ -164,61 +164,75 @@ public class RobotContainer {
     positionChooser.addOption("Top Node + 1", 7);
     positionChooser.addOption("Top Node + 2", 8);
 
-    autoChooser.setDefaultOption("No auto", new WaitCommand(0));
-    canBalanceMap.put(new WaitCommand(0), false);
-    needPositionMap.put(new WaitCommand(0), true);
+    Command wait = new WaitCommand(0);
+    autoChooser.setDefaultOption("No auto", wait);
+    canBalanceMap.put(wait, false);
+    needPositionMap.put(wait, true);
 
-    autoChooser.addOption("Place and Balance Climb", new AutoSwerveBalance());
-    canBalanceMap.put(new AutoSwerveBalance(), true);
-    needPositionMap.put(new AutoSwerveBalance(), true);
+    Command balance = new AutoSwerveBalance();
+    autoChooser.addOption("Place and Balance Climb", balance);
+    canBalanceMap.put(balance, true);
+    needPositionMap.put(balance, true);
 
-    autoChooser.addOption("3 Thing Top", new AutoSwerveThree(true));
-    canBalanceMap.put(new AutoSwerveThree(true), true);
-    needPositionMap.put(new AutoSwerveThree(true), false);
+    Command threeTop = new AutoSwerveThree(true);
+    autoChooser.addOption("3 Thing Top", threeTop);
+    canBalanceMap.put(threeTop, true);
+    needPositionMap.put(threeTop, false);
 
-    autoChooser.addOption("3 Thing Bottom", new AutoSwerveThree(false));
-    canBalanceMap.put(new AutoSwerveThree(false), true);
-    needPositionMap.put(new AutoSwerveThree(false), false);
+    Command threeBottom = new AutoSwerveThree(false);
+    autoChooser.addOption("3 Thing Bottom", threeBottom);
+    canBalanceMap.put(threeBottom, true);
+    needPositionMap.put(threeBottom, false);
 
-    autoChooser.addOption("2 Thing Top", new AutoSwerveTwo(true));
-    canBalanceMap.put(new AutoSwerveTwo(true), false);
-    needPositionMap.put(new AutoSwerveTwo(true), false);
+    Command twoTop = new AutoSwerveTwo(true);
+    autoChooser.addOption("2 Thing Top", twoTop);
+    canBalanceMap.put(twoTop, false);
+    needPositionMap.put(twoTop, false);
 
-    autoChooser.addOption("2 Thing Bottom", new AutoSwerveTwo(false));
-    canBalanceMap.put(new AutoSwerveTwo(false), false);
-    needPositionMap.put(new AutoSwerveTwo(false), false);
+    Command twoBottom = new AutoSwerveTwo(false);
+    autoChooser.addOption("2 Thing Bottom", twoBottom);
+    canBalanceMap.put(twoBottom, false);
+    needPositionMap.put(twoBottom, false);
 
-    autoChooser.addOption("1 Cone Top", new AutoSwervePath(Paths.TOP_CONE, new Objective(8, NodeLevel.HIGH)));
-    canBalanceMap.put(new AutoSwervePath(Paths.TOP_CONE, new Objective(8, NodeLevel.HIGH)), true);
-    needPositionMap.put(new AutoSwervePath(Paths.TOP_CONE, new Objective(8, NodeLevel.HIGH)), false);
+    Command coneTop = new AutoSwervePath(Paths.TOP_CONE, new Objective(8, NodeLevel.HIGH));
+    autoChooser.addOption("1 Cone Top", coneTop);
+    canBalanceMap.put(coneTop, true);
+    needPositionMap.put(coneTop, false);
 
-    autoChooser.addOption("1 Cone Top + 1", new AutoSwervePath(Paths.TOP_CONE_PLUS_ONE, new Objective(8, NodeLevel.HIGH)));
-    canBalanceMap.put(new AutoSwervePath(Paths.TOP_CONE_PLUS_ONE, new Objective(8, NodeLevel.HIGH)), true);
-    needPositionMap.put(new AutoSwervePath(Paths.TOP_CONE_PLUS_ONE, new Objective(8, NodeLevel.HIGH)), false);
+    Command coneTopPlusOne = new AutoSwervePath(Paths.TOP_CONE_PLUS_ONE, new Objective(8, NodeLevel.HIGH));
+    autoChooser.addOption("1 Cone Top + 1", coneTopPlusOne);
+    canBalanceMap.put(coneTopPlusOne, true);
+    needPositionMap.put(coneTopPlusOne, false);
 
-    autoChooser.addOption("1 Cube Top", new AutoSwervePath(Paths.TOP_CUBE, new Objective(7, NodeLevel.HIGH)));
-    canBalanceMap.put(new AutoSwervePath(Paths.TOP_CUBE, new Objective(7, NodeLevel.HIGH)), true);
-    needPositionMap.put(new AutoSwervePath(Paths.TOP_CUBE, new Objective(7, NodeLevel.HIGH)), false);
+    Command cubeTop = new AutoSwervePath(Paths.TOP_CUBE, new Objective(7, NodeLevel.HIGH));
+    autoChooser.addOption("1 Cube Top", cubeTop);
+    canBalanceMap.put(cubeTop, true);
+    needPositionMap.put(cubeTop, false);
 
-    autoChooser.addOption("1 Cube Top + 1", new AutoSwervePath(Paths.TOP_CUBE_PLUS_ONE, new Objective(7, NodeLevel.HIGH)));
-    canBalanceMap.put(new AutoSwervePath(Paths.TOP_CUBE_PLUS_ONE, new Objective(7, NodeLevel.HIGH)), true);
-    needPositionMap.put(new AutoSwervePath(Paths.TOP_CUBE_PLUS_ONE, new Objective(7, NodeLevel.HIGH)), false);
+    Command cubeTopPlusOne = new AutoSwervePath(Paths.TOP_CUBE_PLUS_ONE, new Objective(7, NodeLevel.HIGH));
+    autoChooser.addOption("1 Cube Top + 1", cubeTopPlusOne);
+    canBalanceMap.put(cubeTopPlusOne, true);
+    needPositionMap.put(cubeTopPlusOne, false);
 
-    autoChooser.addOption("1 Cone Bottom", new AutoSwervePath(Paths.BOTTOM_CONE, new Objective(0, NodeLevel.HIGH)));
-    canBalanceMap.put(new AutoSwervePath(Paths.BOTTOM_CONE, new Objective(0, NodeLevel.HIGH)), true);
-    needPositionMap.put(new AutoSwervePath(Paths.BOTTOM_CONE, new Objective(0, NodeLevel.HIGH)), false);
+    Command coneBottom = new AutoSwervePath(Paths.BOTTOM_CONE, new Objective(0, NodeLevel.HIGH));
+    autoChooser.addOption("1 Cone Bottom", coneBottom);
+    canBalanceMap.put(coneBottom, true);
+    needPositionMap.put(coneBottom, false);
 
-    autoChooser.addOption("1 Cone Bottom + 1", new AutoSwervePath(Paths.BOTTOM_CONE_PLUS_ONE, new Objective(1, NodeLevel.HIGH)));
-    canBalanceMap.put(new AutoSwervePath(Paths.BOTTOM_CONE_PLUS_ONE, new Objective(1, NodeLevel.HIGH)), true);
-    needPositionMap.put(new AutoSwervePath(Paths.BOTTOM_CONE_PLUS_ONE, new Objective(1, NodeLevel.HIGH)), false);
+    Command coneBottomPlusOne = new AutoSwervePath(Paths.BOTTOM_CONE_PLUS_ONE, new Objective(1, NodeLevel.HIGH));
+    autoChooser.addOption("1 Cone Bottom + 1", coneBottomPlusOne);
+    canBalanceMap.put(coneBottomPlusOne, true);
+    needPositionMap.put(coneBottomPlusOne, false);
 
-    autoChooser.addOption("1 Cube Bottom", new AutoSwervePath(Paths.BOTTOM_CUBE, new Objective(1, NodeLevel.HIGH)));
-    canBalanceMap.put(new AutoSwervePath(Paths.BOTTOM_CUBE, new Objective(1, NodeLevel.HIGH)), true);
-    needPositionMap.put(new AutoSwervePath(Paths.BOTTOM_CUBE, new Objective(1, NodeLevel.HIGH)), false);
+    Command cubeBottom = new AutoSwervePath(Paths.BOTTOM_CUBE, new Objective(1, NodeLevel.HIGH));
+    autoChooser.addOption("1 Cube Bottom", cubeBottom);
+    canBalanceMap.put(cubeBottom, true);
+    needPositionMap.put(cubeBottom, false);
 
-    autoChooser.addOption("1 Cube Bottom + 1", new AutoSwervePath(Paths.BOTTOM_CUBE_PLUS_ONE, new Objective(1, NodeLevel.HIGH)));
-    canBalanceMap.put(new AutoSwervePath(Paths.BOTTOM_CUBE_PLUS_ONE, new Objective(1, NodeLevel.HIGH)), true);
-    needPositionMap.put(new AutoSwervePath(Paths.BOTTOM_CUBE_PLUS_ONE, new Objective(1, NodeLevel.HIGH)), false);
+    Command cubeBottomPlusOne = new AutoSwervePath(Paths.BOTTOM_CUBE_PLUS_ONE, new Objective(1, NodeLevel.HIGH));
+    autoChooser.addOption("1 Cube Bottom + 1", cubeBottomPlusOne);
+    canBalanceMap.put(cubeBottomPlusOne, true);
+    needPositionMap.put(cubeBottomPlusOne, false);
 
     SmartDashboard.putData("Auto Command", autoChooser);
     SmartDashboard.putData("Should Balance", balanceChooser);
@@ -237,7 +251,7 @@ public class RobotContainer {
     endEffector.addGamePiece();
     objectiveTracker.setAutomated();
     objectiveTracker.updateObjective(new Objective(positionChooser.getSelected(), NodeLevel.HIGH));
-    if (true) {
+    if (needPosition()) {
       swerve.resetPose(new Pose2d(AutoDrivePoints.pathPointFlipper(AutoDrivePoints.nodeSelector(positionChooser.getSelected()), DriverStation.getAlliance()).getPosition(), Rotation2d.fromDegrees(-180)));
     }
     if (canBalance() && balanceChooser.getSelected()) {

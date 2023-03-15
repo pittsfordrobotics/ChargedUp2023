@@ -1,5 +1,6 @@
 package com.team3181.frc2023.commands;
 
+import com.team3181.frc2023.Constants.SuperstructureConstants;
 import com.team3181.frc2023.subsystems.Superstructure;
 import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker.Objective;
 import edu.wpi.first.wpilibj.Timer;
@@ -32,8 +33,7 @@ public class SuperstructureObjectiveGlobal extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return !superstructure.hasGamePiece() && timer.hasElapsed(0.2);
-//        return timer.hasElapsed(SuperstructureConstants.EXHAUST_TIME);
+        return timer.hasElapsed(SuperstructureConstants.EXHAUST_TIME);
     }
 
     @Override

@@ -338,7 +338,7 @@ public final class Constants {
         public static final double AUTO_SCORE_POSITION_TOLERANCE = 0.1;
         public static final double AUTO_SCORE_ROTATION_TOLERANCE = 1;
 
-        public static final double EXHAUST_TIME = 0.5;
+        public static final double EXHAUST_TIME = 0.3;
 
         public static final class ArmPositions {
             public static Rotation2d STORAGE_SHOULDER = Rotation2d.fromRadians(-1.22);

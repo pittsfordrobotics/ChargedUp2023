@@ -88,10 +88,7 @@ public class Vision extends SubsystemBase {
         double robotXPos = Swerve.getInstance().getPose().getX();
 
 //        TODO: see if we should use speed
-        if (robotXPos >= 8.3 - 1.2 && robotXPos < 8.3 + 1.2) {
-            pipeline = Pipelines.FAR_RANGE;
-        }
-        else if ((robotXPos >= 4.9 && robotXPos < 8.3 - 1.2) || (robotXPos >= 8.3 + 1.2 && robotXPos < 11.7)) {
+        if ((robotXPos >= 4.9 && robotXPos < 11.7)) {
             pipeline = Pipelines.MID_RANGE;
         }
         else if ((robotXPos >= 0 && robotXPos < 4.9) || (robotXPos >= 11.7 && robotXPos < 16.5)) {
