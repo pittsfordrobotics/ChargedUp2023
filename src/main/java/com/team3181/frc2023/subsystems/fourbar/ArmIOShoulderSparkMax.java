@@ -34,8 +34,7 @@ public class ArmIOShoulderSparkMax implements ArmIO {
     public void updateInputs(ArmIOInputs inputs) {
         if (lastPos < FourBarConstants.SHOULDER_FLIP_MIN.getRadians() + 0.1 && (absoluteEncoder.getPosition() + FourBarConstants.SHOULDER_MATH_OFFSET.getRadians()) > FourBarConstants.SHOULDER_FLIP_MAX.getRadians() - 0.1 && counter == 1) {
             counter--;
-        }
-        else if (lastPos > FourBarConstants.SHOULDER_FLIP_MAX.getRadians() - 0.1 && (absoluteEncoder.getPosition() + FourBarConstants.SHOULDER_MATH_OFFSET.getRadians()) < FourBarConstants.SHOULDER_FLIP_MIN.getRadians() + 0.1 && counter == 0) {
+        } else if (lastPos > FourBarConstants.SHOULDER_FLIP_MAX.getRadians() - 0.1 && (absoluteEncoder.getPosition() + FourBarConstants.SHOULDER_MATH_OFFSET.getRadians()) < FourBarConstants.SHOULDER_FLIP_MIN.getRadians() + 0.1 && counter == 0) {
             counter++;
         }
 
@@ -45,8 +44,6 @@ public class ArmIOShoulderSparkMax implements ArmIO {
         inputs.armAppliedVolts = mainMotor.getAppliedOutput() * mainMotor.getBusVoltage();
         inputs.armCurrentAmps = mainMotor.getOutputCurrent();
         inputs.armTempCelsius = mainMotor.getMotorTemperature();
-
-        System.out.println(followerMotor.getOutputCurrent());
     }
 
     @Override

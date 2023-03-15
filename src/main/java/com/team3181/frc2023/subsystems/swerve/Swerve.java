@@ -16,8 +16,6 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 
@@ -163,7 +161,7 @@ public class Swerve extends SubsystemBase {
     public void addVisionData(Pose2d pose, double time, boolean stable) {
         if (GeomUtil.distance(pose, getPose()) < 1 || stable) {
             // remove rotation because its being funky
-            Pose2d noRot = new Pose2d(pose.getTranslation(), getRobotRelativeAngle());
+            Pose2d noRot = new Pose2d(pose.getTranslation(), getPose().getRotation());
             poseEstimator.addVisionMeasurement(noRot, time);
         }
     }

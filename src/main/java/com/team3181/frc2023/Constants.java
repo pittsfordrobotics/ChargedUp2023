@@ -245,7 +245,7 @@ public final class Constants {
         }
 
         // PID values for trajectory follower
-        public static final double LINEAR_P = 1.5;
+        public static final double LINEAR_P = 1;
         public static final double ROT_P = 5;
 
         //        numbers from 1678
@@ -290,10 +290,10 @@ public final class Constants {
 
         // Set zero points to be the initial "stowed" position?
         // The Absolute offsets appear to be arbitrary?
-        public static final Rotation2d SHOULDER_ABSOLUTE_OFFSET = Rotation2d.fromRadians(0);
-        public static final Rotation2d SHOULDER_MATH_OFFSET = Rotation2d.fromRadians(0); // zero needs to be at shoulder parallel to ground
-        public static final Rotation2d ELBOW_ABSOLUTE_OFFSET = Rotation2d.fromRadians(0);
-        public static final Rotation2d ELBOW_MATH_OFFSET = Rotation2d.fromRadians(0); // zero is in line with shoulder
+        public static final Rotation2d SHOULDER_ABSOLUTE_OFFSET = Rotation2d.fromRadians(1.5);
+        public static final Rotation2d SHOULDER_MATH_OFFSET = Rotation2d.fromRadians(-1.6262524127960205); // zero needs to be at shoulder parallel to ground
+        public static final Rotation2d ELBOW_ABSOLUTE_OFFSET = Rotation2d.fromRadians(1.5760794878005981);
+        public static final Rotation2d ELBOW_MATH_OFFSET = Rotation2d.fromRadians(-3.358858823776245); // zero is in line with shoulder
 
         public static final Rotation2d ELBOW_MIN = Rotation2d.fromDegrees(-140);
         public static final Rotation2d ELBOW_MAX = Rotation2d.fromDegrees(140);
@@ -342,7 +342,7 @@ public final class Constants {
 
         public static final class ArmPositions {
             public static Rotation2d STORAGE_SHOULDER = Rotation2d.fromRadians(-1.22);
-            public static Rotation2d STORAGE_ELBOW = Rotation2d.fromRadians(1.6431936359405518);
+            public static Rotation2d STORAGE_ELBOW = Rotation2d.fromRadians(1.5538270854949951);
 
             public static Rotation2d HYBRID_SHOULDER = Rotation2d.fromRadians(-1.233066338300705);
             public static Rotation2d HYBRID_ELBOW = Rotation2d.fromRadians(0.23718323707580566);

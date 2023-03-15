@@ -6,6 +6,7 @@ package com.team3181.frc2023;
 
 import com.team3181.frc2023.Constants.RobotConstants;
 import com.team3181.frc2023.FieldConstants.AutoDrivePoints;
+import com.team3181.frc2023.commands.SwerveAutoBalance;
 import com.team3181.frc2023.commands.SwerveDriveFieldXbox;
 import com.team3181.frc2023.commands.TankXbox;
 import com.team3181.frc2023.commands.autos.AutoSwerveBalance;
@@ -65,10 +66,10 @@ public class RobotContainer {
   }
 
   private void testButtons() {
-//    driverController.a().whileTrue(new InstantCommand(()->leds.setLEDMode((LEDModes.FLASH_CUBE))));
+    driverController.a().whileTrue(new SwerveAutoBalance(true));
 //    driverController.a().onTrue(new InstantCommand(endEffector::intake)).onFalse(new InstantCommand(endEffector::idle));
 //    driverController.x().onTrue(new InstantCommand(endEffector::exhaust)).onFalse(new InstantCommand(endEffector::idle));
-//    driverController.rightTrigger().whileTrue(new InstantCommand(swerve::zeroGyro));
+    driverController.rightTrigger().whileTrue(new InstantCommand(swerve::zeroGyro));
 //
 //    driverController.a().whileTrue(new InstantCommand(superstructure::collectGround))
 //            .whileFalse(new InstantCommand(Superstructure.getInstance()::home));
@@ -233,9 +234,10 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
+    endEffector.addGamePiece();
     objectiveTracker.setAutomated();
     objectiveTracker.updateObjective(new Objective(positionChooser.getSelected(), NodeLevel.HIGH));
-    if (needPosition()) {
+    if (true) {
       swerve.resetPose(new Pose2d(AutoDrivePoints.pathPointFlipper(AutoDrivePoints.nodeSelector(positionChooser.getSelected()), DriverStation.getAlliance()).getPosition(), Rotation2d.fromDegrees(-180)));
     }
     if (canBalance() && balanceChooser.getSelected()) {

@@ -18,20 +18,21 @@ public class SuperstructureObjectiveGlobal extends CommandBase {
     @Override
     public void initialize() {
         superstructure.objective(objective);
+        timer.restart();
         timer.stop();
-        timer.reset();
     }
 
     @Override
     public void execute() {
-        if (superstructure.shouldAutoScore()) {
+        if (superstructure.atSetpoint()) {
+            superstructure.exhaust();
             timer.start();
         }
     }
 
     @Override
     public boolean isFinished() {
-        return !superstructure.hasGamePiece();
+        return !superstructure.hasGamePiece() && timer.hasElapsed(0.2);
 //        return timer.hasElapsed(SuperstructureConstants.EXHAUST_TIME);
     }
 

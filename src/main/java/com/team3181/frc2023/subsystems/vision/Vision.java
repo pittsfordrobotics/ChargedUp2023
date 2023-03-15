@@ -27,7 +27,7 @@ public class Vision extends SubsystemBase {
     private CameraMode camera = CameraMode.VISION_PROCESSING;
     private final Timer timer = new Timer();
     private boolean timerStarted = false;
-    private final Pose2d lastPose = new Pose2d();
+    private Pose2d lastPose = new Pose2d();
 
     private final Alert limelightAlert = new Alert("Limelight not detected! Vision will NOT work!", AlertType.ERROR);
 
@@ -64,7 +64,7 @@ public class Vision extends SubsystemBase {
 
     public boolean checkStable() {
         if (getPose() != null) {
-            if (GeomUtil.distance(getPose(), lastPose) < 0.1) {
+            if (GeomUtil.distance(getPose(), lastPose) < 0.1 && !getPose().equals(new Pose2d())) {
                 if (!timerStarted) {
                     timerStarted = true;
                     timer.restart();
@@ -72,6 +72,7 @@ public class Vision extends SubsystemBase {
             }
             else {
                 timerStarted = false;
+                lastPose = getPose();
             }
         }
         return timer.hasElapsed(0.5);
