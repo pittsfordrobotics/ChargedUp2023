@@ -121,15 +121,15 @@ public class RobotContainer {
      */
     driverController.x()
             .whileTrue(new InstantCommand(swerve::driveX));
-    driverController.y()
-            .whileTrue(new SwerveAutoScore())
-            .whileFalse(new SuperstructureHome());
-    driverController.b()
-            .whileTrue(new SwerveAutoDoubleSubstationHigh())
-            .whileFalse(new SuperstructureHome());
-    driverController.a()
-            .whileTrue(new SwerveAutoDoubleSubstationLow())
-            .whileFalse(new SuperstructureHome());
+//    driverController.y()
+//            .whileTrue(new SwerveAutoScore())
+//            .whileFalse(new SuperstructureHome());
+//    driverController.b()
+//            .whileTrue(new SwerveAutoDoubleSubstationHigh())
+//            .whileFalse(new SuperstructureHome());
+//    driverController.a()
+//            .whileTrue(new SwerveAutoDoubleSubstationLow())
+//            .whileFalse(new SuperstructureHome());
     driverController.rightBumper()
             .whileTrue(new InstantCommand(swerve::zeroGyro));
 

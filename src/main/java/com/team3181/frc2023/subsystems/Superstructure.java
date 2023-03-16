@@ -76,15 +76,15 @@ public class Superstructure extends SubsystemBase {
                 break;
             case INTAKE_GROUND:
                 state = StructureState.INTAKE_GROUND;
-                if (endEffector.hasPiece()) {
-                    state = StructureState.HOME;
-                }
+//                if (endEffector.hasPiece()) {
+//                    state = StructureState.HOME;
+//                }
                 break;
             case INTAKE_MID:
                 state = StructureState.INTAKE_MID;
-                if (endEffector.hasPiece()) {
-                    state = StructureState.HOME;
-                }
+//                if (endEffector.hasPiece()) {
+//                    state = StructureState.HOME;
+//                }
                 break;
             case HOME:
                 state = StructureState.HOME;
@@ -105,7 +105,7 @@ public class Superstructure extends SubsystemBase {
         {
             LEDs leds = LEDs.getInstance();
             if (DriverStation.isDisabled()) {
-//                leds.setLEDMode(LEDModes.IDLE);
+                leds.setLEDMode(LEDModes.IDLE);
             } else if (DriverStation.isAutonomous()) {
                 leds.setLEDMode(LEDModes.RAINBOW);
             }
@@ -131,7 +131,7 @@ public class Superstructure extends SubsystemBase {
             if (systemState == StructureState.OBJECTIVE || systemState == StructureState.INTAKE_GROUND || systemState == StructureState.INTAKE_MID || systemState == StructureState.EXHAUST) {
                 endEffector.idle();
             }
-            if (systemState == StructureState.EXHAUST) {
+            if (systemState == StructureState.EXHAUST || systemState == StructureState.OBJECTIVE) {
                 LEDs.getInstance().setLEDMode(LEDModes.IDLE);
             }
             if (state == StructureState.EXHAUST) {

@@ -65,7 +65,7 @@ public class Vision extends SubsystemBase {
 
     public boolean checkStable() {
         if (getPose() != null && !getPose().equals(new Pose2d())) {
-            if (GeomUtil.distance(getPose(), lastPose) < 0.1 && !getPose().equals(new Pose2d())) {
+            if (GeomUtil.distance(getPose(), lastPose) < 0.1) {
                 if (!timerStarted) {
                     timerStarted = true;
                     timer.restart();
@@ -73,8 +73,12 @@ public class Vision extends SubsystemBase {
             }
             else {
                 timerStarted = false;
+                timer.restart();
                 lastPose = getPose();
             }
+        }
+        else {
+            timer.restart();
         }
         return timer.hasElapsed(0.5);
     }

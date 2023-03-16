@@ -290,8 +290,8 @@ public final class Constants {
 
         // Set zero points to be the initial "stowed" position?
         // The Absolute offsets appear to be arbitrary?
-        public static final Rotation2d SHOULDER_ABSOLUTE_OFFSET = Rotation2d.fromRadians(1.5);
-        public static final Rotation2d SHOULDER_MATH_OFFSET = Rotation2d.fromRadians(-1.6262524127960205); // zero needs to be at shoulder parallel to ground
+        public static final Rotation2d SHOULDER_ABSOLUTE_OFFSET = Rotation2d.fromRadians(1.9);
+        public static final Rotation2d SHOULDER_MATH_OFFSET = Rotation2d.fromRadians(-1.5286073684692383); // zero needs to be at shoulder parallel to ground
         public static final Rotation2d ELBOW_ABSOLUTE_OFFSET = Rotation2d.fromRadians(1.5760794878005981);
         public static final Rotation2d ELBOW_MATH_OFFSET = Rotation2d.fromRadians(-3.358858823776245); // zero is in line with shoulder
 
@@ -347,7 +347,7 @@ public final class Constants {
             public static Rotation2d HYBRID_ELBOW = Rotation2d.fromRadians(0.23718323707580566);
 
             public static Rotation2d GROUND_PICKUP_SHOULDER = Rotation2d.fromRadians(-1.3148015022277832);
-            public static Rotation2d GROUND_PICKUP_ELBOW = Rotation2d.fromRadians(-0.02468705177307129);
+            public static Rotation2d GROUND_PICKUP_ELBOW = Rotation2d.fromRadians(-0.07468705177307129);
 
             public static Rotation2d MID_PICKUP_SHOULDER = Rotation2d.fromRadians(0.4);
             public static Rotation2d MID_PICKUP_ELBOW = Rotation2d.fromRadians(0);
