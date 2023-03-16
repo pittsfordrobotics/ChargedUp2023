@@ -19,22 +19,12 @@ public class SwerveAutoBalance extends CommandBase {
 
     @Override
     public void execute() {
-        if (!forward) {
-            Swerve.getInstance().driveFieldOrientated(-0.5, 0, 0);
-        }
-        else {
-            Swerve.getInstance().driveFieldOrientated(0.5, 0, 0);
-        }
+        Swerve.getInstance().driveFieldOrientated(!forward ? -0.5 : 0.5, 0, 0);
     }
 
     @Override
     public boolean isFinished() {
-        if (!forward) {
-            return Math.abs(Swerve.getInstance().getPitch().getRadians()) < 0.005;
-        }
-        else {
-            return Math.abs(Swerve.getInstance().getPitch().getRadians()) > -0.005;
-        }
+        return Math.abs(Swerve.getInstance().getPitch().getRadians()) < 0.005;
     }
 
     @Override

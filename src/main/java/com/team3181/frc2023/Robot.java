@@ -82,6 +82,7 @@ public class Robot extends LoggedRobot {
     DriverStation.silenceJoystickConnectionWarning(true);
     LiveWindow.disableAllTelemetry();
     robotContainer = new RobotContainer();
+    Swerve.getInstance().setCoastMode();
   }
 
   @Override
