@@ -66,7 +66,7 @@ public class RobotContainer {
   }
 
   private void testButtons() {
-    driverController.a().whileTrue(new SwervePathingOnTheFly(AutoDrivePosition.NODE, true));
+    driverController.a().whileTrue(new SwervePathingOnTheFly(AutoDrivePosition.NODE, false));
 //    driverController.a().whileTrue(new SwerveAutoBalance(true));
 //    driverController.a().onTrue(new InstantCommand(endEffector::intake)).onFalse(new InstantCommand(endEffector::idle));
 //    driverController.x().onTrue(new InstantCommand(endEffector::exhaust)).onFalse(new InstantCommand(endEffector::idle));

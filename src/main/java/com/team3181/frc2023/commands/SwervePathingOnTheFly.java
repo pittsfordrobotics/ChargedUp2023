@@ -79,15 +79,14 @@ public class SwervePathingOnTheFly extends CommandBase {
             case NODE:
                 BetterPathPoint node = AutoDrivePoints.nodeSelector(objective.nodeRow);
                 if (objective.nodeLevel == NodeLevel.MID) {
-                    System.out.println(node.getPosition().getX());
                     node = AutoDrivePoints.adjustNodeForMid(node);
                 }
                 node = AutoDrivePoints.pathPointFlipper(node, DriverStation.getAlliance());
                 if (simple) {
                     BetterPathPoint headingCorrection = AutoDrivePoints.updateHeading(robotPoint, node);
-                    System.out.println(headingCorrection.getHeading());
+                    BetterPathPoint updatedNode = new BetterPathPoint(node.getPosition(), headingCorrection.getHeading(), node.getHolonomicRotation());
                     adjustedPathPoints.add(headingCorrection);
-                    adjustedPathPoints.add(node);
+                    adjustedPathPoints.add(updatedNode);
                 }
                 else {
                     if (robotPointBlue.getPosition().getY() > 7.2 && robotPointBlue.getPosition().getX() > 13.6) {
@@ -105,11 +104,11 @@ public class SwervePathingOnTheFly extends CommandBase {
                         double distanceTop = GeomUtil.distance(new Pose2d(AutoDrivePoints.COMMUNITY_TOP_EXIT.getPosition(), new Rotation2d()), new Pose2d(robotPointBlue.getPosition(), new Rotation2d()));
                         double distanceBottom = GeomUtil.distance(new Pose2d(AutoDrivePoints.COMMUNITY_BOTTOM_EXIT.getPosition(), new Rotation2d()), new Pose2d(robotPointBlue.getPosition(), new Rotation2d()));
                         BetterPathPoint entrance;
-                        if (Math.abs(distanceTop - distanceBottom) > 1) {
+                        if (distanceTop > distanceBottom && Math.abs(distanceTop - distanceBottom) > 1) {
                             entrance = AutoDrivePoints.pathPointFlipper(AutoDrivePoints.COMMUNITY_BOTTOM_EXIT, DriverStation.getAlliance());
                             inner = AutoDrivePoints.pathPointFlipper(AutoDrivePoints.COMMUNITY_BOTTOM_INNER, DriverStation.getAlliance());
                         }
-                        else if (Math.abs(distanceBottom - distanceTop) > 1) {
+                        else if (distanceTop < distanceBottom && Math.abs(distanceBottom - distanceTop) > 1) {
                             entrance = AutoDrivePoints.pathPointFlipper(AutoDrivePoints.COMMUNITY_TOP_EXIT, DriverStation.getAlliance());
                             inner = AutoDrivePoints.pathPointFlipper(AutoDrivePoints.COMMUNITY_TOP_INNER, DriverStation.getAlliance());
                         }
@@ -140,15 +139,19 @@ public class SwervePathingOnTheFly extends CommandBase {
                             BetterPathPoint headingCorrection = AutoDrivePoints.updateHeading(robotPoint, inner);
                             adjustedPathPoints.add(headingCorrection);
                         }
-                        BetterPathPoint headingCorrection2 = AutoDrivePoints.updateHeading(inner, node);
-                        adjustedPathPoints.add(headingCorrection2);
+                        adjustedPathPoints.add(inner);
                     }
                     if (robotPointBlue.getPosition().getX() > 1.7) {
+                        BetterPathPoint updatedNode;
                         if (adjustedPathPoints.size() == 0 && robotPointBlue.getPosition().getY() < 5.5) {
                             BetterPathPoint headingCorrection = AutoDrivePoints.updateHeading(robotPoint, node);
                             adjustedPathPoints.add(headingCorrection);
+                            updatedNode = new BetterPathPoint(node.getPosition(), headingCorrection.getHeading(), node.getHolonomicRotation());
                         }
-                        adjustedPathPoints.add(node);
+                        else {
+                            updatedNode = new BetterPathPoint(node.getPosition(),  AutoDrivePoints.updateHeading(inner, node).getHeading(), node.getHolonomicRotation());
+                        }
+                        adjustedPathPoints.add(updatedNode);
                     }
 
                 }
