@@ -111,7 +111,7 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void disabledInit() {
-    LEDs.getInstance().setLEDMode(LEDModes.IDLE);
+    LEDs.getInstance().setLEDMode(LEDModes.RAINBOW);
     disabledTimer.reset();
     disabledTimer.start();
   }

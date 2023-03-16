@@ -6,8 +6,7 @@ package com.team3181.frc2023;
 
 import com.team3181.frc2023.Constants.RobotConstants;
 import com.team3181.frc2023.FieldConstants.AutoDrivePoints;
-import com.team3181.frc2023.commands.SwerveDriveFieldXbox;
-import com.team3181.frc2023.commands.TankXbox;
+import com.team3181.frc2023.commands.*;
 import com.team3181.frc2023.commands.autos.AutoSwerveBalance;
 import com.team3181.frc2023.commands.autos.AutoSwervePath;
 import com.team3181.frc2023.commands.autos.AutoSwerveThree;
@@ -55,9 +54,8 @@ public class RobotContainer {
 
   public RobotContainer() {
     autoConfig();
-
-//      competitionButtons();
-      testButtons();
+    competitionButtons();
+//      testButtons();
 
     if (!RobotConstants.IS_TANK) swerve.setDefaultCommand(new SwerveDriveFieldXbox());
     if (RobotConstants.IS_TANK) Tank.getInstance().setDefaultCommand(new TankXbox());
@@ -66,6 +64,7 @@ public class RobotContainer {
   private void testButtons() {
 //    driverController.a().whileTrue(new SwervePathingOnTheFly(AutoDrivePosition.NODE, false));
 //    driverController.a().whileTrue(new SwerveAutoScore());
+//      driverController.a().whileTrue(new SwerveAutoBalance(true));
 //    driverController.a()
 //            .whileTrue(new SwerveAutoDoubleSubstationLow());
     //    driverController.y()
@@ -122,15 +121,15 @@ public class RobotContainer {
      */
     driverController.x()
             .whileTrue(new InstantCommand(swerve::driveX));
-//    driverController.y()
-//            .whileTrue(new SwerveAutoScore())
-//            .whileFalse(new SuperstructureHome());
-//    driverController.b()
-//            .whileTrue(new SwerveAutoDoubleSubstationHigh())
-//            .whileFalse(new SuperstructureHome());
-//    driverController.a()
-//            .whileTrue(new SwerveAutoDoubleSubstationLow())
-//            .whileFalse(new SuperstructureHome());
+    driverController.y()
+            .whileTrue(new SwerveAutoScore())
+            .whileFalse(new SuperstructureHome());
+    driverController.b()
+            .whileTrue(new SwerveAutoDoubleSubstationHigh())
+            .whileFalse(new SuperstructureHome());
+    driverController.a()
+            .whileTrue(new SwerveAutoDoubleSubstationLow())
+            .whileFalse(new SuperstructureHome());
     driverController.rightBumper()
             .whileTrue(new InstantCommand(swerve::zeroGyro));
 
@@ -139,10 +138,10 @@ public class RobotContainer {
      */
     operatorController.rightTrigger()
             .whileTrue(new InstantCommand(Superstructure.getInstance()::exhaust))
-            .whileFalse(new InstantCommand(Superstructure.getInstance()::idle));
+            .whileFalse(new InstantCommand(Superstructure.getInstance()::home));
     operatorController.leftTrigger()
             .whileTrue(new InstantCommand(Superstructure.getInstance()::manual))
-            .whileFalse(new InstantCommand(Superstructure.getInstance()::idle));
+            .whileFalse(new InstantCommand(Superstructure.getInstance()::home));
     operatorController.a()
             .whileTrue(new InstantCommand(Superstructure.getInstance()::collectGround))
             .whileFalse(new InstantCommand(Superstructure.getInstance()::home));
@@ -230,6 +229,9 @@ public class RobotContainer {
     autoChooser.addOption("2 Thing Bottom", twoBottom);
     canBalanceMap.put(twoBottom, false);
     needPositionMap.put(twoBottom, false);
+
+//    Command test = new AutoSwervePath(PathPlanner.loadPath("Top 3 Item", AutoConstants.SLOW_SPEED), new Objective(0, NodeLevel.HIGH));
+//    autoChooser.addOption("test", test);
 
     Command coneTop = new AutoSwervePath(Paths.TOP_CONE, new Objective(8, NodeLevel.HIGH));
     autoChooser.addOption("1 Cone Top", coneTop);

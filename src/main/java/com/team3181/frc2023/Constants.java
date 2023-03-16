@@ -245,7 +245,7 @@ public final class Constants {
         }
 
         // PID values for trajectory follower
-        public static final double LINEAR_P = 1.5;
+        public static final double LINEAR_P = 3;
         public static final double ROT_P = 5;
 
         //        numbers from 1678
@@ -337,7 +337,7 @@ public final class Constants {
         public static final double AUTO_SCORE_POSITION_TOLERANCE = 0.1;
         public static final double AUTO_SCORE_ROTATION_TOLERANCE = 1;
 
-        public static final double EXHAUST_TIME = 0.3;
+        public static final double EXHAUST_TIME = 0.5;
 
         public static final class ArmPositions {
             public static Rotation2d STORAGE_SHOULDER = Rotation2d.fromRadians(-1.22);
@@ -353,11 +353,17 @@ public final class Constants {
             public static Rotation2d MID_PICKUP_ELBOW = Rotation2d.fromRadians(0);
 
             // long pos
-            public static Rotation2d MID_SHOULDER = Rotation2d.fromRadians(-0.6470000743866);
-            public static Rotation2d MID_ELBOW = Rotation2d.fromRadians(0.7242125606536865);
+            public static Rotation2d MID_CONE_SHOULDER = Rotation2d.fromRadians(-0.6470000743866);
+            public static Rotation2d MID_CONE_ELBOW = Rotation2d.fromRadians(0.7242125606536865);
 
-            public static Rotation2d HIGH_SHOULDER = Rotation2d.fromRadians(0.29303767681121822);
-            public static Rotation2d HIGH_ELBOW = Rotation2d.fromRadians(0.3829857921600342); //0.4229857921600342
+            public static Rotation2d HIGH_CUBE_SHOULDER = Rotation2d.fromRadians(-0.815398097038269);
+            public static Rotation2d HIGH_CUBE_ELBOW = Rotation2d.fromRadians(1.060633897781372);
+
+            public static Rotation2d HIGH_CONE_SHOULDER = Rotation2d.fromRadians(0.29303767681121822);
+            public static Rotation2d HIGH_CONE_ELBOW = Rotation2d.fromRadians(0.3829857921600342); //0.4229857921600342
+
+            public static Rotation2d MID_CUBE_SHOULDER = Rotation2d.fromRadians(-1.3912705928087234);
+            public static Rotation2d MID_CUBE_ELBOW = Rotation2d.fromRadians(0.7722146511077881); //0.4229857921600342
 
             public static Translation2d SWEEP_MIN = new Translation2d(0.66, 0.2);
             public static Translation2d SWEEP_MAX = new Translation2d(1.05, 0.4);

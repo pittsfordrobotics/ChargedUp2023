@@ -113,7 +113,7 @@ public class FourBar extends SubsystemBase {
     }
 
     public void recordHigh(Rotation2d[] rotation2ds) {
-        waitPos = Rotation2d.fromRadians((rotation2ds[0].getRadians() - inputs[0].armPositionRad) / 2 + inputs[0].armPositionRad);
+        waitPos = Rotation2d.fromRadians((rotation2ds[0].getRadians() - inputs[0].armPositionRad) / 3 + inputs[0].armPositionRad);
     }
 
     public void runHigh(Rotation2d[] rotation2ds) {

@@ -108,7 +108,12 @@ public class Superstructure extends SubsystemBase {
                 fourBar.recordDrop();
             }
             else if (state == StructureState.OBJECTIVE && objectiveLocal.nodeLevel == NodeLevel.HIGH) {
-                fourBar.recordHigh(new Rotation2d[]{ArmPositions.HIGH_SHOULDER, ArmPositions.HIGH_ELBOW});
+                if (objectiveLocal.nodeRow == 1 || objectiveLocal.nodeRow == 4 || objectiveLocal.nodeRow == 7) {
+                    fourBar.recordHigh(new Rotation2d[]{ArmPositions.HIGH_CUBE_SHOULDER, ArmPositions.HIGH_CUBE_ELBOW});
+                }
+                else {
+                    fourBar.recordHigh(new Rotation2d[]{ArmPositions.HIGH_CONE_SHOULDER, ArmPositions.HIGH_CONE_ELBOW});
+                }
             }
             systemState = state;
         }
@@ -149,7 +154,12 @@ public class Superstructure extends SubsystemBase {
 //                        }
                         break;
                     case MID:
-                        fourBar.setRotations(new Rotation2d[]{ArmPositions.MID_SHOULDER, ArmPositions.MID_ELBOW}, false);
+                        if (objectiveLocal.nodeRow == 1 || objectiveLocal.nodeRow == 4 || objectiveLocal.nodeRow == 7) {
+                            fourBar.setRotations(new Rotation2d[]{ArmPositions.MID_CUBE_SHOULDER, ArmPositions.MID_CUBE_ELBOW}, false);
+                        }
+                        else {
+                            fourBar.setRotations(new Rotation2d[]{ArmPositions.MID_CONE_SHOULDER, ArmPositions.MID_CONE_ELBOW}, false);
+                        }
 //                        if (gamePieceLocal == GamePiece.CONE) {
 //                            fourBar.setRotations(new Rotation2d[]{ArmPositions.MID_CONE_SHOULDER, ArmPositions.MID_CONE_ELBOW}, false);
 ////                            fourBar.setRotations(fourBar.solve(SuperstructureConstants.ArmPositions.MID_CONE, true, true), false);
@@ -160,7 +170,12 @@ public class Superstructure extends SubsystemBase {
 //                        }
                         break;
                     case HIGH:
-                        fourBar.runHigh(new Rotation2d[]{ArmPositions.HIGH_SHOULDER, ArmPositions.HIGH_ELBOW});
+                        if (objectiveLocal.nodeRow == 1 || objectiveLocal.nodeRow == 4 || objectiveLocal.nodeRow == 7) {
+                            fourBar.runHigh(new Rotation2d[]{ArmPositions.HIGH_CUBE_SHOULDER, ArmPositions.HIGH_CUBE_ELBOW});
+                        }
+                        else {
+                            fourBar.runHigh(new Rotation2d[]{ArmPositions.HIGH_CONE_SHOULDER, ArmPositions.HIGH_CONE_ELBOW});
+                        }
 //                        if (gamePieceLocal == GamePiece.CONE) {
 //                            fourBar.setRotations(new Rotation2d[]{ArmPositions.HIGH_CONE_SHOULDER, ArmPositions.HIGH_CONE_ELBOW}, false);
 ////                            fourBar.setRotations(fourBar.solve(SuperstructureConstants.ArmPositions.HIGH_CONE, true,true), false);
