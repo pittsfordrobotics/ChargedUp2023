@@ -4,11 +4,9 @@
 
 package com.team3181.frc2023;
 
-import com.team3181.frc2023.Constants.AutoConstants.AutoDrivePosition;
 import com.team3181.frc2023.Constants.RobotConstants;
 import com.team3181.frc2023.FieldConstants.AutoDrivePoints;
 import com.team3181.frc2023.commands.SwerveDriveFieldXbox;
-import com.team3181.frc2023.commands.SwervePathingOnTheFly;
 import com.team3181.frc2023.commands.TankXbox;
 import com.team3181.frc2023.commands.autos.AutoSwerveBalance;
 import com.team3181.frc2023.commands.autos.AutoSwervePath;
@@ -66,7 +64,19 @@ public class RobotContainer {
   }
 
   private void testButtons() {
-    driverController.a().whileTrue(new SwervePathingOnTheFly(AutoDrivePosition.NODE, false));
+//    driverController.a().whileTrue(new SwervePathingOnTheFly(AutoDrivePosition.NODE, false));
+//    driverController.a().whileTrue(new SwerveAutoScore());
+//    driverController.a()
+//            .whileTrue(new SwerveAutoDoubleSubstationLow());
+    //    driverController.y()
+//            .whileTrue(new SwerveAutoScore())
+//            .whileFalse(new SuperstructureHome());
+//    driverController.b()
+//            .whileTrue(new SwerveAutoDoubleSubstationHigh())
+//            .whileFalse(new SuperstructureHome());
+//    driverController.a()
+//            .whileTrue(new SwerveAutoDoubleSubstationLow())
+//            .whileFalse(new SuperstructureHome());
 //    driverController.a().whileTrue(new SwerveAutoBalance(true));
 //    driverController.a().onTrue(new InstantCommand(endEffector::intake)).onFalse(new InstantCommand(endEffector::idle));
 //    driverController.x().onTrue(new InstantCommand(endEffector::exhaust)).onFalse(new InstantCommand(endEffector::idle));

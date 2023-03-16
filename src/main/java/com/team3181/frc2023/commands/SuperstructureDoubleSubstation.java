@@ -1,16 +1,14 @@
 package com.team3181.frc2023.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import com.team3181.frc2023.subsystems.Superstructure;
-import com.team3181.frc2023.subsystems.swerve.Swerve;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 
 
 public class SuperstructureDoubleSubstation extends CommandBase {
     private final Superstructure superstructure = Superstructure.getInstance();
-    private final Swerve swerve = Swerve.getInstance();
 
     public SuperstructureDoubleSubstation() {
-        addRequirements(this.superstructure, this.swerve);
+        addRequirements(this.superstructure);
     }
 
     @Override

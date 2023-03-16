@@ -34,8 +34,8 @@ public final class FieldConstants {
         public static final BetterPathPoint COMMUNITY_BOTTOM_EXIT = new BetterPathPoint(new Translation2d(Community.outerX + SwerveConstants.X_LENGTH_METERS, 0.5), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(-180));
 
         // inner is toward the outside of the arena closer to the nodes
-        public static final BetterPathPoint COMMUNITY_TOP_INNER = new BetterPathPoint(new Translation2d(Grids.outerX + 1.02, Community.leftY - 0.9), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(-180));
-        public static final BetterPathPoint COMMUNITY_BOTTOM_INNER = new BetterPathPoint(new Translation2d(Grids.outerX + 1.02, 0.55), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(-180));
+        public static final BetterPathPoint COMMUNITY_TOP_INNER = new BetterPathPoint(new Translation2d(Grids.outerX + 1.12, Community.leftY - 0.8), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(-180));
+        public static final BetterPathPoint COMMUNITY_BOTTOM_INNER = new BetterPathPoint(new Translation2d(Grids.outerX + 1.12, 0.8), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(-180));
 
         public static final BetterPathPoint LOADING_STATION_TOP_EXIT = new BetterPathPoint(new Translation2d(0.5 * LoadingZone.midX + LoadingZone.outerX * 0.5, LoadingZone.midY + Units.inchesToMeters(50.5) / 2), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(-180));
         public static final BetterPathPoint LOADING_STATION_BOTTOM_EXIT = new BetterPathPoint(new Translation2d(0.5 * LoadingZone.midX + LoadingZone.outerX * 0.5, LoadingZone.midY - Units.inchesToMeters(50.5)/ 2), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(-180));
@@ -62,7 +62,6 @@ public final class FieldConstants {
             }
             if (deltaX > 0 && deltaY > 0) {
                 updatedHeading = updatedHeading.times(-1);
-                updatedHeading = updatedHeading.plus(Rotation2d.fromDegrees(90));
             }
             else if (deltaX < 0 && deltaY > 0) {
                 updatedHeading = updatedHeading.plus(Rotation2d.fromDegrees(180));
@@ -72,7 +71,7 @@ public final class FieldConstants {
                 updatedHeading = updatedHeading.plus(Rotation2d.fromDegrees(-90));
             }
             else if (deltaX > 0 && deltaY < 0) {
-                updatedHeading = updatedHeading.plus(Rotation2d.fromDegrees(-90));
+                updatedHeading = updatedHeading.plus(Rotation2d.fromDegrees(90));
             }
             else if (deltaX == 0) {
                 updatedHeading = updatedHeading.plus(Rotation2d.fromDegrees(90 * deltaY > 0 ? 1 : -1));
