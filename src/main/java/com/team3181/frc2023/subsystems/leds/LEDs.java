@@ -33,6 +33,7 @@ public class LEDs extends SubsystemBase {
             case CONE -> setColor(Color.kYellow);
             case FLASH_CUBE -> flashColor(Color.kPurple);
             case FLASH_CONE -> flashColor(Color.kYellow);
+            case IDLE -> setColor(Color.kWhite);
             case GOOD -> setColor(Color.kGreen);
             case BAD -> setColor(Color.kRed);
             case RAINBOW -> setRainbow();

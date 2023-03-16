@@ -100,9 +100,39 @@ public class Superstructure extends SubsystemBase {
                 state = shouldAutoRetract ? StructureState.HOME : StructureState.IDLE;
                 break;
         }
+
+        // update LEDs and gamePieceLocal
+        {
+            LEDs leds = LEDs.getInstance();
+            if (DriverStation.isDisabled()) {
+//                leds.setLEDMode(LEDModes.IDLE);
+            } else if (DriverStation.isAutonomous()) {
+                leds.setLEDMode(LEDModes.RAINBOW);
+            }
+            else if (objectiveLocal.nodeRow == 1 || objectiveLocal.nodeRow == 4 || objectiveLocal.nodeRow == 7 || objectiveLocal.nodeLevel == NodeLevel.HYBRID) {
+                if (endEffector.hasPiece()) {
+                    leds.setLEDMode(LEDModes.FLASH_CUBE);
+                } else if (demandLEDs) {
+                    leds.setLEDMode(LEDModes.CUBE);
+                }
+            } else if (objectiveLocal.nodeRow == 0 || objectiveLocal.nodeRow == 2 || objectiveLocal.nodeRow == 3 || objectiveLocal.nodeRow == 5 || objectiveLocal.nodeRow == 6 || objectiveLocal.nodeRow == 8) {
+                if (endEffector.hasPiece()) {
+                    leds.setLEDMode(LEDModes.FLASH_CONE);
+                } else if (demandLEDs) {
+                    leds.setLEDMode(LEDModes.CONE);
+                }
+            } else {
+                leds.setLEDMode(LEDModes.ERROR);
+            }
+        }
+        demandLEDs = false;
+
         if (state != systemState) {
             if (systemState == StructureState.OBJECTIVE || systemState == StructureState.INTAKE_GROUND || systemState == StructureState.INTAKE_MID || systemState == StructureState.EXHAUST) {
                 endEffector.idle();
+            }
+            if (systemState == StructureState.EXHAUST) {
+                LEDs.getInstance().setLEDMode(LEDModes.IDLE);
             }
             if (state == StructureState.EXHAUST) {
                 fourBar.recordDrop();
@@ -118,34 +148,9 @@ public class Superstructure extends SubsystemBase {
             systemState = state;
         }
 
-        // update LEDs and gamePieceLocal
-        {
-            LEDs leds = LEDs.getInstance();
-            if (DriverStation.isDisabled()) {
-                if (demandLEDs) leds.setLEDMode(LEDModes.IDLE);
-            } else if (DriverStation.isAutonomous()) {
-                 if (demandLEDs) leds.setLEDMode(LEDModes.RAINBOW);
-            }
-            else if (objectiveLocal.nodeRow == 1 || objectiveLocal.nodeRow == 4 || objectiveLocal.nodeRow == 7 || objectiveLocal.nodeLevel == NodeLevel.HYBRID) {
-                if (endEffector.hasPiece()) {
-                    if (demandLEDs) leds.setLEDMode(LEDModes.FLASH_CUBE);
-                } else {
-                    if (demandLEDs) leds.setLEDMode(LEDModes.CUBE);
-                }
-            } else if (objectiveLocal.nodeRow == 0 || objectiveLocal.nodeRow == 2 || objectiveLocal.nodeRow == 3 || objectiveLocal.nodeRow == 5 || objectiveLocal.nodeRow == 6 || objectiveLocal.nodeRow == 8) {
-                if (endEffector.hasPiece()) {
-                    if (demandLEDs) leds.setLEDMode(LEDModes.FLASH_CONE);
-                } else {
-                    if (demandLEDs) leds.setLEDMode(LEDModes.CONE);
-                }
-            } else {
-                if (demandLEDs) leds.setLEDMode(LEDModes.ERROR);
-            }
-        }
-        demandLEDs = false;
-
         switch (systemState) {
             case OBJECTIVE:
+                LEDs.getInstance().setLEDMode(LEDModes.HAPPY);
                 switch (objectiveLocal.nodeLevel) {
                     case HYBRID:
 //                        if (gamePieceLocal == GamePiece.CONE || gamePieceLocal == GamePiece.CUBE) {

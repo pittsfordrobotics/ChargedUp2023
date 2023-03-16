@@ -5,8 +5,6 @@
 package com.team3181.frc2023;
 
 import com.team3181.frc2023.Constants.RobotConstants;
-import com.team3181.frc2023.subsystems.leds.LEDs;
-import com.team3181.frc2023.subsystems.leds.LEDs.LEDModes;
 import com.team3181.frc2023.subsystems.swerve.Swerve;
 import com.team3181.lib.controller.BetterXboxController;
 import com.team3181.lib.drivers.LazySparkMax;
@@ -111,7 +109,6 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void disabledInit() {
-    LEDs.getInstance().setLEDMode(LEDModes.RAINBOW);
     disabledTimer.reset();
     disabledTimer.start();
   }
