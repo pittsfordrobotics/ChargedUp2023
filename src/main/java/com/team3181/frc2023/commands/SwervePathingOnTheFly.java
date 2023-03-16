@@ -9,6 +9,7 @@ import com.team3181.frc2023.Constants.AutoConstants;
 import com.team3181.frc2023.Constants.AutoConstants.AutoDrivePosition;
 import com.team3181.frc2023.FieldConstants.AutoDrivePoints;
 import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker;
+import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker.NodeLevel;
 import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker.Objective;
 import com.team3181.frc2023.subsystems.swerve.Swerve;
 import com.team3181.lib.math.GeomUtil;
@@ -61,7 +62,7 @@ public class SwervePathingOnTheFly extends CommandBase {
     public SwervePathingOnTheFly(AutoDrivePosition position, boolean simple) {
         addRequirements(this.swerve);
         this.pathPoint = null;
-        this.pathConstraints = AutoConstants.SLOW_SPEED;
+        this.pathConstraints = AutoConstants.MAX_SPEED;
         this.simple = simple;
         this.position = position;
         rotController.enableContinuousInput(-Math.PI, Math.PI);
@@ -76,9 +77,15 @@ public class SwervePathingOnTheFly extends CommandBase {
         Objective objective = ObjectiveTracker.getInstance().getObjective();
         switch (position) {
             case NODE:
-                BetterPathPoint node = AutoDrivePoints.pathPointFlipper(AutoDrivePoints.nodeSelector(objective.nodeRow), DriverStation.getAlliance());
+                BetterPathPoint node = AutoDrivePoints.nodeSelector(objective.nodeRow);
+                if (objective.nodeLevel == NodeLevel.MID) {
+                    System.out.println(node.getPosition().getX());
+                    node = AutoDrivePoints.adjustNodeForMid(node);
+                }
+                node = AutoDrivePoints.pathPointFlipper(node, DriverStation.getAlliance());
                 if (simple) {
-                    BetterPathPoint headingCorrection = AutoDrivePoints.updateHeading(robotPoint, AutoDrivePoints.pathPointFlipper(node, DriverStation.getAlliance()));
+                    BetterPathPoint headingCorrection = AutoDrivePoints.updateHeading(robotPoint, node);
+                    System.out.println(headingCorrection.getHeading());
                     adjustedPathPoints.add(headingCorrection);
                     adjustedPathPoints.add(node);
                 }
@@ -231,8 +238,7 @@ public class SwervePathingOnTheFly extends CommandBase {
         } catch (Exception ignored) {}
         // path following setup
 
-        timer.reset();
-        timer.start();
+        timer.restart();
     }
 
     @Override

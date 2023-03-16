@@ -42,8 +42,8 @@ public class Superstructure extends SubsystemBase {
         CONE, CUBE, NONE
     }
 
-    private StructureState systemState = StructureState.IDLE;
-    private StructureState wantedState = StructureState.IDLE;
+    private StructureState systemState = StructureState.HOME;
+    private StructureState wantedState = StructureState.HOME;
     private double sweepGlobal = 0;
     private Objective objectiveGlobal;
     private boolean alternateLaw = false;
@@ -171,7 +171,7 @@ public class Superstructure extends SubsystemBase {
 //                        }
                         break;
                 }
-                if (shouldAutoScore() && fourBar.atSetpoint()) {
+                if (shouldAutoScore(objectiveLocal.nodeLevel) && fourBar.atSetpoint()) {
                     endEffector.exhaust();
                 }
                 else {
@@ -210,8 +210,8 @@ public class Superstructure extends SubsystemBase {
                 endEffector.idle();
                 break;
             case MANUAL:
-                fourBar.setArmVoltage(0, -5 * BetterXboxController.getController(Humans.OPERATOR).getLeftY());
-                fourBar.setArmVoltage(1, -5 * BetterXboxController.getController(Humans.OPERATOR).getRightY());
+                fourBar.setArmVoltageWithFF(0, -5 * BetterXboxController.getController(Humans.OPERATOR).getLeftY());
+                fourBar.setArmVoltageWithFF(1, -5 * BetterXboxController.getController(Humans.OPERATOR).getRightY());
                 endEffector.intake();
                 break;
             case HOME:
@@ -277,16 +277,19 @@ public class Superstructure extends SubsystemBase {
         return Swerve.getInstance().getPose().getX() > 5.3 && Swerve.getInstance().getPose().getX() < 11.25;
     }
 
-    public boolean shouldAutoScore() {
+    public boolean shouldAutoScore(NodeLevel nodeLevel) {
 //        check if at correct pose for current node
         BetterPathPoint wantedNode = AutoDrivePoints.nodeSelector(ObjectiveTracker.getInstance().getObjective().nodeRow);
+        if (nodeLevel == NodeLevel.MID) {
+            wantedNode = AutoDrivePoints.adjustNodeForMid(wantedNode);
+        }
         boolean rot = Math.abs(Swerve.getInstance().getPose().getRotation().getRadians() - wantedNode.getHolonomicRotation().getRadians()) < SuperstructureConstants.AUTO_SCORE_ROTATION_TOLERANCE;
         boolean position = GeomUtil.distance(Swerve.getInstance().getPose(), new Pose2d(wantedNode.getPosition(), wantedNode.getHolonomicRotation())) < SuperstructureConstants.AUTO_SCORE_POSITION_TOLERANCE;
         return rot && position && EndEffector.getInstance().hasPiece();
     }
 
     public boolean atSetpoint() {
-        return shouldAutoScore() && FourBar.getInstance().atSetpoint() || Robot.isSimulation();
+        return FourBar.getInstance().atSetpoint() || Robot.isSimulation();
     }
 
     public boolean hasGamePiece() {

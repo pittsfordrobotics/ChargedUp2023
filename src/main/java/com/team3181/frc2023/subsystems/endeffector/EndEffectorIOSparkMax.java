@@ -6,6 +6,7 @@ import com.revrobotics.RelativeEncoder;
 import com.team3181.frc2023.Constants;
 import com.team3181.lib.drivers.LazySparkMax;
 import edu.wpi.first.math.util.Units;
+import org.littletonrobotics.junction.Logger;
 
 public class EndEffectorIOSparkMax implements EndEffectorIO {
     private final LazySparkMax motorLeft = new LazySparkMax(Constants.EndEffectorConstants.CAN_LEFT, IdleMode.kBrake, 30, true, false);
@@ -20,11 +21,18 @@ public class EndEffectorIOSparkMax implements EndEffectorIO {
 
     @Override
     public void updateInputs(EndEffectorIOInputs inputs) {
+        // motor left is master
         inputs.positionRad = encoder.getPosition();
         inputs.velocityRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(encoder.getVelocity());
         inputs.appliedVolts = motorLeft.getAppliedOutput() * motorLeft.getBusVoltage();
         inputs.currentAmps = motorLeft.getOutputCurrent();
         inputs.tempCelsius = motorLeft.getMotorTemperature();
+
+        Logger.getInstance().recordOutput("EndEffector/rightPositionRad", motorRight.getEncoder().getPosition());
+        Logger.getInstance().recordOutput("EndEffector/rightVelocityRadPerSec", Units.rotationsPerMinuteToRadiansPerSecond(motorRight.getEncoder().getVelocity()));
+        Logger.getInstance().recordOutput("EndEffector/rightAppliedVolts", motorRight.getAppliedOutput() * motorRight.getBusVoltage());
+        Logger.getInstance().recordOutput("EndEffector/rightCurrentAmps", motorRight.getOutputCurrent());
+        Logger.getInstance().recordOutput("EndEffector/rightTempCelsius", motorRight.getMotorTemperature());
     }
 
     @Override

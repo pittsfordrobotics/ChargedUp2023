@@ -245,7 +245,7 @@ public final class Constants {
         }
 
         // PID values for trajectory follower
-        public static final double LINEAR_P = 1;
+        public static final double LINEAR_P = 1.5;
         public static final double ROT_P = 5;
 
         //        numbers from 1678
@@ -331,7 +331,6 @@ public final class Constants {
         public static double SHOULDER_JOINT_POSITION_Y = WHEEL_TO_CHASSIS + CHASSIS_TO_ARM;
 
         public static double BUMPER_THICKNESS = Units.inchesToMeters(4);
-
     }
 
     public static final class SuperstructureConstants {
@@ -356,9 +355,6 @@ public final class Constants {
             // long pos
             public static Rotation2d MID_SHOULDER = Rotation2d.fromRadians(-0.6470000743866);
             public static Rotation2d MID_ELBOW = Rotation2d.fromRadians(0.7242125606536865);
-
-            public static Rotation2d MID_HIGH_SHOULDER = Rotation2d.fromRadians(-0.6470000743866);
-            public static Rotation2d MID_HIGH_ELBOW = Rotation2d.fromRadians(0.7242125606536865);
 
             public static Rotation2d HIGH_SHOULDER = Rotation2d.fromRadians(0.29303767681121822);
             public static Rotation2d HIGH_ELBOW = Rotation2d.fromRadians(0.3829857921600342); //0.4229857921600342

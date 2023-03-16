@@ -47,7 +47,7 @@ public class EndEffector extends SubsystemBase {
                 actualState = newState;
             }
 
-            Logger.getInstance().processInputs("End Effector", inputs);
+            Logger.getInstance().processInputs("EndEffector", inputs);
 
             switch(actualState) {
                 // would be nice if this were command based but that's annoying and periodic is easier
@@ -66,9 +66,9 @@ public class EndEffector extends SubsystemBase {
             }
             lastWantedState = wantedState;
 
-            Logger.getInstance().recordOutput("End Effector/Wanted State", wantedState.toString());
-            Logger.getInstance().recordOutput("End Effector/Actual State", actualState.toString());
-            Logger.getInstance().recordOutput("End Effector/Current Array", intakeCurrents.toString());
+            Logger.getInstance().recordOutput("EndEffector/Wanted State", wantedState.toString());
+            Logger.getInstance().recordOutput("EndEffector/Actual State", actualState.toString());
+            Logger.getInstance().recordOutput("EndEffector/Current Array", intakeCurrents.toString());
         }
     }
 

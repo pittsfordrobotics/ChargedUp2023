@@ -81,9 +81,15 @@ public class FourBar extends SubsystemBase {
         armIO[index].setVoltage(voltage);
     }
 
+    public void setArmVoltageWithFF(int index, double voltage) {
+        Vector<N2> pos = new Vector<>(VecBuilder.fill(inputs[0].armPositionRad, inputs[1].armPositionRad));
+        Vector<N2> ff = ArmDynamics.getInstance().feedforward(pos);
+        setArmVoltage(index, voltage + ff.get(index, 0));
+    }
+
     public void setRotations(Rotation2d[] rotations, boolean mathElbow) {
         Boolean[] illegal = checkIllegal(rotations);
-        Vector<N2> pos = new Vector<N2>(VecBuilder.fill(inputs[0].armPositionRad, inputs[1].armPositionRad));
+        Vector<N2> pos = new Vector<>(VecBuilder.fill(inputs[0].armPositionRad, inputs[1].armPositionRad));
         Vector<N2> ff = ArmDynamics.getInstance().feedforward(pos);
 //        if (!illegal[0]) {
             shoulderPID.setSetpoint(rotations[0].getRadians());

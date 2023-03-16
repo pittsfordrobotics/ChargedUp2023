@@ -8,6 +8,7 @@ import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.team3181.frc2023.Constants.FourBarConstants;
 import com.team3181.lib.drivers.LazySparkMax;
 import edu.wpi.first.math.util.Units;
+import org.littletonrobotics.junction.Logger;
 
 public class ArmIOShoulderSparkMax implements ArmIO {
     private final LazySparkMax mainMotor;
@@ -44,6 +45,12 @@ public class ArmIOShoulderSparkMax implements ArmIO {
         inputs.armAppliedVolts = mainMotor.getAppliedOutput() * mainMotor.getBusVoltage();
         inputs.armCurrentAmps = mainMotor.getOutputCurrent();
         inputs.armTempCelsius = mainMotor.getMotorTemperature();
+
+        Logger.getInstance().recordOutput("Shoulder/Counter", counter);
+
+        Logger.getInstance().recordOutput("Shoulder/followerArmAppliedVolts", followerMotor.getAppliedOutput() * followerMotor.getBusVoltage());
+        Logger.getInstance().recordOutput("Shoulder/followerArmCurrentAmps", followerMotor.getOutputCurrent());
+        Logger.getInstance().recordOutput("Shoulder/followerArmTempCelsius", followerMotor.getMotorTemperature());
     }
 
     @Override
