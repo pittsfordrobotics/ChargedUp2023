@@ -57,7 +57,7 @@ public class Vision extends SubsystemBase {
         Logger.getInstance().recordOutput("Vision/Camera", camera.toString());
 
         if (getPose() != null) {
-            Swerve.getInstance().addVisionData(getPose(), getLatency(), checkStable());
+//            Swerve.getInstance().addVisionData(getPose(), getLatency(), checkStable());
             Logger.getInstance().recordOutput("Vision/Pose", getPose());
         }
         Logger.getInstance().recordOutput("Vision/Stable", checkStable());
