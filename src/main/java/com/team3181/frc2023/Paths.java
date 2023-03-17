@@ -10,19 +10,18 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 import java.util.HashMap;
-import java.util.List;
 
 public class Paths {
-    public static final List<PathPlannerTrajectory> TOP_THREE = PathPlanner.loadPathGroup("Top 3 Item", AutoConstants.SLOW_SPEED);
-    public static final List<PathPlannerTrajectory> BOTTOM_THREE = PathPlanner.loadPathGroup("Bottom 3 Item", AutoConstants.SLOW_SPEED);
+//    public static final List<PathPlannerTrajectory> TOP_THREE = PathPlanner.loadPathGroup("Top 3 Item", AutoConstants.SLOW_SPEED);
+//    public static final List<PathPlannerTrajectory> BOTTOM_THREE = PathPlanner.loadPathGroup("Bottom 3 Item", AutoConstants.SLOW_SPEED);
     public static final PathPlannerTrajectory BOTTOM_CUBE = PathPlanner.loadPath("Bottom Cube", AutoConstants.SLOW_SPEED);
     public static final PathPlannerTrajectory BOTTOM_CONE = PathPlanner.loadPath("Bottom Cone", AutoConstants.SLOW_SPEED);
-    public static final PathPlannerTrajectory BOTTOM_CUBE_PLUS_ONE = PathPlanner.loadPath("Bottom Cube + 1", AutoConstants.SLOW_SPEED);
-    public static final PathPlannerTrajectory BOTTOM_CONE_PLUS_ONE = PathPlanner.loadPath("Bottom Cone + 1", AutoConstants.SLOW_SPEED);
+//    public static final PathPlannerTrajectory BOTTOM_CUBE_PLUS_ONE = PathPlanner.loadPath("Bottom Cube + 1", AutoConstants.SLOW_SPEED);
+//    public static final PathPlannerTrajectory BOTTOM_CONE_PLUS_ONE = PathPlanner.loadPath("Bottom Cone + 1", AutoConstants.SLOW_SPEED);
     public static final PathPlannerTrajectory TOP_CUBE = PathPlanner.loadPath("Top Cube", AutoConstants.SLOW_SPEED);
     public static final PathPlannerTrajectory TOP_CONE = PathPlanner.loadPath("Top Cone", AutoConstants.SLOW_SPEED);
-    public static final PathPlannerTrajectory TOP_CUBE_PLUS_ONE = PathPlanner.loadPath("Top Cube + 1", AutoConstants.SLOW_SPEED);
-    public static final PathPlannerTrajectory TOP_CONE_PLUS_ONE = PathPlanner.loadPath("Top Cone + 1", AutoConstants.SLOW_SPEED);
+//    public static final PathPlannerTrajectory TOP_CUBE_PLUS_ONE = PathPlanner.loadPath("Top Cube + 1", AutoConstants.SLOW_SPEED);
+//    public static final PathPlannerTrajectory TOP_CONE_PLUS_ONE = PathPlanner.loadPath("Top Cone + 1", AutoConstants.SLOW_SPEED);
     public static final PathPlannerTrajectory BALANCE = PathPlanner.loadPath("Balance", AutoConstants.SLOW_SPEED);
 
     public static HashMap<String, Command> EVENT_MAP = new HashMap<>();

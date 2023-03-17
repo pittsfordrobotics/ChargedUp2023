@@ -18,8 +18,8 @@ public class ArmIOShoulderSparkMax implements ArmIO {
     private double lastPos = 0;
 
     public ArmIOShoulderSparkMax() {
-        mainMotor = new LazySparkMax(FourBarConstants.CAN_SHOULDER_MASTER, IdleMode.kBrake, 80, true, false);
-        followerMotor = new LazySparkMax(FourBarConstants.CAN_SHOULDER_FOLLOWER, IdleMode.kBrake, 80, mainMotor, true, true);
+        mainMotor = new LazySparkMax(FourBarConstants.CAN_SHOULDER_MASTER, IdleMode.kCoast, 80, true, false);
+        followerMotor = new LazySparkMax(FourBarConstants.CAN_SHOULDER_FOLLOWER, IdleMode.kCoast, 80, mainMotor, true, true);
         absoluteEncoder = mainMotor.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle);
 
         absoluteEncoder.setInverted(true);

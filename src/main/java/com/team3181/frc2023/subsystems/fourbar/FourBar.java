@@ -11,6 +11,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.numbers.N2;
@@ -27,6 +28,7 @@ public class FourBar extends SubsystemBase {
     private final Alert shoulderTooLow = new Alert("Shoulder needs to be moved forward! THIS WILL BREAK ALOT OF THINGS!", AlertType.ERROR);
     private Rotation2d[] dropStuff = new Rotation2d[]{};
     private Rotation2d waitPos = new Rotation2d();
+    private SlewRateLimiter shoulderLimit = new SlewRateLimiter(3);
 
     private final static FourBar INSTANCE = new FourBar(Constants.RobotConstants.SHOULDER, Constants.RobotConstants.ELBOW);
 
@@ -93,7 +95,7 @@ public class FourBar extends SubsystemBase {
         Vector<N2> ff = ArmDynamics.getInstance().feedforward(pos);
 //        if (!illegal[0]) {
             shoulderPID.setSetpoint(rotations[0].getRadians());
-            armIO[0].setVoltage(MathUtil.clamp(shoulderPID.calculate(inputs[0].armPositionRad), -FourBarConstants.PID_CLAMP_VOLTAGE, FourBarConstants.PID_CLAMP_VOLTAGE) + ff.get(0, 0));
+            armIO[0].setVoltage(shoulderLimit.calculate(MathUtil.clamp(shoulderPID.calculate(inputs[0].armPositionRad), -FourBarConstants.PID_CLAMP_VOLTAGE, FourBarConstants.PID_CLAMP_VOLTAGE) + ff.get(0, 0)));
 //        if (!illegal[1]) {
             elbowPID.setSetpoint(rotations[1].getRadians());
             armIO[1].setVoltage(MathUtil.clamp(elbowPID.calculate(mathElbow ? inputs[1].armPositionRad - inputs[0].armPositionRad : inputs[1].armPositionRad), -FourBarConstants.PID_CLAMP_VOLTAGE, FourBarConstants.PID_CLAMP_VOLTAGE) + ff.get(1, 0));

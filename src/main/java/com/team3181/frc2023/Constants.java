@@ -290,8 +290,8 @@ public final class Constants {
 
         // Set zero points to be the initial "stowed" position?
         // The Absolute offsets appear to be arbitrary?
-        public static final Rotation2d SHOULDER_ABSOLUTE_OFFSET = Rotation2d.fromRadians(1.9);
-        public static final Rotation2d SHOULDER_MATH_OFFSET = Rotation2d.fromRadians(-1.5286073684692383); // zero needs to be at shoulder parallel to ground
+        public static final Rotation2d SHOULDER_ABSOLUTE_OFFSET = Rotation2d.fromRadians(1.7);
+        public static final Rotation2d SHOULDER_MATH_OFFSET = Rotation2d.fromRadians(-1.5245245695114136); // zero needs to be at shoulder parallel to ground
         public static final Rotation2d ELBOW_ABSOLUTE_OFFSET = Rotation2d.fromRadians(1.5760794878005981);
         public static final Rotation2d ELBOW_MATH_OFFSET = Rotation2d.fromRadians(-3.358858823776245); // zero is in line with shoulder
 
@@ -381,8 +381,9 @@ public final class Constants {
     }
 
     public static final class EndEffectorConstants {
-        public static final double EXHAUST_POWER = -2;
-        public static final double INTAKE_IDLE_POWER = 0.8;
+        public static final double EXHAUST_CONE_POWER = -1;
+        public static final double EXHAUST_CUBE_POWER = -2;
+        public static final double INTAKE_IDLE_POWER = 1;
         public static final double INTAKE_POWER = 4.0;
         public static final double GEARING = 4;
 
@@ -398,6 +399,6 @@ public final class Constants {
 
     public static final class LEDConstants {
         public static final int PWM_PORT = 0;
-        public static final int NUMBER = 40;
+        public static final int NUMBER = 40; // TODO: change back to 40
     }
 }
