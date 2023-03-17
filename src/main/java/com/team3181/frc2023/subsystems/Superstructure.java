@@ -105,20 +105,29 @@ public class Superstructure extends SubsystemBase {
         {
             LEDs leds = LEDs.getInstance();
             if (DriverStation.isDisabled()) {
-                leds.setLEDMode(LEDModes.IDLE);
+                if (DriverStation.isFMSAttached()) {
+                    leds.setLEDMode(LEDModes.CONNECTED_FMS);
+                }
+                else {
+                    leds.setLEDMode(LEDModes.IDLE);
+                }
             } else if (DriverStation.isAutonomous()) {
                 leds.setLEDMode(LEDModes.RAINBOW);
             }
             else if (objectiveLocal.nodeRow == 1 || objectiveLocal.nodeRow == 4 || objectiveLocal.nodeRow == 7 || objectiveLocal.nodeLevel == NodeLevel.HYBRID) {
                 if (endEffector.hasPiece()) {
                     leds.setLEDMode(LEDModes.FLASH_CUBE);
-                } else if (demandLEDs) {
+                }
+//                else if (demandLEDs) {
+                else {
                     leds.setLEDMode(LEDModes.CUBE);
                 }
             } else if (objectiveLocal.nodeRow == 0 || objectiveLocal.nodeRow == 2 || objectiveLocal.nodeRow == 3 || objectiveLocal.nodeRow == 5 || objectiveLocal.nodeRow == 6 || objectiveLocal.nodeRow == 8) {
                 if (endEffector.hasPiece()) {
                     leds.setLEDMode(LEDModes.FLASH_CONE);
-                } else if (demandLEDs) {
+                }
+//                else if (demandLEDs) {
+                else {
                     leds.setLEDMode(LEDModes.CONE);
                 }
             } else {

@@ -15,7 +15,7 @@ public class LEDs extends SubsystemBase {
     private int initialRainbowHue = 0;
 
     public enum LEDModes {
-        CONE, CUBE, FLASH_CONE, FLASH_CUBE, RAINBOW, GOOD, BAD, HAPPY, ERROR, IDLE
+        CONE, CUBE, FLASH_CONE, FLASH_CUBE, RAINBOW, GOOD, BAD, HAPPY, ERROR, IDLE, CONNECTED_FMS
     }
     private LEDModes ledMode = LEDModes.IDLE;
 
@@ -36,12 +36,13 @@ public class LEDs extends SubsystemBase {
             case CONE -> setColor(Color.kYellow);
             case FLASH_CUBE -> flashColor(Color.kPurple);
             case FLASH_CONE -> flashColor(Color.kYellow);
-            case IDLE -> setFadeAlliance();
+            case CONNECTED_FMS -> setFadeAlliance();
             case GOOD -> setColor(Color.kGreen);
             case BAD -> setColor(Color.kRed);
             case RAINBOW -> setRainbow();
             case HAPPY -> flashColor(Color.kGreen);
             case ERROR -> flashColor(Color.kRed);
+            case IDLE -> setColor(Color.kWhite);
             default -> setOff();
         }
         leds.setBuffer();
@@ -183,7 +184,7 @@ public class LEDs extends SubsystemBase {
                 leds.setHSV(i, (int)(hsv[0] * 255), (int)(hsv[1] * 255), 255 - (int) (100 * (timer.get()-2.55)));
             }
         }
-        else if (timer.get() < 8) {
+        else if (timer.get() < 5) {
             setOff();
         }
         else {

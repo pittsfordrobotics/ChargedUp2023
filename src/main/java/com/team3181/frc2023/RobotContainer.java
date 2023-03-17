@@ -179,10 +179,10 @@ public class RobotContainer {
             .whileTrue(objectiveTracker.shiftNodeCommand(Direction.DOWN));
     operatorController.povLeft()
             .whileTrue(objectiveTracker.shiftNodeCommand(Direction.LEFT));
-    operatorController.rightBumper().
-            whileTrue(new InstantCommand(objectiveTracker::toggleFilled));
-    operatorController.leftBumper().
-            whileTrue(new InstantCommand(objectiveTracker::toggleActive));
+//    operatorController.rightBumper().
+//            whileTrue(new InstantCommand(objectiveTracker::toggleFilled));
+//    operatorController.leftBumper().
+//            whileTrue(new InstantCommand(objectiveTracker::toggleActive));
   }
 
   private void autoConfig() {
