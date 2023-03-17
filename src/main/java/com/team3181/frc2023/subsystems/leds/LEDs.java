@@ -184,7 +184,7 @@ public class LEDs extends SubsystemBase {
                 leds.setHSV(i, (int)(hsv[0] * 255), (int)(hsv[1] * 255), 255 - (int) (100 * (timer.get()-2.55)));
             }
         }
-        else if (timer.get() < 5) {
+        else if (timer.get() < 7) {
             setOff();
         }
         else {
