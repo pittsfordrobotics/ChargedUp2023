@@ -52,10 +52,16 @@ public class Paths {
         EVENT_MAP_BALANCE.put("maybeStop", new WaitCommand(0));
         EVENT_MAP_NO_BALANCE.put("maybeStop", new SwerveStop());
 
-        EVENT_MAP_BALANCE.put("balanceBackward", new SwerveAutoBalance(false));
-        EVENT_MAP_NO_BALANCE.put("balanceBackward", new SwerveStop());
+//        EVENT_MAP_BALANCE.put("balanceBackward", new SwerveAutoBalance(false));
+//        EVENT_MAP_NO_BALANCE.put("balanceBackward", new SwerveStop());
+//
+//        EVENT_MAP_BALANCE.put("balanceForward", new SwerveAutoBalance(true));
+//        EVENT_MAP_NO_BALANCE.put("balanceForward", new SwerveStop());
 
-        EVENT_MAP_BALANCE.put("balanceForward", new SwerveAutoBalance(true));
-        EVENT_MAP_NO_BALANCE.put("balanceForward", new SwerveStop());
+        EVENT_MAP_BALANCE.put("balanceBackward", new SwerveX());
+        EVENT_MAP_NO_BALANCE.put("balanceBackward", new SwerveX());
+
+        EVENT_MAP_BALANCE.put("balanceForward", new SwerveX());
+        EVENT_MAP_NO_BALANCE.put("balanceForward", new SwerveX());
     }
 }
