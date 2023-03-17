@@ -381,7 +381,7 @@ public final class Constants {
     }
 
     public static final class EndEffectorConstants {
-        public static final double EXHAUST_CONE_POWER = -1;
+        public static final double EXHAUST_CONE_POWER = -1.5;
         public static final double EXHAUST_CUBE_POWER = -2;
         public static final double INTAKE_IDLE_POWER = 1;
         public static final double INTAKE_POWER = 4.0;
