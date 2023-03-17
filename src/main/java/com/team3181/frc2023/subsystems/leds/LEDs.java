@@ -65,10 +65,10 @@ public class LEDs extends SubsystemBase {
     }
 
     private void flashColor(Color color) {
-        if (timer.get() < 0.2) {
+        if (timer.get() < 0.1) {
             setColor(color);
         }
-        else if (timer.get() < 0.4) {
+        else if (timer.get() < 0.2) {
             setOff();
         }
         else {
@@ -176,6 +176,15 @@ public class LEDs extends SubsystemBase {
                 float[] hsv = java.awt.Color.RGBtoHSB((int) color.red, (int) color.green, (int) color.blue, null);
                 leds.setHSV(i, (int)(hsv[0] * 255), (int)(hsv[1] * 255),  (int) (100 * timer.get()));
             }
+        }
+        else if (timer.get() < 5.1) {
+            for (int i = 0; i < leds.getLength(); i++) {
+                float[] hsv = java.awt.Color.RGBtoHSB((int) color.red, (int) color.green, (int) color.blue, null);
+                leds.setHSV(i, (int)(hsv[0] * 255), (int)(hsv[1] * 255), 255 - (int) (100 * (timer.get()-2.55)));
+            }
+        }
+        else if (timer.get() < 8) {
+            setOff();
         }
         else {
             timer.restart();
