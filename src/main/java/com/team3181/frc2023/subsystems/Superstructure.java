@@ -76,15 +76,15 @@ public class Superstructure extends SubsystemBase {
                 break;
             case INTAKE_GROUND:
                 state = StructureState.INTAKE_GROUND;
-                if (endEffector.hasPiece()) {
-                    state = StructureState.HOME;
-                }
+//                if (endEffector.hasPiece()) {
+//                    state = StructureState.HOME;
+//                }
                 break;
             case INTAKE_MID:
                 state = StructureState.INTAKE_MID;
-                if (endEffector.hasPiece()) {
-                    state = StructureState.HOME;
-                }
+//                if (endEffector.hasPiece()) {
+//                    state = StructureState.HOME;
+//                }
                 break;
             case HOME:
                 state = StructureState.HOME;
@@ -100,47 +100,69 @@ public class Superstructure extends SubsystemBase {
                 state = shouldAutoRetract ? StructureState.HOME : StructureState.IDLE;
                 break;
         }
-        if (state != systemState) {
-            if (systemState == StructureState.OBJECTIVE || systemState == StructureState.INTAKE_GROUND || systemState == StructureState.INTAKE_MID || systemState == StructureState.EXHAUST) {
-                endEffector.idle();
-            }
-            if (state == StructureState.EXHAUST) {
-                fourBar.recordDrop();
-            }
-            else if (state == StructureState.OBJECTIVE && objectiveLocal.nodeLevel == NodeLevel.HIGH) {
-                fourBar.recordHigh(new Rotation2d[]{ArmPositions.HIGH_SHOULDER, ArmPositions.HIGH_ELBOW});
-            }
-            systemState = state;
-        }
 
         // update LEDs and gamePieceLocal
         {
             LEDs leds = LEDs.getInstance();
             if (DriverStation.isDisabled()) {
-                if (demandLEDs) leds.setLEDMode(LEDModes.IDLE);
+                if (DriverStation.isFMSAttached()) {
+                    leds.setLEDMode(LEDModes.CONNECTED_FMS);
+                }
+                else {
+                    leds.setLEDMode(LEDModes.IDLE);
+                }
             } else if (DriverStation.isAutonomous()) {
-                 if (demandLEDs) leds.setLEDMode(LEDModes.RAINBOW);
+                leds.setLEDMode(LEDModes.RAINBOW);
             }
             else if (objectiveLocal.nodeRow == 1 || objectiveLocal.nodeRow == 4 || objectiveLocal.nodeRow == 7 || objectiveLocal.nodeLevel == NodeLevel.HYBRID) {
                 if (endEffector.hasPiece()) {
-                    if (demandLEDs) leds.setLEDMode(LEDModes.FLASH_CUBE);
-                } else {
-                    if (demandLEDs) leds.setLEDMode(LEDModes.CUBE);
+                    leds.setLEDMode(LEDModes.FLASH_CUBE);
+                }
+//                else if (demandLEDs) {
+                else {
+                    leds.setLEDMode(LEDModes.CUBE);
                 }
             } else if (objectiveLocal.nodeRow == 0 || objectiveLocal.nodeRow == 2 || objectiveLocal.nodeRow == 3 || objectiveLocal.nodeRow == 5 || objectiveLocal.nodeRow == 6 || objectiveLocal.nodeRow == 8) {
                 if (endEffector.hasPiece()) {
-                    if (demandLEDs) leds.setLEDMode(LEDModes.FLASH_CONE);
-                } else {
-                    if (demandLEDs) leds.setLEDMode(LEDModes.CONE);
+                    leds.setLEDMode(LEDModes.FLASH_CONE);
+                }
+//                else if (demandLEDs) {
+                else {
+                    leds.setLEDMode(LEDModes.CONE);
                 }
             } else {
-                if (demandLEDs) leds.setLEDMode(LEDModes.ERROR);
+                leds.setLEDMode(LEDModes.ERROR);
             }
         }
         demandLEDs = false;
 
+        if (state != systemState) {
+            if (systemState == StructureState.OBJECTIVE || systemState == StructureState.INTAKE_GROUND || systemState == StructureState.INTAKE_MID || systemState == StructureState.EXHAUST) {
+                endEffector.idle();
+            }
+            if (systemState == StructureState.EXHAUST || systemState == StructureState.OBJECTIVE) {
+                LEDs.getInstance().setLEDMode(LEDModes.IDLE);
+            }
+            if (state == StructureState.EXHAUST) {
+                fourBar.recordDrop();
+            }
+            else if (state == StructureState.OBJECTIVE && objectiveLocal.nodeLevel == NodeLevel.HIGH) {
+                if (objectiveLocal.nodeRow == 1 || objectiveLocal.nodeRow == 4 || objectiveLocal.nodeRow == 7) {
+                    fourBar.recordHigh(new Rotation2d[]{ArmPositions.HIGH_CUBE_SHOULDER, ArmPositions.HIGH_CUBE_ELBOW});
+                }
+                else {
+                    fourBar.recordHigh(new Rotation2d[]{ArmPositions.HIGH_CONE_SHOULDER, ArmPositions.HIGH_CONE_ELBOW});
+                }
+            }
+            if (systemState == StructureState.HOME && !atSetpoint() && !DriverStation.isAutonomous()) {
+                state = StructureState.HOME;
+            }
+            systemState = state;
+        }
+
         switch (systemState) {
             case OBJECTIVE:
+                LEDs.getInstance().setLEDMode(LEDModes.HAPPY);
                 switch (objectiveLocal.nodeLevel) {
                     case HYBRID:
 //                        if (gamePieceLocal == GamePiece.CONE || gamePieceLocal == GamePiece.CUBE) {
@@ -149,7 +171,12 @@ public class Superstructure extends SubsystemBase {
 //                        }
                         break;
                     case MID:
-                        fourBar.setRotations(new Rotation2d[]{ArmPositions.MID_SHOULDER, ArmPositions.MID_ELBOW}, false);
+                        if (objectiveLocal.nodeRow == 1 || objectiveLocal.nodeRow == 4 || objectiveLocal.nodeRow == 7) {
+                            fourBar.setRotations(new Rotation2d[]{ArmPositions.MID_CUBE_SHOULDER, ArmPositions.MID_CUBE_ELBOW}, false);
+                        }
+                        else {
+                            fourBar.setRotations(new Rotation2d[]{ArmPositions.MID_CONE_SHOULDER, ArmPositions.MID_CONE_ELBOW}, false);
+                        }
 //                        if (gamePieceLocal == GamePiece.CONE) {
 //                            fourBar.setRotations(new Rotation2d[]{ArmPositions.MID_CONE_SHOULDER, ArmPositions.MID_CONE_ELBOW}, false);
 ////                            fourBar.setRotations(fourBar.solve(SuperstructureConstants.ArmPositions.MID_CONE, true, true), false);
@@ -160,7 +187,12 @@ public class Superstructure extends SubsystemBase {
 //                        }
                         break;
                     case HIGH:
-                        fourBar.runHigh(new Rotation2d[]{ArmPositions.HIGH_SHOULDER, ArmPositions.HIGH_ELBOW});
+                        if (objectiveLocal.nodeRow == 1 || objectiveLocal.nodeRow == 4 || objectiveLocal.nodeRow == 7) {
+                            fourBar.runHigh(new Rotation2d[]{ArmPositions.HIGH_CUBE_SHOULDER, ArmPositions.HIGH_CUBE_ELBOW});
+                        }
+                        else {
+                            fourBar.runHigh(new Rotation2d[]{ArmPositions.HIGH_CONE_SHOULDER, ArmPositions.HIGH_CONE_ELBOW});
+                        }
 //                        if (gamePieceLocal == GamePiece.CONE) {
 //                            fourBar.setRotations(new Rotation2d[]{ArmPositions.HIGH_CONE_SHOULDER, ArmPositions.HIGH_CONE_ELBOW}, false);
 ////                            fourBar.setRotations(fourBar.solve(SuperstructureConstants.ArmPositions.HIGH_CONE, true,true), false);

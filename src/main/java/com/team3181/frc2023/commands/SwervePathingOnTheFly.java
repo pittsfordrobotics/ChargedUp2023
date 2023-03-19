@@ -44,7 +44,7 @@ public class SwervePathingOnTheFly extends CommandBase {
     public SwervePathingOnTheFly(BetterPathPoint... pathPoint) {
         addRequirements(this.swerve);
         this.pathPoint = pathPoint;
-        pathConstraints = AutoConstants.MAX_SPEED;
+        pathConstraints = AutoConstants.SLOW_SPEED;
         simple = false;
         position = null;
         rotController.enableContinuousInput(-Math.PI, Math.PI);
@@ -62,7 +62,7 @@ public class SwervePathingOnTheFly extends CommandBase {
     public SwervePathingOnTheFly(AutoDrivePosition position, boolean simple) {
         addRequirements(this.swerve);
         this.pathPoint = null;
-        this.pathConstraints = AutoConstants.MAX_SPEED;
+        this.pathConstraints = AutoConstants.SLOW_SPEED;
         this.simple = simple;
         this.position = position;
         rotController.enableContinuousInput(-Math.PI, Math.PI);

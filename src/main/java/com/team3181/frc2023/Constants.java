@@ -158,10 +158,10 @@ public final class Constants {
         public static final BetterSwerveKinematics DRIVE_KINEMATICS = new BetterSwerveKinematics(MODULE_OFFSETS);
 
 //        true reading from advantage scope
-        public static final Rotation2d FL_PURE_OFFSET = Rotation2d.fromRadians(1.7841);
-        public static final Rotation2d FR_PURE_OFFSET = Rotation2d.fromRadians(0.0737);
-        public static final Rotation2d BL_PURE_OFFSET = Rotation2d.fromRadians(6.2530);
-        public static final Rotation2d BR_PURE_OFFSET = Rotation2d.fromRadians(2.8320);
+        public static final Rotation2d FL_PURE_OFFSET = Rotation2d.fromRadians(1.7843507528305054);
+        public static final Rotation2d FR_PURE_OFFSET = Rotation2d.fromRadians(0.07440893352031708);
+        public static final Rotation2d BL_PURE_OFFSET = Rotation2d.fromRadians(6.24068546295166);
+        public static final Rotation2d BR_PURE_OFFSET = Rotation2d.fromRadians(0.4658687710762024);
 
 //        public static final Rotation2d FL_OFFSET = FL_PURE_OFFSET.plus(Rotation2d.fromDegrees(0));
 //        public static final Rotation2d FR_OFFSET = FR_PURE_OFFSET.plus(Rotation2d.fromDegrees(0));
@@ -245,7 +245,7 @@ public final class Constants {
         }
 
         // PID values for trajectory follower
-        public static final double LINEAR_P = 1.5;
+        public static final double LINEAR_P = 3;
         public static final double ROT_P = 5;
 
         //        numbers from 1678
@@ -278,11 +278,11 @@ public final class Constants {
 
         public static final double PID_CLAMP_VOLTAGE = 7;
 
-        public static final double ELBOW_P = -15.0;
+        public static final double ELBOW_P = -20.0;
         public static final double ELBOW_I = 0.0;
         public static final double ELBOW_D = 0.0;
 
-        public static final double SHOULDER_P = 15.0;
+        public static final double SHOULDER_P = 20.0;
         public static final double SHOULDER_I = 0.0;
         public static final double SHOULDER_D = 0.0;
 
@@ -291,9 +291,9 @@ public final class Constants {
         // Set zero points to be the initial "stowed" position?
         // The Absolute offsets appear to be arbitrary?
         public static final Rotation2d SHOULDER_ABSOLUTE_OFFSET = Rotation2d.fromRadians(1.5);
-        public static final Rotation2d SHOULDER_MATH_OFFSET = Rotation2d.fromRadians(-1.6262524127960205); // zero needs to be at shoulder parallel to ground
+        public static final Rotation2d SHOULDER_MATH_OFFSET = Rotation2d.fromRadians(-1.5366698503494263); // zero needs to be at shoulder parallel to ground
         public static final Rotation2d ELBOW_ABSOLUTE_OFFSET = Rotation2d.fromRadians(1.5760794878005981);
-        public static final Rotation2d ELBOW_MATH_OFFSET = Rotation2d.fromRadians(-3.358858823776245); // zero is in line with shoulder
+        public static final Rotation2d ELBOW_MATH_OFFSET = Rotation2d.fromRadians(-3.458858823776245); // zero is in line with shoulder
 
         public static final Rotation2d ELBOW_MIN = Rotation2d.fromDegrees(-140);
         public static final Rotation2d ELBOW_MAX = Rotation2d.fromDegrees(140);
@@ -337,7 +337,7 @@ public final class Constants {
         public static final double AUTO_SCORE_POSITION_TOLERANCE = 0.1;
         public static final double AUTO_SCORE_ROTATION_TOLERANCE = 1;
 
-        public static final double EXHAUST_TIME = 0.3;
+        public static final double EXHAUST_TIME = 0.5;
 
         public static final class ArmPositions {
             public static Rotation2d STORAGE_SHOULDER = Rotation2d.fromRadians(-1.22);
@@ -347,17 +347,23 @@ public final class Constants {
             public static Rotation2d HYBRID_ELBOW = Rotation2d.fromRadians(0.23718323707580566);
 
             public static Rotation2d GROUND_PICKUP_SHOULDER = Rotation2d.fromRadians(-1.3148015022277832);
-            public static Rotation2d GROUND_PICKUP_ELBOW = Rotation2d.fromRadians(-0.02468705177307129);
+            public static Rotation2d GROUND_PICKUP_ELBOW = Rotation2d.fromRadians(-0.07468705177307129);
 
             public static Rotation2d MID_PICKUP_SHOULDER = Rotation2d.fromRadians(0.4);
             public static Rotation2d MID_PICKUP_ELBOW = Rotation2d.fromRadians(0);
 
             // long pos
-            public static Rotation2d MID_SHOULDER = Rotation2d.fromRadians(-0.6470000743866);
-            public static Rotation2d MID_ELBOW = Rotation2d.fromRadians(0.7242125606536865);
+            public static Rotation2d MID_CONE_SHOULDER = Rotation2d.fromRadians(-0.6470000743866);
+            public static Rotation2d MID_CONE_ELBOW = Rotation2d.fromRadians(0.7242125606536865);
 
-            public static Rotation2d HIGH_SHOULDER = Rotation2d.fromRadians(0.29303767681121822);
-            public static Rotation2d HIGH_ELBOW = Rotation2d.fromRadians(0.3829857921600342); //0.4229857921600342
+            public static Rotation2d HIGH_CUBE_SHOULDER = Rotation2d.fromRadians(-0.815398097038269);
+            public static Rotation2d HIGH_CUBE_ELBOW = Rotation2d.fromRadians(1.060633897781372);
+
+            public static Rotation2d HIGH_CONE_SHOULDER = Rotation2d.fromRadians(0.29303767681121822);
+            public static Rotation2d HIGH_CONE_ELBOW = Rotation2d.fromRadians(0.3829857921600342); //0.4229857921600342
+
+            public static Rotation2d MID_CUBE_SHOULDER = Rotation2d.fromRadians(-1.3912705928087234);
+            public static Rotation2d MID_CUBE_ELBOW = Rotation2d.fromRadians(0.7722146511077881); //0.4229857921600342
 
             public static Translation2d SWEEP_MIN = new Translation2d(0.66, 0.2);
             public static Translation2d SWEEP_MAX = new Translation2d(1.05, 0.4);
@@ -375,8 +381,9 @@ public final class Constants {
     }
 
     public static final class EndEffectorConstants {
-        public static final double EXHAUST_POWER = -2;
-        public static final double INTAKE_IDLE_POWER = 0.8;
+        public static final double EXHAUST_CONE_POWER = -2;
+        public static final double EXHAUST_CUBE_POWER = -2;
+        public static final double INTAKE_IDLE_POWER = 1.5;
         public static final double INTAKE_POWER = 4.0;
         public static final double GEARING = 4;
 
@@ -392,6 +399,6 @@ public final class Constants {
 
     public static final class LEDConstants {
         public static final int PWM_PORT = 0;
-        public static final int NUMBER = 40;
+        public static final int NUMBER = 40; // TODO: change back to 40
     }
 }

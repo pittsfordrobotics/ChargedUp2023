@@ -57,14 +57,15 @@ public class Vision extends SubsystemBase {
         Logger.getInstance().recordOutput("Vision/Camera", camera.toString());
 
         if (getPose() != null) {
-            Swerve.getInstance().addVisionData(getPose(), getLatency(), checkStable());
+//            Swerve.getInstance().addVisionData(getPose(), getLatency(), checkStable());
             Logger.getInstance().recordOutput("Vision/Pose", getPose());
         }
+        Logger.getInstance().recordOutput("Vision/Stable", checkStable());
     }
 
     public boolean checkStable() {
-        if (getPose() != null) {
-            if (GeomUtil.distance(getPose(), lastPose) < 0.1 && !getPose().equals(new Pose2d())) {
+        if (getPose() != null && !getPose().equals(new Pose2d())) {
+            if (GeomUtil.distance(getPose(), lastPose) < 0.1) {
                 if (!timerStarted) {
                     timerStarted = true;
                     timer.restart();
@@ -72,8 +73,12 @@ public class Vision extends SubsystemBase {
             }
             else {
                 timerStarted = false;
+                timer.restart();
                 lastPose = getPose();
             }
+        }
+        else {
+            timer.restart();
         }
         return timer.hasElapsed(0.5);
     }
@@ -110,7 +115,8 @@ public class Vision extends SubsystemBase {
 
     public Pose2d getPose() {
         if (inputs.botXYZ.length != 0 && inputs.botYPR.length != 0) {
-            return new Pose2d(new Translation2d(inputs.botXYZ[0], inputs.botXYZ[1]), new Rotation2d(inputs.botYPR[0]));
+//            return new Pose2d(new Translation2d(inputs.botXYZ[0], inputs.botXYZ[1]), new Rotation2d(inputs.botYPR[2]));
+            return new Pose2d(new Translation2d(inputs.botXYZ[0], inputs.botXYZ[1]), new Rotation2d());
         }
         return null;
     }
