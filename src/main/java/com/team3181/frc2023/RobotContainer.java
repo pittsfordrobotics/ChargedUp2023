@@ -46,9 +46,9 @@ public class RobotContainer {
   private final BetterXboxController driverController = new BetterXboxController(0, BetterXboxController.Humans.DRIVER);
   private final BetterXboxController operatorController = new BetterXboxController(1, BetterXboxController.Humans.OPERATOR);
 
-  private final SendableChooser<Command> autoChooser = new SendableChooser<>();
-  private final SendableChooser<Integer> positionChooser = new SendableChooser<>();
-  private final SendableChooser<Boolean> balanceChooser = new SendableChooser<>();
+  private SendableChooser<Command> autoChooser = new SendableChooser<>();
+  private SendableChooser<Integer> positionChooser = new SendableChooser<>();
+  private SendableChooser<Boolean> balanceChooser = new SendableChooser<>();
   private final HashMap<Command, Boolean> canBalanceMap = new HashMap<>();
   private final HashMap<Command, Boolean> needPositionMap = new HashMap<>();
 
@@ -188,7 +188,7 @@ public class RobotContainer {
 //            whileTrue(new InstantCommand(objectiveTracker::toggleActive));
   }
 
-  private void autoConfig() {
+  public void autoConfig() {
     balanceChooser.setDefaultOption("No Balance", false);
     balanceChooser.addOption("Yes Balance", true);
 
@@ -280,6 +280,19 @@ public class RobotContainer {
     SmartDashboard.putData("Position", positionChooser);
   }
 
+  // try to optimize memory usage
+  public void killAuto() {
+    autoChooser.close();
+    positionChooser.close();
+    balanceChooser.close();
+    autoChooser = new SendableChooser<>();
+    positionChooser = new SendableChooser<>();
+    balanceChooser = new SendableChooser<>();
+    SmartDashboard.putData("Auto Command", autoChooser);
+    SmartDashboard.putData("Should Balance", balanceChooser);
+    SmartDashboard.putData("Position", positionChooser);
+  }
+
   public boolean canBalance() {
     return canBalanceMap.get(autoChooser.getSelected()) != null && canBalanceMap.get(autoChooser.getSelected());
   }
@@ -304,6 +317,7 @@ public class RobotContainer {
     System.out.println(autoChooser.getSelected());
     System.out.println(positionChooser.getSelected());
     System.out.println(balanceChooser.getSelected());
+
     return autoChooser.getSelected();
   }
 }
