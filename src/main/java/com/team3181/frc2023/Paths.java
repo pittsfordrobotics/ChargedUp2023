@@ -22,7 +22,7 @@ public class Paths {
     public static final PathPlannerTrajectory TOP_CONE = PathPlanner.loadPath("Top Cone", AutoConstants.SLOW_SPEED);
 //    public static final PathPlannerTrajectory TOP_CUBE_PLUS_ONE = PathPlanner.loadPath("Top Cube + 1", AutoConstants.SLOW_SPEED);
 //    public static final PathPlannerTrajectory TOP_CONE_PLUS_ONE = PathPlanner.loadPath("Top Cone + 1", AutoConstants.SLOW_SPEED);
-    public static final PathPlannerTrajectory BALANCE = PathPlanner.loadPath("Balance", AutoConstants.SLOW_SPEED);
+    public static final PathPlannerTrajectory BALANCE = PathPlanner.loadPath("Balance Easy", AutoConstants.SLOW_SPEED);
 
     public static HashMap<String, Command> EVENT_MAP = new HashMap<>();
     public static final HashMap<String, Command> EVENT_MAP_BALANCE = new HashMap<>();
@@ -52,16 +52,16 @@ public class Paths {
         EVENT_MAP_BALANCE.put("maybeStop", new WaitCommand(0));
         EVENT_MAP_NO_BALANCE.put("maybeStop", new SwerveStop());
 
-//        EVENT_MAP_BALANCE.put("balanceBackward", new SwerveAutoBalance(false));
-//        EVENT_MAP_NO_BALANCE.put("balanceBackward", new SwerveStop());
+        EVENT_MAP_BALANCE.put("balanceBackward", new SwerveAutoBalance(false));
+        EVENT_MAP_NO_BALANCE.put("balanceBackward", new SwerveStop());
+
+        EVENT_MAP_BALANCE.put("balanceForward", new SwerveAutoBalance(true));
+        EVENT_MAP_NO_BALANCE.put("balanceForward", new SwerveStop());
+
+//        EVENT_MAP_BALANCE.put("balanceBackward", new SwerveX());
+//        EVENT_MAP_NO_BALANCE.put("balanceBackward", new SwerveX());
 //
-//        EVENT_MAP_BALANCE.put("balanceForward", new SwerveAutoBalance(true));
-//        EVENT_MAP_NO_BALANCE.put("balanceForward", new SwerveStop());
-
-        EVENT_MAP_BALANCE.put("balanceBackward", new SwerveX());
-        EVENT_MAP_NO_BALANCE.put("balanceBackward", new SwerveX());
-
-        EVENT_MAP_BALANCE.put("balanceForward", new SwerveX());
-        EVENT_MAP_NO_BALANCE.put("balanceForward", new SwerveX());
+//        EVENT_MAP_BALANCE.put("balanceForward", new SwerveX());
+//        EVENT_MAP_NO_BALANCE.put("balanceForward", new SwerveX());
     }
 }

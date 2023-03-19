@@ -158,10 +158,10 @@ public final class Constants {
         public static final BetterSwerveKinematics DRIVE_KINEMATICS = new BetterSwerveKinematics(MODULE_OFFSETS);
 
 //        true reading from advantage scope
-        public static final Rotation2d FL_PURE_OFFSET = Rotation2d.fromRadians(1.7841);
-        public static final Rotation2d FR_PURE_OFFSET = Rotation2d.fromRadians(0.0737);
-        public static final Rotation2d BL_PURE_OFFSET = Rotation2d.fromRadians(6.2530);
-        public static final Rotation2d BR_PURE_OFFSET = Rotation2d.fromRadians(2.8320);
+        public static final Rotation2d FL_PURE_OFFSET = Rotation2d.fromRadians(1.7843507528305054);
+        public static final Rotation2d FR_PURE_OFFSET = Rotation2d.fromRadians(0.07440893352031708);
+        public static final Rotation2d BL_PURE_OFFSET = Rotation2d.fromRadians(6.24068546295166);
+        public static final Rotation2d BR_PURE_OFFSET = Rotation2d.fromRadians(0.4658687710762024);
 
 //        public static final Rotation2d FL_OFFSET = FL_PURE_OFFSET.plus(Rotation2d.fromDegrees(0));
 //        public static final Rotation2d FR_OFFSET = FR_PURE_OFFSET.plus(Rotation2d.fromDegrees(0));
@@ -278,11 +278,11 @@ public final class Constants {
 
         public static final double PID_CLAMP_VOLTAGE = 7;
 
-        public static final double ELBOW_P = -15.0;
+        public static final double ELBOW_P = -20.0;
         public static final double ELBOW_I = 0.0;
         public static final double ELBOW_D = 0.0;
 
-        public static final double SHOULDER_P = 15.0;
+        public static final double SHOULDER_P = 20.0;
         public static final double SHOULDER_I = 0.0;
         public static final double SHOULDER_D = 0.0;
 
@@ -291,9 +291,9 @@ public final class Constants {
         // Set zero points to be the initial "stowed" position?
         // The Absolute offsets appear to be arbitrary?
         public static final Rotation2d SHOULDER_ABSOLUTE_OFFSET = Rotation2d.fromRadians(1.5);
-        public static final Rotation2d SHOULDER_MATH_OFFSET = Rotation2d.fromRadians(-1.5547497272491455); // zero needs to be at shoulder parallel to ground
+        public static final Rotation2d SHOULDER_MATH_OFFSET = Rotation2d.fromRadians(-1.5366698503494263); // zero needs to be at shoulder parallel to ground
         public static final Rotation2d ELBOW_ABSOLUTE_OFFSET = Rotation2d.fromRadians(1.5760794878005981);
-        public static final Rotation2d ELBOW_MATH_OFFSET = Rotation2d.fromRadians(-3.358858823776245); // zero is in line with shoulder
+        public static final Rotation2d ELBOW_MATH_OFFSET = Rotation2d.fromRadians(-3.458858823776245); // zero is in line with shoulder
 
         public static final Rotation2d ELBOW_MIN = Rotation2d.fromDegrees(-140);
         public static final Rotation2d ELBOW_MAX = Rotation2d.fromDegrees(140);
@@ -381,9 +381,9 @@ public final class Constants {
     }
 
     public static final class EndEffectorConstants {
-        public static final double EXHAUST_CONE_POWER = -1.5;
+        public static final double EXHAUST_CONE_POWER = -2;
         public static final double EXHAUST_CUBE_POWER = -2;
-        public static final double INTAKE_IDLE_POWER = 1;
+        public static final double INTAKE_IDLE_POWER = 1.5;
         public static final double INTAKE_POWER = 4.0;
         public static final double GEARING = 4;
 

@@ -154,7 +154,7 @@ public class Superstructure extends SubsystemBase {
                     fourBar.recordHigh(new Rotation2d[]{ArmPositions.HIGH_CONE_SHOULDER, ArmPositions.HIGH_CONE_ELBOW});
                 }
             }
-            if (systemState == StructureState.HOME && !atSetpoint()) {
+            if (systemState == StructureState.HOME && !atSetpoint() && !DriverStation.isAutonomous()) {
                 state = StructureState.HOME;
             }
             systemState = state;

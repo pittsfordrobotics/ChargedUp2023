@@ -38,6 +38,7 @@ public class Robot extends LoggedRobot {
   private final Alert operatorControllerAlert = new Alert("Operator Controller is NOT detected!", AlertType.ERROR);
 
   private final Timer disabledTimer = new Timer();
+  private final Timer garbageCollector = new Timer();
   private boolean stopped = false;
   private final Alert lowBatteryAlert = new Alert("Battery is at a LOW voltage! The battery MUST be replaced before playing a match!", AlertType.WARNING);
 
@@ -81,6 +82,10 @@ public class Robot extends LoggedRobot {
     LiveWindow.disableAllTelemetry();
     robotContainer = new RobotContainer();
     Swerve.getInstance().setCoastMode();
+    garbageCollector.start();
+
+    new BetterXboxController(0, BetterXboxController.Humans.DRIVER);
+    new BetterXboxController(1, BetterXboxController.Humans.OPERATOR);
   }
 
   @Override
@@ -96,15 +101,17 @@ public class Robot extends LoggedRobot {
 
     logReceiverQueueAlert.set(Logger.getInstance().getReceiverQueueFault());
 
-    new BetterXboxController(0, BetterXboxController.Humans.DRIVER);
-    new BetterXboxController(1, BetterXboxController.Humans.OPERATOR);
-
     driverControllerAlert.set(!DriverStation.isJoystickConnected(0));
     operatorControllerAlert.set(!DriverStation.isJoystickConnected(1));
     LazySparkMax.checkAlive();
 
     SmartDashboard.putBoolean("Can Balance", robotContainer.canBalance());
     SmartDashboard.putBoolean("Need Position", robotContainer.needPosition());
+
+    if (garbageCollector.hasElapsed(1)) {
+      System.gc();
+      garbageCollector.restart();
+    }
   }
 
   @Override

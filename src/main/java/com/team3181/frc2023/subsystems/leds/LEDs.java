@@ -3,7 +3,6 @@ package com.team3181.frc2023.subsystems.leds;
 import com.team3181.frc2023.Constants.RobotConstants;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -36,7 +35,7 @@ public class LEDs extends SubsystemBase {
             case CONE -> setColor(Color.kYellow);
             case FLASH_CUBE -> flashColor(Color.kPurple);
             case FLASH_CONE -> flashColor(Color.kYellow);
-            case CONNECTED_FMS -> setFadeAlliance();
+            case CONNECTED_FMS -> setFadeFMS();
             case GOOD -> setColor(Color.kGreen);
             case BAD -> setColor(Color.kRed);
             case RAINBOW -> setRainbow();
@@ -84,7 +83,7 @@ public class LEDs extends SubsystemBase {
     }
 
     private void setRunAlliance() {
-        Color color = getAllianceColor();
+        Color color = getConnected();
         if (timer.get() < 0.05 + 0.02) {
             setTwo(0, color);
         }
@@ -155,22 +154,16 @@ public class LEDs extends SubsystemBase {
         }
     }
 
-    private Color getAllianceColor() {
+    private Color getConnected() {
         Color color = Color.kWhite;
-        if (!DriverStation.isDSAttached()) {
-            color = Color.kWhite;
-        }
-        else if (DriverStation.getAlliance() == Alliance.Blue) {
-            color = Color.kBlue;
-        }
-        else if (DriverStation.getAlliance() == Alliance.Red) {
-            color = Color.kRed;
+        if (DriverStation.isFMSAttached()) {
+            color = Color.kGreen;
         }
         return color;
     }
 
-    private void setFadeAlliance() {
-        Color color = getAllianceColor();
+    private void setFadeFMS() {
+        Color color = getConnected();
 
         if (timer.get() < 2.55) {
             for (int i = 0; i < leds.getLength(); i++) {

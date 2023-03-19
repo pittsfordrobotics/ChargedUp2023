@@ -6,6 +6,7 @@ package com.team3181.frc2023;
 
 import com.team3181.frc2023.Constants.RobotConstants;
 import com.team3181.frc2023.FieldConstants.AutoDrivePoints;
+import com.team3181.frc2023.commands.SwerveAutoBalance;
 import com.team3181.frc2023.commands.SwerveDriveFieldXbox;
 import com.team3181.frc2023.commands.TankXbox;
 import com.team3181.frc2023.commands.autos.AutoSwerveBalance;
@@ -120,6 +121,8 @@ public class RobotContainer {
      */
     driverController.x()
             .whileTrue(new InstantCommand(swerve::driveX));
+    driverController.a().whileTrue(new SwerveAutoBalance(true));
+    driverController.b().whileTrue(new SwerveAutoBalance(false));
 //    driverController.y()
 //            .whileTrue(new SwerveAutoScore())
 //            .whileFalse(new SuperstructureHome());
@@ -298,6 +301,9 @@ public class RobotContainer {
     else {
       Paths.EVENT_MAP = Paths.EVENT_MAP_NO_BALANCE;
     }
+    System.out.println(autoChooser.getSelected());
+    System.out.println(positionChooser.getSelected());
+    System.out.println(balanceChooser.getSelected());
     return autoChooser.getSelected();
   }
 }

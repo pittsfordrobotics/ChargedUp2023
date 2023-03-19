@@ -176,10 +176,10 @@ public class Swerve extends SubsystemBase {
     }
 
     public boolean isStopped() {
-        boolean module0 = BetterMath.epsilonEquals(moduleInputs[0].driveVelocityMetersPerSec, 0);
-        boolean module1 = BetterMath.epsilonEquals(moduleInputs[1].driveVelocityMetersPerSec, 0);
-        boolean module2 = BetterMath.epsilonEquals(moduleInputs[2].driveVelocityMetersPerSec, 0);
-        boolean module3 = BetterMath.epsilonEquals(moduleInputs[3].driveVelocityMetersPerSec, 0);
+        boolean module0 = BetterMath.epsilonEquals(moduleInputs[0].driveVelocityMetersPerSec, 0, 0.1);
+        boolean module1 = BetterMath.epsilonEquals(moduleInputs[1].driveVelocityMetersPerSec, 0, 0.1);
+        boolean module2 = BetterMath.epsilonEquals(moduleInputs[2].driveVelocityMetersPerSec, 0, 0.1);
+        boolean module3 = BetterMath.epsilonEquals(moduleInputs[3].driveVelocityMetersPerSec, 0, 0.1);
         return module0 && module1 && module2 && module3;
     }
 
