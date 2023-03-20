@@ -9,13 +9,13 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import org.littletonrobotics.junction.Logger;
 
-public class VisionIOLimelight implements VisionIO {
+public class VisionIOLimelightRight implements VisionIO {
     public Pose3d lastPose = new Pose3d();
 
     private final String limelightName = "";
     private final NetworkTable limelight = LimelightHelpers.getLimelightNTTable(limelightName);
 
-    public VisionIOLimelight() {
+    public VisionIOLimelightRight() {
         setLEDs(LED.OFF);
     }
 

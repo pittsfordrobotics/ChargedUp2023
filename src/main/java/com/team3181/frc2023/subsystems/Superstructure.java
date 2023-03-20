@@ -24,23 +24,23 @@ import org.littletonrobotics.junction.Logger;
 
 public class Superstructure extends SubsystemBase {
 
-    public static class SuperstructurePosition {
-        public Rotation2d elbow;
-        public Rotation2d shoulder;
-
-        public SuperstructurePosition(Rotation2d elbow, Rotation2d shoulder) {
-            this.elbow = elbow;
-            this.shoulder = shoulder;
-        }
-    }
+//    public static class SuperstructurePosition {
+//        public Rotation2d elbow;
+//        public Rotation2d shoulder;
+//
+//        public SuperstructurePosition(Rotation2d elbow, Rotation2d shoulder) {
+//            this.elbow = elbow;
+//            this.shoulder = shoulder;
+//        }
+//    }
 
     enum StructureState {
         IDLE, HOME, INTAKE_GROUND, INTAKE_MID, EXHAUST, OBJECTIVE, OBJECTIVE_GLOBAL, MANUAL
     }
 
-    public enum GamePiece {
-        CONE, CUBE, NONE
-    }
+//    public enum GamePiece {
+//        CONE, CUBE, NONE
+//    }
 
     private StructureState systemState = StructureState.HOME;
     private StructureState wantedState = StructureState.HOME;

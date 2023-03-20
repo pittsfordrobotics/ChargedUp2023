@@ -20,7 +20,8 @@ import com.team3181.frc2023.subsystems.tank.TankIO;
 import com.team3181.frc2023.subsystems.tank.TankIOSim;
 import com.team3181.frc2023.subsystems.tank.TankIOSparkMax;
 import com.team3181.frc2023.subsystems.vision.VisionIO;
-import com.team3181.frc2023.subsystems.vision.VisionIOLimelight;
+import com.team3181.frc2023.subsystems.vision.VisionIOLimelightLeft;
+import com.team3181.frc2023.subsystems.vision.VisionIOLimelightRight;
 import com.team3181.frc2023.subsystems.vision.VisionIOSim;
 import com.team3181.lib.swerve.BetterSwerveKinematics;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -40,7 +41,8 @@ public final class Constants {
         public final static SwerveModuleIO BR_MODULE;
         public final static GyroIO GYRO;
         public final static TankIO TANK;
-        public final static VisionIO VISION;
+        public final static VisionIO VISION_RIGHT;
+        public final static VisionIO VISION_LEFT;
         public final static LEDStripIO LEDS;
         public final static ArmIO SHOULDER;
         public final static ArmIO ELBOW;
@@ -55,19 +57,21 @@ public final class Constants {
 
         public static final HashMap<Integer, String> SPARKMAX_HASHMAP = new HashMap<>();
         static {
-            SPARKMAX_HASHMAP.put(SwerveConstants.CAN_FL_DRIVE, "Front Left Drive");
-            SPARKMAX_HASHMAP.put(SwerveConstants.CAN_FL_STEER, "Front Left Steer");
-            SPARKMAX_HASHMAP.put(SwerveConstants.CAN_FR_DRIVE, "Front Right Drive");
-            SPARKMAX_HASHMAP.put(SwerveConstants.CAN_FR_STEER, "Front Right Steer");
-            SPARKMAX_HASHMAP.put(SwerveConstants.CAN_BL_DRIVE, "Back Left Drive");
-            SPARKMAX_HASHMAP.put(SwerveConstants.CAN_BL_STEER, "Back Left Steer");
-            SPARKMAX_HASHMAP.put(SwerveConstants.CAN_BR_DRIVE, "Back Right Drive");
-            SPARKMAX_HASHMAP.put(SwerveConstants.CAN_BR_STEER, "Back Right Steer");
-            SPARKMAX_HASHMAP.put(EndEffectorConstants.CAN_LEFT, "Intake Left");
-            SPARKMAX_HASHMAP.put(FourBarConstants.CAN_SHOULDER_MASTER, "Shoulder Master");
-            SPARKMAX_HASHMAP.put(FourBarConstants.CAN_SHOULDER_FOLLOWER, "Shoulder Follower");
-            SPARKMAX_HASHMAP.put(FourBarConstants.CAN_ELBOW, "Elbow");
-            SPARKMAX_HASHMAP.put(EndEffectorConstants.CAN_RIGHT, "Intake Right");
+            {
+                SPARKMAX_HASHMAP.put(SwerveConstants.CAN_FL_DRIVE, "Front Left Drive");
+                SPARKMAX_HASHMAP.put(SwerveConstants.CAN_FL_STEER, "Front Left Steer");
+                SPARKMAX_HASHMAP.put(SwerveConstants.CAN_FR_DRIVE, "Front Right Drive");
+                SPARKMAX_HASHMAP.put(SwerveConstants.CAN_FR_STEER, "Front Right Steer");
+                SPARKMAX_HASHMAP.put(SwerveConstants.CAN_BL_DRIVE, "Back Left Drive");
+                SPARKMAX_HASHMAP.put(SwerveConstants.CAN_BL_STEER, "Back Left Steer");
+                SPARKMAX_HASHMAP.put(SwerveConstants.CAN_BR_DRIVE, "Back Right Drive");
+                SPARKMAX_HASHMAP.put(SwerveConstants.CAN_BR_STEER, "Back Right Steer");
+                SPARKMAX_HASHMAP.put(EndEffectorConstants.CAN_LEFT, "Intake Left");
+                SPARKMAX_HASHMAP.put(FourBarConstants.CAN_SHOULDER_MASTER, "Shoulder Master");
+                SPARKMAX_HASHMAP.put(FourBarConstants.CAN_SHOULDER_FOLLOWER, "Shoulder Follower");
+                SPARKMAX_HASHMAP.put(FourBarConstants.CAN_ELBOW, "Elbow");
+                SPARKMAX_HASHMAP.put(EndEffectorConstants.CAN_RIGHT, "Intake Right");
+            }
 
             if (RobotBase.isReal()) {
                 SHOULDER = new ArmIOShoulderSparkMax();
@@ -78,7 +82,8 @@ public final class Constants {
                 BL_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSparkMax(SwerveConstants.CAN_BL_DRIVE, SwerveConstants.CAN_BL_STEER, SwerveConstants.BL_OFFSET);
                 BR_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSparkMax(SwerveConstants.CAN_BR_DRIVE, SwerveConstants.CAN_BR_STEER, SwerveConstants.BR_OFFSET);
                 GYRO = RobotConstants.IS_TANK ? new GyroIO(){} : new GyroIOPigeon();
-                VISION = RobotConstants.IS_TANK ? new VisionIO() {} : new VisionIOLimelight();
+                VISION_RIGHT = RobotConstants.IS_TANK ? new VisionIO() {} : new VisionIOLimelightRight();
+                VISION_LEFT = RobotConstants.IS_TANK ? new VisionIO() {} : new VisionIOLimelightLeft();
                 LEDS = RobotConstants.IS_TANK ? new LEDStripIO(){} : new LEDStripIORio(LEDConstants.PWM_PORT, LEDConstants.NUMBER);
                 END_EFFECTOR = new EndEffectorIOSparkMax();
             }
@@ -91,7 +96,8 @@ public final class Constants {
                 BL_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSim();
                 BR_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSim();
                 GYRO = RobotConstants.IS_TANK ? new GyroIO(){} : new GyroIOSim();
-                VISION = new VisionIOSim();
+                VISION_RIGHT = new VisionIOSim();
+                VISION_LEFT = new VisionIOSim();
                 LEDS = new LEDStripIO() {};
                 END_EFFECTOR = new EndEffectorIO() {};
             }
