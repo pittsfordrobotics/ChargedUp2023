@@ -3,6 +3,7 @@ package com.team3181.frc2023.subsystems.leds;
 import com.team3181.frc2023.Constants.RobotConstants;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -14,7 +15,7 @@ public class LEDs extends SubsystemBase {
     private int initialRainbowHue = 0;
 
     public enum LEDModes {
-        CONE, CUBE, FLASH_CONE, FLASH_CUBE, RAINBOW, GOOD, BAD, HAPPY, ERROR, IDLE, CONNECTED_FMS
+        CONE, CUBE, FLASH_CONE, FLASH_CUBE, RAINBOW, GOOD, BAD, HAPPY, ERROR, IDLE, CONNECTED_FMS, OFF
     }
     private LEDModes ledMode = LEDModes.IDLE;
 
@@ -35,7 +36,7 @@ public class LEDs extends SubsystemBase {
             case CONE -> setColor(Color.kYellow);
             case FLASH_CUBE -> flashColor(Color.kPurple);
             case FLASH_CONE -> flashColor(Color.kYellow);
-            case CONNECTED_FMS -> setFadeFMS();
+            case CONNECTED_FMS -> setFadeAlliance();
             case GOOD -> setColor(Color.kGreen);
             case BAD -> setColor(Color.kRed);
             case RAINBOW -> setRainbow();
@@ -156,25 +157,28 @@ public class LEDs extends SubsystemBase {
 
     private Color getConnected() {
         Color color = Color.kWhite;
-        if (DriverStation.isFMSAttached()) {
-            color = Color.kGreen;
+        if (DriverStation.getAlliance() == Alliance.Blue) {
+            color = Color.kBlue;
+        }
+        else if (DriverStation.getAlliance() == Alliance.Red) {
+            color = Color.kRed;
         }
         return color;
     }
 
-    private void setFadeFMS() {
+    private void setFadeAlliance() {
         Color color = getConnected();
 
         if (timer.get() < 2.55) {
             for (int i = 0; i < leds.getLength(); i++) {
                 float[] hsv = java.awt.Color.RGBtoHSB((int) color.red, (int) color.green, (int) color.blue, null);
-                leds.setHSV(i, (int)(hsv[0] * 255), (int)(hsv[1] * 255),  (int) (100 * timer.get()));
+                leds.setHSV(i, (int)(hsv[0] * 180), (int)(hsv[1] * 255),  (int) (100 * timer.get()));
             }
         }
         else if (timer.get() < 5.1) {
             for (int i = 0; i < leds.getLength(); i++) {
                 float[] hsv = java.awt.Color.RGBtoHSB((int) color.red, (int) color.green, (int) color.blue, null);
-                leds.setHSV(i, (int)(hsv[0] * 255), (int)(hsv[1] * 255), 255 - (int) (100 * (timer.get()-2.55)));
+                leds.setHSV(i, (int)(hsv[0] * 180), (int)(hsv[1] * 255), 255 - (int) (100 * (timer.get()-2.55)));
             }
         }
         else if (timer.get() < 7) {
