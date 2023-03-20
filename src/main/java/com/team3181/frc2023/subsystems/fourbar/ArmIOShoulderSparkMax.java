@@ -39,7 +39,7 @@ public class ArmIOShoulderSparkMax implements ArmIO {
             counter++;
         }
 
-        inputs.armPositionRad = absoluteEncoder.getPosition() + FourBarConstants.SHOULDER_MATH_OFFSET.getRadians() + counter * (FourBarConstants.SHOULDER_FLIP_MIN.getRadians() * -1 + FourBarConstants.SHOULDER_FLIP_MAX.getRadians());
+        inputs.armOffsetPositionRad = absoluteEncoder.getPosition() + FourBarConstants.SHOULDER_MATH_OFFSET.getRadians() + counter * (FourBarConstants.SHOULDER_FLIP_MIN.getRadians() * -1 + FourBarConstants.SHOULDER_FLIP_MAX.getRadians());
         inputs.armVelocityRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(absoluteEncoder.getVelocity());
         lastPos = absoluteEncoder.getPosition() + FourBarConstants.SHOULDER_MATH_OFFSET.getRadians();
         inputs.armAppliedVolts = mainMotor.getAppliedOutput() * mainMotor.getBusVoltage();
@@ -61,5 +61,11 @@ public class ArmIOShoulderSparkMax implements ArmIO {
     @Override
     public void setBrakeMode(boolean enable) {
         mainMotor.setIdleMode(enable ? CANSparkMax.IdleMode.kBrake : CANSparkMax.IdleMode.kCoast);
+    }
+
+    @Override
+    public void zeroAbsoluteEncoder() {
+        absoluteEncoder.setZeroOffset(0);
+        absoluteEncoder.setZeroOffset(absoluteEncoder.getPosition());
     }
 }

@@ -14,8 +14,8 @@ public class SwerveModuleIOSim implements SwerveModuleIO {
     private final PIDController drivePID = new PIDController(10, 0, 0);
     private final PIDController steerPID = new PIDController(15, 0, 0);
 
-    private double steerAbsolutePositionRad = Math.random() * 2.0 * Math.PI;
-    private double steerRelativePositionRad = steerAbsolutePositionRad;
+    private double steerOffsetAbsolutePositionRad = Math.random() * 2.0 * Math.PI;
+    private double steerRelativePositionRad = steerOffsetAbsolutePositionRad;
     private double driveAppliedVolts = 0.0;
     private double steerAppliedVolts = 0.0;
 
@@ -29,12 +29,12 @@ public class SwerveModuleIOSim implements SwerveModuleIO {
 
         double angleDiffRad = steerSim.getAngularVelocityRadPerSec() * RobotConstants.LOOP_TIME_SECONDS;
         steerRelativePositionRad += angleDiffRad;
-        steerAbsolutePositionRad += angleDiffRad;
-        while (steerAbsolutePositionRad < 0) {
-            steerAbsolutePositionRad += 2.0 * Math.PI;
+        steerOffsetAbsolutePositionRad += angleDiffRad;
+        while (steerOffsetAbsolutePositionRad < 0) {
+            steerOffsetAbsolutePositionRad += 2.0 * Math.PI;
         }
-        while (steerAbsolutePositionRad > 2.0 * Math.PI) {
-            steerAbsolutePositionRad -= 2.0 * Math.PI;
+        while (steerOffsetAbsolutePositionRad > 2.0 * Math.PI) {
+            steerOffsetAbsolutePositionRad -= 2.0 * Math.PI;
         }
 
         inputs.driveVelocityMetersPerSec = driveSim.getAngularVelocityRadPerSec() * Math.PI * SwerveConstants.WHEEL_DIAMETER_METERS / SwerveConstants.DRIVE_GEAR_RATIO;
@@ -44,7 +44,8 @@ public class SwerveModuleIOSim implements SwerveModuleIO {
         inputs.driveCurrentAmps = Math.abs(driveSim.getCurrentDrawAmps());
         inputs.driveTempCelsius = 0;
 
-        inputs.steerAbsolutePositionRad = steerAbsolutePositionRad;
+        inputs.steerAbsolutePositionRad = steerOffsetAbsolutePositionRad;
+        inputs.steerOffsetAbsolutePositionRad = steerOffsetAbsolutePositionRad;
         inputs.steerAbsoluteVelocityRadPerSec = steerSim.getAngularVelocityRadPerSec();
         inputs.steerAppliedVolts = steerAppliedVolts;
         inputs.steerCurrentAmps = Math.abs(steerSim.getCurrentDrawAmps());
@@ -74,7 +75,7 @@ public class SwerveModuleIOSim implements SwerveModuleIO {
             driveSim.setInputVoltage(drivePID.calculate(driveSim.getAngularVelocityRadPerSec() * Math.PI * SwerveConstants.WHEEL_DIAMETER_METERS / SwerveConstants.DRIVE_GEAR_RATIO));
         }
         steerPID.setSetpoint(state.angle.getRadians());
-        steerSim.setInputVoltage(steerPID.calculate(steerAbsolutePositionRad) + (isOpenLoop ? SwerveConstants.MODULE_STEER_FF_OL : SwerveConstants.MODULE_STEER_FF_CL) * state.omegaRadPerSecond);
+        steerSim.setInputVoltage(steerPID.calculate(steerOffsetAbsolutePositionRad) + (isOpenLoop ? SwerveConstants.MODULE_STEER_FF_OL : SwerveConstants.MODULE_STEER_FF_CL) * state.omegaRadPerSecond);
     }
 
     @Override

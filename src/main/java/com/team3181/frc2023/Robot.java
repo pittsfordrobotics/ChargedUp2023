@@ -79,6 +79,7 @@ public class Robot extends LoggedRobot {
 
     DriverStation.silenceJoystickConnectionWarning(true);
     LiveWindow.disableAllTelemetry();
+    LiveWindow.setEnabled(false);
     robotContainer = new RobotContainer();
     Swerve.getInstance().setCoastMode();
     garbageCollector.start();

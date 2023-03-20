@@ -28,7 +28,7 @@ public class ArmIOElbowSparkMax implements ArmIO {
 
     @Override
     public void updateInputs(ArmIOInputs inputs) {
-        inputs.armPositionRad = absoluteEncoder.getPosition() + FourBarConstants.ELBOW_MATH_OFFSET.getRadians();
+        inputs.armOffsetPositionRad = absoluteEncoder.getPosition() + FourBarConstants.ELBOW_MATH_OFFSET.getRadians();
         inputs.armVelocityRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(absoluteEncoder.getVelocity());
         inputs.armAppliedVolts = motor.getAppliedOutput() * motor.getBusVoltage();
         inputs.armCurrentAmps = motor.getOutputCurrent();
@@ -43,5 +43,11 @@ public class ArmIOElbowSparkMax implements ArmIO {
     @Override
     public void setBrakeMode(boolean enable) {
         motor.setIdleMode(enable ? CANSparkMax.IdleMode.kBrake : CANSparkMax.IdleMode.kCoast);
+    }
+
+    @Override
+    public void zeroAbsoluteEncoder() {
+        absoluteEncoder.setZeroOffset(0);
+        absoluteEncoder.setZeroOffset(absoluteEncoder.getPosition());
     }
 }

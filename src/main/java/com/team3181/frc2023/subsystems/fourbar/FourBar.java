@@ -54,7 +54,7 @@ public class FourBar extends SubsystemBase {
         Logger.getInstance().processInputs("Shoulder", inputs[0]);
         Logger.getInstance().processInputs("Elbow", inputs[1]);
 
-        shoulderTooLow.set(DriverStation.isDisabled() && inputs[0].armPositionRad > 0);
+        shoulderTooLow.set(DriverStation.isDisabled() && inputs[0].armOffsetPositionRad > 0);
 
 //        System.out.println(Arrays.toString(
 //                solve(
@@ -62,7 +62,7 @@ public class FourBar extends SubsystemBase {
 //                                SmartDashboard.getNumber("shoulder", 0),
 //                                SmartDashboard.getNumber("elbow", 0)), false, true)));
 
-        Logger.getInstance().recordOutput("Arm/Math Elbow", inputs[1].armPositionRad - inputs[0].armPositionRad);
+        Logger.getInstance().recordOutput("Arm/Math Elbow", inputs[1].armOffsetPositionRad - inputs[0].armOffsetPositionRad);
 //        setRotations(new Rotation2d[] {
 //                Rotation2d.fromRadians(SmartDashboard.getNumber("shoulder", 0)),
 //                Rotation2d.fromRadians(SmartDashboard.getNumber("elbow", 0))
@@ -71,7 +71,7 @@ public class FourBar extends SubsystemBase {
     }
 
     public void hold() {
-        Vector<N2> pos = new Vector<N2>(VecBuilder.fill(inputs[0].armPositionRad, inputs[1].armPositionRad));
+        Vector<N2> pos = new Vector<N2>(VecBuilder.fill(inputs[0].armOffsetPositionRad, inputs[1].armOffsetPositionRad));
         Vector<N2> ff = ArmDynamics. getInstance().feedforward(pos);
         setArmVoltage(0, ff.get(0, 0));
         setArmVoltage(1, ff.get(1, 0));
@@ -82,21 +82,21 @@ public class FourBar extends SubsystemBase {
     }
 
     public void setArmVoltageWithFF(int index, double voltage) {
-        Vector<N2> pos = new Vector<>(VecBuilder.fill(inputs[0].armPositionRad, inputs[1].armPositionRad));
+        Vector<N2> pos = new Vector<>(VecBuilder.fill(inputs[0].armOffsetPositionRad, inputs[1].armOffsetPositionRad));
         Vector<N2> ff = ArmDynamics.getInstance().feedforward(pos);
         setArmVoltage(index, voltage + ff.get(index, 0));
     }
 
     public void setRotations(Rotation2d[] rotations, boolean mathElbow) {
         Boolean[] illegal = checkIllegal(rotations);
-        Vector<N2> pos = new Vector<>(VecBuilder.fill(inputs[0].armPositionRad, inputs[1].armPositionRad));
+        Vector<N2> pos = new Vector<>(VecBuilder.fill(inputs[0].armOffsetPositionRad, inputs[1].armOffsetPositionRad));
         Vector<N2> ff = ArmDynamics.getInstance().feedforward(pos);
 //        if (!illegal[0]) {
             shoulderPID.setSetpoint(rotations[0].getRadians());
-            armIO[0].setVoltage(MathUtil.clamp(shoulderPID.calculate(inputs[0].armPositionRad), -FourBarConstants.PID_CLAMP_VOLTAGE, FourBarConstants.PID_CLAMP_VOLTAGE) + ff.get(0, 0));
+            armIO[0].setVoltage(MathUtil.clamp(shoulderPID.calculate(inputs[0].armOffsetPositionRad), -FourBarConstants.PID_CLAMP_VOLTAGE, FourBarConstants.PID_CLAMP_VOLTAGE) + ff.get(0, 0));
 //        if (!illegal[1]) {
             elbowPID.setSetpoint(rotations[1].getRadians());
-            armIO[1].setVoltage(MathUtil.clamp(elbowPID.calculate(mathElbow ? inputs[1].armPositionRad - inputs[0].armPositionRad : inputs[1].armPositionRad), -FourBarConstants.PID_CLAMP_VOLTAGE, FourBarConstants.PID_CLAMP_VOLTAGE) + ff.get(1, 0));
+            armIO[1].setVoltage(MathUtil.clamp(elbowPID.calculate(mathElbow ? inputs[1].armOffsetPositionRad - inputs[0].armOffsetPositionRad : inputs[1].armOffsetPositionRad), -FourBarConstants.PID_CLAMP_VOLTAGE, FourBarConstants.PID_CLAMP_VOLTAGE) + ff.get(1, 0));
 //        }
     }
 
@@ -105,7 +105,7 @@ public class FourBar extends SubsystemBase {
     }
 
     public void recordDrop() {
-        dropStuff = new Rotation2d[]{Rotation2d.fromRadians(inputs[0].armPositionRad), Rotation2d.fromRadians(inputs[1].armPositionRad - 0.2)};
+        dropStuff = new Rotation2d[]{Rotation2d.fromRadians(inputs[0].armOffsetPositionRad), Rotation2d.fromRadians(inputs[1].armOffsetPositionRad - 0.2)};
     }
 
     public boolean atSetpoint() {
@@ -113,12 +113,12 @@ public class FourBar extends SubsystemBase {
     }
 
     public void recordHigh(Rotation2d[] rotation2ds) {
-        waitPos = Rotation2d.fromRadians((rotation2ds[0].getRadians() - inputs[0].armPositionRad) / 3 + inputs[0].armPositionRad);
+        waitPos = Rotation2d.fromRadians((rotation2ds[0].getRadians() - inputs[0].armOffsetPositionRad) / 3 + inputs[0].armOffsetPositionRad);
     }
 
     public void runHigh(Rotation2d[] rotation2ds) {
-        if (inputs[0].armPositionRad < waitPos.getRadians()) {
-            setRotations(new Rotation2d[]{rotation2ds[0], Rotation2d.fromRadians(inputs[1].armPositionRad)}, false);
+        if (inputs[0].armOffsetPositionRad < waitPos.getRadians()) {
+            setRotations(new Rotation2d[]{rotation2ds[0], Rotation2d.fromRadians(inputs[1].armOffsetPositionRad)}, false);
         } else {
             setRotations(rotation2ds, false);
         }
@@ -128,11 +128,11 @@ public class FourBar extends SubsystemBase {
     public Translation2d forward() {
         return new Translation2d(
                 FourBarConstants.SHOULDER_JOINT_POSITION_X
-                        + FourBarConstants.SHOULDER_LENGTH * Math.cos(inputs[0].armPositionRad)
-                        + FourBarConstants.ELBOW_LENGTH * Math.cos(inputs[0].armPositionRad + inputs[1].armPositionRad),
+                        + FourBarConstants.SHOULDER_LENGTH * Math.cos(inputs[0].armOffsetPositionRad)
+                        + FourBarConstants.ELBOW_LENGTH * Math.cos(inputs[0].armOffsetPositionRad + inputs[1].armOffsetPositionRad),
                 FourBarConstants.SHOULDER_JOINT_POSITION_Y
-                        + FourBarConstants.SHOULDER_LENGTH * Math.sin(inputs[0].armPositionRad)
-                        + FourBarConstants.ELBOW_LENGTH * Math.sin(inputs[0].armPositionRad + inputs[1].armPositionRad)
+                        + FourBarConstants.SHOULDER_LENGTH * Math.sin(inputs[0].armOffsetPositionRad)
+                        + FourBarConstants.ELBOW_LENGTH * Math.sin(inputs[0].armOffsetPositionRad + inputs[1].armOffsetPositionRad)
         );
     }
 
@@ -192,8 +192,8 @@ public class FourBar extends SubsystemBase {
      * @return whether it is illegal to move for {shoulder, elbow}
      */
     private Boolean[] checkIllegal(Rotation2d[] rotations) {
-        Rotation2d[] shoulderConstant = new Rotation2d[] {Rotation2d.fromRadians(inputs[0].armPositionRad), rotations[1]};
-        Rotation2d[] elbowConstant = new Rotation2d[] {rotations[0], Rotation2d.fromRadians(inputs[1].armPositionRad)};
+        Rotation2d[] shoulderConstant = new Rotation2d[] {Rotation2d.fromRadians(inputs[0].armOffsetPositionRad), rotations[1]};
+        Rotation2d[] elbowConstant = new Rotation2d[] {rotations[0], Rotation2d.fromRadians(inputs[1].armOffsetPositionRad)};
 
         Translation2d endPositionShoulder = forwardWithEndEffector(elbowConstant);
         Translation2d endPositionElbow = forwardWithEndEffector(shoulderConstant);
