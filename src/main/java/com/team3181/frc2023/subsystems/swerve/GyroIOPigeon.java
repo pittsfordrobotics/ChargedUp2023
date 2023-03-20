@@ -10,6 +10,7 @@ public class GyroIOPigeon implements GyroIO {
     private final double[] ypr = new double[3];
 
     public GyroIOPigeon() {
+        pigeon.configFactoryDefault();
         pigeon.configAllSettings(SwerveConstants.PIGEON_CONFIG);
         pigeon.zeroGyroBiasNow();
         pigeon.setYaw(0);

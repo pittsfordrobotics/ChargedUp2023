@@ -62,7 +62,9 @@ public class FourBar extends SubsystemBase {
 //                                SmartDashboard.getNumber("shoulder", 0),
 //                                SmartDashboard.getNumber("elbow", 0)), false, true)));
 
-        Logger.getInstance().recordOutput("Arm/Math Elbow", inputs[1].armOffsetPositionRad - inputs[0].armOffsetPositionRad);
+        Logger.getInstance().recordOutput("FourBar/Math Elbow", inputs[1].armOffsetPositionRad - inputs[0].armOffsetPositionRad);
+        Logger.getInstance().recordOutput("FourBar/At Setpoint", atSetpoint());
+
 //        setRotations(new Rotation2d[] {
 //                Rotation2d.fromRadians(SmartDashboard.getNumber("shoulder", 0)),
 //                Rotation2d.fromRadians(SmartDashboard.getNumber("elbow", 0))

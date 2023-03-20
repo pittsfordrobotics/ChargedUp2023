@@ -56,7 +56,7 @@ public class Swerve extends SubsystemBase {
             lastModuleStates[i] = new BetterSwerveModuleState(0, Rotation2d.fromRadians(moduleInputs[i].steerOffsetAbsolutePositionRad), 0);
         }
 
-        poseEstimator = new SwerveDrivePoseEstimator(SwerveConstants.DRIVE_KINEMATICS, new Rotation2d(), modulePositions, new Pose2d());
+        poseEstimator = new SwerveDrivePoseEstimator(SwerveConstants.DRIVE_KINEMATICS, getRobotRelativeAngle(), modulePositions, new Pose2d());
     }
 
     @Override

@@ -114,9 +114,9 @@ public class Vision extends SubsystemBase {
     }
 
     public Pose2d getPose() {
-        if (inputs.botXYZ.length != 0 && inputs.botYPR.length != 0) {
-//            return new Pose2d(new Translation2d(inputs.botXYZ[0], inputs.botXYZ[1]), new Rotation2d(inputs.botYPR[2]));
-            return new Pose2d(new Translation2d(inputs.botXYZ[0], inputs.botXYZ[1]), new Rotation2d());
+        if (inputs.botXYZ.length != 0 && inputs.botRPY.length != 0) {
+            return new Pose2d(new Translation2d(inputs.botXYZ[0], inputs.botXYZ[1]), new Rotation2d(inputs.botRPY[2]));
+//            return new Pose2d(new Translation2d(inputs.botXYZ[0], inputs.botXYZ[1]), new Rotation2d());
         }
         return null;
     }
