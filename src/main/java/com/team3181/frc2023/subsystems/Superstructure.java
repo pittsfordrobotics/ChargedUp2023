@@ -47,6 +47,8 @@ public class Superstructure extends SubsystemBase {
     private double sweepGlobal = 0;
     private Objective objectiveGlobal;
     private boolean alternateLaw = false;
+    private boolean autoNode = false;
+    private boolean autoSubstation = false;
     private boolean demandLEDs = false;
 
     private final static Superstructure INSTANCE = new Superstructure();
@@ -63,8 +65,7 @@ public class Superstructure extends SubsystemBase {
         Objective objectiveLocal = ObjectiveTracker.getInstance().getObjective();
         FourBar fourBar = FourBar.getInstance();
         EndEffector endEffector = EndEffector.getInstance();
-        StructureState state = StructureState.IDLE;
-        double sweepLocal = sweepGlobal;
+        StructureState state;
 
         switch (wantedState) {
             case OBJECTIVE:
@@ -111,7 +112,8 @@ public class Superstructure extends SubsystemBase {
                 else {
                     leds.setLEDMode(LEDModes.IDLE);
                 }
-            } else if (DriverStation.isAutonomous()) {
+            }
+            else if (DriverStation.isAutonomous()) {
                 leds.setLEDMode(LEDModes.RAINBOW);
             }
             else if (objectiveLocal.nodeRow == 1 || objectiveLocal.nodeRow == 4 || objectiveLocal.nodeRow == 7 || objectiveLocal.nodeLevel == NodeLevel.HYBRID) {
@@ -122,7 +124,8 @@ public class Superstructure extends SubsystemBase {
                 else {
                     leds.setLEDMode(LEDModes.CUBE);
                 }
-            } else if (objectiveLocal.nodeRow == 0 || objectiveLocal.nodeRow == 2 || objectiveLocal.nodeRow == 3 || objectiveLocal.nodeRow == 5 || objectiveLocal.nodeRow == 6 || objectiveLocal.nodeRow == 8) {
+            }
+            else if (objectiveLocal.nodeRow == 0 || objectiveLocal.nodeRow == 2 || objectiveLocal.nodeRow == 3 || objectiveLocal.nodeRow == 5 || objectiveLocal.nodeRow == 6 || objectiveLocal.nodeRow == 8) {
                 if (endEffector.hasPiece()) {
                     leds.setLEDMode(LEDModes.FLASH_CONE);
                 }
@@ -130,7 +133,8 @@ public class Superstructure extends SubsystemBase {
                 else {
                     leds.setLEDMode(LEDModes.CONE);
                 }
-            } else {
+            }
+            else {
                 leds.setLEDMode(LEDModes.ERROR);
             }
         }
@@ -255,6 +259,18 @@ public class Superstructure extends SubsystemBase {
 
         Logger.getInstance().recordOutput("Superstructure/Wanted State", wantedState.toString());
         Logger.getInstance().recordOutput("Superstructure/System State", systemState.toString());
+    }
+
+    public void setAlternateLaw(boolean alternateLaw) {
+        this.alternateLaw = alternateLaw;
+    }
+
+    public void setAutoPlace(boolean autoPlacing) {
+        this.autoNode = autoPlacing;
+    }
+
+    public void setAutoSubstation(boolean autoSubstation) {
+        this.autoSubstation = autoSubstation;
     }
 
     public void idle() {

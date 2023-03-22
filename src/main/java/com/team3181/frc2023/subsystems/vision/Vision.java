@@ -3,7 +3,6 @@ package com.team3181.frc2023.subsystems.vision;
 import com.team3181.frc2023.Constants.RobotConstants;
 import com.team3181.frc2023.subsystems.swerve.Swerve;
 import com.team3181.frc2023.subsystems.vision.VisionIO.CameraMode;
-import com.team3181.frc2023.subsystems.vision.VisionIO.LED;
 import com.team3181.frc2023.subsystems.vision.VisionIO.Pipelines;
 import com.team3181.lib.math.GeomUtil;
 import com.team3181.lib.util.Alert;
@@ -151,9 +150,9 @@ public class Vision extends SubsystemBase {
         this.pipeline = pipeline;
     }
 
-    public void setLED(LED led) {
-        this.led = led;
-    }
+//    public void setLED(LED led) {
+//        this.led = led;
+//    }
 
     public void setCamMode(CameraMode camera) {
         this.camera = camera;
