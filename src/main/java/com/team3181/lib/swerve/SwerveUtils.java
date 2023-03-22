@@ -62,7 +62,7 @@ public class SwerveUtils {
      */
     public static double AngleDifference(double _angleA, double _angleB) {
         double difference = Math.abs(_angleA - _angleB);
-        return difference > Math.PI ? (2 * Math.PI) - difference : difference;
+        return difference > Math.PI? (2 * Math.PI) - difference : difference;
     }
 
     /**

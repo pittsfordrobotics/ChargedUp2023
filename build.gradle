@@ -1,6 +1,6 @@
 plugins {
     id "java"
-    id "edu.wpi.first.GradleRIO" version "2023.4.2"
+    id "edu.wpi.first.GradleRIO" version "2023.3.2"
     id "com.peterabeles.gversion" version "1.10"
 }
 
@@ -61,8 +61,6 @@ dependencies {
     implementation wpi.java.deps.wpilib()
     implementation wpi.java.vendor.java()
     implementation 'org.jetbrains:annotations:20.1.0'
-    implementation "io.javalin:javalin:5.3.2"
-    implementation("org.slf4j:slf4j-simple:2.0.3")
 
     roborioDebug wpi.java.deps.wpilibJniDebug(wpi.platforms.roborio)
     roborioDebug wpi.java.vendor.jniDebug(wpi.platforms.roborio)

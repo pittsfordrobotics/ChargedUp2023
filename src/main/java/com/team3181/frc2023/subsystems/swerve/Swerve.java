@@ -2,6 +2,7 @@ package com.team3181.frc2023.subsystems.swerve;
 
 import com.team3181.frc2023.Constants.RobotConstants;
 import com.team3181.frc2023.Constants.SwerveConstants;
+import com.team3181.frc2023.subsystems.vision.Vision;
 import com.team3181.lib.math.BetterMath;
 import com.team3181.lib.math.GeomUtil;
 import com.team3181.lib.swerve.BetterSwerveKinematics;
@@ -59,6 +60,10 @@ public class Swerve extends SubsystemBase {
         }
 
         poseEstimator = new SwerveDrivePoseEstimator(SwerveConstants.DRIVE_KINEMATICS, new Rotation2d(), modulePositions, new Pose2d());
+
+        if (!RobotConstants.IS_TANK) {
+            ShuffleboardTab driveTab = Shuffleboard.getTab("Swerve");
+        }
     }
 
     @Override
@@ -171,10 +176,6 @@ public class Swerve extends SubsystemBase {
         return poseEstimator.getEstimatedPosition();
     }
 
-    public ChassisSpeeds getChassisSpeeds() {
-        return actualRobotRelativeChassisSpeeds;
-    }
-
     public boolean isStopped() {
         boolean module0 = BetterMath.epsilonEquals(moduleInputs[0].driveVelocityMetersPerSec, 0);
         boolean module1 = BetterMath.epsilonEquals(moduleInputs[1].driveVelocityMetersPerSec, 0);
@@ -194,9 +195,5 @@ public class Swerve extends SubsystemBase {
         else {
             return Rotation2d.fromRadians(actualRobotRelativeChassisSpeeds.omegaRadiansPerSecond * RobotConstants.LOOP_TIME_SECONDS + lastRotation.getRadians());
         }
-    }
-
-    public Rotation2d getPitch() {
-        return Rotation2d.fromRadians(gyroInputs.pitchPositionRad);
     }
 }

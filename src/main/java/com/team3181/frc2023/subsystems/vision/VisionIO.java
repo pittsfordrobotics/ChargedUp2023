@@ -6,8 +6,6 @@ import org.littletonrobotics.junction.AutoLog;
 public interface VisionIO {
     @AutoLog
     class VisionIOInputs {
-        public double pipelineLatency = 0.0;
-        public double captureLatency = 0.0;
         public double captureTimestamp = 0.0;
         public boolean hasTarget = false;
         public boolean connected = false;
@@ -24,7 +22,7 @@ public interface VisionIO {
      * RETRO: uses the green lights
      */
     enum Pipelines {
-        FAR_RANGE(0), MID_RANGE(1), CLOSE_RANGE(2), RETRO(3), CONE(4), CUBE(5);
+        FAR_RANGE(0), MID_RANGE(1), CLOSE_RANGE(2), RETRO(3);
 
         private final int num;
         Pipelines(int num) {

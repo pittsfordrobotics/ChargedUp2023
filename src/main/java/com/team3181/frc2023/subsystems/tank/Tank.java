@@ -43,6 +43,12 @@ public class Tank extends SubsystemBase {
         this.io = io;
 
         setThrottle(0.7);
+
+        if (RobotConstants.IS_TANK) {
+            ShuffleboardTab driveTab = Shuffleboard.getTab("Tank");
+            driveTab.addNumber("Pigeon", this::getAngle);
+            driveTab.addNumber("Throttle", this::getThrottle);
+        }
     }
 
     @Override
@@ -180,6 +186,7 @@ public class Tank extends SubsystemBase {
 
     public Pose2d getPose() {
         return pose;
+//        TODO: use this sucks (don't fix this) (its magic from other teams)
 //        return RobotState.getInstance().getLatestPose()
     }
 

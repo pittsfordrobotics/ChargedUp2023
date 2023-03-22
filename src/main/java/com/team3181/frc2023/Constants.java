@@ -6,15 +6,6 @@ package com.team3181.frc2023;
 
 import com.ctre.phoenix.sensors.Pigeon2Configuration;
 import com.pathplanner.lib.PathConstraints;
-import com.team3181.frc2023.subsystems.endeffector.EndEffectorIO;
-import com.team3181.frc2023.subsystems.endeffector.EndEffectorIOSparkMax;
-import com.team3181.frc2023.subsystems.fourbar.ArmIO;
-import com.team3181.frc2023.subsystems.fourbar.ArmIOElbowSparkMax;
-import com.team3181.frc2023.subsystems.fourbar.ArmIOShoulderSparkMax;
-import com.team3181.frc2023.subsystems.leds.LEDStripIO;
-import com.team3181.frc2023.subsystems.leds.LEDStripIORio;
-import com.team3181.frc2023.subsystems.objectivetracker.NodeSelectorIO;
-import com.team3181.frc2023.subsystems.objectivetracker.NodeSelectorIOServer;
 import com.team3181.frc2023.subsystems.swerve.*;
 import com.team3181.frc2023.subsystems.tank.TankIO;
 import com.team3181.frc2023.subsystems.tank.TankIOSim;
@@ -33,7 +24,6 @@ import java.util.HashMap;
 
 public final class Constants {
     public static final class RobotConstants {
-        public final static EndEffectorIO END_EFFECTOR;
         public final static SwerveModuleIO FL_MODULE;
         public final static SwerveModuleIO FR_MODULE;
         public final static SwerveModuleIO BL_MODULE;
@@ -41,14 +31,9 @@ public final class Constants {
         public final static GyroIO GYRO;
         public final static TankIO TANK;
         public final static VisionIO VISION;
-        public final static LEDStripIO LEDS;
-        public final static ArmIO SHOULDER;
-        public final static ArmIO ELBOW;
-        public final static NodeSelectorIO NODE_SELECTOR;
 
         public final static boolean IS_TANK = false;
         public static final boolean LOGGING_ENABLED = true;
-        public static final boolean REPLAY_ENABLED = false;
         public static final String LOGGING_PATH = "/media/sda2/";
         public static final boolean PID_TUNER_ENABLED = false;
         public static final double LOOP_TIME_SECONDS = 0.02;
@@ -63,28 +48,17 @@ public final class Constants {
             SPARKMAX_HASHMAP.put(SwerveConstants.CAN_BL_STEER, "Back Left Steer");
             SPARKMAX_HASHMAP.put(SwerveConstants.CAN_BR_DRIVE, "Back Right Drive");
             SPARKMAX_HASHMAP.put(SwerveConstants.CAN_BR_STEER, "Back Right Steer");
-            SPARKMAX_HASHMAP.put(EndEffectorConstants.CAN_LEFT, "Intake Left");
-            SPARKMAX_HASHMAP.put(FourBarConstants.CAN_SHOULDER_MASTER, "Shoulder Master");
-            SPARKMAX_HASHMAP.put(FourBarConstants.CAN_SHOULDER_FOLLOWER, "Shoulder Follower");
-            SPARKMAX_HASHMAP.put(FourBarConstants.CAN_ELBOW, "Elbow");
-            SPARKMAX_HASHMAP.put(EndEffectorConstants.CAN_RIGHT, "Intake Right");
 
             if (RobotBase.isReal()) {
-                SHOULDER = new ArmIOShoulderSparkMax();
-                ELBOW = new ArmIOElbowSparkMax();
                 TANK = RobotConstants.IS_TANK ? new TankIOSparkMax() : new TankIO(){};
                 FL_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSparkMax(SwerveConstants.CAN_FL_DRIVE, SwerveConstants.CAN_FL_STEER, SwerveConstants.FL_OFFSET);
                 FR_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSparkMax(SwerveConstants.CAN_FR_DRIVE, SwerveConstants.CAN_FR_STEER, SwerveConstants.FR_OFFSET);
                 BL_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSparkMax(SwerveConstants.CAN_BL_DRIVE, SwerveConstants.CAN_BL_STEER, SwerveConstants.BL_OFFSET);
                 BR_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSparkMax(SwerveConstants.CAN_BR_DRIVE, SwerveConstants.CAN_BR_STEER, SwerveConstants.BR_OFFSET);
                 GYRO = RobotConstants.IS_TANK ? new GyroIO(){} : new GyroIOPigeon();
-                VISION = RobotConstants.IS_TANK ? new VisionIO() {} : new VisionIOLimelight();
-                LEDS = RobotConstants.IS_TANK ? new LEDStripIO(){} : new LEDStripIORio(LEDConstants.PWM_PORT, LEDConstants.NUMBER);
-                END_EFFECTOR = new EndEffectorIOSparkMax();
+                VISION = new VisionIOLimelight();
             }
             else {
-                SHOULDER = new ArmIO(){};
-                ELBOW = new ArmIO(){};
                 TANK = RobotConstants.IS_TANK ? new TankIOSim() : new TankIO(){};
                 FL_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSim();
                 FR_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSim();
@@ -92,10 +66,7 @@ public final class Constants {
                 BR_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSim();
                 GYRO = RobotConstants.IS_TANK ? new GyroIO(){} : new GyroIOSim();
                 VISION = new VisionIOSim();
-                LEDS = new LEDStripIO() {};
-                END_EFFECTOR = new EndEffectorIO() {};
             }
-            NODE_SELECTOR = new NodeSelectorIOServer();
         }
     }
 
@@ -140,13 +111,12 @@ public final class Constants {
 
         public static final MAX_SWERVE_GEARS GEAR_CONSTANTS = MAX_SWERVE_GEARS.FAST;
         public static final double MAX_LINEAR_VELOCITY_METERS_PER_SECOND = GEAR_CONSTANTS.maxSpeed; // 1678 ran 4.5 m/s in 2022
-        public static final double MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND = 5.0; // from 1678
+        public static final double MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND = 10.0; // from 1678
 
         public static final double DRIVE_GEAR_RATIO = GEAR_CONSTANTS.gearRatio;
         public static final double STEER_GEAR_RATIO = 46.2962962963;
         public static final double X_LENGTH_METERS = Units.inchesToMeters(28);
         public static final double Y_LENGTH_METERS = Units.inchesToMeters(28);
-        public static final double BUMPER_WIDTH = Units.inchesToMeters(3.5);
         public static final double WHEEL_DIAMETER_METERS = Units.inchesToMeters(3);
 
         public static final Translation2d[] MODULE_OFFSETS = {
@@ -157,10 +127,10 @@ public final class Constants {
         };
         public static final BetterSwerveKinematics DRIVE_KINEMATICS = new BetterSwerveKinematics(MODULE_OFFSETS);
 
-        public static final Rotation2d FL_OFFSET = Rotation2d.fromRadians(0.14085696637630463);
-        public static final Rotation2d FR_OFFSET = Rotation2d.fromRadians(2.041490316390991);
-        public static final Rotation2d BL_OFFSET = Rotation2d.fromRadians(3.114173173904419);
-        public static final Rotation2d BR_OFFSET = Rotation2d.fromRadians(6.234853267669678);
+        public static final Rotation2d FL_OFFSET = Rotation2d.fromRadians(0.1715);
+        public static final Rotation2d FR_OFFSET = Rotation2d.fromRadians(5.167658);
+        public static final Rotation2d BL_OFFSET = Rotation2d.fromRadians(3.11452428);
+        public static final Rotation2d BR_OFFSET = Rotation2d.fromRadians(4.138);
 
         // controlling module wheel speed
         // read this later: https://github.com/Team364/BaseFalconSwerve
@@ -229,20 +199,16 @@ public final class Constants {
     }
 
     public static final class AutoConstants {
-        public enum AutoDrivePosition {
-            NODE, SINGLE_SUBSTATION, DOUBLE_SUBSTATION_HIGH, DOUBLE_SUBSTATION_LOW
-        }
-
         // PID values for trajectory follower
-        public static final double LINEAR_P = 1.5;
+        public static final double LINEAR_P = 8;
         public static final double ROT_P = 5;
 
-        //        numbers from 1678
+//        numbers from 1678
         public static final double SLOW_LINEAR_VELOCITY_METERS_PER_SECOND = 2.0;
         public static final double SLOW_LINEAR_ACCELERATION_METERS_PER_SECOND_SQUARED = 2.0;
 
-        public static final double MAX_LINEAR_VELOCITY_METERS_PER_SECOND = 4.8;
-        public static final double MAX_LINEAR_ACCELERATION_METERS_PER_SECOND_SQUARED = 6.0;
+        public static final double MAX_LINEAR_VELOCITY_METERS_PER_SECOND = 4.0;
+        public static final double MAX_LINEAR_ACCELERATION_METERS_PER_SECOND_SQUARED = 4.0;
 
         public static final double SLOW_ANGULAR_VELOCITY_METERS_PER_SECOND = 0.8 * Math.PI;
         public static final double SLOW_ANGULAR_ACCELERATION_METERS_PER_SECOND_SQUARED = Math.pow(SLOW_ANGULAR_VELOCITY_METERS_PER_SECOND, 2);
@@ -256,118 +222,14 @@ public final class Constants {
         public static final TrapezoidProfile.Constraints MAX_ROT_CONSTRAINTS = new TrapezoidProfile.Constraints(MAX_ANGULAR_VELOCITY_METERS_PER_SECOND, MAX_ANGULAR_ACCELERATION_METERS_PER_SECOND_SQUARED);
     }
 
-    public static final class FourBarConstants {
-        public static final int CAN_SHOULDER_MASTER = 10;
-        public static final int CAN_SHOULDER_FOLLOWER = 11;
-        public static final int CAN_ELBOW = 12;
+    public static final class Dimensions {
+        public static double wheelToChassis = Units.inchesToMeters(4.75);
+        public static double chassisToArm = Units.inchesToMeters(28.9);
+        public static double arm1 = Units.inchesToMeters(29);
+        public static double arm2 = Units.inchesToMeters(26.875);
+        public static double endEffector = Units.inchesToMeters(7.15);
+        public static double endEffectorCube = Units.inchesToMeters(6.275);
+        public static double endEffectorCone = Units.inchesToMeters(3.6);
 
-        public static final double SHOULDER_GEAR_RATIO = 5 * 4 * 4;
-        public static final double ELBOW_GEAR_RATIO = 5 * 5 * 3;
-        public static final double CHAIN_RATIO = 1.0 / 3.0;
-
-        public static final double PID_CLAMP_VOLTAGE = 5;
-
-        public static final double ELBOW_P = -10.0;
-        public static final double ELBOW_I = 0.0;
-        public static final double ELBOW_D = 0.0;
-
-        public static final double SHOULDER_P = 10.0;
-        public static final double SHOULDER_I = 0.0;
-        public static final double SHOULDER_D = 0.0;
-
-        public static final double PID_TOLERANCE = 0.05;
-
-        // Set zero points to be the initial "stowed" position?
-        // The Absolute offsets appear to be arbitrary?
-        public static final Rotation2d SHOULDER_ABSOLUTE_OFFSET = Rotation2d.fromRadians(1.702175259590149);
-        public static final Rotation2d ELBOW_ABSOLUTE_OFFSET = Rotation2d.fromRadians(3.2243828773498535);
-        public static final Rotation2d SHOULDER_MATH_OFFSET = Rotation2d.fromRadians(-1.569104790687561); // zero needs to be at shoulder parallel to ground
-        public static final Rotation2d ELBOW_MATH_OFFSET = Rotation2d.fromRadians(-4.720415115356445); // zero is in line with shoulder
-
-        public static final Rotation2d ELBOW_MIN = Rotation2d.fromDegrees(-140);
-        public static final Rotation2d ELBOW_MAX = Rotation2d.fromDegrees(140);
-
-        public static final Rotation2d SHOULDER_MIN = Rotation2d.fromRadians(-1.3); // est -1.22 rad
-        public static final Rotation2d SHOULDER_MAX = Rotation2d.fromDegrees(70); // est 170 deg
-
-        public static final Rotation2d SHOULDER_FLIP_MIN = Rotation2d.fromRadians(-1.5628726813010871);
-        public static final Rotation2d SHOULDER_FLIP_MAX = Rotation2d.fromRadians(0.5233587026596069);
-
-        public static double WHEEL_TO_CHASSIS = Units.inchesToMeters(4.75);
-        public static double CHASSIS_TO_ARM = Units.inchesToMeters(28.9);
-
-        public static double SHOULDER_FULL_LENGTH = Units.inchesToMeters(41.5);
-        public static double SHOULDER_PIVOT_LENGTH = Units.inchesToMeters(13);
-        public static double SHOULDER_LENGTH = SHOULDER_FULL_LENGTH - SHOULDER_PIVOT_LENGTH;
-
-        public static double ELBOW_FULL_LENGTH = Units.inchesToMeters(28);
-        public static double ELBOW_PIVOT_LENGTH = Units.inchesToMeters(1.5 + (1.0/16.0));
-        public static double ELBOW_LENGTH = ELBOW_FULL_LENGTH - ELBOW_PIVOT_LENGTH;
-
-        public static double SHOULDER_MOI = 0.22952; // kg m^2
-        public static double ELBOW_MOI = 1.417864996; // kg m^2
-
-        public static double SHOULDER_CG = Units.inchesToMeters(20.74886);
-        public static double ELBOW_CG = Units.inchesToMeters(13.998858);
-
-        public static double SHOULDER_CG_RADIUS = SHOULDER_CG - SHOULDER_PIVOT_LENGTH;
-        public static double ELBOW_CG_RADIUS = ELBOW_CG - ELBOW_PIVOT_LENGTH;
-
-        public static double SHOULDER_MASS = Units.lbsToKilograms(5.45192);
-        public static double ELBOW_MASS = Units.lbsToKilograms(8.745 - 6); // elbow + end effector
-
-        public static double SHOULDER_JOINT_POSITION_X = Units.inchesToMeters(-14); // zero is front of chassis at ground level
-        public static double SHOULDER_JOINT_POSITION_Y = WHEEL_TO_CHASSIS + CHASSIS_TO_ARM;
-
-        public static double BUMPER_THICKNESS = Units.inchesToMeters(4);
-
-    }
-
-    public static final class SuperstructureConstants {
-        public static final double AUTO_SCORE_POSITION_TOLERANCE = 0.1;
-        public static final double AUTO_SCORE_ROTATION_TOLERANCE = 1;
-
-        public static final double EXHAUST_TIME = 0.5;
-
-        public static final class ArmPositions {
-            public static Rotation2d STORAGE_SHOULDER = Rotation2d.fromRadians(-1.22);
-            public static Rotation2d STORAGE_ELBOW = Rotation2d.fromRadians(1.58);
-
-            public static Rotation2d GROUND_PICKUP_SHOULDER = Rotation2d.fromRadians(-1.15);
-            public static Rotation2d GROUND_PICKUP_ELBOW = Rotation2d.fromRadians(-0.1);
-
-            public static Translation2d SWEEP_MIN = new Translation2d(0.66, 0.3);
-            public static Translation2d SWEEP_MAX = new Translation2d(1.05, 0.15);
-
-            public static Translation2d MID_INTAKE = new Translation2d(1, 1.1);
-
-            public static Translation2d HYBRID = new Translation2d(0, 0);
-
-            public static Translation2d MID_CONE = new Translation2d(0.6 + FourBarConstants.BUMPER_THICKNESS, 0.9);
-            public static Translation2d HIGH_CONE = new Translation2d(1 + FourBarConstants.BUMPER_THICKNESS, 1.25);
-
-            public static Translation2d MID_CUBE = new Translation2d(0.35 + FourBarConstants.BUMPER_THICKNESS, 0.68);
-            public static Translation2d HIGH_CUBE = new Translation2d(0.9 + FourBarConstants.BUMPER_THICKNESS, 1);
-        }
-    }
-
-    public static final class EndEffectorConstants {
-        public static final double EXHAUST_POWER = -12.0;
-        public static final double INTAKE_POWER = 12.0;
-        public static final double GEARING = 4 * 3 * 3;
-
-        public static final int CAN_LEFT = 9;
-        public static final int CAN_RIGHT = 13;
-        public static double MASS = Units.lbsToKilograms(6 +  5.2/ 16.0);
-        public static double CG_RADIUS = Units.inchesToMeters(1.5);
-
-        public static double LENGTH = Units.inchesToMeters(7.15);
-        public static double CUBE_CENTER = Units.inchesToMeters(6.275);
-        public static double CONE_CENTER = Units.inchesToMeters(3.6);
-    }
-
-    public static final class LEDConstants {
-        public static final int PWM_PORT = 0;
-        public static final int NUMBER = 20;
     }
 }
