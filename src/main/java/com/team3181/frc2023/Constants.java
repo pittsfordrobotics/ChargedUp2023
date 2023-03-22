@@ -224,7 +224,7 @@ public final class Constants {
 
     public static final class Dimensions {
         public static double wheelToChassis = Units.inchesToMeters(4.75);
-        public static double chassisToArm = Units.inchesToMeters(28.9);
+        public static double chassisToArm = Units.inchesToMeters(32);
         public static double arm1 = Units.inchesToMeters(29);
         public static double arm2 = Units.inchesToMeters(26.875);
         public static double endEffector = Units.inchesToMeters(7.15);
