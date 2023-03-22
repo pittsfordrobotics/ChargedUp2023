@@ -108,7 +108,7 @@ public class LazySparkMax extends CANSparkMax {
         for (LazySparkMax i : sparkMaxes) {
             if (LazySparkMax.check(i.getLastError()) != 0) {
                 Logger.getInstance().recordOutput("SparkMaxes/" + RobotConstants.SPARKMAX_HASHMAP.get(i.getDeviceId()) + i.getDeviceId(), "ERROR");
-                new Alert("SparkMaxes", RobotConstants.SPARKMAX_HASHMAP.get(i.getDeviceId()) + " PROBLEMED (" + i.getDeviceId() + ")!", AlertType.ERROR).set(true);
+                new Alert("SparkMaxes", RobotConstants.SPARKMAX_HASHMAP.get(i.getDeviceId()) + " (" + i.getDeviceId() + ") PROBLEMED with " + i.getLastError().toString() + " !", AlertType.ERROR).set(true);
             }
         }
     }

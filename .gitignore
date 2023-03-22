@@ -162,7 +162,8 @@ bin/
 *-window.json
 simgui*.json
 
-!.idea
+# IntelJ Config files
+!.idea/
 
 # Version file
 src/main/java/com/team3181/frc2023/BuildConstants.java

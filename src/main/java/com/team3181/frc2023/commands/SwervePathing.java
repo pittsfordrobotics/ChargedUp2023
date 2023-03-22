@@ -43,8 +43,7 @@ public class SwervePathing extends CommandBase {
         yController.reset();
         rotController.reset(adjustedState.holonomicRotation.getRadians());
 
-        timer.reset();
-        timer.start();
+        timer.restart();
     }
 
     @Override
