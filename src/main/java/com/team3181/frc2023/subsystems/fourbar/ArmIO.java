@@ -5,7 +5,7 @@ import org.littletonrobotics.junction.AutoLog;
 public interface ArmIO {
     @AutoLog
     class ArmIOInputs{
-        public double armPositionRad = 0.0;
+        public double armOffsetPositionRad = 0.0;
         public double armVelocityRadPerSec = 0.0;
 
         public double armAppliedVolts = 0.0;
@@ -17,4 +17,6 @@ public interface ArmIO {
     default void setVoltage(double volts) {}
 
     default void setBrakeMode(boolean enable) {}
+
+    default void zeroAbsoluteEncoder() {}
 }

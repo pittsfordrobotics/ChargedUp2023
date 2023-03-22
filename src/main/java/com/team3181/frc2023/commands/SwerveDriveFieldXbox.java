@@ -4,8 +4,6 @@ import com.team3181.frc2023.Constants.SwerveConstants;
 import com.team3181.frc2023.subsystems.swerve.Swerve;
 import com.team3181.lib.controller.BetterXboxController;
 import com.team3181.lib.controller.BetterXboxController.Humans;
-import com.team3181.lib.math.BetterMath;
-import com.team3181.lib.swerve.SwerveUtils;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.DriverStation;

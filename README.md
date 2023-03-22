@@ -1,7 +1,9 @@
 # Charged Up 2023
 ![Build](https://github.com/pittsfordrobotics/chargedup2023/actions/workflows/frcbuild.yml/badge.svg?branch=master)
 ## Features:
-- In development...
+- Setpoints for placing on hybrid, mid, or high with Cone or Cube
+- LED control to show desired game piece and whether it is obtained
+- Objective tracker which allows for selection of node and where game pieces have been scored
 
 ## References
 - Rafi's [Second Order Swerve Kinematics](https://www.chiefdelphi.com/t/whitepaper-swerve-drive-skew-and-second-order-kinematics/416964)

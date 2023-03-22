@@ -13,20 +13,33 @@ const filledNodeToDashboardTopic = "/nodeselector/filled_node_to_dashboard";
 const filledNodeToRobotTopic = "/nodeselector/filled_node_to_robot";
 const activeToDashboardTopic = "/nodeselector/active_to_dashboard";
 const activeToRobotTopic = "/nodeselector/active_to_robot";
-var timer;
+let timer;
 const timeout = 250;
-var active = true;
-var lastIndex = 0;
+let active = true;
+let lastIndex = 0;
+let target = null;
+let lastFilled = null;
 
+function sendTarget(index) {
+  if (index !== target) {
+    client.addSample(currentNodeToRobotTopic, index);
+  }
+}
 
-function setActive(index) {
-  if (index !== null) {
-      Array.from(document.getElementsByClassName("active")).forEach((element) => {
-        element.classList.remove("active");
-      });
+function sendFilled(index) {
+  if (index !== filled) {
+    client.addSample(currentNodeToRobotTopic, index);
+  }
+}
+
+function displayTarget(index) {
+    Array.from(document.getElementsByClassName("active")).forEach((element) => {
+      element.classList.remove("active");
+    });
     Array.from(document.getElementsByClassName("robot")).forEach((element) => {
       element.classList.remove("robot");
     });
+  if (index !== null) {
       if (active) {
         document.getElementsByTagName("td")[index].classList.add("active");
       }
@@ -48,7 +61,10 @@ function toggleFilled(index) {
         arr[i] = document.getElementsByTagName("td")[i].classList.contains("filled");
       }
     }
-    client.addSample(filledNodeToRobotTopic, arr);
+    if (lastFilled !== arr) {
+      client.addSample(filledNodeToRobotTopic, arr);
+      lastFilled = arr;
+    }
   }
 }
 
@@ -77,7 +93,7 @@ let client = new NT4_Client(
     // New data
     if (topic.name === currentNodeToDashboardTopic) {
       document.body.style.backgroundColor = "black";
-      setActive(value);
+      displayTarget(value);
       lastIndex = value;
     }
     if (topic.name === filledNodeToDashboardTopic) {
@@ -87,7 +103,7 @@ let client = new NT4_Client(
     if (topic.name === activeToDashboardTopic) {
       document.body.style.backgroundColor = "black";
       active = (value === 1);
-      setActive(lastIndex);
+      displayTarget(lastIndex);
     }
   },
   () => {
@@ -96,7 +112,7 @@ let client = new NT4_Client(
   () => {
     // Disconnected
     document.body.style.backgroundColor = "red";
-    setActive(null);
+    displayTarget(null);
     setFilled(null);
     active = true;
   }
@@ -123,6 +139,13 @@ window.addEventListener("load", () => {
       if (timer) {
         clearTimeout(timer);
         timer = null;
+        if (document.getElementsByTagName("td")[index].classList.contains("active")) {
+          client.addSample(activeToRobotTopic, 0);
+        }
+        else {
+          client.addSample(activeToRobotTopic, 1);
+          sendTarget(index);
+        }
       }
     });
     // cell.addEventListener("mousemove", () => {
@@ -131,25 +154,25 @@ window.addEventListener("load", () => {
     //     timer = null;
     //   }
     // });
-    cell.addEventListener("click", () => {
-      if (document.getElementsByTagName("td")[index].classList.contains("active")) {
-        client.addSample(activeToRobotTopic, 0);
-      }
-      else {
-        client.addSample(activeToRobotTopic, 1);
-        client.addSample(currentNodeToRobotTopic, index);
-      }
-    });
-    cell.addEventListener("contextmenu", (event) => {
-      event.preventDefault();
-      if (document.getElementsByTagName("td")[index].classList.contains("active")) {
-        client.addSample(activeToRobotTopic, 0);
-      }
-      else {
-        client.addSample(activeToRobotTopic, 1);
-        client.addSample(currentNodeToRobotTopic, index);
-      }
-    });
+    // cell.addEventListener("click", () => {
+    //   if (document.getElementsByTagName("td")[index].classList.contains("active")) {
+    //     client.addSample(activeToRobotTopic, 0);
+    //   }
+    //   else {
+    //     client.addSample(activeToRobotTopic, 1);
+    //     client.addSample(currentNodeToRobotTopic, index);
+    //   }
+    // });
+    // cell.addEventListener("contextmenu", (event) => {
+    //   event.preventDefault();
+    //   if (document.getElementsByTagName("td")[index].classList.contains("active")) {
+    //     client.addSample(activeToRobotTopic, 0);
+    //   }
+    //   else {
+    //     client.addSample(activeToRobotTopic, 1);
+    //     client.addSample(currentNodeToRobotTopic, index);
+    //   }
+    // });
   });
 
   // Add touch listeners
@@ -174,7 +197,7 @@ window.addEventListener("load", () => {
               }
               else {
                 client.addSample(activeToRobotTopic, 1);
-                client.addSample(currentNodeToRobotTopic, index);
+                sendTarget(index);
               }
             }
           }

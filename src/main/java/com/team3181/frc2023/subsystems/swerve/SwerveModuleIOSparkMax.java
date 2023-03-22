@@ -88,7 +88,8 @@ public class SwerveModuleIOSparkMax implements SwerveModuleIO {
         inputs.driveCurrentAmps = driveMotor.getOutputCurrent();
         inputs.driveTempCelsius = driveMotor.getMotorTemperature();
 
-        inputs.steerAbsolutePositionRad = steerAbsoluteEncoder.getPosition() - steerOffset.getRadians();
+        inputs.steerAbsolutePositionRad = steerAbsoluteEncoder.getPosition();
+        inputs.steerOffsetAbsolutePositionRad = steerAbsoluteEncoder.getPosition() - steerOffset.getRadians();
         inputs.steerAbsoluteVelocityRadPerSec = steerAbsoluteEncoder.getVelocity();
         inputs.steerAppliedVolts = steerMotor.getAppliedOutput() * driveMotor.getBusVoltage();
         inputs.steerCurrentAmps = steerMotor.getOutputCurrent();

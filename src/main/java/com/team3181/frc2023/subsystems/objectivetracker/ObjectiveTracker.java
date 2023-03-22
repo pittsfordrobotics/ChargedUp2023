@@ -8,15 +8,18 @@
 package com.team3181.frc2023.subsystems.objectivetracker;
 
 import com.team3181.frc2023.Constants.RobotConstants;
+import com.team3181.frc2023.FieldConstants.AutoDrivePoints;
+import com.team3181.frc2023.subsystems.swerve.Swerve;
+import com.team3181.lib.math.GeomUtil;
 import com.team3181.lib.util.VirtualSubsystem;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import kotlin.ULong;
 import org.littletonrobotics.junction.Logger;
 
 public class ObjectiveTracker extends VirtualSubsystem {
@@ -24,7 +27,8 @@ public class ObjectiveTracker extends VirtualSubsystem {
   private final NodeSelectorIOInputsAutoLogged selectorInputs = new NodeSelectorIOInputsAutoLogged();
   private final Objective objective = new Objective();
   private boolean manualSelection = true;
-  private boolean[] filled = {};
+  private final boolean linkMode = false;
+  private boolean[] filled = new boolean[27];
 
   public static class Objective {
     public int nodeRow; // The row of the selected target node
@@ -75,30 +79,200 @@ public class ObjectiveTracker extends VirtualSubsystem {
 
     // Read updates from node filled
     if (selectorInputs.filled.length != 0) {
-      filled = selectorInputs.filled;
+      if (DriverStation.getAlliance() == Alliance.Blue) {
+        for (int i = 8; i >= 0; i--) {
+          filled[8-i] = selectorInputs.filled[i];
+        }
+        for (int i = 17; i >= 9; i--) {
+          filled[26-i] = selectorInputs.filled[i];
+        }
+        for (int i = 26; i >= 18; i--) {
+          filled[44-i] = selectorInputs.filled[i];
+        }
+      }
+      else {
+        filled = selectorInputs.filled;
+      }
       selectorInputs.filled = new boolean[]{};
     }
 
+    // updates manualSelection
     if (selectorInputs.active != -1) {
       manualSelection = selectorInputs.active == 1;
       selectorInputs.active = -1;
     }
 
-    // Send current node to selector
+    // automatically chooses optimal place to place game piece
+    if (!manualSelection) {
+      double topDist = GeomUtil.distance(new Pose2d(AutoDrivePoints.pathPointFlipper(AutoDrivePoints.COMMUNITY_TOP_INNER, DriverStation.getAlliance()).getPosition(), new Rotation2d()), Swerve.getInstance().getPose());
+      double bottomDist = GeomUtil.distance(new Pose2d(AutoDrivePoints.pathPointFlipper(AutoDrivePoints.COMMUNITY_BOTTOM_INNER, DriverStation.getAlliance()).getPosition(), new Rotation2d()), Swerve.getInstance().getPose());
+
+      boolean objectiveFound = false;
+      if (topDist < bottomDist) {
+        if (linkMode) {
+          for (int i = 18 + 2; i < 27; i++) {
+            if (filled[i - 1] && filled[i - 2] && !filled[i]) {
+              objective.nodeRow = i % 9;
+              objective.nodeLevel = NodeLevel.HIGH;
+              objectiveFound = true;
+              break;
+            } else if (filled[i] && filled[i - 1] && !filled[i - 2]) {
+              objective.nodeRow = (i - 2) % 9;
+              objective.nodeLevel = NodeLevel.HIGH;
+              objectiveFound = true;
+              break;
+            } else if (filled[i] && filled[i - 2] && !filled[i - 1]) {
+              objective.nodeRow = (i - 1) % 9;
+              objective.nodeLevel = NodeLevel.HIGH;
+              objectiveFound = true;
+              break;
+            }
+          }
+        }
+        if (!objectiveFound) {
+          for (int i = 18; i < 27; i++) {
+            if (!filled[i]) {
+                objective.nodeRow = i % 9;
+                objective.nodeLevel = NodeLevel.HIGH;
+                objectiveFound = true;
+                break;
+            }
+          }
+        }
+        if (!objectiveFound && linkMode) {
+          for (int i = 0 + 2; i < 9; i++) {
+            if (filled[i-1] && filled[i-2] && !filled[i]) {
+              objective.nodeRow = i % 9;
+              objective.nodeLevel = NodeLevel.HYBRID;
+              objectiveFound = true;
+              break;
+            }
+            else if (filled[i] && filled[i-1] && !filled[i-2]) {
+              objective.nodeRow = (i-2) % 9;
+              objective.nodeLevel = NodeLevel.HYBRID;
+              objectiveFound = true;
+              break;
+            }
+            else if (filled[i] && filled[i-2] && !filled[i-1]) {
+              objective.nodeRow = (i-1) % 9;
+              objective.nodeLevel = NodeLevel.HYBRID;
+              objectiveFound = true;
+              break;
+            }
+          }
+        }
+        if (!objectiveFound) {
+          for (int i = 0; i < 9; i++) {
+            if (!filled[i]) {
+              objective.nodeRow = i % 9;
+              objective.nodeLevel = NodeLevel.HYBRID;
+              objectiveFound = true;
+              break;
+            }
+          }
+        }
+        if (!objectiveFound) {
+          for (int i = 9; i < 18; i++) {
+            if (!filled[i]) {
+              objective.nodeRow = i % 9;
+              objective.nodeLevel = NodeLevel.MID;
+              objectiveFound = true;
+              break;
+            }
+          }
+        }
+      }
+      else {
+        if (linkMode) {
+          for (int i = 26 - 2; i >= 18; i--) {
+            if (filled[i + 1] && filled[i + 2] && !filled[i]) {
+              objective.nodeRow = i % 9;
+              objective.nodeLevel = NodeLevel.HIGH;
+              objectiveFound = true;
+              break;
+            } else if (filled[i] && filled[i + 1] && !filled[i + 2]) {
+              objective.nodeRow = (i + 2) % 9;
+              objective.nodeLevel = NodeLevel.HIGH;
+              objectiveFound = true;
+              break;
+            } else if (filled[i] && filled[i + 2] && !filled[i + 1]) {
+              objective.nodeRow = (i + 1) % 9;
+              objective.nodeLevel = NodeLevel.HIGH;
+              objectiveFound = true;
+              break;
+            }
+          }
+        }
+        if (!objectiveFound) {
+          for (int i = 26; i >= 18; i--) {
+            if (!filled[i]) {
+              objective.nodeRow = i % 9;
+              objective.nodeLevel = NodeLevel.HIGH;
+              objectiveFound = true;
+              break;
+            }
+          }
+        }
+        if (!objectiveFound && linkMode) {
+          for (int i = 8 - 2; i >= 0; i--) {
+            if (filled[i+1] && filled[i+2] && !filled[i]) {
+              objective.nodeRow = i % 9;
+              objective.nodeLevel = NodeLevel.HYBRID;
+              break;
+            }
+            else if (filled[i] && filled[i+1] && !filled[i+2]) {
+              objective.nodeRow = (i+2) % 9;
+              objective.nodeLevel = NodeLevel.HYBRID;
+              break;
+            }
+            else if (filled[i] && filled[i+2] && !filled[i+1]) {
+              objective.nodeRow = (i+1) % 9;
+              objective.nodeLevel = NodeLevel.HYBRID;
+              break;
+            }
+          }
+        }
+        if (!objectiveFound) {
+          for (int i = 8; i >= 0; i--) {
+            if (!filled[i]) {
+              objective.nodeRow = i % 9;
+              objective.nodeLevel = NodeLevel.HYBRID;
+              objectiveFound = true;
+              break;
+            }
+          }
+        }
+        if (!objectiveFound) {
+          for (int i = 17; i >= 9; i--) {
+            if (!filled[i]) {
+              objective.nodeRow = i % 9;
+              objective.nodeLevel = NodeLevel.MID;
+              objectiveFound = true;
+              break;
+            }
+          }
+        }
+      }
+    }
+
+    // Send current data to selector
     {
-      int selected;
+      selectorIO.setSelected(objectiveToSelected());
+      boolean[] tempFilled = new boolean[27];
       if (DriverStation.getAlliance() == Alliance.Blue) {
-        selected = 8 - objective.nodeRow;
+        for (int i = 8; i >= 0; i--) {
+          tempFilled[8-i] = filled[i];
+        }
+        for (int i = 17; i >= 9; i--) {
+          tempFilled[26-i] = filled[i];
+        }
+        for (int i = 26; i >= 18; i--) {
+          tempFilled[44-i] = filled[i];
+        }
       } else {
-        selected = objective.nodeRow;
+        tempFilled = filled;
       }
-      switch (objective.nodeLevel) {
-        case HYBRID -> selected += 0;
-        case MID -> selected += 9;
-        case HIGH -> selected += 18;
-      }
-      selectorIO.setSelected(selected);
-      selectorIO.setFilled(filled);
+      selectorIO.setFilled(tempFilled);
       selectorIO.setActive(manualSelection ? 1 : 0);
     }
 
@@ -129,7 +303,7 @@ public class ObjectiveTracker extends VirtualSubsystem {
         text += objective.nodeLevel == NodeLevel.HYBRID ? "" : " CONE";
       }
       text += " node";
-      SmartDashboard.putString("Selected Node", text);
+//      SmartDashboard.putString("Selected Node", text);
     }
 
     // Log state
@@ -143,6 +317,7 @@ public class ObjectiveTracker extends VirtualSubsystem {
 
   /** Shifts the selected node in the selector by one position. */
   public void shiftNode(Direction direction) {
+    manualSelection = true;
     switch (direction) {
       case LEFT:
         if (DriverStation.getAlliance() == Alliance.Blue) {
@@ -184,6 +359,43 @@ public class ObjectiveTracker extends VirtualSubsystem {
         }
         break;
     }
+  }
+
+  /** Toggle whether current cell is filled */
+  public void toggleFilled() {
+    int selected = objectiveToSelected();
+    filled[selected] = !filled[selected];
+  }
+
+  private int objectiveToSelected() {
+    int selected;
+    if (DriverStation.getAlliance() == Alliance.Blue) {
+      selected = 8 - objective.nodeRow;
+    } else {
+      selected = objective.nodeRow;
+    }
+    switch (objective.nodeLevel) {
+      case HYBRID -> selected += 0;
+      case MID -> selected += 9;
+      case HIGH -> selected += 18;
+    }
+    return selected;
+  }
+
+  /** Toggle whether automation is enabled */
+  public void toggleActive() {
+    manualSelection = !manualSelection;
+  }
+
+  /** Set automation enabled */
+  public void setAutomated() {
+    manualSelection = false;
+  }
+
+  /** Use automation to update objective */
+  public void updateObjective(Objective objective) {
+    this.objective.nodeRow = objective.nodeRow;
+    this.objective.nodeLevel = objective.nodeLevel;
   }
 
   /** Command factory to shift the selected node in the selector by one position. */

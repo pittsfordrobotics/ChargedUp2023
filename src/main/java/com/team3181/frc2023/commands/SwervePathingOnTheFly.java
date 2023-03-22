@@ -9,6 +9,7 @@ import com.team3181.frc2023.Constants.AutoConstants;
 import com.team3181.frc2023.Constants.AutoConstants.AutoDrivePosition;
 import com.team3181.frc2023.FieldConstants.AutoDrivePoints;
 import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker;
+import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker.NodeLevel;
 import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker.Objective;
 import com.team3181.frc2023.subsystems.swerve.Swerve;
 import com.team3181.lib.math.GeomUtil;
@@ -20,7 +21,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -44,7 +44,7 @@ public class SwervePathingOnTheFly extends CommandBase {
     public SwervePathingOnTheFly(BetterPathPoint... pathPoint) {
         addRequirements(this.swerve);
         this.pathPoint = pathPoint;
-        pathConstraints = AutoConstants.MAX_SPEED;
+        pathConstraints = AutoConstants.SLOW_SPEED;
         simple = false;
         position = null;
         rotController.enableContinuousInput(-Math.PI, Math.PI);
@@ -62,7 +62,7 @@ public class SwervePathingOnTheFly extends CommandBase {
     public SwervePathingOnTheFly(AutoDrivePosition position, boolean simple) {
         addRequirements(this.swerve);
         this.pathPoint = null;
-        this.pathConstraints = AutoConstants.MAX_SPEED;
+        this.pathConstraints = AutoConstants.SLOW_SPEED;
         this.simple = simple;
         this.position = position;
         rotController.enableContinuousInput(-Math.PI, Math.PI);
@@ -77,11 +77,16 @@ public class SwervePathingOnTheFly extends CommandBase {
         Objective objective = ObjectiveTracker.getInstance().getObjective();
         switch (position) {
             case NODE:
-                BetterPathPoint node = AutoDrivePoints.pathPointFlipper(AutoDrivePoints.nodeSelector(objective.nodeRow), DriverStation.getAlliance());
+                BetterPathPoint node = AutoDrivePoints.nodeSelector(objective.nodeRow);
+                if (objective.nodeLevel == NodeLevel.MID) {
+                    node = AutoDrivePoints.adjustNodeForMid(node);
+                }
+                node = AutoDrivePoints.pathPointFlipper(node, DriverStation.getAlliance());
                 if (simple) {
-                    BetterPathPoint headingCorrection = AutoDrivePoints.updateHeading(robotPoint, AutoDrivePoints.pathPointFlipper(node, DriverStation.getAlliance()));
+                    BetterPathPoint headingCorrection = AutoDrivePoints.updateHeading(robotPoint, node);
+                    BetterPathPoint updatedNode = new BetterPathPoint(node.getPosition(), headingCorrection.getHeading(), node.getHolonomicRotation());
                     adjustedPathPoints.add(headingCorrection);
-                    adjustedPathPoints.add(node);
+                    adjustedPathPoints.add(updatedNode);
                 }
                 else {
                     if (robotPointBlue.getPosition().getY() > 7.2 && robotPointBlue.getPosition().getX() > 13.6) {
@@ -99,11 +104,11 @@ public class SwervePathingOnTheFly extends CommandBase {
                         double distanceTop = GeomUtil.distance(new Pose2d(AutoDrivePoints.COMMUNITY_TOP_EXIT.getPosition(), new Rotation2d()), new Pose2d(robotPointBlue.getPosition(), new Rotation2d()));
                         double distanceBottom = GeomUtil.distance(new Pose2d(AutoDrivePoints.COMMUNITY_BOTTOM_EXIT.getPosition(), new Rotation2d()), new Pose2d(robotPointBlue.getPosition(), new Rotation2d()));
                         BetterPathPoint entrance;
-                        if (distanceTop - distanceBottom > 1) {
+                        if (distanceTop > distanceBottom && Math.abs(distanceTop - distanceBottom) > 1) {
                             entrance = AutoDrivePoints.pathPointFlipper(AutoDrivePoints.COMMUNITY_BOTTOM_EXIT, DriverStation.getAlliance());
                             inner = AutoDrivePoints.pathPointFlipper(AutoDrivePoints.COMMUNITY_BOTTOM_INNER, DriverStation.getAlliance());
                         }
-                        else if (distanceBottom - distanceTop > 1) {
+                        else if (distanceTop < distanceBottom && Math.abs(distanceBottom - distanceTop) > 1) {
                             entrance = AutoDrivePoints.pathPointFlipper(AutoDrivePoints.COMMUNITY_TOP_EXIT, DriverStation.getAlliance());
                             inner = AutoDrivePoints.pathPointFlipper(AutoDrivePoints.COMMUNITY_TOP_INNER, DriverStation.getAlliance());
                         }
@@ -134,16 +139,19 @@ public class SwervePathingOnTheFly extends CommandBase {
                             BetterPathPoint headingCorrection = AutoDrivePoints.updateHeading(robotPoint, inner);
                             adjustedPathPoints.add(headingCorrection);
                         }
-                        BetterPathPoint headingCorrection2 = AutoDrivePoints.updateHeading(inner, node);
-                        adjustedPathPoints.add(headingCorrection2);
+                        adjustedPathPoints.add(inner);
                     }
                     if (robotPointBlue.getPosition().getX() > 1.7) {
+                        BetterPathPoint updatedNode;
                         if (adjustedPathPoints.size() == 0 && robotPointBlue.getPosition().getY() < 5.5) {
                             BetterPathPoint headingCorrection = AutoDrivePoints.updateHeading(robotPoint, node);
                             adjustedPathPoints.add(headingCorrection);
-                            System.out.println(headingCorrection.getHeading());
+                            updatedNode = new BetterPathPoint(node.getPosition(), headingCorrection.getHeading(), node.getHolonomicRotation());
                         }
-                        adjustedPathPoints.add(node);
+                        else {
+                            updatedNode = new BetterPathPoint(node.getPosition(),  AutoDrivePoints.updateHeading(inner, node).getHeading(), node.getHolonomicRotation());
+                        }
+                        adjustedPathPoints.add(updatedNode);
                     }
 
                 }
@@ -153,16 +161,61 @@ public class SwervePathingOnTheFly extends CommandBase {
                 break;
             case DOUBLE_SUBSTATION_HIGH:
                 if (simple) {
-                    BetterPathPoint headingCorrection = AutoDrivePoints.updateHeading(robotPoint, AutoDrivePoints.pathPointFlipper(AutoDrivePoints.LOADING_STATION_TOP_INNER, DriverStation.getAlliance()));
+                    BetterPathPoint headingCorrection = AutoDrivePoints.updateHeading(robotPoint, AutoDrivePoints.pathPointFlipper(AutoDrivePoints.leavingCommunity(AutoDrivePoints.LOADING_STATION_TOP_INNER), DriverStation.getAlliance()));
                     adjustedPathPoints.add(headingCorrection);
-                    adjustedPathPoints.add(AutoDrivePoints.pathPointFlipper(AutoDrivePoints.LOADING_STATION_TOP_INNER, DriverStation.getAlliance()));
+                    adjustedPathPoints.add(AutoDrivePoints.pathPointFlipper(AutoDrivePoints.leavingCommunity(AutoDrivePoints.LOADING_STATION_TOP_INNER), DriverStation.getAlliance()));
+                }
+                else {
+                    BetterPathPoint entrance = AutoDrivePoints.pathPointFlipper(AutoDrivePoints.leavingCommunity(AutoDrivePoints.COMMUNITY_BOTTOM_EXIT), DriverStation.getAlliance());;
+                    if (robotPointBlue.getPosition().getX() < 2 && robotPointBlue.getPosition().getY() < 5.5) {
+                        double distanceTop = GeomUtil.distance(new Pose2d(AutoDrivePoints.leavingCommunity(AutoDrivePoints.COMMUNITY_TOP_INNER).getPosition(), new Rotation2d()), new Pose2d(robotPointBlue.getPosition(), new Rotation2d()));
+                        double distanceBottom = GeomUtil.distance(new Pose2d(AutoDrivePoints.leavingCommunity(AutoDrivePoints.COMMUNITY_BOTTOM_INNER).getPosition(), new Rotation2d()), new Pose2d(robotPointBlue.getPosition(), new Rotation2d()));
+                        BetterPathPoint inner;
+                        if (distanceTop > distanceBottom) {
+                            inner = AutoDrivePoints.pathPointFlipper(AutoDrivePoints.leavingCommunity(AutoDrivePoints.COMMUNITY_BOTTOM_INNER), DriverStation.getAlliance());
+                            entrance = AutoDrivePoints.pathPointFlipper(AutoDrivePoints.leavingCommunity(AutoDrivePoints.COMMUNITY_BOTTOM_EXIT), DriverStation.getAlliance());
+                        } else {
+                            inner = AutoDrivePoints.pathPointFlipper(AutoDrivePoints.leavingCommunity(AutoDrivePoints.COMMUNITY_TOP_INNER), DriverStation.getAlliance());
+                            entrance = AutoDrivePoints.pathPointFlipper(AutoDrivePoints.leavingCommunity(AutoDrivePoints.COMMUNITY_TOP_EXIT), DriverStation.getAlliance());
+                        }
+                        BetterPathPoint headingCorrection = AutoDrivePoints.updateHeading(robotPoint, inner);
+                        adjustedPathPoints.add(headingCorrection);
+                    }
+                    if (robotPointBlue.getPosition().getX() < 5.26) {
+                        if (adjustedPathPoints.size() == 0) {
+                            double distanceTop = GeomUtil.distance(new Pose2d(AutoDrivePoints.leavingCommunity(AutoDrivePoints.COMMUNITY_TOP_EXIT).getPosition(), new Rotation2d()), new Pose2d(robotPointBlue.getPosition(), new Rotation2d()));
+                            double distanceBottom = GeomUtil.distance(new Pose2d(AutoDrivePoints.leavingCommunity(AutoDrivePoints.COMMUNITY_BOTTOM_EXIT).getPosition(), new Rotation2d()), new Pose2d(robotPointBlue.getPosition(), new Rotation2d()));
+                            if (Math.abs(distanceTop) > Math.abs(distanceBottom)) {
+                                entrance = AutoDrivePoints.pathPointFlipper(AutoDrivePoints.leavingCommunity(AutoDrivePoints.COMMUNITY_BOTTOM_EXIT), DriverStation.getAlliance());
+                            } else {
+                                entrance = AutoDrivePoints.pathPointFlipper(AutoDrivePoints.leavingCommunity(AutoDrivePoints.COMMUNITY_TOP_EXIT), DriverStation.getAlliance());
+                            }
+                            BetterPathPoint headingCorrection = AutoDrivePoints.updateHeading(robotPoint, entrance);
+                            adjustedPathPoints.add(headingCorrection);
+                        }
+                        adjustedPathPoints.add(entrance);
+                    }
+                    if (robotPointBlue.getPosition().getY() > 7.2 && robotPointBlue.getPosition().getX() > 10.25) {
+                        if (adjustedPathPoints.size() == 0) {
+                            BetterPathPoint headingCorrection = AutoDrivePoints.updateHeading(robotPoint, AutoDrivePoints.pathPointFlipper(AutoDrivePoints.leavingCommunity(AutoDrivePoints.LOADING_STATION_TOP_INNER), DriverStation.getAlliance()));
+                            adjustedPathPoints.add(headingCorrection);
+                        }
+                        adjustedPathPoints.add(AutoDrivePoints.pathPointFlipper(AutoDrivePoints.leavingCommunity(AutoDrivePoints.LOADING_STATION_TOP_INNER), DriverStation.getAlliance()));
+                    }
+                    else if (robotPointBlue.getPosition().getY() > 5.9 && robotPointBlue.getPosition().getX() > 10.25) {
+                        if (adjustedPathPoints.size() == 0) {
+                            BetterPathPoint headingCorrection = AutoDrivePoints.updateHeading(robotPoint, AutoDrivePoints.pathPointFlipper(AutoDrivePoints.leavingCommunity(AutoDrivePoints.LOADING_STATION_BOTTOM_INNER), DriverStation.getAlliance()));
+                            adjustedPathPoints.add(headingCorrection);
+                        }
+                        adjustedPathPoints.add(AutoDrivePoints.pathPointFlipper(AutoDrivePoints.leavingCommunity(AutoDrivePoints.LOADING_STATION_BOTTOM_INNER), DriverStation.getAlliance()));
+                    }
                 }
                 break;
             case DOUBLE_SUBSTATION_LOW:
                 if (simple) {
-                    BetterPathPoint headingCorrection = AutoDrivePoints.updateHeading(robotPoint, AutoDrivePoints.pathPointFlipper(AutoDrivePoints.LOADING_STATION_BOTTOM_INNER, DriverStation.getAlliance()));
+                    BetterPathPoint headingCorrection = AutoDrivePoints.updateHeading(robotPoint, AutoDrivePoints.pathPointFlipper(AutoDrivePoints.leavingCommunity(AutoDrivePoints.LOADING_STATION_BOTTOM_INNER), DriverStation.getAlliance()));
                     adjustedPathPoints.add(headingCorrection);
-                    adjustedPathPoints.add(AutoDrivePoints.pathPointFlipper(AutoDrivePoints.LOADING_STATION_BOTTOM_INNER, DriverStation.getAlliance()));
+                    adjustedPathPoints.add(AutoDrivePoints.pathPointFlipper(AutoDrivePoints.leavingCommunity(AutoDrivePoints.LOADING_STATION_BOTTOM_INNER), DriverStation.getAlliance()));
                 }
                 break;
             default:
@@ -188,8 +241,7 @@ public class SwervePathingOnTheFly extends CommandBase {
         } catch (Exception ignored) {}
         // path following setup
 
-        timer.reset();
-        timer.start();
+        timer.restart();
     }
 
     @Override

@@ -26,7 +26,7 @@ public class TimeKeeper extends CommandBase {
         }
         else {
             timer.stop();
-            System.out.println("Autonomous took " + timer.get() + " seconds");
+            System.out.println("It took " + timer.get() + " seconds");
         }
     }
 

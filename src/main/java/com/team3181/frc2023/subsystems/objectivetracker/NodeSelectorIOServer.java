@@ -11,6 +11,7 @@ import edu.wpi.first.networktables.*;
 import edu.wpi.first.wpilibj.Filesystem;
 import io.javalin.Javalin;
 import io.javalin.http.staticfiles.Location;
+
 import java.nio.file.Paths;
 
 public class NodeSelectorIOServer implements NodeSelectorIO {
@@ -51,7 +52,6 @@ public class NodeSelectorIOServer implements NodeSelectorIO {
       inputs.selected = value;
     }
     for (var value : filledNodeSubscriber.readQueueValues()) {
-      System.out.println(value);
       inputs.filled = value;
     }
     for (var value : activeSubscriber.readQueueValues()) {

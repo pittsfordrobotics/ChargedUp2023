@@ -28,11 +28,14 @@ public final class FieldConstants {
      */
     public static final class AutoDrivePoints {
         public static final BetterPathPoint BOTTOM_NODE = new BetterPathPoint(new Translation2d(SwerveConstants.BUMPER_WIDTH + Grids.outerX + SwerveConstants.X_LENGTH_METERS / 2, Grids.nodeFirstY), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(-180));
+
+        // exit is closer to the inside of the arena and farther from the nodes
         public static final BetterPathPoint COMMUNITY_TOP_EXIT = new BetterPathPoint(new Translation2d(Community.midX + SwerveConstants.X_LENGTH_METERS, Community.leftY - Units.inchesToMeters(65) / 2), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(-180));
         public static final BetterPathPoint COMMUNITY_BOTTOM_EXIT = new BetterPathPoint(new Translation2d(Community.outerX + SwerveConstants.X_LENGTH_METERS, 0.5), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(-180));
 
-        public static final BetterPathPoint COMMUNITY_TOP_INNER = new BetterPathPoint(new Translation2d(Grids.outerX + 0.473, Community.leftY - 0.9), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(-180));
-        public static final BetterPathPoint COMMUNITY_BOTTOM_INNER = new BetterPathPoint(new Translation2d(Grids.outerX + 0.473, 0.5), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(-180));
+        // inner is toward the outside of the arena closer to the nodes
+        public static final BetterPathPoint COMMUNITY_TOP_INNER = new BetterPathPoint(new Translation2d(Grids.outerX + 1.12, Community.leftY - 0.8), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(-180));
+        public static final BetterPathPoint COMMUNITY_BOTTOM_INNER = new BetterPathPoint(new Translation2d(Grids.outerX + 1.12, 0.8), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(-180));
 
         public static final BetterPathPoint LOADING_STATION_TOP_EXIT = new BetterPathPoint(new Translation2d(0.5 * LoadingZone.midX + LoadingZone.outerX * 0.5, LoadingZone.midY + Units.inchesToMeters(50.5) / 2), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(-180));
         public static final BetterPathPoint LOADING_STATION_BOTTOM_EXIT = new BetterPathPoint(new Translation2d(0.5 * LoadingZone.midX + LoadingZone.outerX * 0.5, LoadingZone.midY - Units.inchesToMeters(50.5)/ 2), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(-180));
@@ -52,22 +55,23 @@ public final class FieldConstants {
             if (deltaY == 0) {
                 updatedHeading = Rotation2d.fromDegrees(180 * deltaX > 0 ? 0 : 1);
             }
-            else {
+            else if(deltaY > 0){
+                updatedHeading = Rotation2d.fromRadians(Math.atan((deltaY)/(deltaX)));
+            } else {
                 updatedHeading = Rotation2d.fromRadians(Math.atan((deltaX)/(deltaY)));
             }
             if (deltaX > 0 && deltaY > 0) {
                 updatedHeading = updatedHeading.times(-1);
-                updatedHeading = updatedHeading.plus(Rotation2d.fromDegrees(90));
             }
             else if (deltaX < 0 && deltaY > 0) {
-                updatedHeading = updatedHeading.plus(Rotation2d.fromDegrees(90));
+                updatedHeading = updatedHeading.plus(Rotation2d.fromDegrees(180));
             }
             else if (deltaX < 0 && deltaY < 0) {
                 updatedHeading = updatedHeading.times(-1);
                 updatedHeading = updatedHeading.plus(Rotation2d.fromDegrees(-90));
             }
             else if (deltaX > 0 && deltaY < 0) {
-                updatedHeading = updatedHeading.plus(Rotation2d.fromDegrees(-90));
+                updatedHeading = updatedHeading.plus(Rotation2d.fromDegrees(90));
             }
             else if (deltaX == 0) {
                 updatedHeading = updatedHeading.plus(Rotation2d.fromDegrees(90 * deltaY > 0 ? 1 : -1));
@@ -81,6 +85,10 @@ public final class FieldConstants {
          */
         public static BetterPathPoint nodeSelector(int node) {
             return new BetterPathPoint(new Translation2d(BOTTOM_NODE.getPosition().getX(), BOTTOM_NODE.getPosition().getY() + Grids.nodeSeparationY * (node)), BOTTOM_NODE.getHeading(), BOTTOM_NODE.getHolonomicRotation());
+        }
+
+        public static BetterPathPoint adjustNodeForMid(BetterPathPoint point) {
+            return new BetterPathPoint(new Translation2d(point.getPosition().getX() + 0.33006, point.getPosition().getY()), point.getHeading(), point.getHolonomicRotation());
         }
 
         /**

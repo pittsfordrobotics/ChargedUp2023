@@ -79,7 +79,6 @@ public class LEDs extends SubsystemBase {
         }
     }
 
-    // TODO: Someone else write this
     private void flashColorBack(Color color) {
         if (timer.get() < 0.1) {
             setColorBack(color);
@@ -97,7 +96,6 @@ public class LEDs extends SubsystemBase {
             leds.setRGB(i, (int)(color.red * 255), (int)(color.green * 255), (int)(color.blue * 255));
         }
     }
-
     private void setColorBack(Color color) {
         for (int i = 0; i < 10; i++) {
             leds.setRGB(i, (int)(color.red * 255), (int)(color.green * 255), (int)(color.blue * 255));
@@ -106,7 +104,6 @@ public class LEDs extends SubsystemBase {
             leds.setRGB(i, (int)(color.red * 255), (int)(color.green * 255), (int)(color.blue * 255));
         }
     }
-
     private void setRunAlliance() {
         Color color = getConnected();
         if (timer.get() < 0.05 + 0.02) {

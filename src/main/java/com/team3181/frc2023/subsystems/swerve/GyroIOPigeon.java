@@ -10,9 +10,11 @@ public class GyroIOPigeon implements GyroIO {
     private final double[] ypr = new double[3];
 
     public GyroIOPigeon() {
+        pigeon.configFactoryDefault();
         pigeon.configAllSettings(SwerveConstants.PIGEON_CONFIG);
         pigeon.zeroGyroBiasNow();
-        if (pigeon.getUpTime() < 10) pigeon.setYaw(0);
+        pigeon.setYaw(0);
+//        if (pigeon.getUpTime() < 10) pigeon.setYaw(0);
 //        can try these out if CAN bus is overloaded
 //        pigeon.setStatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_1_General, 255);
 //        pigeon.setStatusFramePeriod(PigeonIMU_StatusFrame.CondStatus_2_GeneralCompass, 255);

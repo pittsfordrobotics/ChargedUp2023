@@ -2,22 +2,66 @@ package com.team3181.frc2023;
 
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
-import com.pathplanner.lib.PathPoint;
 import com.team3181.frc2023.Constants.AutoConstants;
-import com.team3181.frc2023.subsystems.swerve.Swerve;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
+import com.team3181.frc2023.commands.*;
+import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker.NodeLevel;
+import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker.Objective;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 
-import java.util.List;
+import java.util.HashMap;
 
 public class Paths {
-    public static final PathPlannerTrajectory TEST_ON_THE_FLY = PathPlanner.generatePath(
-            AutoConstants.MAX_SPEED,
-                new PathPoint(Swerve.getInstance().getPose().getTranslation(), Swerve.getInstance().getPose().getRotation(), Swerve.getInstance().getPose().getRotation()),
-                new PathPoint(new Translation2d(5,1), Rotation2d.fromDegrees(0), Rotation2d.fromDegrees(0))
-            );
+//    public static final List<PathPlannerTrajectory> TOP_THREE = PathPlanner.loadPathGroup("Top 3 Item", AutoConstants.SLOW_SPEED);
+//    public static final List<PathPlannerTrajectory> BOTTOM_THREE = PathPlanner.loadPathGroup("Bottom 3 Item", AutoConstants.SLOW_SPEED);
+    public static final PathPlannerTrajectory BOTTOM_CUBE = PathPlanner.loadPath("Bottom Cube", AutoConstants.SLOW_SPEED);
+    public static final PathPlannerTrajectory BOTTOM_CONE = PathPlanner.loadPath("Bottom Cone", AutoConstants.SLOW_SPEED);
+//    public static final PathPlannerTrajectory BOTTOM_CUBE_PLUS_ONE = PathPlanner.loadPath("Bottom Cube + 1", AutoConstants.SLOW_SPEED);
+//    public static final PathPlannerTrajectory BOTTOM_CONE_PLUS_ONE = PathPlanner.loadPath("Bottom Cone + 1", AutoConstants.SLOW_SPEED);
+    public static final PathPlannerTrajectory TOP_CUBE = PathPlanner.loadPath("Top Cube", AutoConstants.SLOW_SPEED);
+    public static final PathPlannerTrajectory TOP_CONE = PathPlanner.loadPath("Top Cone", AutoConstants.SLOW_SPEED);
+//    public static final PathPlannerTrajectory TOP_CUBE_PLUS_ONE = PathPlanner.loadPath("Top Cube + 1", AutoConstants.SLOW_SPEED);
+//    public static final PathPlannerTrajectory TOP_CONE_PLUS_ONE = PathPlanner.loadPath("Top Cone + 1", AutoConstants.SLOW_SPEED);
+    public static final PathPlannerTrajectory BALANCE = PathPlanner.loadPath("Balance Easy", AutoConstants.SLOW_SPEED);
 
-    public static final List<PathPlannerTrajectory> PIECE_AUTO_HIGH = PathPlanner.loadPathGroup("3 Item High", AutoConstants.MAX_SPEED);
-    public static final PathPlannerTrajectory PIECE_AUTO_HIGH_NOTGROUP = PathPlanner.loadPath("3 Item Low", AutoConstants.MAX_SPEED);
-    public static final List<PathPlannerTrajectory>  PIECE_AUTO_LOW = PathPlanner.loadPathGroup("3 Item Low", AutoConstants.MAX_SPEED);
+    public static HashMap<String, Command> EVENT_MAP = new HashMap<>();
+    public static final HashMap<String, Command> EVENT_MAP_BALANCE = new HashMap<>();
+    public static final HashMap<String, Command> EVENT_MAP_NO_BALANCE = new HashMap<>();
+    static {
+        EVENT_MAP_BALANCE.put("intakeGround", new SuperstructureGround());
+        EVENT_MAP_NO_BALANCE.put("intakeGround", new SuperstructureGround());
+
+        EVENT_MAP_BALANCE.put("objectiveConeTop", new SuperstructureObjectiveGlobal(new Objective(6, NodeLevel.HIGH)));
+        EVENT_MAP_NO_BALANCE.put("objectiveConeTop", new SuperstructureObjectiveGlobal(new Objective(6, NodeLevel.HIGH)));
+
+        EVENT_MAP_BALANCE.put("objectiveCubeTop", new SuperstructureObjectiveGlobal(new Objective(7, NodeLevel.HIGH)));
+        EVENT_MAP_NO_BALANCE.put("objectiveCubeTop", new SuperstructureObjectiveGlobal(new Objective(7, NodeLevel.HIGH)));
+
+        EVENT_MAP_BALANCE.put("objectiveConeBottom", new SuperstructureObjectiveGlobal(new Objective(2, NodeLevel.HIGH)));
+        EVENT_MAP_NO_BALANCE.put("objectiveConeBottom", new SuperstructureObjectiveGlobal(new Objective(2, NodeLevel.HIGH)));
+
+        EVENT_MAP_BALANCE.put("objectiveCubeBottom", new SuperstructureObjectiveGlobal(new Objective(1, NodeLevel.HIGH)));
+        EVENT_MAP_NO_BALANCE.put("objectiveCubeBottom", new SuperstructureObjectiveGlobal(new Objective(1, NodeLevel.HIGH)));
+
+        EVENT_MAP_BALANCE.put("intakeGround", new SuperstructureGround());
+        EVENT_MAP_NO_BALANCE.put("intakeGround", new SuperstructureGround());
+
+        EVENT_MAP_BALANCE.put("home", new SuperstructureHome());
+        EVENT_MAP_NO_BALANCE.put("home", new SuperstructureHome());
+
+        EVENT_MAP_BALANCE.put("maybeStop", new WaitCommand(0));
+        EVENT_MAP_NO_BALANCE.put("maybeStop", new SwerveStop());
+
+        EVENT_MAP_BALANCE.put("balanceBackward", new SwerveAutoBalance(false));
+        EVENT_MAP_NO_BALANCE.put("balanceBackward", new SwerveStop());
+
+        EVENT_MAP_BALANCE.put("balanceForward", new SwerveAutoBalance(true));
+        EVENT_MAP_NO_BALANCE.put("balanceForward", new SwerveStop());
+
+//        EVENT_MAP_BALANCE.put("balanceBackward", new SwerveX());
+//        EVENT_MAP_NO_BALANCE.put("balanceBackward", new SwerveX());
+//
+//        EVENT_MAP_BALANCE.put("balanceForward", new SwerveX());
+//        EVENT_MAP_NO_BALANCE.put("balanceForward", new SwerveX());
+    }
 }

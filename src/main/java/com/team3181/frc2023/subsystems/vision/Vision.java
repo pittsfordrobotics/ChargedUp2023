@@ -3,8 +3,8 @@ package com.team3181.frc2023.subsystems.vision;
 import com.team3181.frc2023.Constants.RobotConstants;
 import com.team3181.frc2023.subsystems.swerve.Swerve;
 import com.team3181.frc2023.subsystems.vision.VisionIO.CameraMode;
-import com.team3181.frc2023.subsystems.vision.VisionIO.LED;
 import com.team3181.frc2023.subsystems.vision.VisionIO.Pipelines;
+import com.team3181.lib.math.GeomUtil;
 import com.team3181.lib.util.Alert;
 import com.team3181.lib.util.Alert.AlertType;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -12,51 +12,83 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 
 public class Vision extends SubsystemBase {
-    private final VisionIO io;
-    private final VisionIOInputsAutoLogged inputs = new VisionIOInputsAutoLogged();
+    private final VisionIO ioRight;
+    private final VisionIO ioLeft;
+    private final VisionIOInputsAutoLogged inputsRight = new VisionIOInputsAutoLogged();
+    private final VisionIOInputsAutoLogged inputsLeft = new VisionIOInputsAutoLogged();
 
     private boolean autoPipeline = false;
     private Pipelines pipeline = Pipelines.MID_RANGE;
-    private LED led = LED.PIPELINE;
+//    private LED led = LED.PIPELINE;
     private CameraMode camera = CameraMode.VISION_PROCESSING;
+    private final Timer timer = new Timer();
+    private boolean timerStarted = false;
+    private Pose2d lastPose = new Pose2d();
 
-    private final Alert limelightAlert = new Alert("Limelight not detected! Vision will NOT work!", AlertType.ERROR);
+    private final Alert rightLimelightAlert = new Alert("Right Limelight not detected! Vision will NOT work!", AlertType.ERROR);
+    private final Alert leftLimelightAlert = new Alert("Left Limelight not detected! Vision will NOT work!", AlertType.ERROR);
 
-    private static final Vision INSTANCE = new Vision(RobotConstants.VISION);
+    private static final Vision INSTANCE = new Vision(RobotConstants.VISION_RIGHT, RobotConstants.VISION_LEFT);
     public static Vision getInstance() {
         return INSTANCE;
     }
 
-    private Vision(VisionIO io) {
-        this.io = io;
+    // right and left are relative to the robot from birds eye view facing forwards
+    private Vision(VisionIO ioRight, VisionIO ioLeft) {
+        this.ioRight = ioRight;
+        this.ioLeft = ioLeft;
     }
 
     @Override
     public void periodic() {
-        io.updateInputs(inputs);
-        Logger.getInstance().processInputs("Vision", inputs);
+        ioRight.updateInputs(inputsRight);
+        Logger.getInstance().processInputs("VisionRight", inputsRight);
+        Logger.getInstance().processInputs("VisionLeft", inputsLeft);
 
-        limelightAlert.set(!inputs.connected);
+        rightLimelightAlert.set(!inputsRight.connected);
+        leftLimelightAlert.set(!inputsLeft.connected);
 
         if (!DriverStation.isAutonomous() && autoPipeline) {
             pipelineSwitcher();
         }
 
-        io.setPipeline(pipeline);
-        io.setCameraModes(camera);
+        ioRight.setPipeline(pipeline);
+        ioRight.setCameraModes(camera);
+        ioLeft.setPipeline(pipeline);
+        ioLeft.setCameraModes(camera);
         Logger.getInstance().recordOutput("Vision/Pipeline", pipeline.toString());
         Logger.getInstance().recordOutput("Vision/Camera", camera.toString());
 
         if (getPose() != null) {
-            Swerve.getInstance().addVisionData(Vision.getInstance().getPose(), Vision.getInstance().getLatency());
-            Logger.getInstance().recordOutput("Vision/Pose", Vision.getInstance().getPose());
+//            Swerve.getInstance().addVisionData(getPose(), getLatency(), checkStable());
+            Logger.getInstance().recordOutput("Vision/Pose", getPose());
         }
+        Logger.getInstance().recordOutput("Vision/Stable", checkStable());
+    }
+
+    public boolean checkStable() {
+        if (getPose() != null && !getPose().equals(new Pose2d())) {
+            if (GeomUtil.distance(getPose(), lastPose) < 0.1) {
+                if (!timerStarted) {
+                    timerStarted = true;
+                    timer.restart();
+                }
+            }
+            else {
+                timerStarted = false;
+                timer.restart();
+                lastPose = getPose();
+            }
+        }
+        else {
+            timer.restart();
+        }
+        return timer.hasElapsed(0.5);
     }
 
     public void setAutoPipeline(boolean autoPipeline) {
@@ -69,10 +101,7 @@ public class Vision extends SubsystemBase {
         double robotXPos = Swerve.getInstance().getPose().getX();
 
 //        TODO: see if we should use speed
-        if (robotXPos >= 8.3 - 1.2 && robotXPos < 8.3 + 1.2) {
-            pipeline = Pipelines.FAR_RANGE;
-        }
-        else if ((robotXPos >= 4.9 && robotXPos < 8.3 - 1.2) || (robotXPos >= 8.3 + 1.2 && robotXPos < 11.7)) {
+        if ((robotXPos >= 4.9 && robotXPos < 11.7)) {
             pipeline = Pipelines.MID_RANGE;
         }
         else if ((robotXPos >= 0 && robotXPos < 4.9) || (robotXPos >= 11.7 && robotXPos < 16.5)) {
@@ -81,41 +110,55 @@ public class Vision extends SubsystemBase {
     }
 
     public boolean hasTarget() {
-        return inputs.hasTarget;
+        return inputsRight.hasTarget;
     }
 
     public double getHorizontal() {
-        return inputs.hAngle;
+        return inputsRight.hAngle;
     }
 
     public double getVertical() {
-        return inputs.vAngle;
+        return inputsRight.vAngle;
+    }
+
+    private boolean checkRightLimelightHasPose() {
+        return inputsRight.botXYZ.length != 0 && inputsRight.botRPY.length != 0;
+    }
+
+    private boolean checkLeftLimelightHasPose() {
+        return inputsLeft.botXYZ.length != 0 && inputsLeft.botRPY.length != 0;
     }
 
     public Pose2d getPose() {
-        if (inputs.botXYZ.length != 0 && inputs.botYPR.length != 0) {
-            return new Pose2d(new Translation2d(inputs.botXYZ[0], inputs.botXYZ[1]), new Rotation2d(inputs.botYPR[0]));
+        if (checkRightLimelightHasPose() && checkLeftLimelightHasPose()) {
+            return new Pose2d(new Translation2d((inputsRight.botXYZ[0] + inputsLeft.botXYZ[0]) / 2, (inputsRight.botXYZ[1] + inputsLeft.botXYZ[1]) / 2), new Rotation2d(inputsRight.botRPY[2]));
+        }
+        else if (checkRightLimelightHasPose()) {
+            return new Pose2d(new Translation2d(inputsRight.botXYZ[0], inputsRight.botXYZ[1]), new Rotation2d(inputsRight.botRPY[2]));
+        }
+        else if (checkLeftLimelightHasPose()) {
+            return new Pose2d(new Translation2d(inputsLeft.botXYZ[0], inputsLeft.botXYZ[1]), new Rotation2d(inputsLeft.botRPY[2]));
         }
         return null;
     }
 
     public double getLatency() {
-        return inputs.captureTimestamp;
+        return inputsRight.captureTimestamp;
     }
 
     public void setPipeline(Pipelines pipeline) {
         this.pipeline = pipeline;
     }
 
-    public void setLED(LED led) {
-        this.led = led;
-    }
+//    public void setLED(LED led) {
+//        this.led = led;
+//    }
 
     public void setCamMode(CameraMode camera) {
         this.camera = camera;
     }
 
     public boolean isConnected() {
-        return inputs.connected;
+        return inputsRight.connected;
     }
 }

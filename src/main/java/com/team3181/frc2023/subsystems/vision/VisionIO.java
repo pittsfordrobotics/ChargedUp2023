@@ -14,7 +14,7 @@ public interface VisionIO {
         public double vAngle = 0.0;
         public double hAngle = 0.0;
         public double[] botXYZ = new double[]{};
-        public double[] botYPR = new double[]{};
+        public double[] botRPY = new double[]{};
     }
 
     /**

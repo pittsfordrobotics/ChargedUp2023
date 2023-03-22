@@ -9,12 +9,13 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import org.littletonrobotics.junction.Logger;
 
-public class VisionIOLimelight implements VisionIO {
+public class VisionIOLimelightRight implements VisionIO {
     public Pose3d lastPose = new Pose3d();
 
-    private final NetworkTable limelight = LimelightHelpers.getLimelightNTTable("");;
+    private final String limelightName = "";
+    private final NetworkTable limelight = LimelightHelpers.getLimelightNTTable(limelightName);
 
-    public VisionIOLimelight() {
+    public VisionIOLimelightRight() {
         setLEDs(LED.OFF);
     }
 
@@ -22,22 +23,22 @@ public class VisionIOLimelight implements VisionIO {
         NetworkTableEntry heartbeatEntry = limelight.getEntry("hb");
         NetworkTableEntry botposeEntry = DriverStation.getAlliance() == Alliance.Blue ? limelight.getEntry("botpose_wpiblue") : limelight.getEntry("botpose_wpired");
 
-        double pipelineLatency = LimelightHelpers.getLatency_Pipeline("");
-        double captureLatency = LimelightHelpers.getLatency_Capture("");
+        double pipelineLatency = LimelightHelpers.getLatency_Pipeline(limelightName);
+        double captureLatency = LimelightHelpers.getLatency_Capture(limelightName);
         double totalLatency = pipelineLatency + captureLatency; // ms
 
-        if (!lastPose.equals(new Pose3d(botposeEntry.getDoubleArray(new double[7])[0], botposeEntry.getDoubleArray(new double[7])[1], botposeEntry.getDoubleArray(new double[7])[2], new Rotation3d()))) {
+        if (!lastPose.equals(new Pose3d(botposeEntry.getDoubleArray(new double[7])[0], botposeEntry.getDoubleArray(new double[7])[1], botposeEntry.getDoubleArray(new double[7])[2], new Rotation3d(botposeEntry.getDoubleArray(new double[7])[3], botposeEntry.getDoubleArray(new double[7])[4], botposeEntry.getDoubleArray(new double[7])[5])))) {
             inputs.captureTimestamp = (Logger.getInstance().getRealTimestamp() / 1000000.0) - Units.millisecondsToSeconds(totalLatency);
             inputs.botXYZ = new double[]{botposeEntry.getDoubleArray(new double[7])[0], botposeEntry.getDoubleArray(new double[7])[1], botposeEntry.getDoubleArray(new double[7])[2]};
-            inputs.botYPR = new double[]{botposeEntry.getDoubleArray(new double[7])[3], botposeEntry.getDoubleArray(new double[7])[4], botposeEntry.getDoubleArray(new double[7])[5]};
-            lastPose = new Pose3d(botposeEntry.getDoubleArray(new double[7])[0], botposeEntry.getDoubleArray(new double[7])[1], botposeEntry.getDoubleArray(new double[7])[2], new Rotation3d());
+            inputs.botRPY = new double[]{botposeEntry.getDoubleArray(new double[7])[3], botposeEntry.getDoubleArray(new double[7])[4], botposeEntry.getDoubleArray(new double[7])[5]};
+            lastPose = new Pose3d(botposeEntry.getDoubleArray(new double[7])[0], botposeEntry.getDoubleArray(new double[7])[1], botposeEntry.getDoubleArray(new double[7])[2], new Rotation3d(botposeEntry.getDoubleArray(new double[7])[3], botposeEntry.getDoubleArray(new double[7])[4], botposeEntry.getDoubleArray(new double[7])[5]));
         }
         inputs.captureLatency = captureLatency;
         inputs.pipelineLatency = pipelineLatency;
-        inputs.hasTarget = LimelightHelpers.getTV("");
+        inputs.hasTarget = LimelightHelpers.getTV(limelightName);
         inputs.connected = heartbeatEntry.getDouble(0.0) > 0.0;
-        inputs.vAngle = LimelightHelpers.getTY("");
-        inputs.hAngle = LimelightHelpers.getTX("");
+        inputs.vAngle = LimelightHelpers.getTY(limelightName);
+        inputs.hAngle = LimelightHelpers.getTX(limelightName);
     }
 
     @Override

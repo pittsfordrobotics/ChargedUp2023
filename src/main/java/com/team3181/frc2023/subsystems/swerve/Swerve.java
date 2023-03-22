@@ -16,8 +16,6 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 
@@ -54,11 +52,11 @@ public class Swerve extends SubsystemBase {
 
         for (int i = 0; i < 4; i++) {
             moduleIO[i].updateInputs(moduleInputs[i]);
-            modulePositions[i] = new SwerveModulePosition(moduleInputs[i].drivePositionMeters, Rotation2d.fromRadians(moduleInputs[i].steerAbsolutePositionRad));
-            lastModuleStates[i] = new BetterSwerveModuleState(0, Rotation2d.fromRadians(moduleInputs[i].steerAbsolutePositionRad), 0);
+            modulePositions[i] = new SwerveModulePosition(moduleInputs[i].drivePositionMeters, Rotation2d.fromRadians(moduleInputs[i].steerOffsetAbsolutePositionRad));
+            lastModuleStates[i] = new BetterSwerveModuleState(0, Rotation2d.fromRadians(moduleInputs[i].steerOffsetAbsolutePositionRad), 0);
         }
 
-        poseEstimator = new SwerveDrivePoseEstimator(SwerveConstants.DRIVE_KINEMATICS, new Rotation2d(), modulePositions, new Pose2d());
+        poseEstimator = new SwerveDrivePoseEstimator(SwerveConstants.DRIVE_KINEMATICS, getRobotRelativeAngle(), modulePositions, new Pose2d());
     }
 
     @Override
@@ -67,8 +65,8 @@ public class Swerve extends SubsystemBase {
         SwerveModuleState[] actualStates = new SwerveModuleState[4];
         for (int i = 0; i < 4; i++) {
             moduleIO[i].updateInputs(moduleInputs[i]);
-            actualStates[i] = new SwerveModuleState(moduleInputs[i].driveVelocityMetersPerSec, Rotation2d.fromRadians(moduleInputs[i].steerAbsolutePositionRad));
-            modulePositions[i] = new SwerveModulePosition(moduleInputs[i].drivePositionMeters, Rotation2d.fromRadians(moduleInputs[i].steerAbsolutePositionRad));
+            actualStates[i] = new SwerveModuleState(moduleInputs[i].driveVelocityMetersPerSec, Rotation2d.fromRadians(moduleInputs[i].steerOffsetAbsolutePositionRad));
+            modulePositions[i] = new SwerveModulePosition(moduleInputs[i].drivePositionMeters, Rotation2d.fromRadians(moduleInputs[i].steerOffsetAbsolutePositionRad));
             wantedModuleStates[i] = new SwerveModuleState(lastModuleStates[i].speedMetersPerSecond, Rotation2d.fromRadians(lastModuleStates[i].angle.getRadians() + lastModuleStates[i].omegaRadPerSecond * (isOpenLoop ? SwerveConstants.MODULE_STEER_FF_OL : SwerveConstants.MODULE_STEER_FF_CL) * 0.065));
         }
         actualRobotRelativeChassisSpeeds = SwerveConstants.DRIVE_KINEMATICS.toChassisSpeeds(actualStates);
@@ -160,10 +158,12 @@ public class Swerve extends SubsystemBase {
         poseEstimator.resetPosition(getRobotRelativeAngle(), modulePositions, pose);
     }
 
-    public void addVisionData(Pose2d pose, double time) {
-//        this is recommended, but I'm not sure if it's needed
-        if (GeomUtil.distance(pose, getPose()) < 1) {
-            poseEstimator.addVisionMeasurement(pose, time);
+    public void addVisionData(Pose2d pose, double time, boolean stable) {
+        if (GeomUtil.distance(pose, getPose()) < 1 || stable) {
+            // remove rotation because its being funky
+            Pose2d noRot = new Pose2d(pose.getTranslation(), getPose().getRotation());
+            Logger.getInstance().recordOutput("Swerve/Vision Updates", noRot);
+            poseEstimator.addVisionMeasurement(noRot, time);
         }
     }
 
@@ -176,10 +176,10 @@ public class Swerve extends SubsystemBase {
     }
 
     public boolean isStopped() {
-        boolean module0 = BetterMath.epsilonEquals(moduleInputs[0].driveVelocityMetersPerSec, 0);
-        boolean module1 = BetterMath.epsilonEquals(moduleInputs[1].driveVelocityMetersPerSec, 0);
-        boolean module2 = BetterMath.epsilonEquals(moduleInputs[2].driveVelocityMetersPerSec, 0);
-        boolean module3 = BetterMath.epsilonEquals(moduleInputs[3].driveVelocityMetersPerSec, 0);
+        boolean module0 = BetterMath.epsilonEquals(moduleInputs[0].driveVelocityMetersPerSec, 0, 0.1);
+        boolean module1 = BetterMath.epsilonEquals(moduleInputs[1].driveVelocityMetersPerSec, 0, 0.1);
+        boolean module2 = BetterMath.epsilonEquals(moduleInputs[2].driveVelocityMetersPerSec, 0, 0.1);
+        boolean module3 = BetterMath.epsilonEquals(moduleInputs[3].driveVelocityMetersPerSec, 0, 0.1);
         return module0 && module1 && module2 && module3;
     }
 

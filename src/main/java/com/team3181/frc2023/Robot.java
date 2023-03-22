@@ -12,11 +12,13 @@ import com.team3181.lib.util.Alert;
 import com.team3181.lib.util.Alert.AlertType;
 import com.team3181.lib.util.PIDTuner;
 import com.team3181.lib.util.VirtualSubsystem;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import org.littletonrobotics.junction.LogFileUtil;
@@ -35,7 +37,9 @@ public class Robot extends LoggedRobot {
   private final Alert operatorControllerAlert = new Alert("Operator Controller is NOT detected!", AlertType.ERROR);
 
   private final Timer disabledTimer = new Timer();
+  private final Timer garbageCollector = new Timer();
   private boolean stopped = false;
+  private final Alert lowBatteryAlert = new Alert("Battery is at a LOW voltage! The battery MUST be replaced before playing a match!", AlertType.WARNING);
 
   private RobotContainer robotContainer;
 
@@ -52,22 +56,16 @@ public class Robot extends LoggedRobot {
     logger.recordMetadata("GitDate", BuildConstants.GIT_DATE);
     logger.recordMetadata("GitBranch", BuildConstants.GIT_BRANCH);
     switch (BuildConstants.DIRTY) {
-      case 0:
-        logger.recordMetadata("GitDirty", "All changes committed");
-        break;
-      case 1:
-        logger.recordMetadata("GitDirty", "Uncomitted changes");
-        break;
-      default:
-        logger.recordMetadata("GitDirty", "Unknown");
-        break;
+      case 0 -> logger.recordMetadata("GitDirty", "All changes committed");
+      case 1 -> logger.recordMetadata("GitDirty", "Uncommitted changes");
+      default -> logger.recordMetadata("GitDirty", "Unknown");
     }
 
 //    Logger startup
     logger.addDataReceiver(new NT4Publisher());
     if (RobotBase.isReal()) {
       logger.addDataReceiver(new WPILOGWriter(RobotConstants.LOGGING_PATH));
-      LoggedPowerDistribution.getInstance();
+      LoggedPowerDistribution.getInstance(0, ModuleType.kRev);
     }
     else if (RobotConstants.REPLAY_ENABLED) {
       String path = LogFileUtil.findReplayLog();
@@ -81,7 +79,13 @@ public class Robot extends LoggedRobot {
 
     DriverStation.silenceJoystickConnectionWarning(true);
     LiveWindow.disableAllTelemetry();
+    LiveWindow.setEnabled(false);
     robotContainer = new RobotContainer();
+    Swerve.getInstance().setCoastMode();
+    garbageCollector.start();
+
+    new BetterXboxController(0, BetterXboxController.Humans.DRIVER);
+    new BetterXboxController(1, BetterXboxController.Humans.OPERATOR);
   }
 
   @Override
@@ -89,31 +93,33 @@ public class Robot extends LoggedRobot {
     CommandScheduler.getInstance().run();
     VirtualSubsystem.periodicAll();
 
-    // Log scheduled commands
-    Logger.getInstance().recordOutput("ActiveCommands/Scheduler",
-            NetworkTableInstance.getDefault()
-                    .getEntry("/LiveWindow/Ungrouped/Scheduler/Names")
-                    .getStringArray(new String[] {}));
-
     logReceiverQueueAlert.set(Logger.getInstance().getReceiverQueueFault());
-
-    new BetterXboxController(0, BetterXboxController.Humans.DRIVER);
-    new BetterXboxController(1, BetterXboxController.Humans.OPERATOR);
+    // in MBs
+    Logger.getInstance().recordOutput("Memory Usage", String.format("%.2f", (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024.0 / 1024.0));
 
     driverControllerAlert.set(!DriverStation.isJoystickConnected(0));
     operatorControllerAlert.set(!DriverStation.isJoystickConnected(1));
     LazySparkMax.checkAlive();
+
+    SmartDashboard.putBoolean("Can Balance", robotContainer.canBalance());
+    SmartDashboard.putBoolean("Need Position", robotContainer.needPosition());
+
+    if (garbageCollector.hasElapsed(1)) {
+      System.gc();
+      garbageCollector.restart();
+    }
   }
 
   @Override
   public void disabledInit() {
-    disabledTimer.reset();
-    disabledTimer.start();
+    disabledTimer.restart();
+    robotContainer.autoConfig();
   }
 
   @Override
   public void disabledPeriodic() {
-    if (Swerve.getInstance().isStopped() && disabledTimer.hasElapsed(5) && !stopped) {
+    lowBatteryAlert.set(RobotController.getBatteryVoltage() < 12.2);
+    if (disabledTimer.hasElapsed(5) && !stopped) {
       Swerve.getInstance().setCoastMode();
       stopped = true;
     }
@@ -121,6 +127,7 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void autonomousInit() {
+    lowBatteryAlert.set(false);
     Swerve.getInstance().setBrakeMode();
     autonomousCommand = robotContainer.getAutonomousCommand();
 
@@ -134,10 +141,13 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void teleopInit() {
+    lowBatteryAlert.set(false);
     Swerve.getInstance().setBrakeMode();
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
+      autonomousCommand = null;
     }
+    robotContainer.killAuto();
   }
 
   @Override
