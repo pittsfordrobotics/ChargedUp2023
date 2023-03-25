@@ -145,7 +145,7 @@ public class FourBar extends SubsystemBase {
 
     public void zeroArms() {
         armIO[0].zeroAbsoluteEncoder();
-//        armIO[1].zeroAbsoluteEncoder(); TODO: test this
+        armIO[1].zeroAbsoluteEncoder();
     }
 
     public void recordHigh(Rotation2d[] rotation2ds) {
