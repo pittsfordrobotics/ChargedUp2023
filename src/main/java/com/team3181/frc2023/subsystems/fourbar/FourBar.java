@@ -56,6 +56,11 @@ public class FourBar extends SubsystemBase {
 
         shoulderTooLow.set(DriverStation.isDisabled() && inputs[0].armOffsetPositionRad > 0);
 
+        if (atElbowLimit() && atShoulderLimit()) {
+            zeroArms();
+            Logger.getInstance().recordOutput("FourBar/Zeroing", true);
+        }
+
 //        System.out.println(Arrays.toString(
 //                solve(
 //                        new Translation2d(
@@ -77,6 +82,16 @@ public class FourBar extends SubsystemBase {
         Vector<N2> ff = ArmDynamics. getInstance().feedforward(pos);
         setArmVoltage(0, ff.get(0, 0));
         setArmVoltage(1, ff.get(1, 0));
+    }
+
+    public void brake() {
+        armIO[0].setBrakeMode(true);
+        armIO[0].setBrakeMode(true);
+    }
+
+    public void coast() {
+        armIO[0].setBrakeMode(false);
+        armIO[1].setBrakeMode(false);
     }
 
     public void setArmVoltage(int index, double voltage) {
@@ -112,6 +127,19 @@ public class FourBar extends SubsystemBase {
 
     public boolean atSetpoint() {
         return shoulderPID.atSetpoint() && elbowPID.atSetpoint();
+    }
+
+    public boolean atShoulderLimit() {
+        return armIO[0].isAtLimitSwitch();
+    }
+
+    public boolean atElbowLimit() {
+        return armIO[1].isAtLimitSwitch();
+    }
+
+    public void zeroArms() {
+        armIO[0].zeroAbsoluteEncoder();
+        armIO[1].zeroAbsoluteEncoder();
     }
 
     public void recordHigh(Rotation2d[] rotation2ds) {
