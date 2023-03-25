@@ -5,6 +5,8 @@ import com.team3181.frc2023.Constants;
 import com.team3181.frc2023.Constants.EndEffectorConstants;
 import com.team3181.frc2023.Constants.FourBarConstants;
 import com.team3181.frc2023.Constants.SwerveConstants;
+import com.team3181.frc2023.Robot;
+import com.team3181.lib.commands.DisabledInstantCommand;
 import com.team3181.lib.util.Alert;
 import com.team3181.lib.util.Alert.AlertType;
 import edu.wpi.first.math.MathUtil;
@@ -40,6 +42,9 @@ public class FourBar extends SubsystemBase {
 //        SmartDashboard.putNumber("elbow", 0);
         shoulderPID.setTolerance(FourBarConstants.PID_TOLERANCE);
         elbowPID.setTolerance(FourBarConstants.PID_TOLERANCE);
+
+        Robot.pitTab.add("Arm Coast", new DisabledInstantCommand(this::coast));
+        Robot.pitTab.add("Arm Brake", new DisabledInstantCommand(this::brake));
 
         for(int i = 0; i < 2; i++) {
            armIO[i].updateInputs(inputs[i]);

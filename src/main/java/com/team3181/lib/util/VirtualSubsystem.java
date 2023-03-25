@@ -13,7 +13,7 @@ import java.util.List;
  * Represents a subsystem unit that requirse a periodic callback but not require a hardware mutex.
  */
 public abstract class VirtualSubsystem extends SubsystemBase {
-  private static List<VirtualSubsystem> subsystems = new ArrayList<>();
+  private static final List<VirtualSubsystem> subsystems = new ArrayList<>();
 
   public VirtualSubsystem() {
     subsystems.add(this);

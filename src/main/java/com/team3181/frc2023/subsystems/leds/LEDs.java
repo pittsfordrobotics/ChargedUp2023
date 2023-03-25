@@ -15,7 +15,7 @@ public class LEDs extends SubsystemBase {
     private int initialRainbowHue = 0;
 
     public enum LEDModes {
-        CONE, CUBE, FLASH_CONE, FLASH_CUBE, RAINBOW, GOOD, BAD, HAPPY, AUTO_DRIVE_NODE, AUTO_DRIVE_SUBSTATION, ERROR, IDLE, CONNECTED_FMS, OFF
+        CONE, CUBE, FLASH_CONE, FLASH_CUBE, RAINBOW, GOOD, BAD, HAPPY, AUTO_NODE, AUTO_SUBSTATION, ERROR, IDLE, CONNECTED_FMS, OFF
     }
     private LEDModes ledMode = LEDModes.IDLE;
 
@@ -39,8 +39,8 @@ public class LEDs extends SubsystemBase {
             case CONNECTED_FMS -> setFadeAlliance();
             case GOOD -> setColorAll(Color.kGreen);
             case BAD -> setColorAll(Color.kRed);
-            case AUTO_DRIVE_NODE -> flashColor(Color.kBlue);
-            case AUTO_DRIVE_SUBSTATION -> flashColorBack(Color.kBlue);
+            case AUTO_NODE -> flashColor(Color.kBlue);
+            case AUTO_SUBSTATION -> flashColorBack(Color.kBlue);
             case RAINBOW -> setRainbow();
             case HAPPY -> flashColor(Color.kGreen);
             case ERROR -> flashColor(Color.kRed);
@@ -96,6 +96,7 @@ public class LEDs extends SubsystemBase {
             leds.setRGB(i, (int)(color.red * 255), (int)(color.green * 255), (int)(color.blue * 255));
         }
     }
+
     private void setColorBack(Color color) {
         for (int i = 0; i < 10; i++) {
             leds.setRGB(i, (int)(color.red * 255), (int)(color.green * 255), (int)(color.blue * 255));
@@ -104,6 +105,7 @@ public class LEDs extends SubsystemBase {
             leds.setRGB(i, (int)(color.red * 255), (int)(color.green * 255), (int)(color.blue * 255));
         }
     }
+
     private void setRunAlliance() {
         Color color = getConnected();
         if (timer.get() < 0.05 + 0.02) {

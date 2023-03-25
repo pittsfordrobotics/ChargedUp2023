@@ -19,6 +19,8 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -36,11 +38,12 @@ public class Robot extends LoggedRobot {
   private final Alert logReceiverQueueAlert = new Alert("Logging queue is full. Data will NOT be logged.", AlertType.ERROR);
   private final Alert driverControllerAlert = new Alert("Driver Controller is NOT detected!", AlertType.ERROR);
   private final Alert operatorControllerAlert = new Alert("Operator Controller is NOT detected!", AlertType.ERROR);
+  private final Alert lowBatteryAlert = new Alert("Battery is at a LOW voltage! The battery MUST be replaced before playing a match!", AlertType.WARNING);
 
   private final Timer disabledTimer = new Timer();
   private final Timer garbageCollector = new Timer();
+  public static final ShuffleboardTab pitTab = Shuffleboard.getTab("Pit");
   private boolean stopped = false;
-  private final Alert lowBatteryAlert = new Alert("Battery is at a LOW voltage! The battery MUST be replaced before playing a match!", AlertType.WARNING);
 
   private RobotContainer robotContainer;
 

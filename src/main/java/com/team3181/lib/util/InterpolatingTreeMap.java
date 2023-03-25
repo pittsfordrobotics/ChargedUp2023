@@ -45,34 +45,29 @@ public class InterpolatingTreeMap {
         return hasVal.value;
     }
 
-    private static class InterpolatingDouble implements Comparable<InterpolatingDouble> {
-        private final double value;
-
-        private InterpolatingDouble(double value) {
-            this.value = value;
-        }
+    private record InterpolatingDouble(double value) implements Comparable<InterpolatingDouble> {
 
         private InterpolatingDouble lerp(InterpolatingDouble other, double x) {
-            double dydx = other.value - value;
-            return new InterpolatingDouble(dydx * x + value);
-        }
-
-        private double inverseLerp(InterpolatingDouble upper, InterpolatingDouble query) {
-            double upperToLower = upper.value - value;
-            if (upperToLower <= 0) {
-                return 0;
+                double dydx = other.value - value;
+                return new InterpolatingDouble(dydx * x + value);
             }
 
-            double queryToLower = query.value - value;
-            if (queryToLower <= 0) {
-                return 0;
+            private double inverseLerp(InterpolatingDouble upper, InterpolatingDouble query) {
+                double upperToLower = upper.value - value;
+                if (upperToLower <= 0) {
+                    return 0;
+                }
+
+                double queryToLower = query.value - value;
+                if (queryToLower <= 0) {
+                    return 0;
+                }
+
+                return queryToLower / upperToLower;
             }
 
-            return queryToLower / upperToLower;
+            public int compareTo(InterpolatingDouble other) {
+                return Double.compare(value, other.value);
+            }
         }
-
-        public int compareTo(InterpolatingDouble other) {
-            return Double.compare(value, other.value);
-        }
-    }
 }

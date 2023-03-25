@@ -148,6 +148,12 @@ public class Superstructure extends SubsystemBase {
             else {
                 leds.setLEDMode(LEDModes.ERROR);
             }
+            if (autoNode) {
+                leds.setLEDMode(LEDModes.AUTO_NODE);
+            }
+            else if (autoSubstation) {
+                leds.setLEDMode(LEDModes.AUTO_SUBSTATION);
+            }
         }
         demandLEDs = false;
 
