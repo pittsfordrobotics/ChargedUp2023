@@ -163,11 +163,23 @@ public final class Constants {
         };
         public static final BetterSwerveKinematics DRIVE_KINEMATICS = new BetterSwerveKinematics(MODULE_OFFSETS);
 
+        public static final HashMap<Integer, Rotation2d> MODULE_HASHMAP = new HashMap<>();
+        static {
+            MODULE_HASHMAP.put(0, Rotation2d.fromRadians(1.7843507528305054));
+            MODULE_HASHMAP.put(1, Rotation2d.fromRadians(0.07440893352031708));
+            MODULE_HASHMAP.put(2, Rotation2d.fromRadians(6.24068546295166));
+            MODULE_HASHMAP.put(3, Rotation2d.fromRadians(0.4658687710762024));
+            MODULE_HASHMAP.put(4, Rotation2d.fromRadians(0));
+            MODULE_HASHMAP.put(5, Rotation2d.fromRadians(0));
+            MODULE_HASHMAP.put(6, Rotation2d.fromRadians(0));
+            MODULE_HASHMAP.put(7, Rotation2d.fromRadians(0));
+        }
+
 //        true reading from advantage scope
-        public static final Rotation2d FL_PURE_OFFSET = Rotation2d.fromRadians(1.7843507528305054);
-        public static final Rotation2d FR_PURE_OFFSET = Rotation2d.fromRadians(0.07440893352031708);
-        public static final Rotation2d BL_PURE_OFFSET = Rotation2d.fromRadians(6.24068546295166);
-        public static final Rotation2d BR_PURE_OFFSET = Rotation2d.fromRadians(0.4658687710762024);
+        public static final Rotation2d FL_PURE_OFFSET = MODULE_HASHMAP.get(0);
+        public static final Rotation2d FR_PURE_OFFSET = MODULE_HASHMAP.get(1);
+        public static final Rotation2d BL_PURE_OFFSET = MODULE_HASHMAP.get(2);
+        public static final Rotation2d BR_PURE_OFFSET = MODULE_HASHMAP.get(3);
 
 //        public static final Rotation2d FL_OFFSET = FL_PURE_OFFSET.plus(Rotation2d.fromDegrees(0));
 //        public static final Rotation2d FR_OFFSET = FR_PURE_OFFSET.plus(Rotation2d.fromDegrees(0));
