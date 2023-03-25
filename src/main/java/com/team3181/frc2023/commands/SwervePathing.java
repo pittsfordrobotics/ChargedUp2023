@@ -43,7 +43,7 @@ public class SwervePathing extends CommandBase {
         yTuner.setPID();
         rotTuner.setPID();
 
-        holonomicDriveController = new HolonomicDriveController(xController, yController, rotController)
+        holonomicDriveController = new HolonomicDriveController(xController, yController, rotController);
         // adjusts because the field is flipped instead of rotated by 180
         PathPlannerState adjustedState = PathPlannerTrajectory.transformStateForAlliance(trajectory.getInitialState(), DriverStation.getAlliance());
         if (reset) {

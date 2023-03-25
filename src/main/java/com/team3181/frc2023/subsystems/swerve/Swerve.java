@@ -2,6 +2,8 @@ package com.team3181.frc2023.subsystems.swerve;
 
 import com.team3181.frc2023.Constants.RobotConstants;
 import com.team3181.frc2023.Constants.SwerveConstants;
+import com.team3181.frc2023.Robot;
+import com.team3181.lib.commands.DisabledInstantCommand;
 import com.team3181.lib.math.BetterMath;
 import com.team3181.lib.math.GeomUtil;
 import com.team3181.lib.swerve.BetterSwerveKinematics;
@@ -57,6 +59,11 @@ public class Swerve extends SubsystemBase {
         }
 
         poseEstimator = new SwerveDrivePoseEstimator(SwerveConstants.DRIVE_KINEMATICS, getRobotRelativeAngle(), modulePositions, new Pose2d());
+
+        Robot.pitTab.add("Swerve Straight Wheels", new DisabledInstantCommand(this::forward));
+        Robot.pitTab.add("Swerve Coast", new DisabledInstantCommand(this::setCoastMode));
+        Robot.pitTab.add("Swerve Brake", new DisabledInstantCommand(this::setBrakeMode));
+        Robot.pitTab.add("Swerve Zero Pigeon", new DisabledInstantCommand(this::zeroGyro));
     }
 
     @Override
@@ -125,6 +132,16 @@ public class Swerve extends SubsystemBase {
                 new BetterSwerveModuleState(0.1, Rotation2d.fromDegrees(-45), 0),
                 new BetterSwerveModuleState(0.1, Rotation2d.fromDegrees(315), 0),
                 new BetterSwerveModuleState(0.1, Rotation2d.fromDegrees(45), 0),
+        }, true);
+    }
+
+    //    drives wheels forward for debugging
+    private void forward() {
+        setModuleStates(new BetterSwerveModuleState[]{
+                new BetterSwerveModuleState(0.1, Rotation2d.fromDegrees(0), 0),
+                new BetterSwerveModuleState(0.1, Rotation2d.fromDegrees(0), 0),
+                new BetterSwerveModuleState(0.1, Rotation2d.fromDegrees(0), 0),
+                new BetterSwerveModuleState(0.1, Rotation2d.fromDegrees(0), 0),
         }, true);
     }
 

@@ -12,6 +12,7 @@ import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker;
 import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker.NodeLevel;
 import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker.Objective;
 import com.team3181.frc2023.subsystems.swerve.Swerve;
+import com.team3181.lib.commands.DisabledInstantCommand;
 import com.team3181.lib.controller.BetterXboxController;
 import com.team3181.lib.controller.BetterXboxController.Humans;
 import com.team3181.lib.math.GeomUtil;
@@ -58,7 +59,12 @@ public class Superstructure extends SubsystemBase {
         return INSTANCE;
     }
 
-    private Superstructure() {}
+    private Superstructure() {
+        Robot.pitTab.add("Superstructure Home", new DisabledInstantCommand(this::home));
+        Robot.pitTab.add("Superstructure Ground", new DisabledInstantCommand(this::collectGround));
+        Robot.pitTab.add("Superstructure Mid", new DisabledInstantCommand(this::collectMid));
+        Robot.pitTab.add("Superstructure Objective", new DisabledInstantCommand(this::objective));
+    }
 
     @Override
     public void periodic() {

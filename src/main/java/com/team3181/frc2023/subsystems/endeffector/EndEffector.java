@@ -21,7 +21,7 @@ public class EndEffector extends SubsystemBase {
     private WantedState lastWantedState = WantedState.IDLE;
     private ActualState actualState = ActualState.IDLE;
     private final Vector<Double> intakeCurrents = new Vector<>();
-    private final int currentCycles = 20;
+    private final int currentCycles = 20; // TODO: try increasing this
 
     private final static EndEffector INSTANCE = new EndEffector(Constants.RobotConstants.END_EFFECTOR);
     public static EndEffector getInstance() {

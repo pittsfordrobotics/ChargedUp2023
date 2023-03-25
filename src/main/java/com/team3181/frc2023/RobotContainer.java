@@ -67,15 +67,15 @@ public class RobotContainer {
 //    driverController.a().whileTrue(new SwerveAutoScore());
 //      driverController.a().whileTrue(new SwerveAutoBalance(true));
 //    driverController.a()
-//            .whileTrue(new SwerveAutoDoubleSubstationLow());
+//            .whileTrue(new SwerveAutoDoubleSubstationRight());
     //    driverController.y()
 //            .whileTrue(new SwerveAutoScore())
 //            .whileFalse(new SuperstructureHome());
 //    driverController.b()
-//            .whileTrue(new SwerveAutoDoubleSubstationHigh())
+//            .whileTrue(new SwerveAutoDoubleSubstationLeft())
 //            .whileFalse(new SuperstructureHome());
 //    driverController.a()
-//            .whileTrue(new SwerveAutoDoubleSubstationLow())
+//            .whileTrue(new SwerveAutoDoubleSubstationRight())
 //            .whileFalse(new SuperstructureHome());
 //    driverController.a().whileTrue(new SwerveAutoBalance(true));
 //    driverController.a().onTrue(new InstantCommand(endEffector::intake)).onFalse(new InstantCommand(endEffector::idle));
@@ -129,10 +129,10 @@ public class RobotContainer {
 //            .whileTrue(new SwerveAutoScore())
 //            .whileFalse(new SuperstructureHome());
 //    driverController.b()
-//            .whileTrue(new SwerveAutoDoubleSubstationHigh())
+//            .whileTrue(new SwerveAutoDoubleSubstationRight())
 //            .whileFalse(new SuperstructureHome());
 //    driverController.a()
-//            .whileTrue(new SwerveAutoDoubleSubstationLow())
+//            .whileTrue(new SwerveAutoDoubleSubstationLeft())
 //            .whileFalse(new SuperstructureHome());
     driverController.rightBumper()
             .whileTrue(new InstantCommand(swerve::zeroGyro));
@@ -158,24 +158,6 @@ public class RobotContainer {
     operatorController.y()
             .whileTrue(new InstantCommand(Superstructure.getInstance()::setDemandLEDs));
 
-//    operatorController.rightTrigger()
-//            .whileTrue(new RepeatCommand(new InstantCommand(Superstructure.getInstance()::exhaust)))
-//            .whileFalse(new InstantCommand(Superstructure.getInstance()::idle));
-//    operatorController.leftTrigger()
-//            .whileTrue(new RepeatCommand(new InstantCommand(Superstructure.getInstance()::manual)))
-//            .whileFalse(new RepeatCommand(new InstantCommand(Superstructure.getInstance()::idle)));
-//    operatorController.a()
-//            .whileTrue(new RepeatCommand(new InstantCommand(Superstructure.getInstance()::collectGround)))
-//            .whileFalse(new RepeatCommand(new InstantCommand(Superstructure.getInstance()::home)));
-//    operatorController.b()
-//            .whileTrue(new RepeatCommand(new InstantCommand(Superstructure.getInstance()::collectMid)))
-//            .whileFalse(new RepeatCommand(new InstantCommand(Superstructure.getInstance()::home)));
-//    operatorController.x()
-//            .whileTrue(new RepeatCommand(new InstantCommand(Superstructure.getInstance()::objective)))
-//            .whileFalse(new RepeatCommand(new InstantCommand(Superstructure.getInstance()::home)));
-//    operatorController.y()
-//            .whileTrue(new RepeatCommand(new InstantCommand(Superstructure.getInstance()::setDemandLEDs)));
-
     operatorController.povUp()
             .whileTrue(objectiveTracker.shiftNodeCommand(Direction.UP));
     operatorController.povRight()
@@ -184,10 +166,10 @@ public class RobotContainer {
             .whileTrue(objectiveTracker.shiftNodeCommand(Direction.DOWN));
     operatorController.povLeft()
             .whileTrue(objectiveTracker.shiftNodeCommand(Direction.LEFT));
-//    operatorController.rightBumper().
-//            whileTrue(new InstantCommand(objectiveTracker::toggleFilled));
-//    operatorController.leftBumper().
-//            whileTrue(new InstantCommand(objectiveTracker::toggleActive));
+    operatorController.rightBumper().
+            whileTrue(new InstantCommand(objectiveTracker::toggleFilled));
+    operatorController.leftBumper().
+            whileTrue(new InstantCommand(objectiveTracker::toggleActive));
   }
 
   public void autoConfig() {

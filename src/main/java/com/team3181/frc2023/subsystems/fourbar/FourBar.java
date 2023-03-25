@@ -61,6 +61,7 @@ public class FourBar extends SubsystemBase {
 
         shoulderTooLow.set(DriverStation.isDisabled() && inputs[0].armOffsetPositionRad > 0);
 
+//        auto zeros when at setpoint
         if (atElbowLimit() && atShoulderLimit()) {
             zeroArms();
             Logger.getInstance().recordOutput("FourBar/Zeroing", true);
@@ -144,7 +145,7 @@ public class FourBar extends SubsystemBase {
 
     public void zeroArms() {
         armIO[0].zeroAbsoluteEncoder();
-        armIO[1].zeroAbsoluteEncoder();
+//        armIO[1].zeroAbsoluteEncoder(); TODO: test this
     }
 
     public void recordHigh(Rotation2d[] rotation2ds) {

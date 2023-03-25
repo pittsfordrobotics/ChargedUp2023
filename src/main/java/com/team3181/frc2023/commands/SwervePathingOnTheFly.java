@@ -21,6 +21,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -34,7 +35,7 @@ public class SwervePathingOnTheFly extends CommandBase {
     private final AutoDrivePosition position;
     private final boolean simple;
     private final Timer timer = new Timer();
-    private PathConstraints pathConstraints;
+    private final PathConstraints pathConstraints;
 
     private final PIDController xController = new PIDController(AutoConstants.LINEAR_P, 0, 0);
     private final PIDController yController = new PIDController(AutoConstants.LINEAR_P, 0, 0);
@@ -68,6 +69,31 @@ public class SwervePathingOnTheFly extends CommandBase {
         rotController.enableContinuousInput(-Math.PI, Math.PI);
     }
 
+    public SwervePathingOnTheFly(boolean leftSubstation, boolean simple) {
+        addRequirements(this.swerve);
+        this.pathPoint = null;
+        this.pathConstraints = AutoConstants.SLOW_SPEED;
+        this.simple = simple;
+        Alliance alliance = DriverStation.getAlliance();
+        if (alliance == Alliance.Red) {
+            if (leftSubstation) {
+                this.position = AutoDrivePosition.DOUBLE_SUBSTATION_LOW;
+            }
+            else {
+                this.position = AutoDrivePosition.DOUBLE_SUBSTATION_HIGH;
+            }
+        }
+        else {
+            if (leftSubstation) {
+                this.position = AutoDrivePosition.DOUBLE_SUBSTATION_HIGH;
+            }
+            else {
+                this.position = AutoDrivePosition.DOUBLE_SUBSTATION_LOW;
+            }
+        }
+        rotController.enableContinuousInput(-Math.PI, Math.PI);
+    }
+
     @Override
     public void initialize() {
         ArrayList<PathPoint> adjustedPathPoints = new ArrayList<>();
@@ -78,7 +104,7 @@ public class SwervePathingOnTheFly extends CommandBase {
         switch (position) {
             case NODE:
                 BetterPathPoint node = AutoDrivePoints.nodeSelector(objective.nodeRow);
-                if (objective.nodeLevel == NodeLevel.MID) {
+                if (objective.nodeLevel == NodeLevel.MID || objective.nodeLevel == NodeLevel.HYBRID) {
                     node = AutoDrivePoints.adjustNodeForMid(node);
                 }
                 node = AutoDrivePoints.pathPointFlipper(node, DriverStation.getAlliance());
