@@ -14,7 +14,7 @@ public class ArmIOElbowSparkMax implements ArmIO {
     private final AbsoluteEncoder absoluteEncoder;
 
     public ArmIOElbowSparkMax() {
-        motor = new LazySparkMax(FourBarConstants.CAN_ELBOW, IdleMode.kBrake, 80, false,false);
+        motor = new LazySparkMax(FourBarConstants.CAN_ELBOW, IdleMode.kCoast, 80, false,false);
         absoluteEncoder = motor.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle);
         limitSwitch = motor.getForwardLimitSwitch(Type.kNormallyOpen);
         limitSwitch.enableLimitSwitch(true);
@@ -50,7 +50,8 @@ public class ArmIOElbowSparkMax implements ArmIO {
 
     @Override
     public void zeroAbsoluteEncoder() {
-        absoluteEncoder.setZeroOffset(absoluteEncoder.getPosition() - FourBarConstants.ELBOW_ABSOLUTE_OFFSET.getRadians());
+        // TODO: update mathoffset with this mess
+        absoluteEncoder.setZeroOffset(absoluteEncoder.getPosition() - FourBarConstants.ELBOW_ABSOLUTE_OFFSET.getRadians() + 1.57);
     }
 
     @Override

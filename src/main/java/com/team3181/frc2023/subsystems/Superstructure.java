@@ -261,7 +261,9 @@ public class Superstructure extends SubsystemBase {
                 }
                 break;
             case IDLE:
-                fourBar.hold();
+                fourBar.setArmVoltage(0, 0);
+                fourBar.setArmVoltage(1, 0);
+//                fourBar.hold();
                 endEffector.idle();
                 break;
             case MANUAL:
@@ -273,15 +275,14 @@ public class Superstructure extends SubsystemBase {
                 boolean shoulderDone = fourBar.atShoulderLimit();
                 boolean elbowDone = fourBar.atElbowLimit();
                 if (!shoulderDone) {
-                    fourBar.setArmVoltage(0, 0.1);
+                    fourBar.setArmVoltage(0, -1.5);
                 }
                 if (!elbowDone) {
-                    fourBar.setArmVoltage(1, 0.1);
+                    fourBar.setArmVoltage(1, -0.5);
                 }
                 if (shoulderDone && elbowDone) {
                     fourBar.setArmVoltage(0, 0);
                     fourBar.setArmVoltage(1, 0);
-                    fourBar.zeroArms();
                     hasBeenZeroed = true;
                 }
                 break;

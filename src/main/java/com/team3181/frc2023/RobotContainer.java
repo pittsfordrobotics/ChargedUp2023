@@ -6,7 +6,6 @@ package com.team3181.frc2023;
 
 import com.team3181.frc2023.Constants.RobotConstants;
 import com.team3181.frc2023.FieldConstants.AutoDrivePoints;
-import com.team3181.frc2023.commands.SwerveAutoBalance;
 import com.team3181.frc2023.commands.SwerveDriveFieldXbox;
 import com.team3181.frc2023.commands.TankXbox;
 import com.team3181.frc2023.commands.autos.AutoSwerveBalance;
@@ -54,8 +53,8 @@ public class RobotContainer {
 
   public RobotContainer() {
     autoConfig();
-//    competitionButtons();
-    testButtons();
+    competitionButtons();
+//    testButtons();
 
     if (!RobotConstants.IS_TANK) swerve.setDefaultCommand(new SwerveDriveFieldXbox());
     if (RobotConstants.IS_TANK) Tank.getInstance().setDefaultCommand(new TankXbox());
@@ -80,7 +79,7 @@ public class RobotContainer {
 //    driverController.a().onTrue(new InstantCommand(endEffector::intake)).onFalse(new InstantCommand(endEffector::idle));
 //    driverController.x().onTrue(new InstantCommand(endEffector::exhaust)).onFalse(new InstantCommand(endEffector::idle));
     driverController.rightTrigger().whileTrue(new InstantCommand(swerve::zeroGyro));
-    driverController.a().whileTrue(new InstantCommand(fourBar::zeroArms));
+    driverController.a().whileTrue(new InstantCommand(superstructure::collectGround)).whileFalse(new InstantCommand(superstructure::home));
 //
 //    driverController.a().whileTrue(new InstantCommand(superstructure::collectGround))
 //            .whileFalse(new InstantCommand(Superstructure.getInstance()::home));
@@ -122,8 +121,8 @@ public class RobotContainer {
      */
     driverController.x()
             .whileTrue(new InstantCommand(swerve::driveX));
-    driverController.a().whileTrue(new SwerveAutoBalance(true));
-    driverController.b().whileTrue(new SwerveAutoBalance(false));
+//    driverController.a().whileTrue(new SwerveAutoBalance(true));
+//    driverController.b().whileTrue(new SwerveAutoBalance(false));
 //    driverController.y()
 //            .whileTrue(new SwerveAutoScore())
 //            .whileFalse(new SuperstructureHome());
