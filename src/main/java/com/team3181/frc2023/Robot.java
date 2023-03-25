@@ -95,7 +95,7 @@ public class Robot extends LoggedRobot {
 
     logReceiverQueueAlert.set(Logger.getInstance().getReceiverQueueFault());
     // in MBs
-    Logger.getInstance().recordOutput("Memory Usage", String.format("%.2f", (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024.0 / 1024.0));
+    Logger.getInstance().recordOutput("Memory Usage", (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024.0 / 1024.0);
 
     driverControllerAlert.set(!DriverStation.isJoystickConnected(0));
     operatorControllerAlert.set(!DriverStation.isJoystickConnected(1));
@@ -104,6 +104,7 @@ public class Robot extends LoggedRobot {
     SmartDashboard.putBoolean("Can Balance", robotContainer.canBalance());
     SmartDashboard.putBoolean("Need Position", robotContainer.needPosition());
 
+    // try to fix mem problems
     if (garbageCollector.hasElapsed(1)) {
       System.gc();
       garbageCollector.restart();
