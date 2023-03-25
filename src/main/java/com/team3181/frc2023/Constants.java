@@ -204,6 +204,11 @@ public final class Constants {
         public static final double MODULE_STEER_FF_OL = Robot.isReal() ? 0.4 : 0.5;
         public static final double MODULE_STEER_FF_CL = Robot.isReal() ? 0.9 : 0.33;
 
+        public static final double AUTO_ROTATE_P = 5;
+        public static final double AUTO_ROTATE_I = 0;
+        public static final double AUTO_ROTATE_D = 0;
+        public static final double AUTO_ROTATE_TOLERANCE = 0.05;
+
         public static final double DIRECTION_RATE_LIMIT = 15; // radians per second
         public static final double MAGNITUDE_RATE_LIMIT = 8.7; // percent per second (1 = 100%)
         public static final double ROTATION_RATE_LIMIT = 16.0; // percent per second (1 = 100%)
