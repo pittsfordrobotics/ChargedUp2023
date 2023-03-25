@@ -1,21 +1,23 @@
 package com.team3181.frc2023.subsystems.fourbar;
 
-import com.revrobotics.AbsoluteEncoder;
-import com.revrobotics.CANSparkMax;
+import com.revrobotics.*;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
-import com.revrobotics.SparkMaxAbsoluteEncoder;
+import com.revrobotics.SparkMaxLimitSwitch.Type;
 import com.team3181.frc2023.Constants.FourBarConstants;
 import com.team3181.lib.drivers.LazySparkMax;
 import edu.wpi.first.math.util.Units;
 
 public class ArmIOElbowSparkMax implements ArmIO {
     private final LazySparkMax motor;
+    private final SparkMaxLimitSwitch limitSwitch;
     private final AbsoluteEncoder absoluteEncoder;
 
     public ArmIOElbowSparkMax() {
-        motor = new LazySparkMax(FourBarConstants.CAN_ELBOW, IdleMode.kBrake, 80, false,false);
+        motor = new LazySparkMax(FourBarConstants.CAN_ELBOW, IdleMode.kCoast, 80, false,false);
         absoluteEncoder = motor.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle);
+        limitSwitch = motor.getForwardLimitSwitch(Type.kNormallyOpen);
+        limitSwitch.enableLimitSwitch(true);
 
         absoluteEncoder.setInverted(true);
         absoluteEncoder.setPositionConversionFactor(2 * Math.PI);
@@ -33,6 +35,7 @@ public class ArmIOElbowSparkMax implements ArmIO {
         inputs.armAppliedVolts = motor.getAppliedOutput() * motor.getBusVoltage();
         inputs.armCurrentAmps = motor.getOutputCurrent();
         inputs.armTempCelsius = motor.getMotorTemperature();
+        inputs.armAtLimit = limitSwitch.isPressed();
     }
 
     @Override
@@ -47,7 +50,12 @@ public class ArmIOElbowSparkMax implements ArmIO {
 
     @Override
     public void zeroAbsoluteEncoder() {
-        absoluteEncoder.setZeroOffset(0);
-        absoluteEncoder.setZeroOffset(absoluteEncoder.getPosition());
+        // TODO: update mathoffset with this mess
+        absoluteEncoder.setZeroOffset(absoluteEncoder.getPosition() - FourBarConstants.ELBOW_ABSOLUTE_OFFSET.getRadians() + 1.57);
+    }
+
+    @Override
+    public boolean isAtLimitSwitch() {
+        return limitSwitch.isPressed();
     }
 }

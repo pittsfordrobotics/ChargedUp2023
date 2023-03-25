@@ -35,7 +35,7 @@ public class Superstructure extends SubsystemBase {
 //    }
 
     enum StructureState {
-        IDLE, HOME, INTAKE_GROUND, INTAKE_MID, EXHAUST, OBJECTIVE, OBJECTIVE_GLOBAL, MANUAL
+        IDLE, HOME, INTAKE_GROUND, INTAKE_MID, EXHAUST, OBJECTIVE, OBJECTIVE_GLOBAL, MANUAL, ZEROING
     }
 
 //    public enum GamePiece {
@@ -50,6 +50,7 @@ public class Superstructure extends SubsystemBase {
     private boolean autoNode = false;
     private boolean autoSubstation = false;
     private boolean demandLEDs = false;
+    private boolean hasBeenZeroed = true;
 
     private final static Superstructure INSTANCE = new Superstructure();
 
@@ -88,13 +89,23 @@ public class Superstructure extends SubsystemBase {
 //                }
                 break;
             case HOME:
-                state = StructureState.HOME;
+                // this checks for systemState, so the wantedState will have already been HOME
+                // this means the setpoint is at HOME, which is convoluted but works
+                if(systemState == StructureState.HOME && fourBar.atSetpoint() && !hasBeenZeroed) {
+                    state = StructureState.ZEROING;
+                }
+                else {
+                    state = StructureState.HOME;
+                }
                 break;
             case EXHAUST:
                 state = StructureState.EXHAUST;
                 break;
             case MANUAL:
                 state = StructureState.MANUAL;
+                break;
+            case ZEROING:
+                state = StructureState.ZEROING;
                 break;
             case IDLE:
             default:
@@ -141,11 +152,19 @@ public class Superstructure extends SubsystemBase {
         demandLEDs = false;
 
         if (state != systemState) {
+            // runs when switching away from current state
             if (systemState == StructureState.OBJECTIVE || systemState == StructureState.INTAKE_GROUND || systemState == StructureState.INTAKE_MID || systemState == StructureState.EXHAUST) {
                 endEffector.idle();
             }
             if (systemState == StructureState.EXHAUST || systemState == StructureState.OBJECTIVE) {
                 LEDs.getInstance().setLEDMode(LEDModes.IDLE);
+            }
+            if (systemState == StructureState.HOME) {
+                hasBeenZeroed = false;
+            }
+
+            if (state == StructureState.HOME && systemState == StructureState.ZEROING && !hasBeenZeroed) {
+                state = StructureState.ZEROING;
             }
             if (state == StructureState.EXHAUST) {
                 fourBar.recordDrop();
@@ -242,13 +261,30 @@ public class Superstructure extends SubsystemBase {
                 }
                 break;
             case IDLE:
-                fourBar.hold();
+                fourBar.setArmVoltage(0, 0);
+                fourBar.setArmVoltage(1, 0);
+//                fourBar.hold();
                 endEffector.idle();
                 break;
             case MANUAL:
                 fourBar.setArmVoltageWithFF(0, -5 * BetterXboxController.getController(Humans.OPERATOR).getLeftY());
                 fourBar.setArmVoltageWithFF(1, -5 * BetterXboxController.getController(Humans.OPERATOR).getRightY());
                 endEffector.intake();
+                break;
+            case ZEROING:
+                boolean shoulderDone = fourBar.atShoulderLimit();
+                boolean elbowDone = fourBar.atElbowLimit();
+                if (!shoulderDone) {
+                    fourBar.setArmVoltage(0, -1.5);
+                }
+                if (!elbowDone) {
+                    fourBar.setArmVoltage(1, -0.5);
+                }
+                if (shoulderDone && elbowDone) {
+                    fourBar.setArmVoltage(0, 0);
+                    fourBar.setArmVoltage(1, 0);
+                    hasBeenZeroed = true;
+                }
                 break;
             case HOME:
             default:
