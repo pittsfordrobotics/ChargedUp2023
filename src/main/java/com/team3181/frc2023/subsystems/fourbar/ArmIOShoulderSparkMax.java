@@ -5,6 +5,8 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import com.revrobotics.SparkMaxAbsoluteEncoder;
+import com.revrobotics.SparkMaxLimitSwitch;
+import com.revrobotics.SparkMaxLimitSwitch.Type;
 import com.team3181.frc2023.Constants.FourBarConstants;
 import com.team3181.lib.drivers.LazySparkMax;
 import edu.wpi.first.math.util.Units;
@@ -14,6 +16,7 @@ public class ArmIOShoulderSparkMax implements ArmIO {
     private final LazySparkMax mainMotor;
     private final LazySparkMax followerMotor;
     private final AbsoluteEncoder absoluteEncoder;
+    private final SparkMaxLimitSwitch limitSwitch;
     private int counter = 0;
     private double lastPos = 0;
 
@@ -21,6 +24,8 @@ public class ArmIOShoulderSparkMax implements ArmIO {
         mainMotor = new LazySparkMax(FourBarConstants.CAN_SHOULDER_MASTER, IdleMode.kCoast, 80, true, false);
         followerMotor = new LazySparkMax(FourBarConstants.CAN_SHOULDER_FOLLOWER, IdleMode.kCoast, 80, mainMotor, true, true);
         absoluteEncoder = mainMotor.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle);
+        limitSwitch = mainMotor.getReverseLimitSwitch(Type.kNormallyOpen);
+        limitSwitch.enableLimitSwitch(true);
 
         absoluteEncoder.setInverted(true);
         absoluteEncoder.setPositionConversionFactor(2 * Math.PI * FourBarConstants.CHAIN_RATIO);
@@ -45,6 +50,7 @@ public class ArmIOShoulderSparkMax implements ArmIO {
         inputs.armAppliedVolts = mainMotor.getAppliedOutput() * mainMotor.getBusVoltage();
         inputs.armCurrentAmps = mainMotor.getOutputCurrent();
         inputs.armTempCelsius = mainMotor.getMotorTemperature();
+        inputs.armAtLimit = limitSwitch.isPressed();
 
         Logger.getInstance().recordOutput("Shoulder/Counter", counter);
 
@@ -65,7 +71,11 @@ public class ArmIOShoulderSparkMax implements ArmIO {
 
     @Override
     public void zeroAbsoluteEncoder() {
-        absoluteEncoder.setZeroOffset(0);
-        absoluteEncoder.setZeroOffset(absoluteEncoder.getPosition());
+        absoluteEncoder.setZeroOffset(absoluteEncoder.getPosition() - FourBarConstants.SHOULDER_ABSOLUTE_OFFSET.getRadians() - 0.1);
+    }
+
+    @Override
+    public boolean isAtLimitSwitch() {
+        return limitSwitch.isPressed();
     }
 }

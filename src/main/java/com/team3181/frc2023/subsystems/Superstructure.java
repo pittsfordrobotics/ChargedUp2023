@@ -18,7 +18,6 @@ import com.team3181.lib.math.GeomUtil;
 import com.team3181.lib.swerve.BetterPathPoint;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
@@ -51,10 +50,7 @@ public class Superstructure extends SubsystemBase {
     private boolean autoNode = false;
     private boolean autoSubstation = false;
     private boolean demandLEDs = false;
-    private boolean hasBeenHomed = true;
-
-    DigitalInput shoulderLimit = new DigitalInput(0);
-    DigitalInput elbowLimit = new DigitalInput(1);
+    private boolean hasBeenZeroed = true;
 
     private final static Superstructure INSTANCE = new Superstructure();
 
@@ -95,9 +91,10 @@ public class Superstructure extends SubsystemBase {
             case HOME:
                 // this checks for systemState, so the wantedState will have already been HOME
                 // this means the setpoint is at HOME, which is convoluted but works
-                if(systemState == StructureState.HOME && fourBar.atSetpoint()) {
-                    wantedState = StructureState.ZEROING;
-                } else {
+                if(systemState == StructureState.HOME && fourBar.atSetpoint() && !hasBeenZeroed) {
+                    state = StructureState.ZEROING;
+                }
+                else {
                     state = StructureState.HOME;
                 }
                 break;
@@ -155,13 +152,20 @@ public class Superstructure extends SubsystemBase {
         demandLEDs = false;
 
         if (state != systemState) {
+            // runs when switching away from current state
             if (systemState == StructureState.OBJECTIVE || systemState == StructureState.INTAKE_GROUND || systemState == StructureState.INTAKE_MID || systemState == StructureState.EXHAUST) {
                 endEffector.idle();
             }
             if (systemState == StructureState.EXHAUST || systemState == StructureState.OBJECTIVE) {
                 LEDs.getInstance().setLEDMode(LEDModes.IDLE);
             }
+            if (systemState == StructureState.HOME) {
+                hasBeenZeroed = false;
+            }
 
+            if (state == StructureState.HOME && systemState == StructureState.ZEROING && !hasBeenZeroed) {
+                state = StructureState.ZEROING;
+            }
             if (state == StructureState.EXHAUST) {
                 fourBar.recordDrop();
             }
@@ -266,17 +270,19 @@ public class Superstructure extends SubsystemBase {
                 endEffector.intake();
                 break;
             case ZEROING:
-                if(!shoulderLimit.get()) {
-                    fourBar.setArmVoltage(0, -0.2);
+                boolean shoulderDone = fourBar.atShoulderLimit();
+                boolean elbowDone = fourBar.atElbowLimit();
+                if (!shoulderDone) {
+                    fourBar.setArmVoltage(0, 0.1);
                 }
-                if(!elbowLimit.get()) {
-                    fourBar.setArmVoltage(1, -0.2);
+                if (!elbowDone) {
+                    fourBar.setArmVoltage(1, 0.1);
                 }
-                if(shoulderLimit.get() && elbowLimit.get()) {
+                if (shoulderDone && elbowDone) {
                     fourBar.setArmVoltage(0, 0);
                     fourBar.setArmVoltage(1, 0);
-                    fourBar.setRotations(new Rotation2d[]{ArmPositions.STORAGE_SHOULDER, ArmPositions.STORAGE_ELBOW}, false);
-                    systemState = StructureState.IDLE;
+                    fourBar.zeroArms();
+                    hasBeenZeroed = true;
                 }
                 break;
             case HOME:

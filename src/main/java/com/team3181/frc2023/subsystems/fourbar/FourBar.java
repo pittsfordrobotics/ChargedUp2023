@@ -114,6 +114,19 @@ public class FourBar extends SubsystemBase {
         return shoulderPID.atSetpoint() && elbowPID.atSetpoint();
     }
 
+    public boolean atShoulderLimit() {
+        return armIO[0].isAtLimitSwitch();
+    }
+
+    public boolean atElbowLimit() {
+        return armIO[1].isAtLimitSwitch();
+    }
+
+    public void zeroArms() {
+        armIO[0].zeroAbsoluteEncoder();
+        armIO[1].zeroAbsoluteEncoder();
+    }
+
     public void recordHigh(Rotation2d[] rotation2ds) {
         waitPos = Rotation2d.fromRadians((rotation2ds[0].getRadians() - inputs[0].armOffsetPositionRad) / 3 + inputs[0].armOffsetPositionRad);
     }
