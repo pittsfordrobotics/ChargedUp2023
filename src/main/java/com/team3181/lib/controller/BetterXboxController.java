@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import java.util.HashMap;
 
 public class BetterXboxController extends CommandXboxController {
-    private final double deadband = 0.05;
+    private final double deadband = 0.15;
 
     private final BetterPOVButton DUp;
     private final BetterPOVButton DRight;

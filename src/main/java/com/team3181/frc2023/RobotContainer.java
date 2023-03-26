@@ -50,8 +50,11 @@ public class RobotContainer {
   private SendableChooser<Command> autoChooser = new SendableChooser<>();
   private SendableChooser<Integer> positionChooser = new SendableChooser<>();
   private SendableChooser<Boolean> balanceChooser = new SendableChooser<>();
-  private final HashMap<Command, Boolean> canBalanceMap = new HashMap<>();
-  private final HashMap<Command, Boolean> needPositionMap = new HashMap<>();
+  private HashMap<Command, Boolean> canBalanceMap = new HashMap<>();
+  private HashMap<Command, Boolean> needPositionMap = new HashMap<>();
+  private HashMap<Command, Boolean> canForwardBalance = new HashMap<>();
+
+  public static boolean balanceForward = false;
 
   public RobotContainer() {
     autoConfig();
@@ -157,31 +160,37 @@ public class RobotContainer {
     autoChooser.setDefaultOption("No auto", wait);
     canBalanceMap.put(wait, false);
     needPositionMap.put(wait, true);
+    canForwardBalance.put(wait, true);
 
     Command balance = new AutoSwerveBalance();
     autoChooser.addOption("Place and Balance Climb", balance);
     canBalanceMap.put(balance, true);
     needPositionMap.put(balance, true);
+    canForwardBalance.put(balance, false);
 
     Command threeTop = new AutoSwerveThree(true);
     autoChooser.addOption("3 Thing Top", threeTop);
     canBalanceMap.put(threeTop, true);
     needPositionMap.put(threeTop, false);
+    canForwardBalance.put(threeTop, false);
 
     Command threeBottom = new AutoSwerveThree(false);
     autoChooser.addOption("3 Thing Bottom", threeBottom);
     canBalanceMap.put(threeBottom, true);
     needPositionMap.put(threeBottom, false);
+    canForwardBalance.put(threeBottom, false);
 
     Command twoTop = new AutoSwerveTwo(true);
     autoChooser.addOption("2 Thing Top", twoTop);
     canBalanceMap.put(twoTop, false);
     needPositionMap.put(twoTop, false);
+    canForwardBalance.put(twoTop, false);
 
     Command twoBottom = new AutoSwerveTwo(false);
     autoChooser.addOption("2 Thing Bottom", twoBottom);
     canBalanceMap.put(twoBottom, false);
     needPositionMap.put(twoBottom, false);
+    canForwardBalance.put(twoBottom, false);
 
 //    Command test = new AutoSwervePath(PathPlanner.loadPath("Top 3 Item", AutoConstants.SLOW_SPEED), new Objective(0, NodeLevel.HIGH));
 //    autoChooser.addOption("test", test);
@@ -190,41 +199,49 @@ public class RobotContainer {
     autoChooser.addOption("1 Cone Top", coneTop);
     canBalanceMap.put(coneTop, true);
     needPositionMap.put(coneTop, false);
+    canForwardBalance.put(coneTop, false);
 
     Command coneTopPlusOne = new AutoSwervePath(Paths.TOP_CONE_PLUS_ONE, new Objective(8, NodeLevel.HIGH));
     autoChooser.addOption("1 Cone Top + 1", coneTopPlusOne);
     canBalanceMap.put(coneTopPlusOne, true);
     needPositionMap.put(coneTopPlusOne, false);
+    canForwardBalance.put(coneTopPlusOne, false);
 
     Command cubeTop = new AutoSwervePath(Paths.TOP_CUBE, new Objective(7, NodeLevel.HIGH));
     autoChooser.addOption("1 Cube Top", cubeTop);
     canBalanceMap.put(cubeTop, true);
     needPositionMap.put(cubeTop, false);
+    canForwardBalance.put(cubeTop, false);
 
     Command cubeTopPlusOne = new AutoSwervePath(Paths.TOP_CUBE_PLUS_ONE, new Objective(7, NodeLevel.HIGH));
     autoChooser.addOption("1 Cube Top + 1", cubeTopPlusOne);
     canBalanceMap.put(cubeTopPlusOne, true);
     needPositionMap.put(cubeTopPlusOne, false);
+    canForwardBalance.put(cubeTopPlusOne, false);
 
     Command coneBottom = new AutoSwervePath(Paths.BOTTOM_CONE, new Objective(0, NodeLevel.HIGH));
     autoChooser.addOption("1 Cone Bottom", coneBottom);
     canBalanceMap.put(coneBottom, true);
     needPositionMap.put(coneBottom, false);
+    canForwardBalance.put(coneBottom, false);
 
     Command coneBottomPlusOne = new AutoSwervePath(Paths.BOTTOM_CONE_PLUS_ONE, new Objective(1, NodeLevel.HIGH));
     autoChooser.addOption("1 Cone Bottom + 1", coneBottomPlusOne);
     canBalanceMap.put(coneBottomPlusOne, true);
     needPositionMap.put(coneBottomPlusOne, false);
+    canForwardBalance.put(coneBottomPlusOne, false);
 
     Command cubeBottom = new AutoSwervePath(Paths.BOTTOM_CUBE, new Objective(1, NodeLevel.HIGH));
     autoChooser.addOption("1 Cube Bottom", cubeBottom);
     canBalanceMap.put(cubeBottom, true);
     needPositionMap.put(cubeBottom, false);
+    canForwardBalance.put(cubeBottom, false);
 
     Command cubeBottomPlusOne = new AutoSwervePath(Paths.BOTTOM_CUBE_PLUS_ONE, new Objective(1, NodeLevel.HIGH));
     autoChooser.addOption("1 Cube Bottom + 1", cubeBottomPlusOne);
     canBalanceMap.put(cubeBottomPlusOne, true);
     needPositionMap.put(cubeBottomPlusOne, false);
+    canForwardBalance.put(cubeBottomPlusOne, false);
 
     SmartDashboard.putData("Auto Command", autoChooser);
     SmartDashboard.putData("Should Balance", balanceChooser);
@@ -239,6 +256,9 @@ public class RobotContainer {
     autoChooser = new SendableChooser<>();
     positionChooser = new SendableChooser<>();
     balanceChooser = new SendableChooser<>();
+//    forwardBalanceMap = new HashMap<>();
+//    needPositionMap = new HashMap<>();
+//    needForward = new HashMap<>();
     SmartDashboard.putData("Auto Command", autoChooser);
     SmartDashboard.putData("Should Balance", balanceChooser);
     SmartDashboard.putData("Position", positionChooser);
@@ -265,6 +285,7 @@ public class RobotContainer {
     else {
       Paths.EVENT_MAP = Paths.EVENT_MAP_NO_BALANCE;
     }
+    balanceForward = balanceChooser.getSelected();
     System.out.println(autoChooser.getSelected());
     System.out.println(positionChooser.getSelected());
     System.out.println(balanceChooser.getSelected());

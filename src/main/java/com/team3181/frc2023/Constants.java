@@ -268,7 +268,7 @@ public final class Constants {
         }
 
         // PID values for trajectory follower
-        public static final double LINEAR_P = 3;
+        public static final double LINEAR_P = 5;
         public static final double ROT_P = 5;
 
         //        numbers from 1678

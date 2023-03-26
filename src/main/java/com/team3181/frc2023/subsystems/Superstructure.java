@@ -104,7 +104,7 @@ public class Superstructure extends SubsystemBase {
                 case HOME:
                     // this checks for systemState, so the wantedState will have already been HOME
                     // this means the setpoint is at HOME, which is convoluted but works
-                    if (systemState == StructureState.HOME && fourBar.atSetpoint() && !hasBeenZeroed) {
+                    if (systemState == StructureState.HOME && fourBar.atSetpoint() && !hasBeenZeroed && !DriverStation.isAutonomous()) {
                         state = StructureState.ZEROING;
                     } else {
                         state = StructureState.HOME;
@@ -285,20 +285,20 @@ public class Superstructure extends SubsystemBase {
                     endEffector.intake();
                     break;
                 case ZEROING:
-                    boolean shoulderDone = fourBar.atShoulderLimit();
-                    boolean elbowDone = fourBar.atElbowLimit();
-                    if (!shoulderDone) {
-                        fourBar.setArmVoltage(0, -1.5);
-                    }
-                    if (!elbowDone) {
-                        fourBar.setArmVoltage(1, -0.5);
-                    }
-                    if (shoulderDone && elbowDone) {
-                        fourBar.setArmVoltage(0, 0);
-                        fourBar.setArmVoltage(1, 0);
-                        hasBeenZeroed = true;
-                    }
-                    break;
+//                    boolean shoulderDone = fourBar.atShoulderLimit();
+//                    boolean elbowDone = fourBar.atElbowLimit();
+//                    if (!shoulderDone) {
+//                        fourBar.setArmVoltage(0, -1.5);
+//                    }
+//                    if (!elbowDone) {
+//                        fourBar.setArmVoltage(1, -0.5);
+//                    }
+//                    if (shoulderDone && elbowDone) {
+//                        fourBar.setArmVoltage(0, 0);
+//                        fourBar.setArmVoltage(1, 0);
+//                        hasBeenZeroed = true;
+//                    }
+//                    break;
                 case HOME:
                 default:
                     fourBar.setRotations(new Rotation2d[]{SuperstructureConstants.ArmPositions.STORAGE_SHOULDER, SuperstructureConstants.ArmPositions.STORAGE_ELBOW}, false);

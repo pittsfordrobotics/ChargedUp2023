@@ -134,10 +134,10 @@ public class Robot extends LoggedRobot {
     SmartDashboard.putBoolean("Need Position", robotContainer.needPosition());
 
     // try to fix mem problems
-    if (garbageCollector.hasElapsed(1)) {
-      System.gc();
-      garbageCollector.restart();
-    }
+//    if (garbageCollector.hasElapsed(5)) {
+//      System.gc();
+//      garbageCollector.restart();
+//    }
   }
 
   @Override
