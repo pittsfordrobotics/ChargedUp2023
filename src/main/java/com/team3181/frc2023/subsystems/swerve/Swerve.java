@@ -171,6 +171,7 @@ public class Swerve extends SubsystemBase {
     }
 
     public void zeroGyro() {
+        gyroIO.zeroGyro();
         Pose2d pose = new Pose2d(getPose().getX(), getPose().getY(), new Rotation2d());
         poseEstimator.resetPosition(getRobotRelativeAngle(), modulePositions, pose);
     }
@@ -213,7 +214,7 @@ public class Swerve extends SubsystemBase {
         }
     }
 
-    public Rotation2d getPitch() {
-        return Rotation2d.fromRadians(gyroInputs.pitchPositionRad);
+    public double getPitch() {
+        return gyroInputs.rollPositionRad;
     }
 }

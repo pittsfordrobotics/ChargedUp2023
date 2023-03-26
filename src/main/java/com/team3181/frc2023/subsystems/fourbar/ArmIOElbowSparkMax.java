@@ -13,6 +13,9 @@ public class ArmIOElbowSparkMax implements ArmIO {
     private final LazySparkMax motor;
     private final SparkMaxLimitSwitch limitSwitch;
     private final AbsoluteEncoder absoluteEncoder;
+    private double lastPos = FourBarConstants.ELBOW_MATH_OFFSET.getRadians();
+    private double wraparoundOffset = 0;
+    private double oneEncoderRotation = 2 * Math.PI;
 
     public ArmIOElbowSparkMax() {
         motor = new LazySparkMax(FourBarConstants.CAN_ELBOW, IdleMode.kBrake, 80, false,false);
@@ -31,12 +34,30 @@ public class ArmIOElbowSparkMax implements ArmIO {
 
     @Override
     public void updateInputs(ArmIOInputs inputs) {
-        inputs.armOffsetPositionRad = absoluteEncoder.getPosition() + FourBarConstants.ELBOW_MATH_OFFSET.getRadians();
+        double position = absoluteEncoder.getPosition() + FourBarConstants.ELBOW_MATH_OFFSET.getRadians() + wraparoundOffset;
+        double positionDiff = position - lastPos;
+
+        // Check if we've wrapped around the zero point.  If we've travelled more than a half circle in one update period,
+        // then assume we wrapped around.
+        if (positionDiff > oneEncoderRotation / 2) {
+            // We went up by over a half rotation, which means we likely wrapped around the zero point going in the negative direction.
+            position -= oneEncoderRotation;
+            wraparoundOffset -= oneEncoderRotation;
+        }
+        if (positionDiff < -1 * oneEncoderRotation / 2) {
+            // We went down by over a half rotation, which means we likely wrapped around the zero point going in the positive direction.
+            position += oneEncoderRotation;
+            wraparoundOffset += oneEncoderRotation;
+        }
+
+        inputs.armPositionRawRad = absoluteEncoder.getPosition();
+        inputs.armOffsetPositionRad = position;
         inputs.armVelocityRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(absoluteEncoder.getVelocity());
         inputs.armAppliedVolts = motor.getAppliedOutput() * motor.getBusVoltage();
         inputs.armCurrentAmps = motor.getOutputCurrent();
         inputs.armTempCelsius = motor.getMotorTemperature();
         inputs.armAtLimit = limitSwitch.isPressed();
+        lastPos = position;
     }
 
     @Override

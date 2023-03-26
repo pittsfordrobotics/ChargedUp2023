@@ -24,7 +24,8 @@ public class SwerveAutoBalance extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return Math.abs(Swerve.getInstance().getPitch().getRadians()) < 0.006;
+        System.out.println(Math.abs(Swerve.getInstance().getPitch()));
+        return Math.abs(Swerve.getInstance().getPitch()) < 0.14;
     }
 
     @Override

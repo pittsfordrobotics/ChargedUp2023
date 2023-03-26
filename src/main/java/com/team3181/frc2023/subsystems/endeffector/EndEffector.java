@@ -6,6 +6,7 @@ import com.team3181.frc2023.Constants.EndEffectorConstants;
 import com.team3181.frc2023.Robot;
 import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker;
 import com.team3181.lib.commands.DisabledInstantCommand;
+import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker.NodeLevel;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 
@@ -62,7 +63,8 @@ public class EndEffector extends SubsystemBase {
                     break;
                 case EXHAUSTING: // may need to be 2 different values if we need to shoot cone and cube at different speeds
                     if (ObjectiveTracker.getInstance().getObjective().nodeRow == 1 || ObjectiveTracker.getInstance().getObjective().nodeRow == 4 || ObjectiveTracker.getInstance().getObjective().nodeRow == 7) {
-                        io.setVoltage(EndEffectorConstants.EXHAUST_CUBE_POWER);
+//                        io.setVoltage(EndEffectorConstants.EXHAUST_CUBE_POWER);
+                        io.setVoltage(-12);
                     }
                     else {
                         io.setVoltage(EndEffectorConstants.EXHAUST_CONE_POWER);
@@ -71,7 +73,12 @@ public class EndEffector extends SubsystemBase {
                 case OBTAINED:
                 case IDLE:
                 default:
-                    io.setVoltage(EndEffectorConstants.INTAKE_IDLE_POWER); // TODO: add to constants
+                    if (ObjectiveTracker.getInstance().getObjective().nodeLevel == NodeLevel.HYBRID || ObjectiveTracker.getInstance().getObjective().nodeRow == 1 || ObjectiveTracker.getInstance().getObjective().nodeRow == 4 || ObjectiveTracker.getInstance().getObjective().nodeRow == 7) {
+                        io.setVoltage(EndEffectorConstants.INTAKE_IDLE_POWER);
+                    }
+                    else {
+                        io.setVoltage(0);
+                    }
                     // last thing command to do is call back and set state here, removes need for
                     break;
             }

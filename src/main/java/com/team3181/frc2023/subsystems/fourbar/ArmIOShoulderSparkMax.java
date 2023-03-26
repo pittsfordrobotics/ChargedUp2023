@@ -21,7 +21,9 @@ public class ArmIOShoulderSparkMax implements ArmIO {
     private final SparkMaxLimitSwitch limitSwitch;
     private Rotation2d offset;
     private int counter = 0;
-    private double lastPos = 0;
+    private double lastPos = FourBarConstants.SHOULDER_MATH_OFFSET.getRadians();
+    private double wraparoundOffset = 0;
+    private double oneEncoderRotation = 2 * Math.PI * FourBarConstants.CHAIN_RATIO;
 
     public ArmIOShoulderSparkMax() {
         mainMotor = new LazySparkMax(FourBarConstants.CAN_SHOULDER_MASTER, IdleMode.kBrake, 80, true, false);
@@ -43,19 +45,37 @@ public class ArmIOShoulderSparkMax implements ArmIO {
 
     @Override
     public void updateInputs(ArmIOInputs inputs) {
-        if (lastPos < FourBarConstants.SHOULDER_FLIP_MIN.getRadians() + 0.1 && (absoluteEncoder.getPosition() + FourBarConstants.SHOULDER_MATH_OFFSET.getRadians()) > FourBarConstants.SHOULDER_FLIP_MAX.getRadians() - 0.1 && counter == 1) {
-            counter--;
-        } else if (lastPos > FourBarConstants.SHOULDER_FLIP_MAX.getRadians() - 0.1 && (absoluteEncoder.getPosition() + FourBarConstants.SHOULDER_MATH_OFFSET.getRadians()) < FourBarConstants.SHOULDER_FLIP_MIN.getRadians() + 0.1 && counter == 0) {
-            counter++;
-        }
+        double position = absoluteEncoder.getPosition() + FourBarConstants.SHOULDER_MATH_OFFSET.getRadians() + wraparoundOffset;
+        double positionDiff = position - lastPos;
 
-        inputs.armOffsetPositionRad = absoluteEncoder.getPosition() + FourBarConstants.SHOULDER_MATH_OFFSET.getRadians() + counter * (FourBarConstants.SHOULDER_FLIP_MIN.getRadians() * -1 + FourBarConstants.SHOULDER_FLIP_MAX.getRadians());
+        // Check if we've wrapped around the zero point.  If we've travelled more than a half circle in one update period,
+        // then assume we wrapped around.
+        if (positionDiff > oneEncoderRotation / 2) {
+            // We went up by over a half rotation, which means we likely wrapped around the zero point going in the negative direction.
+            position -= oneEncoderRotation;
+            wraparoundOffset -= oneEncoderRotation;
+        }
+        if (positionDiff < -1 * oneEncoderRotation / 2) {
+            // We went down by over a half rotation, which means we likely wrapped around the zero point going in the positive direction.
+            position += oneEncoderRotation;
+            wraparoundOffset += oneEncoderRotation;
+        }
+        
+        // if (lastPos < FourBarConstants.SHOULDER_FLIP_MIN.getRadians() + 0.1 && (position) > FourBarConstants.SHOULDER_FLIP_MAX.getRadians() - 0.1 && counter == 1) {
+        //     counter--;
+        // } else if (lastPos > FourBarConstants.SHOULDER_FLIP_MAX.getRadians() - 0.1 && (position) < FourBarConstants.SHOULDER_FLIP_MIN.getRadians() + 0.1 && counter == 0) {
+        //     counter++;
+        // }
+        //inputs.armOffsetPositionRad = position + counter * (FourBarConstants.SHOULDER_FLIP_MIN.getRadians() * -1 + FourBarConstants.SHOULDER_FLIP_MAX.getRadians());
+
+        inputs.armPositionRawRad = absoluteEncoder.getPosition();
+        inputs.armOffsetPositionRad = position;
         inputs.armVelocityRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(absoluteEncoder.getVelocity());
-        lastPos = absoluteEncoder.getPosition() + FourBarConstants.SHOULDER_MATH_OFFSET.getRadians();
         inputs.armAppliedVolts = mainMotor.getAppliedOutput() * mainMotor.getBusVoltage();
         inputs.armCurrentAmps = mainMotor.getOutputCurrent();
         inputs.armTempCelsius = mainMotor.getMotorTemperature();
         inputs.armAtLimit = limitSwitch.isPressed();
+        lastPos = position;
 
         Logger.getInstance().recordOutput("Shoulder/Counter", counter);
 

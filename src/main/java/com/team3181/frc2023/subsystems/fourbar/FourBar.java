@@ -128,7 +128,7 @@ public class FourBar extends SubsystemBase {
     }
 
     public void recordDrop() {
-        dropStuff = new Rotation2d[]{Rotation2d.fromRadians(inputs[0].armOffsetPositionRad), Rotation2d.fromRadians(inputs[1].armOffsetPositionRad - 0.2)};
+        dropStuff = new Rotation2d[]{Rotation2d.fromRadians(inputs[0].armOffsetPositionRad), Rotation2d.fromRadians(inputs[1].armOffsetPositionRad - 0.3)};
     }
 
     public boolean atSetpoint() {
