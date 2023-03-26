@@ -9,6 +9,8 @@ import com.revrobotics.SparkMaxLimitSwitch;
 import com.revrobotics.SparkMaxLimitSwitch.Type;
 import com.team3181.frc2023.Constants.FourBarConstants;
 import com.team3181.lib.drivers.LazySparkMax;
+import com.team3181.lib.math.BetterMath;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import org.littletonrobotics.junction.Logger;
 
@@ -17,6 +19,7 @@ public class ArmIOShoulderSparkMax implements ArmIO {
     private final LazySparkMax followerMotor;
     private final AbsoluteEncoder absoluteEncoder;
     private final SparkMaxLimitSwitch limitSwitch;
+    private Rotation2d offset;
     private int counter = 0;
     private double lastPos = 0;
 
@@ -34,6 +37,8 @@ public class ArmIOShoulderSparkMax implements ArmIO {
         mainMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
 
         mainMotor.burnFlash();
+
+        offset = FourBarConstants.SHOULDER_ABSOLUTE_OFFSET;
     }
 
     @Override
@@ -71,7 +76,7 @@ public class ArmIOShoulderSparkMax implements ArmIO {
 
     @Override
     public void zeroAbsoluteEncoder() {
-        absoluteEncoder.setZeroOffset(absoluteEncoder.getPosition() - FourBarConstants.SHOULDER_ABSOLUTE_OFFSET.getRadians() - 0.1);
+        absoluteEncoder.setZeroOffset(BetterMath.clampCustom(absoluteEncoder.getPosition() - offset.getRadians() - 0.1, 0,2 * Math.PI * FourBarConstants.CHAIN_RATIO));
     }
 
     @Override

@@ -88,6 +88,11 @@ public class BetterMath {
         return degrees % 360 < 0 ? degrees % 360 + 360 : degrees % 360;
     }
 
+    /** returns equal angle between a and b where b > a */
+    public static double clampCustom(double units, double a, double b) {
+        return units % b < a ? units % b + b : units % b;
+    }
+
     /** returns equal angle between -180 and 180 */
     public static double clamp180(double degrees) {
         return clamp360(degrees) > 180 ? clamp360(degrees) - 360 : clamp360(degrees);

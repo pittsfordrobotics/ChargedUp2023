@@ -6,6 +6,7 @@ import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import com.revrobotics.SparkMaxLimitSwitch.Type;
 import com.team3181.frc2023.Constants.FourBarConstants;
 import com.team3181.lib.drivers.LazySparkMax;
+import com.team3181.lib.math.BetterMath;
 import edu.wpi.first.math.util.Units;
 
 public class ArmIOElbowSparkMax implements ArmIO {
@@ -51,7 +52,7 @@ public class ArmIOElbowSparkMax implements ArmIO {
     @Override
     public void zeroAbsoluteEncoder() {
         // TODO: update mathoffset with this mess
-        absoluteEncoder.setZeroOffset(absoluteEncoder.getPosition() - FourBarConstants.ELBOW_ABSOLUTE_OFFSET.getRadians() + 1.57);
+        absoluteEncoder.setZeroOffset(BetterMath.clampCustom(absoluteEncoder.getPosition() - FourBarConstants.ELBOW_ABSOLUTE_OFFSET.getRadians() + 1.57, 0, 2 * Math.PI));
     }
 
     @Override
