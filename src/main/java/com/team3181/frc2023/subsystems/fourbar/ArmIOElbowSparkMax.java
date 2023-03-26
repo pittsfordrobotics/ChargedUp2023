@@ -47,6 +47,7 @@ public class ArmIOElbowSparkMax implements ArmIO {
             wraparoundOffset += oneEncoderRotation;
         }
 
+        inputs.armPositionRawRad = absoluteEncoder.getPosition();
         inputs.armOffsetPositionRad = position;
         inputs.armVelocityRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(absoluteEncoder.getVelocity());
         inputs.armAppliedVolts = motor.getAppliedOutput() * motor.getBusVoltage();

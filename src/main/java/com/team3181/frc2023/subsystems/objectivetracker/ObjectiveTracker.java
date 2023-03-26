@@ -41,7 +41,7 @@ public class ObjectiveTracker extends VirtualSubsystem {
 
     public Objective() {
       this.nodeRow = 0;
-      this.nodeLevel = NodeLevel.HYBRID;
+      this.nodeLevel = NodeLevel.MID;
     }
   }
 

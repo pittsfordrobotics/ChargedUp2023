@@ -5,6 +5,7 @@ import org.littletonrobotics.junction.AutoLog;
 public interface ArmIO {
     @AutoLog
     class ArmIOInputs{
+        public double armPositionRawRad = 0.0;
         public double armOffsetPositionRad = 0.0;
         public double armVelocityRadPerSec = 0.0;
 

@@ -296,10 +296,10 @@ public final class Constants {
 
         // Set zero points to be the initial "stowed" position?
         // The Absolute offsets appear to be arbitrary?
-        public static final Rotation2d SHOULDER_ABSOLUTE_OFFSET = Rotation2d.fromRadians(1.6980544328689575);
-        public static final Rotation2d SHOULDER_MATH_OFFSET = Rotation2d.fromRadians(-1.4508755207061768); // zero needs to be at shoulder parallel to ground
-        public static final Rotation2d ELBOW_ABSOLUTE_OFFSET = Rotation2d.fromRadians(0.42347046732902527);
-        public static final Rotation2d ELBOW_MATH_OFFSET = Rotation2d.fromRadians(-4.787408351898193); // zero is in line with shoulder
+        public static final Rotation2d SHOULDER_ABSOLUTE_OFFSET = Rotation2d.fromRadians(1.5980665922164917);
+        public static final Rotation2d SHOULDER_MATH_OFFSET = Rotation2d.fromRadians(-1.5609228610992432); // zero needs to be at shoulder parallel to ground
+        public static final Rotation2d ELBOW_ABSOLUTE_OFFSET = Rotation2d.fromRadians(3.9912614822387695);
+        public static final Rotation2d ELBOW_MATH_OFFSET = Rotation2d.fromRadians(4.560662333165304); // zero is in line with shoulder
 
         public static final Rotation2d ELBOW_MIN = Rotation2d.fromDegrees(-140);
         public static final Rotation2d ELBOW_MAX = Rotation2d.fromDegrees(140);
@@ -360,7 +360,7 @@ public final class Constants {
 
             // long pos
             public static Rotation2d MID_CONE_SHOULDER = Rotation2d.fromRadians(-0.6470000743866);
-            public static Rotation2d MID_CONE_ELBOW = Rotation2d.fromRadians(0.7242125606536865);
+            public static Rotation2d MID_CONE_ELBOW = Rotation2d.fromRadians(0.5816769599914551);
 
             public static Rotation2d HIGH_CUBE_SHOULDER = Rotation2d.fromRadians(-0.815398097038269);
             public static Rotation2d HIGH_CUBE_ELBOW = Rotation2d.fromRadians(1.060633897781372);
