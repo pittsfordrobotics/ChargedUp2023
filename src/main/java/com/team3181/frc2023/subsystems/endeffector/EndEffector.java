@@ -3,7 +3,9 @@ package com.team3181.frc2023.subsystems.endeffector;
 
 import com.team3181.frc2023.Constants;
 import com.team3181.frc2023.Constants.EndEffectorConstants;
+import com.team3181.frc2023.Robot;
 import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker;
+import com.team3181.lib.commands.DisabledInstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 
@@ -36,6 +38,9 @@ public class EndEffector extends SubsystemBase {
     }
     private EndEffector(EndEffectorIO io) {
         this.io = io;
+        Robot.pitTab.add("EndEffector Intake", new DisabledInstantCommand(this::intake));
+        Robot.pitTab.add("EndEffector Idle", new DisabledInstantCommand(this::idle));
+        Robot.pitTab.add("EndEffector Exhaust", new DisabledInstantCommand(this::exhaust));
         for (int i = 0; i < currentCycles; i++) intakeCurrents.add(0.0);
     }
 
