@@ -29,8 +29,8 @@ public class Paths {
     public static final HashMap<String, Command> EVENT_MAP_BALANCE = new HashMap<>();
     public static final HashMap<String, Command> EVENT_MAP_NO_BALANCE = new HashMap<>();
     static {
-        EVENT_MAP_BALANCE.put("intakeGround", new SuperstructureGround());
-        EVENT_MAP_NO_BALANCE.put("intakeGround", new SuperstructureGround());
+        EVENT_MAP_BALANCE.put("intakeGround", new SuperstructureGroundFar());
+        EVENT_MAP_NO_BALANCE.put("intakeGround", new SuperstructureGroundFar());
 
         EVENT_MAP_BALANCE.put("objectiveConeTop", new SuperstructureObjectiveGlobal(new Objective(6, NodeLevel.HIGH)));
         EVENT_MAP_NO_BALANCE.put("objectiveConeTop", new SuperstructureObjectiveGlobal(new Objective(6, NodeLevel.HIGH)));
@@ -44,8 +44,8 @@ public class Paths {
         EVENT_MAP_BALANCE.put("objectiveCubeBottom", new SuperstructureObjectiveGlobal(new Objective(1, NodeLevel.HIGH)));
         EVENT_MAP_NO_BALANCE.put("objectiveCubeBottom", new SuperstructureObjectiveGlobal(new Objective(1, NodeLevel.HIGH)));
 
-        EVENT_MAP_BALANCE.put("intakeGround", new SuperstructureGround());
-        EVENT_MAP_NO_BALANCE.put("intakeGround", new SuperstructureGround());
+        EVENT_MAP_BALANCE.put("intakeGround", new SuperstructureGroundFar());
+        EVENT_MAP_NO_BALANCE.put("intakeGround", new SuperstructureGroundFar());
 
         EVENT_MAP_BALANCE.put("home", new SuperstructureHome());
         EVENT_MAP_NO_BALANCE.put("home", new SuperstructureHome());

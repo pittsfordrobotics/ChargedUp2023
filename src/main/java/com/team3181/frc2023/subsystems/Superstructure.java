@@ -36,7 +36,7 @@ public class Superstructure extends SubsystemBase {
 //    }
 
     enum StructureState {
-        IDLE, HOME, INTAKE_GROUND, INTAKE_MID, EXHAUST, OBJECTIVE, OBJECTIVE_GLOBAL, MANUAL, ZEROING
+        IDLE, HOME, INTAKE_GROUND, INTAKE_GROUND_FAR, INTAKE_MID, EXHAUST, OBJECTIVE, OBJECTIVE_GLOBAL, MANUAL, ZEROING
     }
 
 //    public enum GamePiece {
@@ -91,6 +91,9 @@ public class Superstructure extends SubsystemBase {
 //                if (endEffector.hasPiece()) {
 //                    state = StructureState.HOME;
 //                }
+                    break;
+                case INTAKE_GROUND_FAR:
+                    state = StructureState.INTAKE_GROUND_FAR;
                     break;
                 case INTAKE_MID:
                     state = StructureState.INTAKE_MID;
@@ -240,7 +243,17 @@ public class Superstructure extends SubsystemBase {
                 case INTAKE_GROUND:
 //                Translation2d pos = new Translation2d(SuperstructureConstants.ArmPositions.SWEEP_MIN.getX() + sweepLocal * (SuperstructureConstants.ArmPositions.SWEEP_MAX.getX() - SuperstructureConstants.ArmPositions.SWEEP_MIN.getX()), SuperstructureConstants.ArmPositions.SWEEP_MIN.getY());
 //                fourBar.setRotations(FourBar.getInstance().solve(pos, false, true), true);
-                    fourBar.setRotations(new Rotation2d[]{ArmPositions.GROUND_PICKUP_SHOULDER, ArmPositions.GROUND_PICKUP_ELBOW}, false);
+                    fourBar.setRotations(new Rotation2d[]{ArmPositions.GROUND_PICKUP_CLOSE_SHOULDER, ArmPositions.GROUND_PICKUP_CLOSE_ELBOW}, false);
+                    if (fourBar.atSetpoint()) {
+                        endEffector.intake();
+                    } else {
+                        endEffector.idle();
+                    }
+                    break;
+                case INTAKE_GROUND_FAR:
+//                Translation2d pos = new Translation2d(SuperstructureConstants.ArmPositions.SWEEP_MIN.getX() + sweepLocal * (SuperstructureConstants.ArmPositions.SWEEP_MAX.getX() - SuperstructureConstants.ArmPositions.SWEEP_MIN.getX()), SuperstructureConstants.ArmPositions.SWEEP_MIN.getY());
+//                fourBar.setRotations(FourBar.getInstance().solve(pos, false, true), true);
+                    fourBar.setRotations(new Rotation2d[]{ArmPositions.GROUND_PICKUP_FAR_SHOULDER, ArmPositions.GROUND_PICKUP_FAR_ELBOW}, false);
                     if (fourBar.atSetpoint()) {
                         endEffector.intake();
                     } else {
@@ -263,9 +276,7 @@ public class Superstructure extends SubsystemBase {
                     }
                     break;
                 case IDLE:
-                    fourBar.setArmVoltage(0, 0);
-                    fourBar.setArmVoltage(1, 0);
-//                fourBar.hold();
+                    fourBar.hold();
                     endEffector.idle();
                     break;
                 case MANUAL:
@@ -340,6 +351,11 @@ public class Superstructure extends SubsystemBase {
     public void collectGround() {
         sweepGlobal = 0;
         wantedState = StructureState.INTAKE_GROUND;
+    }
+
+    public void collectGroundFar() {
+        sweepGlobal = 0;
+        wantedState = StructureState.INTAKE_GROUND_FAR;
     }
 
     public void setDemandLEDs() {

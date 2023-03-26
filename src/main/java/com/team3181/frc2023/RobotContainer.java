@@ -63,52 +63,19 @@ public class RobotContainer {
   }
 
   private void testButtons() {
-//    driverController.a().whileTrue(new SwervePathingOnTheFly(AutoDrivePosition.NODE, false));
-//    driverController.a().whileTrue(new SwerveAutoScore());
 //      driverController.a().whileTrue(new SwerveAutoBalance(true));
-//    driverController.a()
-//            .whileTrue(new SwerveAutoDoubleSubstationRight());
-    //    driverController.y()
-//            .whileTrue(new SwerveAutoScore())
-//            .whileFalse(new SuperstructureHome());
-//    driverController.b()
-//            .whileTrue(new SwerveAutoDoubleSubstationLeft())
-//            .whileFalse(new SuperstructureHome());
-//    driverController.a()
-//            .whileTrue(new SwerveAutoDoubleSubstationRight())
-//            .whileFalse(new SuperstructureHome());
-//    driverController.a().whileTrue(new SwerveAutoBalance(true));
-//    driverController.a().onTrue(new InstantCommand(endEffector::intake)).onFalse(new InstantCommand(endEffector::idle));
-//    driverController.x().onTrue(new InstantCommand(endEffector::exhaust)).onFalse(new InstantCommand(endEffector::idle));
     driverController.rightTrigger().whileTrue(new InstantCommand(swerve::zeroGyro));
     driverController.a().whileTrue(new InstantCommand(superstructure::collectGround)).whileFalse(new InstantCommand(superstructure::home));
-//
-//    driverController.a().whileTrue(new InstantCommand(superstructure::collectGround))
-//            .whileFalse(new InstantCommand(Superstructure.getInstance()::home));
-//    driverController.b().whileTrue(new InstantCommand(superstructure::collectMid))
-//            .whileFalse(new InstantCommand(Superstructure.getInstance()::home));
-//    driverController.x().whileTrue(new InstantCommand(superstructure::objective))
-//            .whileFalse(new InstantCommand(Superstructure.getInstance()::home));
-//    driverController.b().whileTrue(new InstantCommand(() -> leds.setLEDMode(LEDModes.RAINBOW)));
-//    driverController.a()
-//            .whileTrue(new RepeatCommand(new InstantCommand(() -> fourBar.setArmVoltage(0, 2))))
-//            .whileFalse(new InstantCommand(() -> fourBar.setArmVoltage(0, 0)));
-//    driverController.b()
-//            .whileTrue(new RepeatCommand(new InstantCommand(() -> fourBar.setArmVoltage(0, -2))))
-//            .whileFalse(new InstantCommand(() -> fourBar.setArmVoltage(0, 0)));
-//    driverController.x()
-//            .whileTrue(new RepeatCommand(new InstantCommand(() -> fourBar.setArmVoltage(1, 2))))
-//            .whileFalse(new InstantCommand(() -> fourBar.setArmVoltage(1, 0)));
-//    driverController.y()
-//            .whileTrue(new RepeatCommand(new InstantCommand(() -> fourBar.setArmVoltage(1, -2))))
-//            .whileFalse(new InstantCommand(() -> fourBar.setArmVoltage(1, 0)));
-//    driverController.rightBumper()
-//            .whileTrue(new RepeatCommand(new InstantCommand(endEffector::intake)))
-//            .whileFalse(new InstantCommand(endEffector::idle));
-//    driverController.leftBumper()
-//            .whileTrue(new RepeatCommand(new InstantCommand(superstructure::exhaust)))
-//            .whileFalse(new InstantCommand(superstructure::home));
-//    driverController.rightBumper().whileTrue(new InstantCommand(endEffector::exhaust)).whileFalse(new InstantCommand(endEffector::idle));
+
+    operatorController.a()
+            .whileTrue(new InstantCommand(Superstructure.getInstance()::collectGround))
+            .whileFalse(new InstantCommand(Superstructure.getInstance()::home));
+    operatorController.rightTrigger()
+            .whileTrue(new InstantCommand(Superstructure.getInstance()::exhaust))
+            .whileFalse(new InstantCommand(Superstructure.getInstance()::home));
+    operatorController.leftTrigger()
+            .whileTrue(new InstantCommand(Superstructure.getInstance()::manual))
+            .whileFalse(new InstantCommand(Superstructure.getInstance()::home));
 
     operatorController.povUp().whileTrue(objectiveTracker.shiftNodeCommand(Direction.UP));
     operatorController.povRight().whileTrue(objectiveTracker.shiftNodeCommand(Direction.RIGHT));

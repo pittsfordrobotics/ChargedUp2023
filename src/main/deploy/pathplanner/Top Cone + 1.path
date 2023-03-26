@@ -7,10 +7,35 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.034795775157956,
-        "y": 4.835887616640142
+        "x": 2.5426236833783347,
+        "y": 4.828464704319817
       },
       "holonomicAngle": 179.31917542451097,
+      "isReversal": false,
+      "velOverride": null,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 4.159439995990452,
+        "y": 4.804385202601786
+      },
+      "prevControl": {
+        "x": 2.904125843511932,
+        "y": 4.853696281904143
+      },
+      "nextControl": {
+        "x": 5.065758789517253,
+        "y": 4.768783311383897
+      },
+      "holonomicAngle": 0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
@@ -28,12 +53,12 @@
         "y": 4.536324969975244
       },
       "prevControl": {
-        "x": 5.508926814918517,
-        "y": 4.8292330448321925
+        "x": 5.833620779626422,
+        "y": 4.702719232676169
       },
       "nextControl": {
-        "x": 6.618130431887973,
-        "y": 4.318326255214756
+        "x": 6.7945951621612455,
+        "y": 4.188939015817485
       },
       "holonomicAngle": 0,
       "isReversal": false,
@@ -57,7 +82,7 @@
         "y": 2.872953836565225
       },
       "nextControl": null,
-      "holonomicAngle": 180.0,
+      "holonomicAngle": 0.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
@@ -72,27 +97,27 @@
   ],
   "markers": [
     {
-      "position": 1.416534978693182,
-      "names": [
-        "maybeStop"
-      ]
-    },
-    {
-      "position": 0.6352228338068183,
+      "position": 1.0354481090198864,
       "names": [
         "intakeGround"
       ]
     },
     {
-      "position": 1.2449662642045463,
+      "position": 2.32,
+      "names": [
+        "maybeStop"
+      ]
+    },
+    {
+      "position": 2.175982111150568,
       "names": [
         "home"
       ]
     },
     {
-      "position": 2.0,
+      "position": 3.0,
       "names": [
-        "balanceBackward"
+        "balanceBackwards"
       ]
     }
   ]
