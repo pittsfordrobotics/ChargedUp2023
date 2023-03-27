@@ -72,8 +72,10 @@ public class SwervePathingOnTheFly extends CommandBase {
     public SwervePathingOnTheFly(boolean leftSubstation, boolean simple) {
         addRequirements(this.swerve);
         this.pathPoint = null;
-        this.pathConstraints = AutoConstants.SLOW_SPEED;
+//        this.pathConstraints = AutoConstants.SLOW_SPEED;
+        this.pathConstraints = new PathConstraints(0.5, 0.2);
         this.simple = simple;
+        Swerve.getInstance().setVision(false);
         Alliance alliance = DriverStation.getAlliance();
         if (alliance == Alliance.Red) {
             if (leftSubstation) {
@@ -286,6 +288,7 @@ public class SwervePathingOnTheFly extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
+        Swerve.getInstance().setVision(true);
         timer.stop();
         swerve.stopMotors();
     }

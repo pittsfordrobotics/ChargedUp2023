@@ -40,8 +40,8 @@ public final class FieldConstants {
         public static final BetterPathPoint LOADING_STATION_TOP_EXIT = new BetterPathPoint(new Translation2d(0.5 * LoadingZone.midX + LoadingZone.outerX * 0.5, LoadingZone.midY + Units.inchesToMeters(50.5) / 2), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(-180));
         public static final BetterPathPoint LOADING_STATION_BOTTOM_EXIT = new BetterPathPoint(new Translation2d(0.5 * LoadingZone.midX + LoadingZone.outerX * 0.5, LoadingZone.midY - Units.inchesToMeters(50.5)/ 2), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(-180));
 
-        public static final BetterPathPoint LOADING_STATION_TOP_INNER = new BetterPathPoint(new Translation2d(-SwerveConstants.BUMPER_WIDTH + LoadingZone.doubleSubstationX - SwerveConstants.X_LENGTH_METERS / 2 - 0.2, LoadingZone.midY + Units.inchesToMeters(50.5) / 2), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(0));
-        public static final BetterPathPoint LOADING_STATION_BOTTOM_INNER = new BetterPathPoint(new Translation2d(-SwerveConstants.BUMPER_WIDTH + LoadingZone.doubleSubstationX - SwerveConstants.X_LENGTH_METERS / 2 - 0.2, LoadingZone.midY - Units.inchesToMeters(50.5) / 2), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(0));
+        public static final BetterPathPoint LOADING_STATION_TOP_INNER = new BetterPathPoint(new Translation2d(-SwerveConstants.BUMPER_WIDTH + LoadingZone.doubleSubstationX - SwerveConstants.X_LENGTH_METERS / 2 - 0.2 - 0.5, LoadingZone.midY + Units.inchesToMeters(50.5) / 2), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(0));
+        public static final BetterPathPoint LOADING_STATION_BOTTOM_INNER = new BetterPathPoint(new Translation2d(-SwerveConstants.BUMPER_WIDTH + LoadingZone.doubleSubstationX - SwerveConstants.X_LENGTH_METERS / 2 - 0.2 - 0.5, LoadingZone.midY - Units.inchesToMeters(50.5) / 2), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(0));
 
         /**
          * @param startingPoint point 1

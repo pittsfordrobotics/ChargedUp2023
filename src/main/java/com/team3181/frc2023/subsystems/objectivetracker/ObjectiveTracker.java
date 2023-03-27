@@ -103,7 +103,7 @@ public class ObjectiveTracker extends VirtualSubsystem {
     }
 
     // automatically chooses optimal place to place game piece
-    if (!manualSelection) {
+    if (!manualSelection && !DriverStation.isAutonomous()) {
       double topDist = GeomUtil.distance(new Pose2d(AutoDrivePoints.pathPointFlipper(AutoDrivePoints.COMMUNITY_TOP_INNER, DriverStation.getAlliance()).getPosition(), new Rotation2d()), Swerve.getInstance().getPose());
       double bottomDist = GeomUtil.distance(new Pose2d(AutoDrivePoints.pathPointFlipper(AutoDrivePoints.COMMUNITY_BOTTOM_INNER, DriverStation.getAlliance()).getPosition(), new Rotation2d()), Swerve.getInstance().getPose());
 

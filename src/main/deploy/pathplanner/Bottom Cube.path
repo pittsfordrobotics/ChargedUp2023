@@ -72,15 +72,9 @@
   ],
   "markers": [
     {
-      "position": 1.5151922052556823,
+      "position": 0.9614146839488634,
       "names": [
         "maybeStop"
-      ]
-    },
-    {
-      "position": 2.0,
-      "names": [
-        "balanceBackward"
       ]
     }
   ]

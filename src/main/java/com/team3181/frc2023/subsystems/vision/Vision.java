@@ -65,7 +65,7 @@ public class Vision extends SubsystemBase {
         Logger.getInstance().recordOutput("Vision/Camera", camera.toString());
 
         if (getPose() != null) {
-//            Swerve.getInstance().addVisionData(getPose(), getLatency(), checkStable());
+            Swerve.getInstance().addVisionData(getPose(), getTime(), checkStable());
             Logger.getInstance().recordOutput("Vision/Pose", getPose());
         }
         Logger.getInstance().recordOutput("Vision/Stable", checkStable());
@@ -88,7 +88,7 @@ public class Vision extends SubsystemBase {
         else {
             timer.restart();
         }
-        return timer.hasElapsed(0.5);
+        return timer.hasElapsed(0.2);
     }
 
     public void setAutoPipeline(boolean autoPipeline) {
@@ -131,18 +131,18 @@ public class Vision extends SubsystemBase {
 
     public Pose2d getPose() {
         if (checkRightLimelightHasPose() && checkLeftLimelightHasPose()) {
-            return new Pose2d(new Translation2d((inputsRight.botXYZ[0] + inputsLeft.botXYZ[0]) / 2, (inputsRight.botXYZ[1] + inputsLeft.botXYZ[1]) / 2), new Rotation2d(inputsRight.botRPY[2]));
+            return new Pose2d(new Translation2d((inputsRight.botXYZ[0] + inputsLeft.botXYZ[0]) / 2, (inputsRight.botXYZ[1] + inputsLeft.botXYZ[1]) / 2), Rotation2d.fromDegrees(inputsRight.botRPY[2]));
         }
         else if (checkRightLimelightHasPose()) {
-            return new Pose2d(new Translation2d(inputsRight.botXYZ[0], inputsRight.botXYZ[1]), new Rotation2d(inputsRight.botRPY[2]));
+            return new Pose2d(new Translation2d(inputsRight.botXYZ[0], inputsRight.botXYZ[1]), Rotation2d.fromDegrees(inputsRight.botRPY[2]));
         }
         else if (checkLeftLimelightHasPose()) {
-            return new Pose2d(new Translation2d(inputsLeft.botXYZ[0], inputsLeft.botXYZ[1]), new Rotation2d(inputsLeft.botRPY[2]));
+            return new Pose2d(new Translation2d(inputsLeft.botXYZ[0], inputsLeft.botXYZ[1]), Rotation2d.fromDegrees(inputsLeft.botRPY[2]));
         }
         return null;
     }
 
-    public double getLatency() {
+    public double getTime() {
         return inputsRight.captureTimestamp;
     }
 

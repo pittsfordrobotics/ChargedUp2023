@@ -84,6 +84,7 @@ public class Superstructure extends SubsystemBase {
                     break;
                 case OBJECTIVE_GLOBAL:
                     objectiveLocal = objectiveGlobal;
+                    ObjectiveTracker.getInstance().updateObjective(objectiveLocal);
                     state = StructureState.OBJECTIVE;
                     break;
                 case INTAKE_GROUND:
@@ -307,6 +308,8 @@ public class Superstructure extends SubsystemBase {
             }
         }
         else {
+            fourBar.setArmVoltage(0, 0);
+            fourBar.setArmVoltage(1, 0);
             LEDs.getInstance().setLEDMode(LEDModes.GOOD);
         }
 

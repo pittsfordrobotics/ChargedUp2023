@@ -17,13 +17,14 @@ public class SuperstructureObjective extends CommandBase {
     @Override
     public void initialize() {
         superstructure.objective();
+        timer.restart();
         timer.stop();
-        timer.reset();
     }
 
     @Override
     public void execute() {
         if (superstructure.atSetpoint()) {
+            superstructure.exhaust();
             timer.start();
         }
     }

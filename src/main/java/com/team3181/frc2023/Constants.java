@@ -193,7 +193,7 @@ public final class Constants {
 
         // controlling module wheel speed
         // read this later: https://github.com/Team364/BaseFalconSwerve
-        public static final double MODULE_DRIVE_P = 0.0001;
+        public static final double MODULE_DRIVE_P = 0.0005;
         public static final double MODULE_DRIVE_I = 0;
         public static final double MODULE_DRIVE_D = 0;
 
@@ -204,7 +204,7 @@ public final class Constants {
         public static final double MODULE_DRIVE_FF = 1 / MAX_LINEAR_VELOCITY_METERS_PER_SECOND;
 
         // controlling module position / angle
-        public static final double MODULE_STEER_P = 1.5;
+        public static final double MODULE_STEER_P = 5;
         public static final double MODULE_STEER_I = 0;
         public static final double MODULE_STEER_D = 0;
         // irl
@@ -213,8 +213,8 @@ public final class Constants {
         // sim
         // -0.65 for open loop
         // -0.15 closed loop
-        public static final double MODULE_STEER_FF_OL = Robot.isReal() ? 0.4 : 0.5;
-        public static final double MODULE_STEER_FF_CL = Robot.isReal() ? 0.9 : 0.33;
+        public static final double MODULE_STEER_FF_OL = Robot.isReal() ? 0.6 : 0.5;
+        public static final double MODULE_STEER_FF_CL = Robot.isReal() ? 0.8 : 0.33;
 
         public static final double AUTO_ROTATE_P = 5;
         public static final double AUTO_ROTATE_I = 0;
@@ -268,7 +268,7 @@ public final class Constants {
         }
 
         // PID values for trajectory follower
-        public static final double LINEAR_P = 5;
+        public static final double LINEAR_P = 10;
         public static final double ROT_P = 5;
 
         //        numbers from 1678
@@ -299,13 +299,13 @@ public final class Constants {
         public static final double ELBOW_GEAR_RATIO = 5 * 5 * 3;
         public static final double CHAIN_RATIO = 1.0 / 3.0;
 
-        public static final double PID_CLAMP_VOLTAGE = 7;
+        public static final double PID_CLAMP_VOLTAGE = 10;
 
-        public static final double ELBOW_P = -20.0;
+        public static final double ELBOW_P = -30.0;
         public static final double ELBOW_I = 0.0;
         public static final double ELBOW_D = 0.0;
 
-        public static final double SHOULDER_P = 20.0;
+        public static final double SHOULDER_P = 30.0;
         public static final double SHOULDER_I = 0.0;
         public static final double SHOULDER_D = 0.0;
 
@@ -315,8 +315,8 @@ public final class Constants {
         // The Absolute offsets appear to be arbitrary?
         public static final Rotation2d SHOULDER_ABSOLUTE_OFFSET = Rotation2d.fromRadians(1.5980665922164917);
         public static final Rotation2d SHOULDER_MATH_OFFSET = Rotation2d.fromRadians(-1.5609228610992432); // zero needs to be at shoulder parallel to ground
-        public static final Rotation2d ELBOW_ABSOLUTE_OFFSET = Rotation2d.fromRadians(3.9912614822387695);
-        public static final Rotation2d ELBOW_MATH_OFFSET = Rotation2d.fromRadians(4.560662333165304); // zero is in line with shoulder
+        public static final Rotation2d ELBOW_ABSOLUTE_OFFSET = Rotation2d.fromRadians(3.7);
+        public static final Rotation2d ELBOW_MATH_OFFSET = Rotation2d.fromRadians(-1.952480435371399); // zero is in line with shoulder
 
         public static final Rotation2d ELBOW_MIN = Rotation2d.fromDegrees(-140);
         public static final Rotation2d ELBOW_MAX = Rotation2d.fromDegrees(140);

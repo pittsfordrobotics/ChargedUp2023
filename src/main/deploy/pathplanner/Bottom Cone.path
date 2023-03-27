@@ -51,12 +51,6 @@
       "names": [
         "maybeStop"
       ]
-    },
-    {
-      "position": 1.0,
-      "names": [
-        "balanceBackward"
-      ]
     }
   ]
 }

@@ -6,8 +6,7 @@ package com.team3181.frc2023;
 
 import com.team3181.frc2023.Constants.RobotConstants;
 import com.team3181.frc2023.FieldConstants.AutoDrivePoints;
-import com.team3181.frc2023.commands.SwerveDriveFieldXbox;
-import com.team3181.frc2023.commands.TankXbox;
+import com.team3181.frc2023.commands.*;
 import com.team3181.frc2023.commands.autos.AutoSwerveBalance;
 import com.team3181.frc2023.commands.autos.AutoSwervePath;
 import com.team3181.frc2023.commands.autos.AutoSwerveThree;
@@ -225,7 +224,7 @@ public class RobotContainer {
     needPositionMap.put(coneBottom, false);
     canForwardBalance.put(coneBottom, false);
 
-    Command coneBottomPlusOne = new AutoSwervePath(Paths.BOTTOM_CONE_PLUS_ONE, new Objective(1, NodeLevel.HIGH));
+    Command coneBottomPlusOne = new AutoSwervePath(Paths.BOTTOM_CONE_PLUS_ONE, new Objective(0, NodeLevel.HIGH));
     autoChooser.addOption("1 Cone Bottom + 1", coneBottomPlusOne);
     canBalanceMap.put(coneBottomPlusOne, true);
     needPositionMap.put(coneBottomPlusOne, false);
@@ -285,7 +284,7 @@ public class RobotContainer {
     else {
       Paths.EVENT_MAP = Paths.EVENT_MAP_NO_BALANCE;
     }
-    balanceForward = balanceChooser.getSelected();
+    balanceForward = canForwardBalance.get(autoChooser.getSelected());
     System.out.println(autoChooser.getSelected());
     System.out.println(positionChooser.getSelected());
     System.out.println(balanceChooser.getSelected());

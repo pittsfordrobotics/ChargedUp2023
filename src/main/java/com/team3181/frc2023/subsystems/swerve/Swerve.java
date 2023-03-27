@@ -40,6 +40,7 @@ public class Swerve extends SubsystemBase {
 
     private Rotation2d lastRotation = new Rotation2d();
     private boolean isOpenLoop = false;
+    private boolean vision = true;
 
     private final Alert pigeonAlert = new Alert("Pigeon not detected! Falling back to estimated angle!", AlertType.ERROR);
     private final static Swerve INSTANCE = new Swerve(RobotConstants.FL_MODULE, RobotConstants.FR_MODULE, RobotConstants.BL_MODULE, RobotConstants.BR_MODULE, RobotConstants.GYRO);
@@ -89,6 +90,7 @@ public class Swerve extends SubsystemBase {
         poseEstimator.update(getRobotRelativeAngle(), modulePositions);
         lastRotation = getRobotRelativeAngle();
 
+        Logger.getInstance().recordOutput("Swerve/VisionEnabled", vision);
         Logger.getInstance().recordOutput("Swerve/Pose", getPose());
         Logger.getInstance().recordOutput("Swerve/Wanted States", wantedModuleStates);
         Logger.getInstance().recordOutput("Swerve/Actual States", actualStates);
@@ -177,12 +179,16 @@ public class Swerve extends SubsystemBase {
     }
 
     public void addVisionData(Pose2d pose, double time, boolean stable) {
-        if (GeomUtil.distance(pose, getPose()) < 1 || stable) {
+        if ((vision && GeomUtil.distance(pose, getPose()) < 1) || stable) {
             // remove rotation because its being funky
-            Pose2d noRot = new Pose2d(pose.getTranslation(), getPose().getRotation());
-            Logger.getInstance().recordOutput("Swerve/Vision Updates", noRot);
-            poseEstimator.addVisionMeasurement(noRot, time);
+//            Pose2d noRot = new Pose2d(pose.getTranslation(), getPose().getRotation());
+            Logger.getInstance().recordOutput("Swerve/Vision Updates", pose);
+            poseEstimator.addVisionMeasurement(pose, time);
         }
+    }
+
+    public void setVision(boolean vision) {
+        this.vision = vision;
     }
 
     public Pose2d getPose() {
