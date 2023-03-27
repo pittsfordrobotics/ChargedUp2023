@@ -87,7 +87,6 @@ public class Swerve extends SubsystemBase {
         Logger.getInstance().processInputs("Gyro", gyroInputs);
 
         poseEstimator.update(getRobotRelativeAngle(), modulePositions);
-//        poseEstimator.setVisionMeasurementStdDevs();
         lastRotation = getRobotRelativeAngle();
 
         Logger.getInstance().recordOutput("Swerve/Pose", getPose());

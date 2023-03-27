@@ -68,10 +68,12 @@ public class Vision extends SubsystemBase {
         Logger.getInstance().recordOutput("Vision/Camera", camera.toString());
         Logger.getInstance().recordOutput("Vision/Enabled", enabled);
 
-        if (!Objects.equals(getPose(), new Pose2d()) && getPose() != null && enabled && !DriverStation.isAutonomous()) {
-            Swerve.getInstance().addVisionData(getPose(), getTime(), checkStable());
+        if (getPose() != null) {
+            if (!Objects.equals(getPose(), new Pose2d()) && enabled && !DriverStation.isAutonomous()) {
+                Swerve.getInstance().addVisionData(getPose(), getTime(), checkStable());
+            }
+            Logger.getInstance().recordOutput("Vision/Pose", getPose());
         }
-        Logger.getInstance().recordOutput("Vision/Pose", getPose());
         Logger.getInstance().recordOutput("Vision/Stable", checkStable());
     }
 

@@ -3,6 +3,7 @@ package com.team3181.frc2023.subsystems.swerve;
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 import com.revrobotics.SparkMaxPIDController;
@@ -36,8 +37,8 @@ public class SwerveModuleIOSparkMax implements SwerveModuleIO {
         steerAbsoluteEncoder.setInverted(true);
 
         // allows for faster response time
-        driveRelativeEncoder.setAverageDepth(4);
-        driveRelativeEncoder.setMeasurementPeriod(20);
+        driveRelativeEncoder.setAverageDepth(2);
+        driveRelativeEncoder.setMeasurementPeriod(10);
 
         // converts to m/s
         driveRelativeEncoder.setPositionConversionFactor((Math.PI * SwerveConstants.WHEEL_DIAMETER_METERS) / SwerveConstants.DRIVE_GEAR_RATIO);
@@ -56,6 +57,7 @@ public class SwerveModuleIOSparkMax implements SwerveModuleIO {
         steerPID.setPositionPIDWrappingEnabled(true);
         steerPID.setPositionPIDWrappingMinInput(0);
         steerPID.setPositionPIDWrappingMaxInput(2 * Math.PI);
+        steerMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20); // trying to get more position readings
 
         drivePID.setP(SwerveConstants.MODULE_DRIVE_P);
         drivePID.setI(SwerveConstants.MODULE_DRIVE_I);

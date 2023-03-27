@@ -30,8 +30,6 @@ public class SwerveOptimizer {
     }
 
     public static BetterSwerveModuleState optimize(BetterSwerveModuleState desiredState, Rotation2d currentAngle, double secondOrderOffsetDegrees) {
-//        double targetAngle = placeInAppropriate0To360Scope(currentAngle.getDegrees(), desiredState.angle.getDegrees());
-//         TODO: test this
         double targetAngle = placeInAppropriate0To360Scope(currentAngle.getDegrees(), desiredState.angle.getDegrees() + secondOrderOffsetDegrees);
         double targetSpeed = desiredState.speedMetersPerSecond;
         double delta = targetAngle - currentAngle.getDegrees();

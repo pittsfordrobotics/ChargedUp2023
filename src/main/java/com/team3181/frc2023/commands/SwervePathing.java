@@ -4,7 +4,6 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
 import com.team3181.frc2023.Constants.AutoConstants;
 import com.team3181.frc2023.subsystems.swerve.Swerve;
-import com.team3181.lib.util.PIDTuner;
 import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -24,9 +23,6 @@ public class SwervePathing extends CommandBase {
     private final PIDController xController = new PIDController(AutoConstants.LINEAR_P, 0, 0);
     private final PIDController yController = new PIDController(AutoConstants.LINEAR_P, 0, 0);
     private final ProfiledPIDController rotController = new ProfiledPIDController(AutoConstants.ROT_P, 0, 0, AutoConstants.MAX_ROT_CONSTRAINTS);
-    private final PIDTuner xTuner = new PIDTuner("SwervePathingX", xController);
-    private final PIDTuner yTuner = new PIDTuner("SwervePathingY", yController);
-    private final PIDTuner rotTuner = new PIDTuner("SwervePathingRot", rotController);
 //    private final HolonomicDriveController holonomicDriveController = new HolonomicDriveController(xController, yController, rotController);
     private HolonomicDriveController holonomicDriveController = new HolonomicDriveController(xController, yController, rotController);
 
@@ -39,10 +35,6 @@ public class SwervePathing extends CommandBase {
 
     @Override
     public void initialize() {
-        xTuner.setPID();
-        yTuner.setPID();
-        rotTuner.setPID();
-
         holonomicDriveController = new HolonomicDriveController(xController, yController, rotController);
         // adjusts because the field is flipped instead of rotated by 180
         PathPlannerState adjustedState = PathPlannerTrajectory.transformStateForAlliance(trajectory.getInitialState(), DriverStation.getAlliance());

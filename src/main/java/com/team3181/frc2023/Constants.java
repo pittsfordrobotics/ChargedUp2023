@@ -150,8 +150,8 @@ public final class Constants {
 
         public static final double DRIVE_GEAR_RATIO = GEAR_CONSTANTS.gearRatio;
         public static final double STEER_GEAR_RATIO = 46.2962962963;
-        public static final double X_LENGTH_METERS = Units.inchesToMeters(26.5);
-        public static final double Y_LENGTH_METERS = Units.inchesToMeters(26.5);
+        public static final double X_LENGTH_METERS = Units.inchesToMeters(28 - 1.7 * 2);
+        public static final double Y_LENGTH_METERS = Units.inchesToMeters(28 - 1.7 * 2);
         public static final double BUMPER_WIDTH = Units.inchesToMeters(3.5);
         public static final double WHEEL_DIAMETER_METERS = Units.inchesToMeters(3);
 
