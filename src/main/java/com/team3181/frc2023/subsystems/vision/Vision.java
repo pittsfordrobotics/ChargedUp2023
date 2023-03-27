@@ -16,6 +16,8 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 
+import java.util.Objects;
+
 public class Vision extends SubsystemBase {
     private final VisionIO ioRight;
     private final VisionIO ioLeft;
@@ -28,6 +30,7 @@ public class Vision extends SubsystemBase {
     private CameraMode camera = CameraMode.VISION_PROCESSING;
     private final Timer timer = new Timer();
     private boolean timerStarted = false;
+    private boolean enabled = true;
     private Pose2d lastPose = new Pose2d();
 
     private final Alert rightLimelightAlert = new Alert("Right Limelight not detected! Vision will NOT work!", AlertType.ERROR);
@@ -63,11 +66,12 @@ public class Vision extends SubsystemBase {
         ioLeft.setCameraModes(camera);
         Logger.getInstance().recordOutput("Vision/Pipeline", pipeline.toString());
         Logger.getInstance().recordOutput("Vision/Camera", camera.toString());
+        Logger.getInstance().recordOutput("Vision/Enabled", enabled);
 
-        if (getPose() != null) {
+        if (!Objects.equals(getPose(), new Pose2d()) && getPose() != null && enabled && !DriverStation.isAutonomous()) {
             Swerve.getInstance().addVisionData(getPose(), getTime(), checkStable());
-            Logger.getInstance().recordOutput("Vision/Pose", getPose());
         }
+        Logger.getInstance().recordOutput("Vision/Pose", getPose());
         Logger.getInstance().recordOutput("Vision/Stable", checkStable());
     }
 
@@ -88,7 +92,7 @@ public class Vision extends SubsystemBase {
         else {
             timer.restart();
         }
-        return timer.hasElapsed(0.2);
+        return timer.hasElapsed(0.05);
     }
 
     public void setAutoPipeline(boolean autoPipeline) {
@@ -140,6 +144,10 @@ public class Vision extends SubsystemBase {
             return new Pose2d(new Translation2d(inputsLeft.botXYZ[0], inputsLeft.botXYZ[1]), Rotation2d.fromDegrees(inputsLeft.botRPY[2]));
         }
         return null;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     public double getTime() {

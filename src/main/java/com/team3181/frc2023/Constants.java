@@ -150,8 +150,8 @@ public final class Constants {
 
         public static final double DRIVE_GEAR_RATIO = GEAR_CONSTANTS.gearRatio;
         public static final double STEER_GEAR_RATIO = 46.2962962963;
-        public static final double X_LENGTH_METERS = Units.inchesToMeters(28);
-        public static final double Y_LENGTH_METERS = Units.inchesToMeters(28);
+        public static final double X_LENGTH_METERS = Units.inchesToMeters(26.5);
+        public static final double Y_LENGTH_METERS = Units.inchesToMeters(26.5);
         public static final double BUMPER_WIDTH = Units.inchesToMeters(3.5);
         public static final double WHEEL_DIAMETER_METERS = Units.inchesToMeters(3);
 
@@ -272,6 +272,10 @@ public final class Constants {
         public static final double ROT_P = 5;
 
         //        numbers from 1678
+        public static final double VERY_SLOW_LINEAR_VELOCITY_METERS_PER_SECOND = 0.5;
+        public static final double VERY_SLOW_LINEAR_ACCELERATION_METERS_PER_SECOND_SQUARED = 0.3;
+
+        //        numbers from 1678
         public static final double SLOW_LINEAR_VELOCITY_METERS_PER_SECOND = 2.0;
         public static final double SLOW_LINEAR_ACCELERATION_METERS_PER_SECOND_SQUARED = 2.0;
 
@@ -284,6 +288,7 @@ public final class Constants {
         public static final double MAX_ANGULAR_VELOCITY_METERS_PER_SECOND = 1.2 * Math.PI;
         public static final double MAX_ANGULAR_ACCELERATION_METERS_PER_SECOND_SQUARED = Math.pow(MAX_ANGULAR_VELOCITY_METERS_PER_SECOND, 2);
 
+        public static final PathConstraints VERY_SLOW_SPEED = new PathConstraints(VERY_SLOW_LINEAR_VELOCITY_METERS_PER_SECOND, VERY_SLOW_LINEAR_ACCELERATION_METERS_PER_SECOND_SQUARED);
         public static final PathConstraints SLOW_SPEED = new PathConstraints(SLOW_LINEAR_VELOCITY_METERS_PER_SECOND, SLOW_LINEAR_ACCELERATION_METERS_PER_SECOND_SQUARED);
         public static final PathConstraints MAX_SPEED = new PathConstraints(MAX_LINEAR_VELOCITY_METERS_PER_SECOND, MAX_LINEAR_ACCELERATION_METERS_PER_SECOND_SQUARED);
 

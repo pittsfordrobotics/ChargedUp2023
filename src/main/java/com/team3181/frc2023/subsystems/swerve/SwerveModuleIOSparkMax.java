@@ -9,6 +9,7 @@ import com.revrobotics.SparkMaxPIDController;
 import com.team3181.frc2023.Constants.SwerveConstants;
 import com.team3181.lib.drivers.LazySparkMax;
 import com.team3181.lib.swerve.BetterSwerveModuleState;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 
 public class SwerveModuleIOSparkMax implements SwerveModuleIO {
@@ -18,7 +19,7 @@ public class SwerveModuleIOSparkMax implements SwerveModuleIO {
     private final RelativeEncoder driveRelativeEncoder;
     private final AbsoluteEncoder steerAbsoluteEncoder;
 
-//    private final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(SwerveConstants.MODULE_DRIVE_S, SwerveConstants.MODULE_DRIVE_V, SwerveConstants.MODULE_DRIVE_A);
+    private final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(SwerveConstants.MODULE_DRIVE_S, SwerveConstants.MODULE_DRIVE_V, SwerveConstants.MODULE_DRIVE_A);
     private final SparkMaxPIDController drivePID;
     private final SparkMaxPIDController steerPID;
 //    private final PIDTuner driveTuner;

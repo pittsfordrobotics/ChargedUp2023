@@ -12,6 +12,7 @@ import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker;
 import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker.NodeLevel;
 import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker.Objective;
 import com.team3181.frc2023.subsystems.swerve.Swerve;
+import com.team3181.frc2023.subsystems.vision.Vision;
 import com.team3181.lib.math.GeomUtil;
 import com.team3181.lib.swerve.BetterPathPoint;
 import edu.wpi.first.math.controller.HolonomicDriveController;
@@ -35,7 +36,7 @@ public class SwervePathingOnTheFly extends CommandBase {
     private final AutoDrivePosition position;
     private final boolean simple;
     private final Timer timer = new Timer();
-    private final PathConstraints pathConstraints;
+    private PathConstraints pathConstraints = AutoConstants.VERY_SLOW_SPEED;
 
     private final PIDController xController = new PIDController(AutoConstants.LINEAR_P, 0, 0);
     private final PIDController yController = new PIDController(AutoConstants.LINEAR_P, 0, 0);
@@ -45,7 +46,6 @@ public class SwervePathingOnTheFly extends CommandBase {
     public SwervePathingOnTheFly(BetterPathPoint... pathPoint) {
         addRequirements(this.swerve);
         this.pathPoint = pathPoint;
-        pathConstraints = AutoConstants.SLOW_SPEED;
         simple = false;
         position = null;
         rotController.enableContinuousInput(-Math.PI, Math.PI);
@@ -63,7 +63,6 @@ public class SwervePathingOnTheFly extends CommandBase {
     public SwervePathingOnTheFly(AutoDrivePosition position, boolean simple) {
         addRequirements(this.swerve);
         this.pathPoint = null;
-        this.pathConstraints = AutoConstants.SLOW_SPEED;
         this.simple = simple;
         this.position = position;
         rotController.enableContinuousInput(-Math.PI, Math.PI);
@@ -72,10 +71,7 @@ public class SwervePathingOnTheFly extends CommandBase {
     public SwervePathingOnTheFly(boolean leftSubstation, boolean simple) {
         addRequirements(this.swerve);
         this.pathPoint = null;
-//        this.pathConstraints = AutoConstants.SLOW_SPEED;
-        this.pathConstraints = new PathConstraints(0.5, 0.2);
         this.simple = simple;
-        Swerve.getInstance().setVision(false);
         Alliance alliance = DriverStation.getAlliance();
         if (alliance == Alliance.Red) {
             if (leftSubstation) {
@@ -98,6 +94,7 @@ public class SwervePathingOnTheFly extends CommandBase {
 
     @Override
     public void initialize() {
+        Vision.getInstance().setEnabled(false);
         ArrayList<PathPoint> adjustedPathPoints = new ArrayList<>();
         // adds path points and flips for correct alliance
         BetterPathPoint robotPoint = new BetterPathPoint(Swerve.getInstance().getPose().getTranslation(), Swerve.getInstance().getPose().getRotation(), Swerve.getInstance().getPose().getRotation());
@@ -288,7 +285,7 @@ public class SwervePathingOnTheFly extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        Swerve.getInstance().setVision(true);
+        Vision.getInstance().setEnabled(true);
         timer.stop();
         swerve.stopMotors();
     }
