@@ -150,6 +150,8 @@ public final class Constants {
 
         public static final double DRIVE_GEAR_RATIO = GEAR_CONSTANTS.gearRatio;
         public static final double STEER_GEAR_RATIO = 46.2962962963;
+//        CENTER OF WHEEL TO CENTER OF WHEEL
+//        NOT CHASSIS LENGTH
         public static final double X_LENGTH_METERS = Units.inchesToMeters(28 - 1.7 * 2);
         public static final double Y_LENGTH_METERS = Units.inchesToMeters(28 - 1.7 * 2);
         public static final double BUMPER_WIDTH = Units.inchesToMeters(3.5);
@@ -316,12 +318,13 @@ public final class Constants {
 
         public static final double PID_TOLERANCE = 0.05;
 
-        // Set zero points to be the initial "stowed" position?
-        // The Absolute offsets appear to be arbitrary?
+        // This should be when shoulder is all the way back
+        // then fudge the number by subtracting an extra 0.1
         public static final Rotation2d SHOULDER_ABSOLUTE_OFFSET = Rotation2d.fromRadians(1.5980665922164917);
         public static final Rotation2d SHOULDER_MATH_OFFSET = Rotation2d.fromRadians(-1.5609228610992432); // zero needs to be at shoulder parallel to ground
+        // This should be when claw is pointing at the ground
         public static final Rotation2d ELBOW_ABSOLUTE_OFFSET = Rotation2d.fromRadians(3.7);
-        public static final Rotation2d ELBOW_MATH_OFFSET = Rotation2d.fromRadians(-1.952480435371399); // zero is in line with shoulder
+        public static final Rotation2d ELBOW_MATH_OFFSET = Rotation2d.fromRadians(-1.952480435371399); // zero is in line with shoulder parallel to ground
 
         public static final Rotation2d ELBOW_MIN = Rotation2d.fromDegrees(-140);
         public static final Rotation2d ELBOW_MAX = Rotation2d.fromDegrees(140);
