@@ -24,7 +24,7 @@ public class EndEffectorRun extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return timer.hasElapsed(0.5);
+        return timer.hasElapsed(0.1);
     }
 
     @Override

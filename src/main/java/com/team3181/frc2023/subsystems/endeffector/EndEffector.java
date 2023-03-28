@@ -6,6 +6,7 @@ import com.team3181.frc2023.Constants.EndEffectorConstants;
 import com.team3181.frc2023.Robot;
 import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker;
 import com.team3181.lib.commands.DisabledInstantCommand;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 
@@ -56,9 +57,14 @@ public class EndEffector extends SubsystemBase {
             Logger.getInstance().processInputs("EndEffector", inputs);
 
             switch(actualState) {
-                // would be nice if this were command based but that's annoying and periodic is easier
                 case INTAKING:
-                    io.setVoltage(EndEffectorConstants.INTAKE_POWER);
+                    if (DriverStation.isAutonomous()) {
+                        // maximize power in auto to decrease time initially
+                        io.setVoltage(8);
+                    }
+                    else {
+                        io.setVoltage(EndEffectorConstants.INTAKE_POWER);
+                    }
                     break;
                 case EXHAUSTING: // may need to be 2 different values if we need to shoot cone and cube at different speeds
                     if (ObjectiveTracker.getInstance().getObjective().nodeRow == 1 || ObjectiveTracker.getInstance().getObjective().nodeRow == 4 || ObjectiveTracker.getInstance().getObjective().nodeRow == 7) {

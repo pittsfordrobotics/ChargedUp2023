@@ -22,10 +22,6 @@ public class AutoSwerveThree extends SequentialCommandGroup {
                         (top ? Paths.TOP_THREE : Paths.BOTTOM_THREE).get(0).getMarkers()
                 ),
                 new SwerveAutoBalance(RobotContainer.balanceForward)
-//                new FollowPathWithLiveEvents(
-//                        new SwervePathing((top ? Paths.TOP_THREE : Paths.BOTTOM_THREE).get(1), false),
-//                        (top ? Paths.TOP_THREE : Paths.BOTTOM_THREE).get(1).getMarkers()
-//                )
         );
     }
 }

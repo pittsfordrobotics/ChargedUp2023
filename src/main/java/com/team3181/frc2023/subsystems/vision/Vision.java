@@ -94,7 +94,7 @@ public class Vision extends SubsystemBase {
         else {
             timer.restart();
         }
-        return timer.hasElapsed(0.1);
+        return timer.hasElapsed(0.2);
     }
 
     public void setAutoPipeline(boolean autoPipeline) {
