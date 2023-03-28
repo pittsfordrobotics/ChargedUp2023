@@ -13,8 +13,9 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Paths {
-    public static final List<PathPlannerTrajectory> TOP_THREE = PathPlanner.loadPathGroup("Top 3 Item", AutoConstants.MAX_SPEED);
-    public static final List<PathPlannerTrajectory> BOTTOM_THREE = PathPlanner.loadPathGroup("Bottom 3 Item", AutoConstants.MAX_SPEED);
+    public static final PathPlannerTrajectory TOP_THREE = PathPlanner.loadPath("Top 3 Item", AutoConstants.SLOW_SPEED);
+    public static final List<PathPlannerTrajectory> TOP_THREE_BALANCE = PathPlanner.loadPathGroup("Top 3 Item + Balance", AutoConstants.SLOW_SPEED);
+    public static final PathPlannerTrajectory BOTTOM_THREE = PathPlanner.loadPath("Bottom 3 Item", AutoConstants.SLOW_SPEED);
     public static final PathPlannerTrajectory BOTTOM_CUBE = PathPlanner.loadPath("Bottom Cube", AutoConstants.SLOW_SPEED);
     public static final PathPlannerTrajectory BOTTOM_CONE = PathPlanner.loadPath("Bottom Cone", AutoConstants.SLOW_SPEED);
     public static final PathPlannerTrajectory BOTTOM_CUBE_PLUS_ONE = PathPlanner.loadPath("Bottom Cube + 1", AutoConstants.SLOW_SPEED);
@@ -29,8 +30,14 @@ public class Paths {
     public static final HashMap<String, Command> EVENT_MAP_BALANCE = new HashMap<>();
     public static final HashMap<String, Command> EVENT_MAP_NO_BALANCE = new HashMap<>();
     static {
-        EVENT_MAP_BALANCE.put("intakeGround", new SuperstructureGroundFar());
-        EVENT_MAP_NO_BALANCE.put("intakeGround", new SuperstructureGroundFar());
+        EVENT_MAP_BALANCE.put("intakeGround", new SuperstructureGround());
+        EVENT_MAP_NO_BALANCE.put("intakeGround", new SuperstructureGround());
+
+        EVENT_MAP_BALANCE.put("objectiveHybridTop", new SuperstructureObjectiveGlobal(new Objective(8, NodeLevel.HYBRID)));
+        EVENT_MAP_NO_BALANCE.put("objectiveHybridTop", new SuperstructureObjectiveGlobal(new Objective(8, NodeLevel.HYBRID)));
+
+        EVENT_MAP_BALANCE.put("objectiveHybridBottom", new SuperstructureObjectiveGlobal(new Objective(0, NodeLevel.HYBRID)));
+        EVENT_MAP_NO_BALANCE.put("objectiveHybridBottom", new SuperstructureObjectiveGlobal(new Objective(0, NodeLevel.HYBRID)));
 
         EVENT_MAP_BALANCE.put("objectiveConeTop", new SuperstructureObjectiveGlobal(new Objective(6, NodeLevel.HIGH)));
         EVENT_MAP_NO_BALANCE.put("objectiveConeTop", new SuperstructureObjectiveGlobal(new Objective(6, NodeLevel.HIGH)));
@@ -44,8 +51,11 @@ public class Paths {
         EVENT_MAP_BALANCE.put("objectiveCubeBottom", new SuperstructureObjectiveGlobal(new Objective(1, NodeLevel.HIGH)));
         EVENT_MAP_NO_BALANCE.put("objectiveCubeBottom", new SuperstructureObjectiveGlobal(new Objective(1, NodeLevel.HIGH)));
 
-        EVENT_MAP_BALANCE.put("intakeGround", new SuperstructureGroundFar());
-        EVENT_MAP_NO_BALANCE.put("intakeGround", new SuperstructureGroundFar());
+        EVENT_MAP_BALANCE.put("exhaust", new SuperstructureExhaust());
+        EVENT_MAP_NO_BALANCE.put("exhaust", new SuperstructureExhaust());
+
+        EVENT_MAP_BALANCE.put("intakeGroundFar", new SuperstructureGroundFar());
+        EVENT_MAP_NO_BALANCE.put("intakeGroundFar", new SuperstructureGroundFar());
 
         EVENT_MAP_BALANCE.put("home", new SuperstructureHome());
         EVENT_MAP_NO_BALANCE.put("home", new SuperstructureHome());

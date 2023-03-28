@@ -2,7 +2,6 @@ package com.team3181.frc2023.subsystems;
 
 import com.team3181.frc2023.Constants.SuperstructureConstants;
 import com.team3181.frc2023.Constants.SuperstructureConstants.ArmPositions;
-import com.team3181.frc2023.FieldConstants.AutoDrivePoints;
 import com.team3181.frc2023.Robot;
 import com.team3181.frc2023.subsystems.endeffector.EndEffector;
 import com.team3181.frc2023.subsystems.fourbar.FourBar;
@@ -15,9 +14,6 @@ import com.team3181.frc2023.subsystems.swerve.Swerve;
 import com.team3181.lib.commands.DisabledInstantCommand;
 import com.team3181.lib.controller.BetterXboxController;
 import com.team3181.lib.controller.BetterXboxController.Humans;
-import com.team3181.lib.math.GeomUtil;
-import com.team3181.lib.swerve.BetterPathPoint;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -240,11 +236,6 @@ public class Superstructure extends SubsystemBase {
 //                        }
                             break;
                     }
-                    if (shouldAutoScore(objectiveLocal.nodeLevel) && fourBar.atSetpoint()) {
-                        endEffector.exhaust();
-                    } else {
-                        endEffector.idle();
-                    }
                     break;
                 case INTAKE_GROUND:
 //                Translation2d pos = new Translation2d(SuperstructureConstants.ArmPositions.SWEEP_MIN.getX() + sweepLocal * (SuperstructureConstants.ArmPositions.SWEEP_MAX.getX() - SuperstructureConstants.ArmPositions.SWEEP_MIN.getX()), SuperstructureConstants.ArmPositions.SWEEP_MIN.getY());
@@ -390,17 +381,6 @@ public class Superstructure extends SubsystemBase {
     private boolean shouldAutoRetract() {
 //        check if in center of field
         return Swerve.getInstance().getPose().getX() > 5.3 && Swerve.getInstance().getPose().getX() < 11.25;
-    }
-
-    public boolean shouldAutoScore(NodeLevel nodeLevel) {
-//        check if at correct pose for current node
-        BetterPathPoint wantedNode = AutoDrivePoints.nodeSelector(ObjectiveTracker.getInstance().getObjective().nodeRow);
-        if (nodeLevel == NodeLevel.MID) {
-            wantedNode = AutoDrivePoints.adjustNodeForMid(wantedNode);
-        }
-        boolean rot = Math.abs(Swerve.getInstance().getPose().getRotation().getRadians() - wantedNode.getHolonomicRotation().getRadians()) < SuperstructureConstants.AUTO_SCORE_ROTATION_TOLERANCE;
-        boolean position = GeomUtil.distance(Swerve.getInstance().getPose(), new Pose2d(wantedNode.getPosition(), wantedNode.getHolonomicRotation())) < SuperstructureConstants.AUTO_SCORE_POSITION_TOLERANCE;
-        return rot && position && EndEffector.getInstance().hasPiece();
     }
 
     public boolean atSetpoint() {

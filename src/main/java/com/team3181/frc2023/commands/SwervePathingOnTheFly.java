@@ -103,8 +103,8 @@ public class SwervePathingOnTheFly extends CommandBase {
         switch (position) {
             case NODE:
                 BetterPathPoint node = AutoDrivePoints.nodeSelector(objective.nodeRow);
-                if (objective.nodeLevel == NodeLevel.MID || objective.nodeLevel == NodeLevel.HYBRID) {
-                    node = AutoDrivePoints.adjustNodeForMid(node);
+                if (objective.nodeLevel == NodeLevel.HYBRID) {
+                    node = AutoDrivePoints.adjustNodeForHyrbid(node);
                 }
                 node = AutoDrivePoints.pathPointFlipper(node, DriverStation.getAlliance());
                 if (simple) {

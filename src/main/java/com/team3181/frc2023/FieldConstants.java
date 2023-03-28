@@ -87,7 +87,7 @@ public final class FieldConstants {
             return new BetterPathPoint(new Translation2d(BOTTOM_NODE.getPosition().getX(), BOTTOM_NODE.getPosition().getY() + Grids.nodeSeparationY * (node)), BOTTOM_NODE.getHeading(), BOTTOM_NODE.getHolonomicRotation());
         }
 
-        public static BetterPathPoint adjustNodeForMid(BetterPathPoint point) {
+        public static BetterPathPoint adjustNodeForHyrbid(BetterPathPoint point) {
             return new BetterPathPoint(new Translation2d(point.getPosition().getX() + 0.33006, point.getPosition().getY()), point.getHeading(), point.getHolonomicRotation());
         }
 

@@ -13,16 +13,16 @@ import com.team3181.lib.commands.FollowPathWithLiveEvents;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
-public class AutoSwerveTwo extends SequentialCommandGroup {
-    public AutoSwerveTwo(boolean top) {
+public class AutoSwerveThreeBalance extends SequentialCommandGroup {
+    public AutoSwerveThreeBalance(boolean top) {
         super(
                 new ParallelCommandGroup(
                     new EndEffectorRun(),
                     new SuperstructureObjectiveGlobal(new Objective(8, NodeLevel.HIGH))
                 ),
                 new FollowPathWithLiveEvents(
-                        new SwervePathing((top ? Paths.TOP_THREE : Paths.BOTTOM_THREE).get(0), true),
-                        (top ? Paths.TOP_THREE : Paths.BOTTOM_THREE).get(0).getMarkers()
+                        new SwervePathing((top ? Paths.TOP_THREE_BALANCE : Paths.BOTTOM_THREE).get(0), true),
+                        (top ? Paths.TOP_THREE_BALANCE : Paths.BOTTOM_THREE).get(0).getMarkers()
                 ),
                 new SwerveAutoBalance(RobotContainer.balanceForward)
         );

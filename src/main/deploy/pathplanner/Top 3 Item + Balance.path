@@ -49,16 +49,16 @@
     },
     {
       "anchorPoint": {
-        "x": 6.028881323306267,
-        "y": 4.652920642728221
+        "x": 6.134719322824063,
+        "y": 4.649408293676071
       },
       "prevControl": {
-        "x": 5.415793615712666,
-        "y": 4.795609086796515
+        "x": 5.521631615230461,
+        "y": 4.792096737744365
       },
       "nextControl": {
-        "x": 5.415793615712666,
-        "y": 4.795609086796515
+        "x": 5.521631615230461,
+        "y": 4.792096737744365
       },
       "holonomicAngle": 0.0,
       "isReversal": true,
@@ -224,12 +224,12 @@
     },
     {
       "anchorPoint": {
-        "x": 3.4420441744393693,
-        "y": 3.401473348329726
+        "x": 3.843900759402539,
+        "y": 3.3347627269798807
       },
       "prevControl": {
-        "x": 2.6302054411698883,
-        "y": 3.4286307424068845
+        "x": 3.032062026133058,
+        "y": 3.361920121057039
       },
       "nextControl": null,
       "holonomicAngle": 180.0,
@@ -245,5 +245,57 @@
       }
     }
   ],
-  "markers": []
+  "maxVelocity": null,
+  "maxAcceleration": 2.0,
+  "isReversed": null,
+  "markers": [
+    {
+      "position": 0.982097833806818,
+      "names": [
+        "intakeGround"
+      ]
+    },
+    {
+      "position": 2.4213267933238636,
+      "names": [
+        "home"
+      ]
+    },
+    {
+      "position": 3.374680397727272,
+      "names": [
+        "objectiveHybridTop"
+      ]
+    },
+    {
+      "position": 4.00528564453125,
+      "names": [
+        "exhaust"
+      ]
+    },
+    {
+      "position": 5.288648570667615,
+      "names": [
+        "intakeGround"
+      ]
+    },
+    {
+      "position": 6.311026278409088,
+      "names": [
+        "home"
+      ]
+    },
+    {
+      "position": 7.7,
+      "names": [
+        "objectiveCubeTop"
+      ]
+    },
+    {
+      "position": 7.946700772372159,
+      "names": [
+        "exhaust"
+      ]
+    }
+  ]
 }
