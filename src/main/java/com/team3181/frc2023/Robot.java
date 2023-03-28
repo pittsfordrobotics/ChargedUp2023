@@ -125,6 +125,8 @@ public class Robot extends LoggedRobot {
     logReceiverQueueAlert.set(Logger.getInstance().getReceiverQueueFault());
     // in MBs
     Logger.getInstance().recordOutput("Memory Usage", (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024.0 / 1024.0);
+    Logger.getInstance().recordOutput("Memory Free", (Runtime.getRuntime().freeMemory()) / 1024.0 / 1024.0);
+    Logger.getInstance().recordOutput("Memory Total", (Runtime.getRuntime().totalMemory()) / 1024.0 / 1024.0);
 
     driverControllerAlert.set(!DriverStation.isJoystickConnected(0));
     operatorControllerAlert.set(!DriverStation.isJoystickConnected(1));

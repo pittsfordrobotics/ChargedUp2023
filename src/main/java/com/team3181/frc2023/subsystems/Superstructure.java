@@ -180,7 +180,12 @@ public class Superstructure extends SubsystemBase {
                     state = StructureState.ZEROING;
                 }
                 if (state == StructureState.EXHAUST) {
-                    fourBar.recordDrop();
+                    if (objectiveLocal.nodeRow == 0 || objectiveLocal.nodeRow == 2 || objectiveLocal.nodeRow == 3 || objectiveLocal.nodeRow == 5 || objectiveLocal.nodeRow == 6 || objectiveLocal.nodeRow == 8) {
+                        fourBar.recordDrop();
+                    }
+                    else {
+                        fourBar.recordDropCube();
+                    }
                 } else if (state == StructureState.OBJECTIVE && objectiveLocal.nodeLevel == NodeLevel.HIGH) {
                     if (objectiveLocal.nodeRow == 1 || objectiveLocal.nodeRow == 4 || objectiveLocal.nodeRow == 7) {
                         fourBar.recordHigh(new Rotation2d[]{ArmPositions.HIGH_CUBE_SHOULDER, ArmPositions.HIGH_CUBE_ELBOW});

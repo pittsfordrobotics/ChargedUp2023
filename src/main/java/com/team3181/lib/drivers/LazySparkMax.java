@@ -17,6 +17,7 @@ public class LazySparkMax extends CANSparkMax {
     private int errors = 1;
     private int attempts = -1;
     private static final ArrayList<LazySparkMax> sparkMaxes = new ArrayList<>();
+    private static final ArrayList<Alert> alerts = new ArrayList<>();
 
     /**
      * Lazy Spark Max
@@ -47,6 +48,7 @@ public class LazySparkMax extends CANSparkMax {
         }
         else {
             sparkMaxes.add(this);
+            alerts.add(new Alert("SparkMaxes", "Error", AlertType.ERROR));
         }
     }
 
@@ -90,6 +92,7 @@ public class LazySparkMax extends CANSparkMax {
         }
         else {
             sparkMaxes.add(this);
+            alerts.add(new Alert("SparkMaxes", "Error", AlertType.ERROR));
         }
     }
 
@@ -105,10 +108,14 @@ public class LazySparkMax extends CANSparkMax {
     }
 
     public static void checkAlive() {
-        for (LazySparkMax i : sparkMaxes) {
-            if (LazySparkMax.check(i.getLastError()) != 0) {
-                Logger.getInstance().recordOutput("SparkMaxes/" + RobotConstants.SPARKMAX_HASHMAP.get(i.getDeviceId()) + i.getDeviceId(), "ERROR");
-                new Alert("SparkMaxes", RobotConstants.SPARKMAX_HASHMAP.get(i.getDeviceId()) + " (" + i.getDeviceId() + ") PROBLEMED with " + i.getLastError().toString() + " !", AlertType.ERROR).set(true);
+        for (int i = 0; i < sparkMaxes.size(); i++) {
+            if (LazySparkMax.check(sparkMaxes.get(i).getLastError()) != 0) {
+                Logger.getInstance().recordOutput("SparkMaxes/" + RobotConstants.SPARKMAX_HASHMAP.get(sparkMaxes.get(i).getDeviceId()) + sparkMaxes.get(i).getDeviceId(), sparkMaxes.get(i).getLastError().toString());
+                alerts.get(i).setText(RobotConstants.SPARKMAX_HASHMAP.get(sparkMaxes.get(i).getDeviceId()) + " (" + sparkMaxes.get(i).getDeviceId() + ") PROBLEMED with " + sparkMaxes.get(i).getLastError().toString() + " !");
+                alerts.get(i).set(true);
+            }
+            else {
+                alerts.get(i).set(false);
             }
         }
     }

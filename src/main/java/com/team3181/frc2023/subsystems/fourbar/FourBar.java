@@ -62,10 +62,10 @@ public class FourBar extends SubsystemBase {
         shoulderTooLow.set(DriverStation.isDisabled() && inputs[0].armOffsetPositionRad > 0);
 
 //        auto zeros when at setpoint
-        if (atElbowLimit() && atShoulderLimit()) {
-            zeroArms();
-            Logger.getInstance().recordOutput("FourBar/Zeroing", true);
-        }
+//        if (atElbowLimit() && atShoulderLimit()) {
+//            zeroArms();
+//            Logger.getInstance().recordOutput("FourBar/Zeroing", true);
+//        }
 
 //        System.out.println(Arrays.toString(
 //                solve(
@@ -130,6 +130,11 @@ public class FourBar extends SubsystemBase {
     public void recordDrop() {
         dropStuff = new Rotation2d[]{Rotation2d.fromRadians(inputs[0].armOffsetPositionRad), Rotation2d.fromRadians(inputs[1].armOffsetPositionRad - 0.3)};
     }
+
+    public void recordDropCube() {
+        dropStuff = new Rotation2d[]{Rotation2d.fromRadians(inputs[0].armOffsetPositionRad), Rotation2d.fromRadians(inputs[1].armOffsetPositionRad)};
+    }
+
 
     public boolean atSetpoint() {
         return shoulderPID.atSetpoint() && elbowPID.atSetpoint();

@@ -22,7 +22,7 @@ public class Vision extends SubsystemBase {
     private final VisionIO ioRight;
     private final VisionIO ioLeft;
     private final VisionIOInputsAutoLogged inputsRight = new VisionIOInputsAutoLogged();
-    private final VisionIOInputsAutoLogged inputsLeft = new VisionIOInputsAutoLogged();
+//    private final VisionIOInputsAutoLogged inputsLeft = new VisionIOInputsAutoLogged();
 
     private boolean autoPipeline = false;
     private Pipelines pipeline = Pipelines.MID_RANGE;
@@ -51,10 +51,10 @@ public class Vision extends SubsystemBase {
     public void periodic() {
         ioRight.updateInputs(inputsRight);
         Logger.getInstance().processInputs("VisionRight", inputsRight);
-        Logger.getInstance().processInputs("VisionLeft", inputsLeft);
+//        Logger.getInstance().processInputs("VisionLeft", inputsLeft);
 
         rightLimelightAlert.set(!inputsRight.connected);
-        leftLimelightAlert.set(!inputsLeft.connected);
+//        leftLimelightAlert.set(!inputsLeft.connected);
 
         if (!DriverStation.isAutonomous() && autoPipeline) {
             pipelineSwitcher();
@@ -94,7 +94,7 @@ public class Vision extends SubsystemBase {
         else {
             timer.restart();
         }
-        return timer.hasElapsed(0.05);
+        return timer.hasElapsed(0.1);
     }
 
     public void setAutoPipeline(boolean autoPipeline) {
@@ -131,20 +131,20 @@ public class Vision extends SubsystemBase {
         return inputsRight.botXYZ.length != 0 && inputsRight.botRPY.length != 0;
     }
 
-    private boolean checkLeftLimelightHasPose() {
-        return inputsLeft.botXYZ.length != 0 && inputsLeft.botRPY.length != 0;
-    }
+//    private boolean checkLeftLimelightHasPose() {
+//        return inputsLeft.botXYZ.length != 0 && inputsLeft.botRPY.length != 0;
+//    }
 
     public Pose2d getPose() {
-        if (checkRightLimelightHasPose() && checkLeftLimelightHasPose()) {
-            return new Pose2d(new Translation2d((inputsRight.botXYZ[0] + inputsLeft.botXYZ[0]) / 2, (inputsRight.botXYZ[1] + inputsLeft.botXYZ[1]) / 2), Rotation2d.fromDegrees(inputsRight.botRPY[2]));
-        }
-        else if (checkRightLimelightHasPose()) {
+//        if (checkRightLimelightHasPose() && checkLeftLimelightHasPose()) {
+//            return new Pose2d(new Translation2d((inputsRight.botXYZ[0] + inputsLeft.botXYZ[0]) / 2, (inputsRight.botXYZ[1] + inputsLeft.botXYZ[1]) / 2), Rotation2d.fromDegrees(inputsRight.botRPY[2]));
+//        }
+        /*else */if (checkRightLimelightHasPose()) {
             return new Pose2d(new Translation2d(inputsRight.botXYZ[0], inputsRight.botXYZ[1]), Rotation2d.fromDegrees(inputsRight.botRPY[2]));
         }
-        else if (checkLeftLimelightHasPose()) {
-            return new Pose2d(new Translation2d(inputsLeft.botXYZ[0], inputsLeft.botXYZ[1]), Rotation2d.fromDegrees(inputsLeft.botRPY[2]));
-        }
+//        else if (checkLeftLimelightHasPose()) {
+//            return new Pose2d(new Translation2d(inputsLeft.botXYZ[0], inputsLeft.botXYZ[1]), Rotation2d.fromDegrees(inputsLeft.botRPY[2]));
+//        }
         return null;
     }
 

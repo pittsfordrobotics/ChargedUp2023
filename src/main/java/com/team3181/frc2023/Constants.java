@@ -204,7 +204,7 @@ public final class Constants {
         public static final double MODULE_DRIVE_FF = 1 / MAX_LINEAR_VELOCITY_METERS_PER_SECOND;
 
         // controlling module position / angle
-        public static final double MODULE_STEER_P = 5;
+        public static final double MODULE_STEER_P = 3;
         public static final double MODULE_STEER_I = 0;
         public static final double MODULE_STEER_D = 0;
         // irl
@@ -272,8 +272,8 @@ public final class Constants {
         public static final double ROT_P = 5;
 
         //        numbers from 1678
-        public static final double VERY_SLOW_LINEAR_VELOCITY_METERS_PER_SECOND = 0.5;
-        public static final double VERY_SLOW_LINEAR_ACCELERATION_METERS_PER_SECOND_SQUARED = 0.3;
+        public static final double VERY_SLOW_LINEAR_VELOCITY_METERS_PER_SECOND = 1.5;
+        public static final double VERY_SLOW_LINEAR_ACCELERATION_METERS_PER_SECOND_SQUARED = 1;
 
         //        numbers from 1678
         public static final double SLOW_LINEAR_VELOCITY_METERS_PER_SECOND = 2.0;
