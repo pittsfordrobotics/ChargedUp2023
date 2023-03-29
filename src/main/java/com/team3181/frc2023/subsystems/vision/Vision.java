@@ -1,22 +1,32 @@
 package com.team3181.frc2023.subsystems.vision;
 
 import com.team3181.frc2023.Constants.RobotConstants;
+import com.team3181.frc2023.Constants.VisionConstants;
+import com.team3181.frc2023.FieldConstants;
 import com.team3181.frc2023.subsystems.swerve.Swerve;
 import com.team3181.frc2023.subsystems.vision.VisionIO.CameraMode;
 import com.team3181.frc2023.subsystems.vision.VisionIO.Pipelines;
 import com.team3181.lib.math.GeomUtil;
 import com.team3181.lib.util.Alert;
 import com.team3181.lib.util.Alert.AlertType;
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 public class Vision extends SubsystemBase {
     private final VisionIO ioRight;
@@ -30,7 +40,7 @@ public class Vision extends SubsystemBase {
     private CameraMode camera = CameraMode.VISION_PROCESSING;
     private final Timer timer = new Timer();
     private boolean timerStarted = false;
-    private boolean enabled = true;
+    private boolean enabled = false;
     private Pose2d lastPose = new Pose2d();
 
     private final Alert rightLimelightAlert = new Alert("Right Limelight not detected! Vision will NOT work!", AlertType.ERROR);
@@ -69,12 +79,38 @@ public class Vision extends SubsystemBase {
         Logger.getInstance().recordOutput("Vision/Enabled", enabled);
 
         if (getPose() != null) {
-            if (!Objects.equals(getPose(), new Pose2d()) && enabled && !DriverStation.isAutonomous()) {
-                Swerve.getInstance().addVisionData(getPose(), getTime(), checkStable());
+            if ((!Objects.equals(getPose(), new Pose2d()) && !DriverStation.isAutonomous()) || enabled) {
+                Swerve.getInstance().addVisionData(getPose(), getTime(), checkStable(), calculateStdDev());
             }
             Logger.getInstance().recordOutput("Vision/Pose", getPose());
         }
         Logger.getInstance().recordOutput("Vision/Stable", checkStable());
+    }
+
+//    https://github.com/Mechanical-Advantage/RobotCode2023/blob/main/src/main/java/org/littletonrobotics/frc2023/subsystems/apriltagvision/AprilTagVision.java
+    private double calculateAvgDistance() {
+        List<Pose3d> tagPoses = new ArrayList<>();
+        for (int i = (values[0] == 1 ? 9 : 17); i < values.length; i++) {
+            int tagId = (int) values[i];
+            lastTagDetectionTimes.put(tagId, Timer.getFPGATimestamp());
+            Optional<Pose3d> tagPose = FieldConstants.aprilTags.getTagPose((int) values[i]);
+            if (tagPose.isPresent()) {
+                tagPoses.add(tagPose.get());
+            }
+        }
+
+        // Calculate average distance to tag
+        double totalDistance = 0.0;
+        for (Pose3d tagPose : tagPoses) {
+            totalDistance += tagPose.getTranslation().getDistance(cameraPose.getTranslation());
+        }
+        double avgDistance = totalDistance / tagPoses.size();
+    }
+
+    private Matrix<N3, N1> calculateStdDev() {
+        double xy = VisionConstants.XY_STD_DEV_COEF * Math.pow(getHorizontal(), 2) + VisionConstants.XY_STD_DEV_CONST;
+        double theta = VisionConstants.XY_STD_DEV_COEF * Math.pow(getHorizontal(), 2) + VisionConstants.XY_STD_DEV_CONST;
+        return VecBuilder.fill(xy, xy, theta);
     }
 
     public boolean checkStable() {

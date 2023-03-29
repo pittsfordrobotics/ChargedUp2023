@@ -36,7 +36,7 @@ public class SwervePathingOnTheFly extends CommandBase {
     private final AutoDrivePosition position;
     private final boolean simple;
     private final Timer timer = new Timer();
-    private PathConstraints pathConstraints = AutoConstants.VERY_SLOW_SPEED;
+    private PathConstraints pathConstraints = AutoConstants.SLOW_SPEED;
 
     private final PIDController xController = new PIDController(AutoConstants.LINEAR_P, 0, 0);
     private final PIDController yController = new PIDController(AutoConstants.LINEAR_P, 0, 0);

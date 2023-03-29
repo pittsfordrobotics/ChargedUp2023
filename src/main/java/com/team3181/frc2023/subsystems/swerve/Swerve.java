@@ -11,12 +11,17 @@ import com.team3181.lib.swerve.BetterSwerveModuleState;
 import com.team3181.lib.swerve.SwerveOptimizer;
 import com.team3181.lib.util.Alert;
 import com.team3181.lib.util.Alert.AlertType;
+import com.team3181.lib.util.PoseEstimator;
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
@@ -58,7 +63,7 @@ public class Swerve extends SubsystemBase {
             lastModuleStates[i] = new BetterSwerveModuleState(0, Rotation2d.fromRadians(moduleInputs[i].steerOffsetAbsolutePositionRad), 0);
         }
 
-        poseEstimator = new SwerveDrivePoseEstimator(SwerveConstants.DRIVE_KINEMATICS, getRobotRelativeAngle(), modulePositions, new Pose2d());
+        poseEstimator = new SwerveDrivePoseEstimator(SwerveConstants.DRIVE_KINEMATICS, getRobotRelativeAngle(), modulePositions, new Pose2d(), VecBuilder.fill(0.003, 0.003, 0.0002), VecBuilder.fill(0, 0, 0));
 
         Robot.pitTab.add("Swerve Straight Wheels", new DisabledInstantCommand(this::forward));
         Robot.pitTab.add("Swerve Coast", new DisabledInstantCommand(this::setCoastMode));
@@ -176,12 +181,12 @@ public class Swerve extends SubsystemBase {
         poseEstimator.resetPosition(getRobotRelativeAngle(), modulePositions, pose);
     }
 
-    public void addVisionData(Pose2d pose, double time, boolean stable) {
+    public void addVisionData(Pose2d pose, double time, boolean stable, Matrix<N3, N1> visionMeasurementStdDevs) {
         if (GeomUtil.distance(pose, getPose()) < 0.5 || stable) {
             // remove rotation because its being funky
 //            Pose2d noRot = new Pose2d(pose.getTranslation(), getPose().getRotation());
             Logger.getInstance().recordOutput("Swerve/Vision Updates", pose);
-            poseEstimator.addVisionMeasurement(pose, time);
+            poseEstimator.addVisionMeasurement(pose, time, visionMeasurementStdDevs);
         }
     }
 

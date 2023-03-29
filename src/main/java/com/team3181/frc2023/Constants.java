@@ -264,6 +264,11 @@ public final class Constants {
         public static final double MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 5;
     }
 
+    public static final class VisionConstants {
+        public static final double XY_STD_DEV_COEF = 0.01;
+        public static final double THETA_STD_DEV_COEF = 0.01;
+    }
+
     public static final class AutoConstants {
         public enum AutoDrivePosition {
             NODE, SINGLE_SUBSTATION, DOUBLE_SUBSTATION_HIGH, DOUBLE_SUBSTATION_LOW
@@ -274,15 +279,11 @@ public final class Constants {
         public static final double ROT_P = 5;
 
         //        numbers from 1678
-        public static final double VERY_SLOW_LINEAR_VELOCITY_METERS_PER_SECOND = 1.5;
-        public static final double VERY_SLOW_LINEAR_ACCELERATION_METERS_PER_SECOND_SQUARED = 1;
-
-        //        numbers from 1678
         public static final double SLOW_LINEAR_VELOCITY_METERS_PER_SECOND = 2.0;
         public static final double SLOW_LINEAR_ACCELERATION_METERS_PER_SECOND_SQUARED = 2.0;
 
-        public static final double MAX_LINEAR_VELOCITY_METERS_PER_SECOND = 3.0;
-        public static final double MAX_LINEAR_ACCELERATION_METERS_PER_SECOND_SQUARED = 2.0;
+        public static final double MAX_LINEAR_VELOCITY_METERS_PER_SECOND = 2.5;
+        public static final double MAX_LINEAR_ACCELERATION_METERS_PER_SECOND_SQUARED = 2.3;
 
         public static final double SLOW_ANGULAR_VELOCITY_METERS_PER_SECOND = 0.8 * Math.PI;
         public static final double SLOW_ANGULAR_ACCELERATION_METERS_PER_SECOND_SQUARED = Math.pow(SLOW_ANGULAR_VELOCITY_METERS_PER_SECOND, 2);
@@ -290,7 +291,6 @@ public final class Constants {
         public static final double MAX_ANGULAR_VELOCITY_METERS_PER_SECOND = 1.2 * Math.PI;
         public static final double MAX_ANGULAR_ACCELERATION_METERS_PER_SECOND_SQUARED = Math.pow(MAX_ANGULAR_VELOCITY_METERS_PER_SECOND, 2);
 
-        public static final PathConstraints VERY_SLOW_SPEED = new PathConstraints(VERY_SLOW_LINEAR_VELOCITY_METERS_PER_SECOND, VERY_SLOW_LINEAR_ACCELERATION_METERS_PER_SECOND_SQUARED);
         public static final PathConstraints SLOW_SPEED = new PathConstraints(SLOW_LINEAR_VELOCITY_METERS_PER_SECOND, SLOW_LINEAR_ACCELERATION_METERS_PER_SECOND_SQUARED);
         public static final PathConstraints MAX_SPEED = new PathConstraints(MAX_LINEAR_VELOCITY_METERS_PER_SECOND, MAX_LINEAR_ACCELERATION_METERS_PER_SECOND_SQUARED);
 
