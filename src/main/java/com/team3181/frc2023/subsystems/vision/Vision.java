@@ -9,6 +9,7 @@ import com.team3181.frc2023.subsystems.vision.VisionIO.Pipelines;
 import com.team3181.lib.math.GeomUtil;
 import com.team3181.lib.util.Alert;
 import com.team3181.lib.util.Alert.AlertType;
+import com.team3181.lib.util.PoseEstimator;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -23,16 +24,15 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 public class Vision extends SubsystemBase {
     private final VisionIO ioRight;
     private final VisionIO ioLeft;
     private final VisionIOInputsAutoLogged inputsRight = new VisionIOInputsAutoLogged();
 //    private final VisionIOInputsAutoLogged inputsLeft = new VisionIOInputsAutoLogged();
+
+    private Map<Integer, Double> lastFrameTimes = new HashMap<>();
 
     private boolean autoPipeline = false;
     private Pipelines pipeline = Pipelines.MID_RANGE;
@@ -85,6 +85,28 @@ public class Vision extends SubsystemBase {
             Logger.getInstance().recordOutput("Vision/Pose", getPose());
         }
         Logger.getInstance().recordOutput("Vision/Stable", checkStable());
+
+        List<Pose2d> allRobotPoses = new ArrayList<>();
+        List<Pose3d> allRobotPoses3d = new ArrayList<>();
+        List<PoseEstimator.TimestampedVisionUpdate> = new ArrayList<>();
+        for (int instanceIndex = 0; instanceIndex < io.length; instanceIndex++) {
+
+            // Loop over frames
+            // Mechanical advantage has 4 cameras but uses 1 or 2 at a time at max, there must be logic to decide what inputs should be put into the logic
+            for(int frameIndex = 0; frameIndex < inputs[instanceIndex].timestamps.length; frameIndex++) {
+                lastFrameTimes.put(instanceIndex, inputs[instanceIndex].timestamps[frameIndex]);
+                var timestamp = input[instanceIndex].timestamps[frameIndex];
+                var values = inputs[instanceIndex].frames[frameIndex];
+
+                Pose3d cameraPose = null;
+                Pose3d robotPose3d = null;
+                switch((int) values[0]) {
+                    case 1:
+                       cameraPose
+                }
+
+            }
+        }
     }
 
 //    https://github.com/Mechanical-Advantage/RobotCode2023/blob/main/src/main/java/org/littletonrobotics/frc2023/subsystems/apriltagvision/AprilTagVision.java
