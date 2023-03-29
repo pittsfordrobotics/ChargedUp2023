@@ -24,6 +24,7 @@ public class ArmIOShoulderSparkMax implements ArmIO {
     private double lastPos = FourBarConstants.SHOULDER_MATH_OFFSET.getRadians();
     private double wraparoundOffset = 0;
     private double oneEncoderRotation = 2 * Math.PI * FourBarConstants.CHAIN_RATIO;
+    private double currentOffset = FourBarConstants.SHOULDER_ABSOLUTE_OFFSET.getRadians();
 
     public ArmIOShoulderSparkMax() {
         mainMotor = new LazySparkMax(FourBarConstants.CAN_SHOULDER_MASTER, IdleMode.kBrake, 80, true, false);
@@ -96,7 +97,8 @@ public class ArmIOShoulderSparkMax implements ArmIO {
 
     @Override
     public void zeroAbsoluteEncoder() {
-        absoluteEncoder.setZeroOffset(BetterMath.clampCustom(absoluteEncoder.getPosition() - offset.getRadians() - 0.1, 0,2 * Math.PI * FourBarConstants.CHAIN_RATIO));
+        currentOffset = BetterMath.clampCustom(absoluteEncoder.getPosition() - offset.getRadians() - 0.1, 0,2 * Math.PI * FourBarConstants.CHAIN_RATIO);
+        absoluteEncoder.setZeroOffset(currentOffset);
     }
 
     @Override

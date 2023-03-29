@@ -177,7 +177,12 @@ public class Superstructure extends SubsystemBase {
                 }
                 if (state == StructureState.EXHAUST) {
                     if (objectiveLocal.nodeRow == 0 || objectiveLocal.nodeRow == 2 || objectiveLocal.nodeRow == 3 || objectiveLocal.nodeRow == 5 || objectiveLocal.nodeRow == 6 || objectiveLocal.nodeRow == 8) {
-                        fourBar.recordDrop();
+                        if (objectiveLocal.nodeLevel == NodeLevel.MID) {
+                            fourBar.recordDropMid();
+                        }
+                        else {
+                            fourBar.recordDrop();
+                        }
                     }
                     else {
                         fourBar.recordDropCube();

@@ -7,7 +7,6 @@ package com.team3181.frc2023;
 import com.ctre.phoenix.sensors.Pigeon2Configuration;
 import com.pathplanner.lib.PathConstraints;
 import com.team3181.frc2023.subsystems.endeffector.EndEffectorIO;
-import com.team3181.frc2023.subsystems.endeffector.EndEffectorIOSparkMax;
 import com.team3181.frc2023.subsystems.fourbar.ArmIO;
 import com.team3181.frc2023.subsystems.fourbar.ArmIOElbowSparkMax;
 import com.team3181.frc2023.subsystems.fourbar.ArmIOShoulderSparkMax;
@@ -85,7 +84,8 @@ public final class Constants {
                 VISION_RIGHT = RobotConstants.IS_TANK ? new VisionIO() {} : new VisionIOLimelightRight();
                 VISION_LEFT = RobotConstants.IS_TANK ? new VisionIO() {} : new VisionIOLimelightLeft();
                 LEDS = RobotConstants.IS_TANK ? new LEDStripIO(){} : new LEDStripIORio(LEDConstants.PWM_PORT, LEDConstants.NUMBER);
-                END_EFFECTOR = new EndEffectorIOSparkMax();
+//                END_EFFECTOR = new EndEffectorIOSparkMax();
+                END_EFFECTOR = new EndEffectorIO() {};
             }
             else {
                 SHOULDER = new ArmIO(){};
@@ -152,8 +152,8 @@ public final class Constants {
         public static final double STEER_GEAR_RATIO = 46.2962962963;
 //        CENTER OF WHEEL TO CENTER OF WHEEL
 //        NOT CHASSIS LENGTH
-        public static final double X_LENGTH_METERS = Units.inchesToMeters(28 - 1.7 * 2);
-        public static final double Y_LENGTH_METERS = Units.inchesToMeters(28 - 1.7 * 2);
+        public static final double X_LENGTH_METERS = Units.inchesToMeters(24.5);
+        public static final double Y_LENGTH_METERS = Units.inchesToMeters(24.5);
         public static final double BUMPER_WIDTH = Units.inchesToMeters(3.5);
         public static final double WHEEL_DIAMETER_METERS = Units.inchesToMeters(3);
 
@@ -195,7 +195,7 @@ public final class Constants {
 
         // controlling module wheel speed
         // read this later: https://github.com/Team364/BaseFalconSwerve
-        public static final double MODULE_DRIVE_P = 0.0005;
+        public static final double MODULE_DRIVE_P = 0.1;
         public static final double MODULE_DRIVE_I = 0;
         public static final double MODULE_DRIVE_D = 0;
 
@@ -206,7 +206,7 @@ public final class Constants {
         public static final double MODULE_DRIVE_FF = 1 / MAX_LINEAR_VELOCITY_METERS_PER_SECOND;
 
         // controlling module position / angle
-        public static final double MODULE_STEER_P = 3;
+        public static final double MODULE_STEER_P = 2;
         public static final double MODULE_STEER_I = 0;
         public static final double MODULE_STEER_D = 0;
         // irl
@@ -270,7 +270,7 @@ public final class Constants {
         }
 
         // PID values for trajectory follower
-        public static final double LINEAR_P = 10;
+        public static final double LINEAR_P = 25;
         public static final double ROT_P = 5;
 
         //        numbers from 1678
@@ -281,8 +281,8 @@ public final class Constants {
         public static final double SLOW_LINEAR_VELOCITY_METERS_PER_SECOND = 2.0;
         public static final double SLOW_LINEAR_ACCELERATION_METERS_PER_SECOND_SQUARED = 2.0;
 
-        public static final double MAX_LINEAR_VELOCITY_METERS_PER_SECOND = 4.8;
-        public static final double MAX_LINEAR_ACCELERATION_METERS_PER_SECOND_SQUARED = 6.0;
+        public static final double MAX_LINEAR_VELOCITY_METERS_PER_SECOND = 3.0;
+        public static final double MAX_LINEAR_ACCELERATION_METERS_PER_SECOND_SQUARED = 2.0;
 
         public static final double SLOW_ANGULAR_VELOCITY_METERS_PER_SECOND = 0.8 * Math.PI;
         public static final double SLOW_ANGULAR_ACCELERATION_METERS_PER_SECOND_SQUARED = Math.pow(SLOW_ANGULAR_VELOCITY_METERS_PER_SECOND, 2);
@@ -387,8 +387,8 @@ public final class Constants {
             public static Rotation2d MID_PICKUP_ELBOW = Rotation2d.fromRadians(0);
 
             // long pos
-            public static Rotation2d MID_CONE_SHOULDER = Rotation2d.fromRadians(-0.6470000743866);
-            public static Rotation2d MID_CONE_ELBOW = Rotation2d.fromRadians(0.5816769599914551);
+            public static Rotation2d MID_CONE_SHOULDER = Rotation2d.fromRadians(-0.9440126776695251);
+            public static Rotation2d MID_CONE_ELBOW = Rotation2d.fromRadians(0.8577836751937866);
 
             public static Rotation2d HIGH_CUBE_SHOULDER = Rotation2d.fromRadians(-0.815398097038269);
             public static Rotation2d HIGH_CUBE_ELBOW = Rotation2d.fromRadians(1.060633897781372);
@@ -415,8 +415,7 @@ public final class Constants {
     }
 
     public static final class EndEffectorConstants {
-        public static final double EXHAUST_CONE_POWER = -2;
-        public static final double EXHAUST_CUBE_POWER = -2;
+        public static final double EXHAUST_CONE_POWER = -3;
         public static final double INTAKE_IDLE_POWER = 1.5;
         public static final double INTAKE_POWER = 4.0;
         public static final double GEARING = 4;

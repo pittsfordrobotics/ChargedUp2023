@@ -7,10 +7,7 @@ package com.team3181.frc2023;
 import com.team3181.frc2023.Constants.RobotConstants;
 import com.team3181.frc2023.FieldConstants.AutoDrivePoints;
 import com.team3181.frc2023.commands.*;
-import com.team3181.frc2023.commands.autos.AutoSwerveBalance;
-import com.team3181.frc2023.commands.autos.AutoSwervePath;
-import com.team3181.frc2023.commands.autos.AutoSwerveThree;
-import com.team3181.frc2023.commands.autos.AutoSwerveTwo;
+import com.team3181.frc2023.commands.autos.*;
 import com.team3181.frc2023.subsystems.Superstructure;
 import com.team3181.frc2023.subsystems.endeffector.EndEffector;
 import com.team3181.frc2023.subsystems.fourbar.FourBar;
@@ -167,11 +164,11 @@ public class RobotContainer {
     needPositionMap.put(balance, true);
     canForwardBalance.put(balance, false);
 
-    Command threeTop = new AutoSwerveThree(true);
-    autoChooser.addOption("3 Thing Top", threeTop);
+    Command threeTop = new AutoSwerveThreeBalance(true);
+    autoChooser.addOption("3 Thing Top + Balance", threeTop);
     canBalanceMap.put(threeTop, true);
     needPositionMap.put(threeTop, false);
-    canForwardBalance.put(threeTop, false);
+    canForwardBalance.put(threeTop, true);
 
     Command threeBottom = new AutoSwerveThree(false);
     autoChooser.addOption("3 Thing Bottom", threeBottom);

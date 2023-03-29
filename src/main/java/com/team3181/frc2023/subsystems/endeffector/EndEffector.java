@@ -4,7 +4,6 @@ package com.team3181.frc2023.subsystems.endeffector;
 import com.team3181.frc2023.Constants;
 import com.team3181.frc2023.Constants.EndEffectorConstants;
 import com.team3181.frc2023.Robot;
-import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker;
 import com.team3181.lib.commands.DisabledInstantCommand;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -67,13 +66,7 @@ public class EndEffector extends SubsystemBase {
                     }
                     break;
                 case EXHAUSTING: // may need to be 2 different values if we need to shoot cone and cube at different speeds
-                    if (ObjectiveTracker.getInstance().getObjective().nodeRow == 1 || ObjectiveTracker.getInstance().getObjective().nodeRow == 4 || ObjectiveTracker.getInstance().getObjective().nodeRow == 7) {
-//                        io.setVoltage(EndEffectorConstants.EXHAUST_CUBE_POWER);
-                        io.setVoltage(-12);
-                    }
-                    else {
-                        io.setVoltage(EndEffectorConstants.EXHAUST_CONE_POWER);
-                    }
+                    io.setVoltage(EndEffectorConstants.EXHAUST_CONE_POWER);
                     break;
                 case OBTAINED:
                 case IDLE:

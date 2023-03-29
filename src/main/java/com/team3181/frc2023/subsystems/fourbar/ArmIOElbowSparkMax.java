@@ -1,8 +1,11 @@
 package com.team3181.frc2023.subsystems.fourbar;
 
-import com.revrobotics.*;
+import com.revrobotics.AbsoluteEncoder;
+import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
+import com.revrobotics.SparkMaxAbsoluteEncoder;
+import com.revrobotics.SparkMaxLimitSwitch;
 import com.revrobotics.SparkMaxLimitSwitch.Type;
 import com.team3181.frc2023.Constants.FourBarConstants;
 import com.team3181.lib.drivers.LazySparkMax;
@@ -13,14 +16,15 @@ public class ArmIOElbowSparkMax implements ArmIO {
     private final LazySparkMax motor;
     private final SparkMaxLimitSwitch limitSwitch;
     private final AbsoluteEncoder absoluteEncoder;
-    private double lastPos = FourBarConstants.ELBOW_MATH_OFFSET.getRadians();
-    private double wraparoundOffset = 0;
-    private double oneEncoderRotation = 2 * Math.PI;
+//    private double lastPos = FourBarConstants.ELBOW_MATH_OFFSET.getRadians();
+//    private double wraparoundOffset = 0;
+//    private double oneEncoderRotation = 2 * Math.PI;
+    private double currentOffset = FourBarConstants.ELBOW_ABSOLUTE_OFFSET.getRadians();
 
     public ArmIOElbowSparkMax() {
         motor = new LazySparkMax(FourBarConstants.CAN_ELBOW, IdleMode.kBrake, 80, false,false);
         absoluteEncoder = motor.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle);
-        limitSwitch = motor.getForwardLimitSwitch(Type.kNormallyOpen);
+        limitSwitch = motor.getReverseLimitSwitch(Type.kNormallyOpen);
         limitSwitch.enableLimitSwitch(true);
 
         absoluteEncoder.setInverted(true);
@@ -73,7 +77,8 @@ public class ArmIOElbowSparkMax implements ArmIO {
     @Override
     public void zeroAbsoluteEncoder() {
         // TODO: update mathoffset with this mess
-        absoluteEncoder.setZeroOffset(BetterMath.clampCustom(absoluteEncoder.getPosition() - FourBarConstants.ELBOW_ABSOLUTE_OFFSET.getRadians() + 1.57, 0, 2 * Math.PI));
+        currentOffset = BetterMath.clampCustom(absoluteEncoder.getPosition() - currentOffset + 1.57, 0, 2 * Math.PI);
+        absoluteEncoder.setZeroOffset(currentOffset);
     }
 
     @Override

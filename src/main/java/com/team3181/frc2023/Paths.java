@@ -10,11 +10,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 import java.util.HashMap;
-import java.util.List;
 
 public class Paths {
     public static final PathPlannerTrajectory TOP_THREE = PathPlanner.loadPath("Top 3 Item", AutoConstants.SLOW_SPEED);
-    public static final List<PathPlannerTrajectory> TOP_THREE_BALANCE = PathPlanner.loadPathGroup("Top 3 Item + Balance", AutoConstants.SLOW_SPEED);
+    public static final PathPlannerTrajectory TOP_THREE_BALANCE = PathPlanner.loadPath("Top 3 Item + Balance", AutoConstants.MAX_SPEED);
     public static final PathPlannerTrajectory BOTTOM_THREE = PathPlanner.loadPath("Bottom 3 Item", AutoConstants.SLOW_SPEED);
     public static final PathPlannerTrajectory BOTTOM_CUBE = PathPlanner.loadPath("Bottom Cube", AutoConstants.SLOW_SPEED);
     public static final PathPlannerTrajectory BOTTOM_CONE = PathPlanner.loadPath("Bottom Cone", AutoConstants.SLOW_SPEED);
