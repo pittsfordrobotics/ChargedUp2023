@@ -1,6 +1,7 @@
 package com.team3181.lib.controller;
 
 import com.team3181.frc2023.Constants.SwerveConstants;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
@@ -58,6 +59,26 @@ public class BetterXboxController extends CommandXboxController {
     @Override
     public Trigger povUp() {
         return DUp;
+    }
+
+    @Override
+    public double getLeftY() {
+        return MathUtil.applyDeadband(super.getLeftY(), deadband);
+    }
+
+    @Override
+    public double getLeftX() {
+        return MathUtil.applyDeadband(super.getLeftX(), deadband);
+    }
+
+    @Override
+    public double getRightX() {
+        return MathUtil.applyDeadband(super.getRightX(), deadband);
+    }
+
+    @Override
+    public double getRightY() {
+        return MathUtil.applyDeadband(super.getRightY(), deadband);
     }
 
     // from 1678 2022 control board
