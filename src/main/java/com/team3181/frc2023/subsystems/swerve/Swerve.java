@@ -63,7 +63,8 @@ public class Swerve extends SubsystemBase {
             lastModuleStates[i] = new BetterSwerveModuleState(0, Rotation2d.fromRadians(moduleInputs[i].steerOffsetAbsolutePositionRad), 0);
         }
 
-        poseEstimator = new SwerveDrivePoseEstimator(SwerveConstants.DRIVE_KINEMATICS, getRobotRelativeAngle(), modulePositions, new Pose2d(), VecBuilder.fill(0.003, 0.003, 0.0002), VecBuilder.fill(0, 0, 0));
+//        poseEstimator = new SwerveDrivePoseEstimator(SwerveConstants.DRIVE_KINEMATICS, getRobotRelativeAngle(), modulePositions, new Pose2d(), VecBuilder.fill(0.003, 0.003, 0.0002), VecBuilder.fill(0.9, 0.9, 0.9));
+        poseEstimator = new SwerveDrivePoseEstimator(SwerveConstants.DRIVE_KINEMATICS, getRobotRelativeAngle(), modulePositions, new Pose2d(), VecBuilder.fill(0.1, 0.1, 0.1), VecBuilder.fill(0.9, 0.9, 0.9));
 
         Robot.pitTab.add("Swerve Straight Wheels", new DisabledInstantCommand(this::forward));
         Robot.pitTab.add("Swerve Coast", new DisabledInstantCommand(this::setCoastMode));

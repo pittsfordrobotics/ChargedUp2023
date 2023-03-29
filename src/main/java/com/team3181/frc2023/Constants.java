@@ -7,6 +7,7 @@ package com.team3181.frc2023;
 import com.ctre.phoenix.sensors.Pigeon2Configuration;
 import com.pathplanner.lib.PathConstraints;
 import com.team3181.frc2023.subsystems.endeffector.EndEffectorIO;
+import com.team3181.frc2023.subsystems.endeffector.EndEffectorIOSparkMax;
 import com.team3181.frc2023.subsystems.fourbar.ArmIO;
 import com.team3181.frc2023.subsystems.fourbar.ArmIOElbowSparkMax;
 import com.team3181.frc2023.subsystems.fourbar.ArmIOShoulderSparkMax;
@@ -84,8 +85,7 @@ public final class Constants {
                 VISION_RIGHT = RobotConstants.IS_TANK ? new VisionIO() {} : new VisionIOLimelightRight();
                 VISION_LEFT = RobotConstants.IS_TANK ? new VisionIO() {} : new VisionIOLimelightLeft();
                 LEDS = RobotConstants.IS_TANK ? new LEDStripIO(){} : new LEDStripIORio(LEDConstants.PWM_PORT, LEDConstants.NUMBER);
-//                END_EFFECTOR = new EndEffectorIOSparkMax();
-                END_EFFECTOR = new EndEffectorIO() {};
+                END_EFFECTOR = new EndEffectorIOSparkMax();
             }
             else {
                 SHOULDER = new ArmIO(){};
@@ -282,7 +282,7 @@ public final class Constants {
         public static final double SLOW_LINEAR_VELOCITY_METERS_PER_SECOND = 2.0;
         public static final double SLOW_LINEAR_ACCELERATION_METERS_PER_SECOND_SQUARED = 2.0;
 
-        public static final double MAX_LINEAR_VELOCITY_METERS_PER_SECOND = 2.5;
+        public static final double MAX_LINEAR_VELOCITY_METERS_PER_SECOND = 2.2;
         public static final double MAX_LINEAR_ACCELERATION_METERS_PER_SECOND_SQUARED = 2.3;
 
         public static final double SLOW_ANGULAR_VELOCITY_METERS_PER_SECOND = 0.8 * Math.PI;

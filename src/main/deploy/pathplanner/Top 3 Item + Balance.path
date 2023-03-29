@@ -283,6 +283,18 @@
       "names": [
         "event"
       ]
+    },
+    {
+      "position": 0.0,
+      "names": [
+        "visionOn"
+      ]
+    },
+    {
+      "position": 1.0163174715909091,
+      "names": [
+        "visionOff"
+      ]
     }
   ]
 }

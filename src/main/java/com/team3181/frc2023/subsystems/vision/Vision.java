@@ -88,29 +88,30 @@ public class Vision extends SubsystemBase {
     }
 
 //    https://github.com/Mechanical-Advantage/RobotCode2023/blob/main/src/main/java/org/littletonrobotics/frc2023/subsystems/apriltagvision/AprilTagVision.java
-    private double calculateAvgDistance() {
-        List<Pose3d> tagPoses = new ArrayList<>();
-        for (int i = (values[0] == 1 ? 9 : 17); i < values.length; i++) {
-            int tagId = (int) values[i];
-            lastTagDetectionTimes.put(tagId, Timer.getFPGATimestamp());
-            Optional<Pose3d> tagPose = FieldConstants.aprilTags.getTagPose((int) values[i]);
-            if (tagPose.isPresent()) {
-                tagPoses.add(tagPose.get());
-            }
-        }
-
-        // Calculate average distance to tag
-        double totalDistance = 0.0;
-        for (Pose3d tagPose : tagPoses) {
-            totalDistance += tagPose.getTranslation().getDistance(cameraPose.getTranslation());
-        }
-        double avgDistance = totalDistance / tagPoses.size();
-    }
+//    private double calculateAvgDistance() {
+//        List<Pose3d> tagPoses = new ArrayList<>();
+//        for (int i = (values[0] == 1 ? 9 : 17); i < values.length; i++) {
+//            int tagId = (int) values[i];
+//            lastTagDetectionTimes.put(tagId, Timer.getFPGATimestamp());
+//            Optional<Pose3d> tagPose = FieldConstants.aprilTags.getTagPose((int) values[i]);
+//            if (tagPose.isPresent()) {
+//                tagPoses.add(tagPose.get());
+//            }
+//        }
+//
+//        // Calculate average distance to tag
+//        double totalDistance = 0.0;
+//        for (Pose3d tagPose : tagPoses) {
+//            totalDistance += tagPose.getTranslation().getDistance(cameraPose.getTranslation());
+//        }
+//        double avgDistance = totalDistance / tagPoses.size();
+//    }
 
     private Matrix<N3, N1> calculateStdDev() {
-        double xy = VisionConstants.XY_STD_DEV_COEF * Math.pow(getHorizontal(), 2) + VisionConstants.XY_STD_DEV_CONST;
-        double theta = VisionConstants.XY_STD_DEV_COEF * Math.pow(getHorizontal(), 2) + VisionConstants.XY_STD_DEV_CONST;
-        return VecBuilder.fill(xy, xy, theta);
+//        double xy = VisionConstants.XY_STD_DEV_COEF * Math.pow(getHorizontal(), 2) + VisionConstants.XY_STD_DEV_CONST;
+//        double theta = VisionConstants.XY_STD_DEV_COEF * Math.pow(getHorizontal(), 2) + VisionConstants.XY_STD_DEV_CONST;
+//        return VecBuilder.fill(xy, xy, theta);
+        return VecBuilder.fill(0.9, 0.9, 0.9);
     }
 
     public boolean checkStable() {

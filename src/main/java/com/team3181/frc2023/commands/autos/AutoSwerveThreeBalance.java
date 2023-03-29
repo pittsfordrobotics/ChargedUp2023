@@ -20,15 +20,19 @@ public class AutoSwerveThreeBalance extends SequentialCommandGroup {
 //                new SwerveAutoScore(),
                 new ParallelCommandGroup(
                     new EndEffectorRun(),
-                    new SuperstructureObjectiveGlobalDemand(new Objective(8, NodeLevel.HIGH)),
+                    new SuperstructureObjectiveGlobalDemand(new Objective(8, NodeLevel.HIGH))
                 ),
 //                new FollowPathWithLiveEvents(
 //                        new SwervePathing((top ? Paths.TOP_THREE_BALANCE : Paths.BOTTOM_THREE), true),
 //                        (top ? Paths.TOP_THREE_BALANCE : Paths.BOTTOM_THREE).getMarkers()
 //                ),
+//                new FollowPathWithLiveEvents(
+//                        new SwervePathing((top ? Paths.TOP_THREE_BALANCE : Paths.BOTTOM_THREE_BALANCE), true),
+//                        (top ? Paths.TOP_THREE_BALANCE : Paths.BOTTOM_THREE_BALANCE).getMarkers()
+//                ),
                 new FollowPathWithLiveEvents(
-                        new SwervePathing((top ? Paths.TOP_THREE_BALANCE : Paths.BOTTOM_THREE), true),
-                        (top ? Paths.TOP_THREE_BALANCE : Paths.BOTTOM_THREE).getMarkers()
+                        new SwervePathing(Paths.TOP_THREE_BALANCE, true),
+                        (Paths.TOP_THREE_BALANCE).getMarkers()
                 ),
                 new WaitCommand(0.5),
                 new SwerveAutoBalance(RobotContainer.balanceForward)
