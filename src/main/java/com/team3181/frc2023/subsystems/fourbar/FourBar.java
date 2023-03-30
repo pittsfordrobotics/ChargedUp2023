@@ -13,9 +13,12 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.numbers.N2;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
@@ -24,8 +27,8 @@ public class FourBar extends SubsystemBase {
     private final ArmIO[] armIO;
     private final ArmIOInputsAutoLogged[] inputs = new ArmIOInputsAutoLogged[]{new ArmIOInputsAutoLogged(), new ArmIOInputsAutoLogged()};
 
-    private final PIDController shoulderPID = new PIDController(FourBarConstants.SHOULDER_P, FourBarConstants.SHOULDER_I, FourBarConstants.SHOULDER_D);
-    private final PIDController elbowPID = new PIDController(FourBarConstants.ELBOW_P, FourBarConstants.ELBOW_I, FourBarConstants.ELBOW_D);
+    private final ProfiledPIDController shoulderPID = new ProfiledPIDController(FourBarConstants.SHOULDER_P, FourBarConstants.SHOULDER_I, FourBarConstants.SHOULDER_D, new Constraints(100000, 10));
+    private final ProfiledPIDController elbowPID = new ProfiledPIDController(FourBarConstants.ELBOW_P, FourBarConstants.ELBOW_I, FourBarConstants.ELBOW_D, new Constraints(400000, 20));
     private final Alert shoulderTooLow = new Alert("Shoulder needs to be moved forward! THIS WILL BREAK ALOT OF THINGS!", AlertType.ERROR);
     private Rotation2d[] dropStuff = new Rotation2d[]{};
     private Rotation2d waitPos = new Rotation2d();
@@ -115,10 +118,10 @@ public class FourBar extends SubsystemBase {
         Vector<N2> pos = new Vector<>(VecBuilder.fill(inputs[0].armOffsetPositionRad, inputs[1].armOffsetPositionRad));
         Vector<N2> ff = ArmDynamics.getInstance().feedforward(pos);
 //        if (!illegal[0]) {
-            shoulderPID.setSetpoint(rotations[0].getRadians());
+            shoulderPID.setGoal(rotations[0].getRadians());
             armIO[0].setVoltage(MathUtil.clamp(shoulderPID.calculate(inputs[0].armOffsetPositionRad), -FourBarConstants.PID_CLAMP_VOLTAGE, FourBarConstants.PID_CLAMP_VOLTAGE) + ff.get(0, 0));
 //        if (!illegal[1]) {
-            elbowPID.setSetpoint(rotations[1].getRadians());
+            elbowPID.setGoal(rotations[1].getRadians());
             armIO[1].setVoltage(MathUtil.clamp(elbowPID.calculate(mathElbow ? inputs[1].armOffsetPositionRad - inputs[0].armOffsetPositionRad : inputs[1].armOffsetPositionRad), -FourBarConstants.PID_CLAMP_VOLTAGE, FourBarConstants.PID_CLAMP_VOLTAGE) + ff.get(1, 0));
 //        }
     }
@@ -141,7 +144,7 @@ public class FourBar extends SubsystemBase {
 
 
     public boolean atSetpoint() {
-        return shoulderPID.atSetpoint() && elbowPID.atSetpoint();
+        return shoulderPID.atGoal() && elbowPID.atGoal();
     }
 
     public boolean atShoulderLimit() {
@@ -158,7 +161,7 @@ public class FourBar extends SubsystemBase {
     }
 
     public void recordHigh(Rotation2d[] rotation2ds) {
-        waitPos = Rotation2d.fromRadians((rotation2ds[0].getRadians() - inputs[0].armOffsetPositionRad) / 3 + inputs[0].armOffsetPositionRad);
+        waitPos = Rotation2d.fromRadians((rotation2ds[0].getRadians() - inputs[0].armOffsetPositionRad) / 4 + inputs[0].armOffsetPositionRad);
     }
 
     public void runHigh(Rotation2d[] rotation2ds) {

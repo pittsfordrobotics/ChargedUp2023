@@ -14,14 +14,14 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 public class AutoSwerveThreeBalance extends SequentialCommandGroup {
     public AutoSwerveThreeBalance(boolean top) {
         super(
-//                new EndEffectorRun(),
-//                new SwerveResetPoseAprilTag(),
-//                new SuperstructureObjectiveGlobalDemand(new Objective(8, NodeLevel.HIGH)),
-//                new SwerveAutoScore(),
-                new ParallelCommandGroup(
-                    new EndEffectorRun(),
-                    new SuperstructureObjectiveGlobalDemand(new Objective(8, NodeLevel.HIGH))
-                ),
+                new EndEffectorRun(),
+                new SwerveResetPoseAprilTag(),
+                new SuperstructureObjectiveGlobalDemand(new Objective(8, NodeLevel.HIGH)),
+                new SwerveAutoScore(),
+//                new ParallelCommandGroup(
+//                    new EndEffectorRun(),
+//                    new SuperstructureObjectiveGlobalDemand(new Objective(8, NodeLevel.HIGH))
+//                ),
 //                new FollowPathWithLiveEvents(
 //                        new SwervePathing((top ? Paths.TOP_THREE_BALANCE : Paths.BOTTOM_THREE), true),
 //                        (top ? Paths.TOP_THREE_BALANCE : Paths.BOTTOM_THREE).getMarkers()

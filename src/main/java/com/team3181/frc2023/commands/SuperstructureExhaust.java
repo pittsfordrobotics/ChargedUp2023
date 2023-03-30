@@ -23,8 +23,6 @@ public class SuperstructureExhaust extends CommandBase {
     public void execute() {
         if (superstructure.atSetpoint()) {
             timer.start();
-        }
-        if (timer.hasElapsed(0.001)) {
             superstructure.exhaust();
         }
     }

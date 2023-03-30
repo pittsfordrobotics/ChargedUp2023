@@ -24,8 +24,8 @@ public class SuperstructureObjective extends CommandBase {
     @Override
     public void execute() {
         if (superstructure.atSetpoint()) {
-            superstructure.exhaust();
             timer.start();
+            superstructure.exhaust();
         }
     }
 

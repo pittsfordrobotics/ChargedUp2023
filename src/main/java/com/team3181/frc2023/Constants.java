@@ -275,15 +275,15 @@ public final class Constants {
         }
 
         // PID values for trajectory follower
-        public static final double LINEAR_P = 25;
+        public static final double LINEAR_P = 10;
         public static final double ROT_P = 5;
 
         //        numbers from 1678
         public static final double SLOW_LINEAR_VELOCITY_METERS_PER_SECOND = 2.0;
         public static final double SLOW_LINEAR_ACCELERATION_METERS_PER_SECOND_SQUARED = 2.0;
 
-        public static final double MAX_LINEAR_VELOCITY_METERS_PER_SECOND = 2.2;
-        public static final double MAX_LINEAR_ACCELERATION_METERS_PER_SECOND_SQUARED = 2.3;
+        public static final double MAX_LINEAR_VELOCITY_METERS_PER_SECOND = 2.0;
+        public static final double MAX_LINEAR_ACCELERATION_METERS_PER_SECOND_SQUARED = 2.0;
 
         public static final double SLOW_ANGULAR_VELOCITY_METERS_PER_SECOND = 0.8 * Math.PI;
         public static final double SLOW_ANGULAR_ACCELERATION_METERS_PER_SECOND_SQUARED = Math.pow(SLOW_ANGULAR_VELOCITY_METERS_PER_SECOND, 2);
@@ -308,15 +308,15 @@ public final class Constants {
 
         public static final double PID_CLAMP_VOLTAGE = 10;
 
-        public static final double ELBOW_P = -30.0;
+        public static final double ELBOW_P = -20.0;
         public static final double ELBOW_I = 0.0;
         public static final double ELBOW_D = 0.0;
 
-        public static final double SHOULDER_P = 30.0;
+        public static final double SHOULDER_P = 15.0;
         public static final double SHOULDER_I = 0.0;
         public static final double SHOULDER_D = 0.0;
 
-        public static final double PID_TOLERANCE = 0.05;
+        public static final double PID_TOLERANCE = 0.1;
 
         // This should be when shoulder is all the way back
         // then fudge the number by subtracting an extra 0.1
