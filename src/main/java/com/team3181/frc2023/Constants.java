@@ -154,7 +154,7 @@ public final class Constants {
 //        NOT CHASSIS LENGTH
         public static final double X_LENGTH_METERS = Units.inchesToMeters(24.5);
         public static final double Y_LENGTH_METERS = Units.inchesToMeters(24.5);
-        public static final double BUMPER_WIDTH = Units.inchesToMeters(3.5);
+        public static final double BUMPER_WIDTH = Units.inchesToMeters(9);
         public static final double WHEEL_DIAMETER_METERS = Units.inchesToMeters(3);
 
         public static final Translation2d[] MODULE_OFFSETS = {

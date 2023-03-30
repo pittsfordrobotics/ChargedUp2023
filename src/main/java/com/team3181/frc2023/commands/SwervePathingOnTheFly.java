@@ -107,7 +107,7 @@ public class SwervePathingOnTheFly extends CommandBase {
                     node = AutoDrivePoints.adjustNodeForHyrbid(node);
                 }
                 node = AutoDrivePoints.pathPointFlipper(node, DriverStation.getAlliance());
-                if (simple) {
+                if (simple || (robotPointBlue.getPosition().getX() > 1.8 && robotPointBlue.getPosition().getX() < 2.5)) {
                     BetterPathPoint headingCorrection = AutoDrivePoints.updateHeading(robotPoint, node);
                     BetterPathPoint updatedNode = new BetterPathPoint(node.getPosition(), headingCorrection.getHeading(), node.getHolonomicRotation());
                     adjustedPathPoints.add(headingCorrection);
@@ -148,6 +148,7 @@ public class SwervePathingOnTheFly extends CommandBase {
                         adjustedPathPoints.add(entrance);
                     }
 
+                    // slightly outside node
                     if (robotPointBlue.getPosition().getX() > 2) {
                         if (adjustedPathPoints.size() == 0 && robotPointBlue.getPosition().getY() < 5.5) {
                             double distanceTop = GeomUtil.distance(new Pose2d(AutoDrivePoints.COMMUNITY_TOP_INNER.getPosition(), new Rotation2d()), new Pose2d(robotPointBlue.getPosition(), new Rotation2d()));
@@ -166,6 +167,7 @@ public class SwervePathingOnTheFly extends CommandBase {
                         }
                         adjustedPathPoints.add(inner);
                     }
+                    // inside node
                     if (robotPointBlue.getPosition().getX() > 1.7) {
                         BetterPathPoint updatedNode;
                         if (adjustedPathPoints.size() == 0 && robotPointBlue.getPosition().getY() < 5.5) {
