@@ -13,6 +13,7 @@ public interface VisionIO {
         public boolean connected = false;
         public double vAngle = 0.0;
         public double hAngle = 0.0;
+        public double[] tagIDs = new double[]{};
         public double[] botXYZ = new double[]{};
         public double[] botRPY = new double[]{};
     }

@@ -5,6 +5,8 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import com.revrobotics.SparkMaxAbsoluteEncoder;
+import com.revrobotics.SparkMaxLimitSwitch;
+import com.revrobotics.SparkMaxLimitSwitch.Type;
 import com.team3181.frc2023.Constants.FourBarConstants;
 import com.team3181.lib.drivers.LazySparkMax;
 import edu.wpi.first.math.util.Units;
@@ -14,13 +16,19 @@ public class ArmIOShoulderSparkMax implements ArmIO {
     private final LazySparkMax mainMotor;
     private final LazySparkMax followerMotor;
     private final AbsoluteEncoder absoluteEncoder;
+    private final SparkMaxLimitSwitch limitSwitch;
     private int counter = 0;
-    private double lastPos = 0;
+    private double lastPos = FourBarConstants.SHOULDER_MATH_OFFSET.getRadians();
+    private double wraparoundOffset = 0;
+    private double oneEncoderRotation = 2 * Math.PI * FourBarConstants.CHAIN_RATIO;
+    private double currentOffset = FourBarConstants.SHOULDER_ABSOLUTE_OFFSET.getRadians();
 
     public ArmIOShoulderSparkMax() {
-        mainMotor = new LazySparkMax(FourBarConstants.CAN_SHOULDER_MASTER, IdleMode.kCoast, 80, true, false);
-        followerMotor = new LazySparkMax(FourBarConstants.CAN_SHOULDER_FOLLOWER, IdleMode.kCoast, 80, mainMotor, true, true);
+        mainMotor = new LazySparkMax(FourBarConstants.CAN_SHOULDER_MASTER, IdleMode.kBrake, 80, true, false);
+        followerMotor = new LazySparkMax(FourBarConstants.CAN_SHOULDER_FOLLOWER, IdleMode.kBrake, 80, mainMotor, true, true);
         absoluteEncoder = mainMotor.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle);
+        limitSwitch = mainMotor.getReverseLimitSwitch(Type.kNormallyOpen);
+        limitSwitch.enableLimitSwitch(true);
 
         absoluteEncoder.setInverted(true);
         absoluteEncoder.setPositionConversionFactor(2 * Math.PI * FourBarConstants.CHAIN_RATIO);
@@ -33,18 +41,37 @@ public class ArmIOShoulderSparkMax implements ArmIO {
 
     @Override
     public void updateInputs(ArmIOInputs inputs) {
-        if (lastPos < FourBarConstants.SHOULDER_FLIP_MIN.getRadians() + 0.1 && (absoluteEncoder.getPosition() + FourBarConstants.SHOULDER_MATH_OFFSET.getRadians()) > FourBarConstants.SHOULDER_FLIP_MAX.getRadians() - 0.1 && counter == 1) {
-            counter--;
-        } else if (lastPos > FourBarConstants.SHOULDER_FLIP_MAX.getRadians() - 0.1 && (absoluteEncoder.getPosition() + FourBarConstants.SHOULDER_MATH_OFFSET.getRadians()) < FourBarConstants.SHOULDER_FLIP_MIN.getRadians() + 0.1 && counter == 0) {
-            counter++;
-        }
+        double position = absoluteEncoder.getPosition() + FourBar.mathOffsetShoulder.getRadians() + wraparoundOffset;
+        double positionDiff = position - lastPos;
 
-        inputs.armOffsetPositionRad = absoluteEncoder.getPosition() + FourBarConstants.SHOULDER_MATH_OFFSET.getRadians() + counter * (FourBarConstants.SHOULDER_FLIP_MIN.getRadians() * -1 + FourBarConstants.SHOULDER_FLIP_MAX.getRadians());
+//        // Check if we've wrapped around the zero point.  If we've travelled more than a half circle in one update period,
+//        // then assume we wrapped around.
+        if (positionDiff > oneEncoderRotation / 1.2) {
+            // We went up by over a half rotation, which means we likely wrapped around the zero point going in the negative direction.
+            position -= oneEncoderRotation;
+            wraparoundOffset -= oneEncoderRotation;
+        }
+        if (positionDiff < -1 * oneEncoderRotation / 1.2) {
+            // We went down by over a half rotation, which means we likely wrapped around the zero point going in the positive direction.
+            position += oneEncoderRotation;
+            wraparoundOffset += oneEncoderRotation;
+        }
+//        
+//         if (lastPos < FourBarConstants.SHOULDER_FLIP_MIN.getRadians() + 0.1 && (position) > FourBarConstants.SHOULDER_FLIP_MAX.getRadians() - 0.1 && counter == 1) {
+//             counter--;
+//         } else if (lastPos > FourBarConstants.SHOULDER_FLIP_MAX.getRadians() - 0.1 && (position) < FourBarConstants.SHOULDER_FLIP_MIN.getRadians() + 0.1 && counter == 0) {
+//             counter++;
+//         }
+//        inputs.armOffsetPositionRad = position + counter * (FourBarConstants.SHOULDER_FLIP_MIN.getRadians() * -1 + FourBarConstants.SHOULDER_FLIP_MAX.getRadians());
+
+        inputs.armPositionRawRad = absoluteEncoder.getPosition();
+        inputs.armOffsetPositionRad = position;
         inputs.armVelocityRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(absoluteEncoder.getVelocity());
-        lastPos = absoluteEncoder.getPosition() + FourBarConstants.SHOULDER_MATH_OFFSET.getRadians();
         inputs.armAppliedVolts = mainMotor.getAppliedOutput() * mainMotor.getBusVoltage();
         inputs.armCurrentAmps = mainMotor.getOutputCurrent();
         inputs.armTempCelsius = mainMotor.getMotorTemperature();
+        inputs.armAtLimit = limitSwitch.isPressed();
+        lastPos = position;
 
         Logger.getInstance().recordOutput("Shoulder/Counter", counter);
 
@@ -65,7 +92,12 @@ public class ArmIOShoulderSparkMax implements ArmIO {
 
     @Override
     public void zeroAbsoluteEncoder() {
-        absoluteEncoder.setZeroOffset(0);
-        absoluteEncoder.setZeroOffset(absoluteEncoder.getPosition());
+        currentOffset = absoluteEncoder.getPosition() - currentOffset - 0.1;
+        absoluteEncoder.setZeroOffset(currentOffset);
+    }
+
+    @Override
+    public boolean isAtLimitSwitch() {
+        return limitSwitch.isPressed();
     }
 }

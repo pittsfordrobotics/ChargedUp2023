@@ -12,6 +12,7 @@ import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker;
 import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker.NodeLevel;
 import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker.Objective;
 import com.team3181.frc2023.subsystems.swerve.Swerve;
+import com.team3181.frc2023.subsystems.vision.Vision;
 import com.team3181.lib.math.GeomUtil;
 import com.team3181.lib.swerve.BetterPathPoint;
 import edu.wpi.first.math.controller.HolonomicDriveController;
@@ -21,6 +22,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -34,7 +36,7 @@ public class SwervePathingOnTheFly extends CommandBase {
     private final AutoDrivePosition position;
     private final boolean simple;
     private final Timer timer = new Timer();
-    private PathConstraints pathConstraints;
+    private PathConstraints pathConstraints = AutoConstants.SLOW_SPEED;
 
     private final PIDController xController = new PIDController(AutoConstants.LINEAR_P, 0, 0);
     private final PIDController yController = new PIDController(AutoConstants.LINEAR_P, 0, 0);
@@ -44,7 +46,6 @@ public class SwervePathingOnTheFly extends CommandBase {
     public SwervePathingOnTheFly(BetterPathPoint... pathPoint) {
         addRequirements(this.swerve);
         this.pathPoint = pathPoint;
-        pathConstraints = AutoConstants.SLOW_SPEED;
         simple = false;
         position = null;
         rotController.enableContinuousInput(-Math.PI, Math.PI);
@@ -62,14 +63,38 @@ public class SwervePathingOnTheFly extends CommandBase {
     public SwervePathingOnTheFly(AutoDrivePosition position, boolean simple) {
         addRequirements(this.swerve);
         this.pathPoint = null;
-        this.pathConstraints = AutoConstants.SLOW_SPEED;
         this.simple = simple;
         this.position = position;
         rotController.enableContinuousInput(-Math.PI, Math.PI);
     }
 
+    public SwervePathingOnTheFly(boolean leftSubstation, boolean simple) {
+        addRequirements(this.swerve);
+        this.pathPoint = null;
+        this.simple = simple;
+        Alliance alliance = DriverStation.getAlliance();
+        if (alliance == Alliance.Red) {
+            if (leftSubstation) {
+                this.position = AutoDrivePosition.DOUBLE_SUBSTATION_LOW;
+            }
+            else {
+                this.position = AutoDrivePosition.DOUBLE_SUBSTATION_HIGH;
+            }
+        }
+        else {
+            if (leftSubstation) {
+                this.position = AutoDrivePosition.DOUBLE_SUBSTATION_HIGH;
+            }
+            else {
+                this.position = AutoDrivePosition.DOUBLE_SUBSTATION_LOW;
+            }
+        }
+        rotController.enableContinuousInput(-Math.PI, Math.PI);
+    }
+
     @Override
     public void initialize() {
+        Vision.getInstance().setEnabled(false);
         ArrayList<PathPoint> adjustedPathPoints = new ArrayList<>();
         // adds path points and flips for correct alliance
         BetterPathPoint robotPoint = new BetterPathPoint(Swerve.getInstance().getPose().getTranslation(), Swerve.getInstance().getPose().getRotation(), Swerve.getInstance().getPose().getRotation());
@@ -78,11 +103,11 @@ public class SwervePathingOnTheFly extends CommandBase {
         switch (position) {
             case NODE:
                 BetterPathPoint node = AutoDrivePoints.nodeSelector(objective.nodeRow);
-                if (objective.nodeLevel == NodeLevel.MID) {
-                    node = AutoDrivePoints.adjustNodeForMid(node);
+                if (objective.nodeLevel == NodeLevel.HYBRID) {
+                    node = AutoDrivePoints.adjustNodeForHyrbid(node);
                 }
                 node = AutoDrivePoints.pathPointFlipper(node, DriverStation.getAlliance());
-                if (simple) {
+                if (simple || (robotPointBlue.getPosition().getX() > 1.8 && robotPointBlue.getPosition().getX() < 2.5)) {
                     BetterPathPoint headingCorrection = AutoDrivePoints.updateHeading(robotPoint, node);
                     BetterPathPoint updatedNode = new BetterPathPoint(node.getPosition(), headingCorrection.getHeading(), node.getHolonomicRotation());
                     adjustedPathPoints.add(headingCorrection);
@@ -123,6 +148,7 @@ public class SwervePathingOnTheFly extends CommandBase {
                         adjustedPathPoints.add(entrance);
                     }
 
+                    // slightly outside node
                     if (robotPointBlue.getPosition().getX() > 2) {
                         if (adjustedPathPoints.size() == 0 && robotPointBlue.getPosition().getY() < 5.5) {
                             double distanceTop = GeomUtil.distance(new Pose2d(AutoDrivePoints.COMMUNITY_TOP_INNER.getPosition(), new Rotation2d()), new Pose2d(robotPointBlue.getPosition(), new Rotation2d()));
@@ -141,6 +167,7 @@ public class SwervePathingOnTheFly extends CommandBase {
                         }
                         adjustedPathPoints.add(inner);
                     }
+                    // inside node
                     if (robotPointBlue.getPosition().getX() > 1.7) {
                         BetterPathPoint updatedNode;
                         if (adjustedPathPoints.size() == 0 && robotPointBlue.getPosition().getY() < 5.5) {
@@ -260,6 +287,7 @@ public class SwervePathingOnTheFly extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
+        Vision.getInstance().setEnabled(true);
         timer.stop();
         swerve.stopMotors();
     }

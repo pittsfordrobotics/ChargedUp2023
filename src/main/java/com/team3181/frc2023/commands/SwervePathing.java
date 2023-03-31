@@ -23,7 +23,8 @@ public class SwervePathing extends CommandBase {
     private final PIDController xController = new PIDController(AutoConstants.LINEAR_P, 0, 0);
     private final PIDController yController = new PIDController(AutoConstants.LINEAR_P, 0, 0);
     private final ProfiledPIDController rotController = new ProfiledPIDController(AutoConstants.ROT_P, 0, 0, AutoConstants.MAX_ROT_CONSTRAINTS);
-    private final HolonomicDriveController holonomicDriveController = new HolonomicDriveController(xController, yController, rotController);
+//    private final HolonomicDriveController holonomicDriveController = new HolonomicDriveController(xController, yController, rotController);
+    private HolonomicDriveController holonomicDriveController = new HolonomicDriveController(xController, yController, rotController);
 
     public SwervePathing(PathPlannerTrajectory trajectory, boolean reset) {
         addRequirements(this.swerve);
@@ -34,6 +35,7 @@ public class SwervePathing extends CommandBase {
 
     @Override
     public void initialize() {
+        holonomicDriveController = new HolonomicDriveController(xController, yController, rotController);
         // adjusts because the field is flipped instead of rotated by 180
         PathPlannerState adjustedState = PathPlannerTrajectory.transformStateForAlliance(trajectory.getInitialState(), DriverStation.getAlliance());
         if (reset) {

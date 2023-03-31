@@ -8,11 +8,6 @@
 package com.team3181.frc2023.subsystems.objectivetracker;
 
 import edu.wpi.first.networktables.*;
-import edu.wpi.first.wpilibj.Filesystem;
-import io.javalin.Javalin;
-import io.javalin.http.staticfiles.Location;
-
-import java.nio.file.Paths;
 
 public class NodeSelectorIOServer implements NodeSelectorIO {
   private final IntegerPublisher currentNodePublisher;
@@ -33,17 +28,17 @@ public class NodeSelectorIOServer implements NodeSelectorIO {
     activeSubscriber = table.getIntegerTopic("active_to_robot").subscribe(-1);
 
     // Start server
-    var app =
-        Javalin.create(
-            config -> {
-              config.staticFiles.add(
-                  Paths.get(
-                                  Filesystem.getDeployDirectory().getAbsolutePath(),
-                          "nodeselector")
-                      .toString(),
-                  Location.EXTERNAL);
-            });
-    app.start(5800);
+//    var app =
+//        Javalin.create(
+//            config -> {
+//              config.staticFiles.add(
+//                  Paths.get(
+//                                  Filesystem.getDeployDirectory().getAbsolutePath(),
+//                          "nodeselector")
+//                      .toString(),
+//                  Location.EXTERNAL);
+//            });
+//    app.start(5800);
   }
 
   @Override

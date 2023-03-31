@@ -24,16 +24,16 @@
     },
     {
       "anchorPoint": {
-        "x": 3.75,
-        "y": 2.75
+        "x": 2.5,
+        "y": 0.8
       },
       "prevControl": {
-        "x": 2.75,
-        "y": 2.75
+        "x": 1.5,
+        "y": 0.8
       },
       "nextControl": {
-        "x": 4.75,
-        "y": 2.75
+        "x": 3.5,
+        "y": 0.8
       },
       "holonomicAngle": 180.0,
       "isReversal": false,
@@ -49,16 +49,41 @@
     },
     {
       "anchorPoint": {
-        "x": 5.751068240119336,
-        "y": 2.75
+        "x": 5.561042590780929,
+        "y": 2.741232366036781
       },
       "prevControl": {
-        "x": 4.751068240119336,
-        "y": 2.75
+        "x": 5.142063944899251,
+        "y": 2.741232366036781
       },
       "nextControl": {
-        "x": 4.751068240119336,
-        "y": 2.75
+        "x": 5.980021236662607,
+        "y": 2.741232366036781
+      },
+      "holonomicAngle": 180.0,
+      "isReversal": false,
+      "velOverride": 1.0,
+      "isLocked": false,
+      "isStopPoint": false,
+      "stopEvent": {
+        "names": [],
+        "executionBehavior": "parallel",
+        "waitBehavior": "none",
+        "waitTime": 0
+      }
+    },
+    {
+      "anchorPoint": {
+        "x": 7.635884532239985,
+        "y": 2.7378373520039143
+      },
+      "prevControl": {
+        "x": 6.635884532239985,
+        "y": 2.7378373520039143
+      },
+      "nextControl": {
+        "x": 6.635884532239985,
+        "y": 2.7378373520039143
       },
       "holonomicAngle": 180.0,
       "isReversal": true,
@@ -74,12 +99,12 @@
     },
     {
       "anchorPoint": {
-        "x": 4.443641268779391,
-        "y": 2.75
+        "x": 4.8084313134229575,
+        "y": 2.740387916322708
       },
       "prevControl": {
-        "x": 5.828718803801696,
-        "y": 2.75
+        "x": 5.631177673176202,
+        "y": 2.7325734595045588
       },
       "nextControl": null,
       "holonomicAngle": 180.0,
@@ -100,12 +125,6 @@
       "position": 0.0,
       "names": [
         "maybeStop"
-      ]
-    },
-    {
-      "position": 3.0,
-      "names": [
-        "balanceBackward"
       ]
     }
   ]

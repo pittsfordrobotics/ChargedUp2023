@@ -2,10 +2,13 @@ package com.team3181.frc2023;
 
 import com.team3181.frc2023.Constants.SwerveConstants;
 import com.team3181.lib.swerve.BetterPathPoint;
+import edu.wpi.first.apriltag.AprilTag;
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -21,7 +24,6 @@ public final class FieldConstants {
     public static final double fieldLength = Units.inchesToMeters(651.25); // 16.54
     public static final double fieldWidth = Units.inchesToMeters(315.5);
     public static final double tapeWidth = Units.inchesToMeters(2.0);
-    public static final double aprilTagWidth = Units.inchesToMeters(6.0);
 
     /**
      * ALL DEFINED IN BLUE, YOU MUST USE PATHPOINTFLIPPER!!!!!
@@ -40,8 +42,8 @@ public final class FieldConstants {
         public static final BetterPathPoint LOADING_STATION_TOP_EXIT = new BetterPathPoint(new Translation2d(0.5 * LoadingZone.midX + LoadingZone.outerX * 0.5, LoadingZone.midY + Units.inchesToMeters(50.5) / 2), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(-180));
         public static final BetterPathPoint LOADING_STATION_BOTTOM_EXIT = new BetterPathPoint(new Translation2d(0.5 * LoadingZone.midX + LoadingZone.outerX * 0.5, LoadingZone.midY - Units.inchesToMeters(50.5)/ 2), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(-180));
 
-        public static final BetterPathPoint LOADING_STATION_TOP_INNER = new BetterPathPoint(new Translation2d(-SwerveConstants.BUMPER_WIDTH + LoadingZone.doubleSubstationX - SwerveConstants.X_LENGTH_METERS / 2 - 0.2, LoadingZone.midY + Units.inchesToMeters(50.5) / 2), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(0));
-        public static final BetterPathPoint LOADING_STATION_BOTTOM_INNER = new BetterPathPoint(new Translation2d(-SwerveConstants.BUMPER_WIDTH + LoadingZone.doubleSubstationX - SwerveConstants.X_LENGTH_METERS / 2 - 0.2, LoadingZone.midY - Units.inchesToMeters(50.5) / 2), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(0));
+        public static final BetterPathPoint LOADING_STATION_TOP_INNER = new BetterPathPoint(new Translation2d(-SwerveConstants.BUMPER_WIDTH + LoadingZone.doubleSubstationX - SwerveConstants.X_LENGTH_METERS / 2 - 0.2 - 0.5, LoadingZone.midY + Units.inchesToMeters(50.5) / 2), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(0));
+        public static final BetterPathPoint LOADING_STATION_BOTTOM_INNER = new BetterPathPoint(new Translation2d(-SwerveConstants.BUMPER_WIDTH + LoadingZone.doubleSubstationX - SwerveConstants.X_LENGTH_METERS / 2 - 0.2 - 0.5, LoadingZone.midY - Units.inchesToMeters(50.5) / 2), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(0));
 
         /**
          * @param startingPoint point 1
@@ -87,7 +89,7 @@ public final class FieldConstants {
             return new BetterPathPoint(new Translation2d(BOTTOM_NODE.getPosition().getX(), BOTTOM_NODE.getPosition().getY() + Grids.nodeSeparationY * (node)), BOTTOM_NODE.getHeading(), BOTTOM_NODE.getHolonomicRotation());
         }
 
-        public static BetterPathPoint adjustNodeForMid(BetterPathPoint point) {
+        public static BetterPathPoint adjustNodeForHyrbid(BetterPathPoint point) {
             return new BetterPathPoint(new Translation2d(point.getPosition().getX() + 0.33006, point.getPosition().getY()), point.getHeading(), point.getHolonomicRotation());
         }
 
@@ -179,6 +181,19 @@ public final class FieldConstants {
         public static final double nodeFirstY = Units.inchesToMeters(20.19);
         public static final double nodeSeparationY = Units.inchesToMeters(22.0);
 
+        public static final double[] nodeY = new double[] {
+                        Units.inchesToMeters(20.19 + 22.0 * 0),
+                        Units.inchesToMeters(20.19 + 22.0 * 1),
+                        Units.inchesToMeters(20.19 + 22.0 * 2),
+                        Units.inchesToMeters(20.19 + 22.0 * 3),
+                        Units.inchesToMeters(20.19 + 22.0 * 4),
+                        Units.inchesToMeters(20.19 + 22.0 * 5),
+                        Units.inchesToMeters(20.19 + 22.0 * 6),
+                        Units.inchesToMeters(20.19 + 22.0 * 7),
+                        Units.inchesToMeters(20.19 + 22.0 * 8)
+                };
+
+
         // Z layout
         public static final double cubeEdgeHigh = Units.inchesToMeters(3.0);
         public static final double cubeEdgeHighInches = 3.0;
@@ -255,6 +270,7 @@ public final class FieldConstants {
         public static final double doubleSubstationLength = Units.inchesToMeters(14.0);
         public static final double doubleSubstationX = innerX - doubleSubstationLength;
         public static final double doubleSubstationShelfZ = Units.inchesToMeters(37.375);
+        public static final double doubleSubstationCenterY = fieldWidth - Units.inchesToMeters(49.76);
 
         // Single substation dimensions
         public static final double singleSubstationWidth = Units.inchesToMeters(22.75);
@@ -290,55 +306,67 @@ public final class FieldConstants {
         }
     }
 
-    // AprilTag locations (do not flip for red alliance)
-    public static final Map<Integer, Pose3d> aprilTags =
-            Map.of(
-                    1,
-                    new Pose3d(
-                            Units.inchesToMeters(610.77),
-                            Units.inchesToMeters(42.19),
-                            Units.inchesToMeters(18.22),
-                            new Rotation3d(0.0, 0.0, Math.PI)),
-                    2,
-                    new Pose3d(
-                            Units.inchesToMeters(610.77),
-                            Units.inchesToMeters(108.19),
-                            Units.inchesToMeters(18.22),
-                            new Rotation3d(0.0, 0.0, Math.PI)),
-                    3,
-                    new Pose3d(
-                            Units.inchesToMeters(610.77),
-                            Units.inchesToMeters(174.19), // FIRST's diagram has a typo (it says 147.19)
-                            Units.inchesToMeters(18.22),
-                            new Rotation3d(0.0, 0.0, Math.PI)),
-                    4,
-                    new Pose3d(
-                            Units.inchesToMeters(636.96),
-                            Units.inchesToMeters(265.74),
-                            Units.inchesToMeters(27.38),
-                            new Rotation3d(0.0, 0.0, Math.PI)),
-                    5,
-                    new Pose3d(
-                            Units.inchesToMeters(14.25),
-                            Units.inchesToMeters(265.74),
-                            Units.inchesToMeters(27.38),
-                            new Rotation3d()),
-                    6,
-                    new Pose3d(
-                            Units.inchesToMeters(40.45),
-                            Units.inchesToMeters(174.19), // FIRST's diagram has a typo (it says 147.19)
-                            Units.inchesToMeters(18.22),
-                            new Rotation3d()),
-                    7,
-                    new Pose3d(
-                            Units.inchesToMeters(40.45),
-                            Units.inchesToMeters(108.19),
-                            Units.inchesToMeters(18.22),
-                            new Rotation3d()),
-                    8,
-                    new Pose3d(
-                            Units.inchesToMeters(40.45),
-                            Units.inchesToMeters(42.19),
-                            Units.inchesToMeters(18.22),
-                            new Rotation3d()));
+    // AprilTag constants
+    public static final double aprilTagWidth = Units.inchesToMeters(6.0);
+    public static final AprilTagFieldLayout aprilTags =
+            new AprilTagFieldLayout(
+                    List.of(
+                            new AprilTag(
+                                    1,
+                                    new Pose3d(
+                                            Units.inchesToMeters(610.77),
+                                            Grids.nodeY[1],
+                                            Units.inchesToMeters(18.22),
+                                            new Rotation3d(0.0, 0.0, Math.PI))),
+                            new AprilTag(
+                                    2,
+                                    new Pose3d(
+                                            Units.inchesToMeters(610.77),
+                                            Grids.nodeY[4],
+                                            Units.inchesToMeters(18.22),
+                                            new Rotation3d(0.0, 0.0, Math.PI))),
+                            new AprilTag(
+                                    3,
+                                    new Pose3d(
+                                            Units.inchesToMeters(610.77),
+                                            Grids.nodeY[7],
+                                            Units.inchesToMeters(18.22),
+                                            new Rotation3d(0.0, 0.0, Math.PI))),
+                            new AprilTag(
+                                    4,
+                                    new Pose3d(
+                                            Units.inchesToMeters(636.96),
+                                            LoadingZone.doubleSubstationCenterY,
+                                            Units.inchesToMeters(27.38),
+                                            new Rotation3d(0.0, 0.0, Math.PI))),
+                            new AprilTag(
+                                    5,
+                                    new Pose3d(
+                                            Units.inchesToMeters(14.25),
+                                            LoadingZone.doubleSubstationCenterY,
+                                            Units.inchesToMeters(27.38),
+                                            new Rotation3d())),
+                            new AprilTag(
+                                    6,
+                                    new Pose3d(
+                                            Units.inchesToMeters(40.45),
+                                            Grids.nodeY[7],
+                                            Units.inchesToMeters(18.22),
+                                            new Rotation3d())),
+                            new AprilTag(
+                                    7,
+                                    new Pose3d(
+                                            Units.inchesToMeters(40.45),
+                                            Grids.nodeY[4],
+                                            Units.inchesToMeters(18.22),
+                                            new Rotation3d())),
+                            new AprilTag(
+                                    8,
+                                    new Pose3d(
+                                            Units.inchesToMeters(40.45),
+                                            Grids.nodeY[1],
+                                            Units.inchesToMeters(18.22),
+                                            new Rotation3d()))),
+                    fieldLength,
+                    fieldWidth);
 }

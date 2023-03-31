@@ -25,6 +25,18 @@ public class GeomUtil {
         return new Transform2d(translation, new Rotation2d());
     }
 
+
+    /**
+     * Multiplies a twist by a scaling factor
+     *
+     * @param twist The twist to multiply
+     * @param factor The scaling factor for the twist components
+     * @return The new twist
+     */
+    public static Twist2d multiplyTwist(Twist2d twist, double factor) {
+        return new Twist2d(twist.dx * factor, twist.dy * factor, twist.dtheta * factor);
+    }
+
     /**
      * Creates a pure translating transform
      *

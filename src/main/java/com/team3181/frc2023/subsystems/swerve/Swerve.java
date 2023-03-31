@@ -2,6 +2,8 @@ package com.team3181.frc2023.subsystems.swerve;
 
 import com.team3181.frc2023.Constants.RobotConstants;
 import com.team3181.frc2023.Constants.SwerveConstants;
+import com.team3181.frc2023.Robot;
+import com.team3181.lib.commands.DisabledInstantCommand;
 import com.team3181.lib.math.BetterMath;
 import com.team3181.lib.math.GeomUtil;
 import com.team3181.lib.swerve.BetterSwerveKinematics;
@@ -9,9 +11,11 @@ import com.team3181.lib.swerve.BetterSwerveModuleState;
 import com.team3181.lib.swerve.SwerveOptimizer;
 import com.team3181.lib.util.Alert;
 import com.team3181.lib.util.Alert.AlertType;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -35,6 +39,7 @@ public class Swerve extends SubsystemBase {
     private final BetterSwerveModuleState[] lastModuleStates = new BetterSwerveModuleState[4];
     private ChassisSpeeds actualRobotRelativeChassisSpeeds = new ChassisSpeeds();
     private final SwerveDrivePoseEstimator poseEstimator;
+//    private final PoseEstimator poseEstimator;
 
     private Rotation2d lastRotation = new Rotation2d();
     private boolean isOpenLoop = false;
@@ -56,20 +61,40 @@ public class Swerve extends SubsystemBase {
             lastModuleStates[i] = new BetterSwerveModuleState(0, Rotation2d.fromRadians(moduleInputs[i].steerOffsetAbsolutePositionRad), 0);
         }
 
-        poseEstimator = new SwerveDrivePoseEstimator(SwerveConstants.DRIVE_KINEMATICS, getRobotRelativeAngle(), modulePositions, new Pose2d());
+        poseEstimator = new SwerveDrivePoseEstimator(SwerveConstants.DRIVE_KINEMATICS, getRobotRelativeAngle(), modulePositions, new Pose2d(), VecBuilder.fill(0.01, 0.01, 0.01), VecBuilder.fill(0.3, 0.3, 0.3));
+//        poseEstimator = new SwerveDrivePoseEstimator(SwerveConstants.DRIVE_KINEMATICS, getRobotRelativeAngle(), modulePositions, new Pose2d(), VecBuilder.fill(0.1, 0.1, 0.1), VecBuilder.fill(0.9, 0.9, 0.9));
+//        poseEstimator = new PoseEstimator(VecBuilder.fill(0.05, 0.05, 0.001));
+
+        Robot.pitTab.add("Swerve Straight Wheels", new DisabledInstantCommand(this::forward));
+        Robot.pitTab.add("Swerve Coast", new DisabledInstantCommand(this::setCoastMode));
+        Robot.pitTab.add("Swerve Brake", new DisabledInstantCommand(this::setBrakeMode));
+        Robot.pitTab.add("Swerve Zero Pigeon", new DisabledInstantCommand(this::zeroGyro));
     }
 
     @Override
     public void periodic() {
         SwerveModuleState[] wantedModuleStates = new SwerveModuleState[4];
         SwerveModuleState[] actualStates = new SwerveModuleState[4];
+        SwerveModulePosition[] wheelDeltas = new SwerveModulePosition[4];
         for (int i = 0; i < 4; i++) {
             moduleIO[i].updateInputs(moduleInputs[i]);
+            wheelDeltas[i] =
+                    new SwerveModulePosition(
+                            (moduleInputs[i].drivePositionMeters - modulePositions[i].distanceMeters),
+                            Rotation2d.fromRadians(moduleInputs[i].steerOffsetAbsolutePositionRad));
             actualStates[i] = new SwerveModuleState(moduleInputs[i].driveVelocityMetersPerSec, Rotation2d.fromRadians(moduleInputs[i].steerOffsetAbsolutePositionRad));
             modulePositions[i] = new SwerveModulePosition(moduleInputs[i].drivePositionMeters, Rotation2d.fromRadians(moduleInputs[i].steerOffsetAbsolutePositionRad));
             wantedModuleStates[i] = new SwerveModuleState(lastModuleStates[i].speedMetersPerSecond, Rotation2d.fromRadians(lastModuleStates[i].angle.getRadians() + lastModuleStates[i].omegaRadPerSecond * (isOpenLoop ? SwerveConstants.MODULE_STEER_FF_OL : SwerveConstants.MODULE_STEER_FF_CL) * 0.065));
         }
         actualRobotRelativeChassisSpeeds = SwerveConstants.DRIVE_KINEMATICS.toChassisSpeeds(actualStates);
+
+        var twist = SwerveConstants.DRIVE_KINEMATICS.toTwist2d(wheelDeltas);
+        var gyroYaw = new Rotation2d(gyroInputs.yawPositionRad);
+        if (gyroInputs.connected) {
+            twist = new Twist2d(twist.dx, twist.dy, gyroYaw.minus(lastRotation).getRadians());
+        }
+        lastRotation = getRobotRelativeAngle();
+//        poseEstimator.addDriveData(Timer.getFPGATimestamp(), twist);
 
         Logger.getInstance().processInputs("FL Swerve Module", moduleInputs[0]);
         Logger.getInstance().processInputs("FR Swerve Module", moduleInputs[1]);
@@ -79,6 +104,7 @@ public class Swerve extends SubsystemBase {
         gyroIO.updateInputs(gyroInputs);
         Logger.getInstance().processInputs("Gyro", gyroInputs);
 
+//        old WPILib pose estimator
         poseEstimator.update(getRobotRelativeAngle(), modulePositions);
         lastRotation = getRobotRelativeAngle();
 
@@ -128,6 +154,16 @@ public class Swerve extends SubsystemBase {
         }, true);
     }
 
+    //    drives wheels forward for debugging
+    private void forward() {
+        setModuleStates(new BetterSwerveModuleState[]{
+                new BetterSwerveModuleState(0.1, Rotation2d.fromDegrees(0), 0),
+                new BetterSwerveModuleState(0.1, Rotation2d.fromDegrees(0), 0),
+                new BetterSwerveModuleState(0.1, Rotation2d.fromDegrees(0), 0),
+                new BetterSwerveModuleState(0.1, Rotation2d.fromDegrees(0), 0),
+        }, true);
+    }
+
     public void setBrakeMode() {
         for (int i = 0; i < 4; i++) {
             moduleIO[i].setDriveBrakeMode(true);
@@ -150,24 +186,32 @@ public class Swerve extends SubsystemBase {
     }
 
     public void resetPose(Pose2d pose) {
+//        poseEstimator.resetPose(pose);
         poseEstimator.resetPosition(getRobotRelativeAngle(), modulePositions, pose);
     }
 
     public void zeroGyro() {
+        gyroIO.zeroGyro();
         Pose2d pose = new Pose2d(getPose().getX(), getPose().getY(), new Rotation2d());
+//        poseEstimator.resetPose(pose);
         poseEstimator.resetPosition(getRobotRelativeAngle(), modulePositions, pose);
     }
 
     public void addVisionData(Pose2d pose, double time, boolean stable) {
-        if (GeomUtil.distance(pose, getPose()) < 1 || stable) {
+        if (GeomUtil.distance(pose, getPose()) < 0.5 || stable) {
             // remove rotation because its being funky
-            Pose2d noRot = new Pose2d(pose.getTranslation(), getPose().getRotation());
-            Logger.getInstance().recordOutput("Swerve/Vision Updates", noRot);
-            poseEstimator.addVisionMeasurement(noRot, time);
+//            Pose2d noRot = new Pose2d(pose.getTranslation(), getPose().getRotation());
+            Logger.getInstance().recordOutput("Swerve/Vision Updates", pose);
+            poseEstimator.addVisionMeasurement(pose, time);
         }
     }
 
+//    public void addVisionData(List<TimestampedVisionUpdate> visionData) {
+//        poseEstimator.addVisionData(visionData);
+//    }
+
     public Pose2d getPose() {
+//        return poseEstimator.getLatestPose();
         return poseEstimator.getEstimatedPosition();
     }
 
@@ -196,7 +240,7 @@ public class Swerve extends SubsystemBase {
         }
     }
 
-    public Rotation2d getPitch() {
-        return Rotation2d.fromRadians(gyroInputs.pitchPositionRad);
+    public double getPitch() {
+        return gyroInputs.rollPositionRad;
     }
 }

@@ -89,12 +89,12 @@ export class NT4_Client {
   onDisconnect;
   serverBaseAddr;
   ws = null;
-  useSecure = false;
   serverAddr = "";
   serverConnectionActive = false;
   serverConnectionRequested = false;
   serverTimeOffset_us = null;
   networkLatency_us = 0;
+  rxLengthCounter = 0;
   subscriptions = new Map();
   publishedTopics = new Map();
   serverTopics = new Map();
@@ -109,13 +109,13 @@ export class NT4_Client {
    * @param onDisconnect Gets called once client detects server has disconnected
    */
   constructor(
-    serverAddr,
-    appName,
-    onTopicAnnounce,
-    onTopicUnannounce,
-    onNewTopicData,
-    onConnect,
-    onDisconnect
+      serverAddr,
+      appName,
+      onTopicAnnounce,
+      onTopicUnannounce,
+      onNewTopicData,
+      onConnect,
+      onDisconnect
   ) {
     this.serverBaseAddr = serverAddr;
     this.appName = appName;
@@ -124,7 +124,16 @@ export class NT4_Client {
     this.onNewTopicData = onNewTopicData;
     this.onConnect = onConnect;
     this.onDisconnect = onDisconnect;
-    setInterval(() => this.ws_sendTimestamp(), 5000);
+    setInterval(() => {
+      // Update timestamp
+      this.ws_sendTimestamp();
+      // Log bitrate
+      let bitrateKbPerSec = ((this.rxLengthCounter / 1000) * 8) / 5;
+      this.rxLengthCounter = 0;
+      console.log(
+          "[NT4] Bitrate: " + Math.round(bitrateKbPerSec).toString() + " kb/s"
+      );
+    }, 5000);
   }
   //////////////////////////////////////////////////////////////
   // PUBLIC API
@@ -297,11 +306,14 @@ export class NT4_Client {
     return new Date().getTime() * 1000;
   }
   /** Returns the current server time in microseconds (or null if unknown). */
-  getServerTime_us() {
+  getServerTime_us(clientTime) {
     if (this.serverTimeOffset_us === null) {
       return null;
     } else {
-      return this.getClientTime_us() + this.serverTimeOffset_us;
+      return (
+          (clientTime === undefined ? this.getClientTime_us() : clientTime) +
+          this.serverTimeOffset_us
+      );
     }
   }
   /** Returns the current network latency in microseconds */
@@ -321,7 +333,7 @@ export class NT4_Client {
     let serverTimeAtRx = serverTimestamp + this.networkLatency_us;
     this.serverTimeOffset_us = serverTimeAtRx - rxTime;
     console.log(
-      "[NT4] New server time: " +
+        "[NT4] New server time: " +
         (this.getServerTime_us() / 1000000.0).toString() +
         "s with " +
         (this.networkLatency_us / 1000.0).toString() +
@@ -351,12 +363,12 @@ export class NT4_Client {
   ws_sendJSON(method, params) {
     if (this.ws && this.ws.readyState === WebSocket.OPEN) {
       this.ws.send(
-        JSON.stringify([
-          {
-            method: method,
-            params: params,
-          },
-        ])
+          JSON.stringify([
+            {
+              method: method,
+              params: params,
+            },
+          ])
       );
     }
   }
@@ -395,9 +407,6 @@ export class NT4_Client {
     if (event.reason !== "") {
       console.log("[NT4] Socket is closed: ", event.reason);
     }
-    if (!event.wasClean) {
-      this.useSecure = !this.useSecure;
-    }
     if (this.serverConnectionRequested) {
       setTimeout(() => this.ws_connect(), 500);
     }
@@ -408,10 +417,11 @@ export class NT4_Client {
   ws_onMessage(event) {
     if (typeof event.data === "string") {
       // JSON array
+      this.rxLengthCounter += event.data.length;
       let msgData = JSON.parse(event.data);
       if (!Array.isArray(msgData)) {
         console.warn(
-          "[NT4] Ignoring text message, JSON parsing did not produce an array at the top level."
+            "[NT4] Ignoring text message, JSON parsing did not produce an array at the top level."
         );
         return;
       }
@@ -419,13 +429,13 @@ export class NT4_Client {
         // Validate proper format of message
         if (typeof msg !== "object") {
           console.warn(
-            "[NT4] Ignoring text message, JSON parsing did not produce an object."
+              "[NT4] Ignoring text message, JSON parsing did not produce an object."
           );
           return;
         }
         if (!("method" in msg) || !("params" in msg)) {
           console.warn(
-            "[NT4] Ignoring text message, JSON parsing did not find all required fields."
+              "[NT4] Ignoring text message, JSON parsing did not find all required fields."
           );
           return;
         }
@@ -433,13 +443,13 @@ export class NT4_Client {
         let params = msg["params"];
         if (typeof method !== "string") {
           console.warn(
-            '[NT4] Ignoring text message, JSON parsing found "method", but it wasn\'t a string.'
+              '[NT4] Ignoring text message, JSON parsing found "method", but it wasn\'t a string.'
           );
           return;
         }
         if (typeof params !== "object") {
           console.warn(
-            '[NT4] Ignoring text message, JSON parsing found "params", but it wasn\'t an object.'
+              '[NT4] Ignoring text message, JSON parsing found "params", but it wasn\'t an object.'
           );
           return;
         }
@@ -456,7 +466,7 @@ export class NT4_Client {
           let removedTopic = this.serverTopics.get(params.name);
           if (!removedTopic) {
             console.warn(
-              "[NT4] Ignoring unannounce, topic was not previously announced."
+                "[NT4] Ignoring unannounce, topic was not previously announced."
             );
             return;
           }
@@ -466,7 +476,7 @@ export class NT4_Client {
           let topic = this.serverTopics.get(params.name);
           if (!topic) {
             console.warn(
-              "[NT4] Ignoring set properties, topic was not previously announced."
+                "[NT4] Ignoring set properties, topic was not previously announced."
             );
             return;
           }
@@ -480,13 +490,14 @@ export class NT4_Client {
           }
         } else {
           console.warn(
-            "[NT4] Ignoring text message - unknown method " + method
+              "[NT4] Ignoring text message - unknown method " + method
           );
           return;
         }
       });
     } else {
       // MSGPack
+      this.rxLengthCounter += event.data.byteLength;
       deserialize(event.data, { multiple: true }).forEach((unpackedData) => {
         let topicID = unpackedData[0];
         let timestamp_us = unpackedData[1];
@@ -502,7 +513,7 @@ export class NT4_Client {
           }
           if (!topic) {
             console.warn(
-              "[NT4] Ignoring binary data - unknown topic ID " +
+                "[NT4] Ignoring binary data - unknown topic ID " +
                 topicID.toString()
             );
             return;
@@ -512,7 +523,7 @@ export class NT4_Client {
           this.ws_handleReceiveTimestamp(timestamp_us, value);
         } else {
           console.warn(
-            "[NT4] Ignoring binary data - invalid topic ID " +
+              "[NT4] Ignoring binary data - invalid topic ID " +
               topicID.toString()
           );
         }
@@ -522,17 +533,13 @@ export class NT4_Client {
   ws_connect() {
     let port = 5810;
     let prefix = "ws://";
-    if (this.useSecure) {
-      prefix = "wss://";
-      port = 5811;
-    }
     this.serverAddr =
-      prefix +
-      this.serverBaseAddr +
-      ":" +
-      port.toString() +
-      "/nt/" +
-      this.appName;
+        prefix +
+        this.serverBaseAddr +
+        ":" +
+        port.toString() +
+        "/nt/" +
+        this.appName;
     this.ws = new WebSocket(this.serverAddr, "networktables.first.wpi.edu");
     this.ws.binaryType = "arraybuffer";
     this.ws.addEventListener("open", () => this.ws_onOpen());

@@ -5,7 +5,9 @@
 package com.team3181.frc2023;
 
 import com.team3181.frc2023.Constants.RobotConstants;
+import com.team3181.frc2023.subsystems.fourbar.FourBar;
 import com.team3181.frc2023.subsystems.swerve.Swerve;
+import com.team3181.frc2023.subsystems.vision.Vision;
 import com.team3181.lib.controller.BetterXboxController;
 import com.team3181.lib.drivers.LazySparkMax;
 import com.team3181.lib.util.Alert;
@@ -18,6 +20,8 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -29,17 +33,22 @@ import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.BiConsumer;
+
 public class Robot extends LoggedRobot {
   private Command autonomousCommand;
 
   private final Alert logReceiverQueueAlert = new Alert("Logging queue is full. Data will NOT be logged.", AlertType.ERROR);
   private final Alert driverControllerAlert = new Alert("Driver Controller is NOT detected!", AlertType.ERROR);
   private final Alert operatorControllerAlert = new Alert("Operator Controller is NOT detected!", AlertType.ERROR);
+  private final Alert lowBatteryAlert = new Alert("Battery is at a LOW voltage! The battery MUST be replaced before playing a match!", AlertType.WARNING);
 
   private final Timer disabledTimer = new Timer();
   private final Timer garbageCollector = new Timer();
+  public static final ShuffleboardTab pitTab = Shuffleboard.getTab("Pit");
   private boolean stopped = false;
-  private final Alert lowBatteryAlert = new Alert("Battery is at a LOW voltage! The battery MUST be replaced before playing a match!", AlertType.WARNING);
 
   private RobotContainer robotContainer;
 
@@ -84,6 +93,27 @@ public class Robot extends LoggedRobot {
     Swerve.getInstance().setCoastMode();
     garbageCollector.start();
 
+    // Log active commands
+    Map<String, Integer> commandCounts = new HashMap<>();
+    BiConsumer<Command, Boolean> logCommandFunction = (Command command, Boolean active) -> {
+              String name = command.getName();
+              int count = commandCounts.getOrDefault(name, 0) + (active ? 1 : -1);
+              commandCounts.put(name, count);
+              Logger.getInstance()
+                      .recordOutput(
+                              "CommandsUnique/" + name + "_" + Integer.toHexString(command.hashCode()), active);
+              Logger.getInstance().recordOutput("CommandsAll/" + name, count > 0);
+            };
+    CommandScheduler.getInstance().onCommandInitialize((Command command) -> {
+                      logCommandFunction.accept(command, true);
+                    });
+    CommandScheduler.getInstance().onCommandFinish((Command command) -> {
+                      logCommandFunction.accept(command, false);
+                    });
+    CommandScheduler.getInstance().onCommandInterrupt((Command command) -> {
+                      logCommandFunction.accept(command, false);
+                    });
+
     new BetterXboxController(0, BetterXboxController.Humans.DRIVER);
     new BetterXboxController(1, BetterXboxController.Humans.OPERATOR);
   }
@@ -95,7 +125,9 @@ public class Robot extends LoggedRobot {
 
     logReceiverQueueAlert.set(Logger.getInstance().getReceiverQueueFault());
     // in MBs
-    Logger.getInstance().recordOutput("Memory Usage", String.format("%.2f", (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024.0 / 1024.0));
+    Logger.getInstance().recordOutput("Memory Usage", (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024.0 / 1024.0);
+    Logger.getInstance().recordOutput("Memory Free", (Runtime.getRuntime().freeMemory()) / 1024.0 / 1024.0);
+    Logger.getInstance().recordOutput("Memory Total", (Runtime.getRuntime().totalMemory()) / 1024.0 / 1024.0);
 
     driverControllerAlert.set(!DriverStation.isJoystickConnected(0));
     operatorControllerAlert.set(!DriverStation.isJoystickConnected(1));
@@ -104,16 +136,18 @@ public class Robot extends LoggedRobot {
     SmartDashboard.putBoolean("Can Balance", robotContainer.canBalance());
     SmartDashboard.putBoolean("Need Position", robotContainer.needPosition());
 
-    if (garbageCollector.hasElapsed(1)) {
-      System.gc();
-      garbageCollector.restart();
-    }
+    // try to fix mem problems
+//    if (garbageCollector.hasElapsed(5)) {
+//      System.gc();
+//      garbageCollector.restart();
+//    }
   }
 
   @Override
   public void disabledInit() {
     disabledTimer.restart();
     robotContainer.autoConfig();
+    Vision.getInstance().setEnabled(true);
   }
 
   @Override
@@ -129,6 +163,8 @@ public class Robot extends LoggedRobot {
   public void autonomousInit() {
     lowBatteryAlert.set(false);
     Swerve.getInstance().setBrakeMode();
+    FourBar.getInstance().brake();
+    Vision.getInstance().setEnabled(false);
     autonomousCommand = robotContainer.getAutonomousCommand();
 
     if (autonomousCommand != null) {
@@ -143,6 +179,8 @@ public class Robot extends LoggedRobot {
   public void teleopInit() {
     lowBatteryAlert.set(false);
     Swerve.getInstance().setBrakeMode();
+    FourBar.getInstance().brake();
+    Vision.getInstance().setEnabled(true);
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
       autonomousCommand = null;

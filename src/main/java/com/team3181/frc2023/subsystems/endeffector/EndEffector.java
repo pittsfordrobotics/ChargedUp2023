@@ -3,7 +3,9 @@ package com.team3181.frc2023.subsystems.endeffector;
 
 import com.team3181.frc2023.Constants;
 import com.team3181.frc2023.Constants.EndEffectorConstants;
-import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker;
+import com.team3181.frc2023.Robot;
+import com.team3181.lib.commands.DisabledInstantCommand;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 
@@ -21,7 +23,7 @@ public class EndEffector extends SubsystemBase {
     private WantedState lastWantedState = WantedState.IDLE;
     private ActualState actualState = ActualState.IDLE;
     private final Vector<Double> intakeCurrents = new Vector<>();
-    private final int currentCycles = 20;
+    private final int currentCycles = 20; // TODO: try increasing this
 
     private final static EndEffector INSTANCE = new EndEffector(Constants.RobotConstants.END_EFFECTOR);
     public static EndEffector getInstance() {
@@ -36,6 +38,9 @@ public class EndEffector extends SubsystemBase {
     }
     private EndEffector(EndEffectorIO io) {
         this.io = io;
+        Robot.pitTab.add("EndEffector Intake", new DisabledInstantCommand(this::intake));
+        Robot.pitTab.add("EndEffector Idle", new DisabledInstantCommand(this::idle));
+        Robot.pitTab.add("EndEffector Exhaust", new DisabledInstantCommand(this::exhaust));
         for (int i = 0; i < currentCycles; i++) intakeCurrents.add(0.0);
     }
 
@@ -51,22 +56,22 @@ public class EndEffector extends SubsystemBase {
             Logger.getInstance().processInputs("EndEffector", inputs);
 
             switch(actualState) {
-                // would be nice if this were command based but that's annoying and periodic is easier
                 case INTAKING:
-                    io.setVoltage(EndEffectorConstants.INTAKE_POWER);
-                    break;
-                case EXHAUSTING: // may need to be 2 different values if we need to shoot cone and cube at different speeds
-                    if (ObjectiveTracker.getInstance().getObjective().nodeRow == 1 || ObjectiveTracker.getInstance().getObjective().nodeRow == 4 || ObjectiveTracker.getInstance().getObjective().nodeRow == 7) {
-                        io.setVoltage(EndEffectorConstants.EXHAUST_CUBE_POWER);
+                    if (DriverStation.isAutonomous()) {
+                        // maximize power in auto to decrease time initially
+                        io.setVoltage(3);
                     }
                     else {
-                        io.setVoltage(EndEffectorConstants.EXHAUST_CONE_POWER);
+                        io.setVoltage(EndEffectorConstants.INTAKE_POWER);
                     }
+                    break;
+                case EXHAUSTING: // may need to be 2 different values if we need to shoot cone and cube at different speeds
+                    io.setVoltage(EndEffectorConstants.EXHAUST_CONE_POWER);
                     break;
                 case OBTAINED:
                 case IDLE:
                 default:
-                    io.setVoltage(EndEffectorConstants.INTAKE_IDLE_POWER); // TODO: add to constants
+                    io.setVoltage(EndEffectorConstants.INTAKE_IDLE_POWER);
                     // last thing command to do is call back and set state here, removes need for
                     break;
             }

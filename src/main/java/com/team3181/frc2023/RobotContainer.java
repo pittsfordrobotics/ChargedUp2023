@@ -6,11 +6,8 @@ package com.team3181.frc2023;
 
 import com.team3181.frc2023.Constants.RobotConstants;
 import com.team3181.frc2023.FieldConstants.AutoDrivePoints;
-import com.team3181.frc2023.commands.SwerveAutoBalance;
-import com.team3181.frc2023.commands.SwerveDriveFieldXbox;
-import com.team3181.frc2023.commands.TankXbox;
-import com.team3181.frc2023.commands.autos.AutoSwerveBalance;
-import com.team3181.frc2023.commands.autos.AutoSwervePath;
+import com.team3181.frc2023.commands.*;
+import com.team3181.frc2023.commands.autos.*;
 import com.team3181.frc2023.subsystems.Superstructure;
 import com.team3181.frc2023.subsystems.endeffector.EndEffector;
 import com.team3181.frc2023.subsystems.fourbar.FourBar;
@@ -49,64 +46,37 @@ public class RobotContainer {
   private SendableChooser<Command> autoChooser = new SendableChooser<>();
   private SendableChooser<Integer> positionChooser = new SendableChooser<>();
   private SendableChooser<Boolean> balanceChooser = new SendableChooser<>();
-  private final HashMap<Command, Boolean> canBalanceMap = new HashMap<>();
-  private final HashMap<Command, Boolean> needPositionMap = new HashMap<>();
+  private HashMap<Command, Boolean> canBalanceMap = new HashMap<>();
+  private HashMap<Command, Boolean> needPositionMap = new HashMap<>();
+  private HashMap<Command, Boolean> canForwardBalance = new HashMap<>();
+
+  public static boolean balanceForward = false;
 
   public RobotContainer() {
     autoConfig();
     competitionButtons();
-//      testButtons();
+//    testButtons();
+
+//    vision.setDataInterface(swerve::addVisionData);
 
     if (!RobotConstants.IS_TANK) swerve.setDefaultCommand(new SwerveDriveFieldXbox());
     if (RobotConstants.IS_TANK) Tank.getInstance().setDefaultCommand(new TankXbox());
   }
 
   private void testButtons() {
-//    driverController.a().whileTrue(new SwervePathingOnTheFly(AutoDrivePosition.NODE, false));
-//    driverController.a().whileTrue(new SwerveAutoScore());
 //      driverController.a().whileTrue(new SwerveAutoBalance(true));
-//    driverController.a()
-//            .whileTrue(new SwerveAutoDoubleSubstationLow());
-    //    driverController.y()
-//            .whileTrue(new SwerveAutoScore())
-//            .whileFalse(new SuperstructureHome());
-//    driverController.b()
-//            .whileTrue(new SwerveAutoDoubleSubstationHigh())
-//            .whileFalse(new SuperstructureHome());
-//    driverController.a()
-//            .whileTrue(new SwerveAutoDoubleSubstationLow())
-//            .whileFalse(new SuperstructureHome());
-//    driverController.a().whileTrue(new SwerveAutoBalance(true));
-//    driverController.a().onTrue(new InstantCommand(endEffector::intake)).onFalse(new InstantCommand(endEffector::idle));
-//    driverController.x().onTrue(new InstantCommand(endEffector::exhaust)).onFalse(new InstantCommand(endEffector::idle));
     driverController.rightTrigger().whileTrue(new InstantCommand(swerve::zeroGyro));
-//
-//    driverController.a().whileTrue(new InstantCommand(superstructure::collectGround))
-//            .whileFalse(new InstantCommand(Superstructure.getInstance()::home));
-//    driverController.b().whileTrue(new InstantCommand(superstructure::collectMid))
-//            .whileFalse(new InstantCommand(Superstructure.getInstance()::home));
-//    driverController.x().whileTrue(new InstantCommand(superstructure::objective))
-//            .whileFalse(new InstantCommand(Superstructure.getInstance()::home));
-//    driverController.b().whileTrue(new InstantCommand(() -> leds.setLEDMode(LEDModes.RAINBOW)));
-//    driverController.a()
-//            .whileTrue(new RepeatCommand(new InstantCommand(() -> fourBar.setArmVoltage(0, 2))))
-//            .whileFalse(new InstantCommand(() -> fourBar.setArmVoltage(0, 0)));
-//    driverController.b()
-//            .whileTrue(new RepeatCommand(new InstantCommand(() -> fourBar.setArmVoltage(0, -2))))
-//            .whileFalse(new InstantCommand(() -> fourBar.setArmVoltage(0, 0)));
-//    driverController.x()
-//            .whileTrue(new RepeatCommand(new InstantCommand(() -> fourBar.setArmVoltage(1, 2))))
-//            .whileFalse(new InstantCommand(() -> fourBar.setArmVoltage(1, 0)));
-//    driverController.y()
-//            .whileTrue(new RepeatCommand(new InstantCommand(() -> fourBar.setArmVoltage(1, -2))))
-//            .whileFalse(new InstantCommand(() -> fourBar.setArmVoltage(1, 0)));
-//    driverController.rightBumper()
-//            .whileTrue(new RepeatCommand(new InstantCommand(endEffector::intake)))
-//            .whileFalse(new InstantCommand(endEffector::idle));
-//    driverController.leftBumper()
-//            .whileTrue(new RepeatCommand(new InstantCommand(superstructure::exhaust)))
-//            .whileFalse(new InstantCommand(superstructure::home));
-//    driverController.rightBumper().whileTrue(new InstantCommand(endEffector::exhaust)).whileFalse(new InstantCommand(endEffector::idle));
+    driverController.a().whileTrue(new InstantCommand(superstructure::collectGround)).whileFalse(new InstantCommand(superstructure::home));
+
+    operatorController.a()
+            .whileTrue(new InstantCommand(Superstructure.getInstance()::collectGround))
+            .whileFalse(new InstantCommand(Superstructure.getInstance()::home));
+    operatorController.rightTrigger()
+            .whileTrue(new InstantCommand(Superstructure.getInstance()::exhaust))
+            .whileFalse(new InstantCommand(Superstructure.getInstance()::home));
+    operatorController.leftTrigger()
+            .whileTrue(new InstantCommand(Superstructure.getInstance()::manual))
+            .whileFalse(new InstantCommand(Superstructure.getInstance()::home));
 
     operatorController.povUp().whileTrue(objectiveTracker.shiftNodeCommand(Direction.UP));
     operatorController.povRight().whileTrue(objectiveTracker.shiftNodeCommand(Direction.RIGHT));
@@ -121,17 +91,17 @@ public class RobotContainer {
      */
     driverController.x()
             .whileTrue(new InstantCommand(swerve::driveX));
-    driverController.a().whileTrue(new SwerveAutoBalance(true));
-    driverController.b().whileTrue(new SwerveAutoBalance(false));
-//    driverController.y()
-//            .whileTrue(new SwerveAutoScore())
-//            .whileFalse(new SuperstructureHome());
-//    driverController.b()
-//            .whileTrue(new SwerveAutoDoubleSubstationHigh())
-//            .whileFalse(new SuperstructureHome());
-//    driverController.a()
-//            .whileTrue(new SwerveAutoDoubleSubstationLow())
-//            .whileFalse(new SuperstructureHome());
+//    driverController.a().whileTrue(new SwerveAutoBalance(true));
+//    driverController.b().whileTrue(new SwerveAutoBalance(false));
+    driverController.y()
+            .whileTrue(new SwerveAutoScore())
+            .whileFalse(new SuperstructureHome());
+    driverController.b()
+            .whileTrue(new SwerveAutoDoubleSubstationRight())
+            .whileFalse(new SuperstructureHome());
+    driverController.a()
+            .whileTrue(new SwerveAutoDoubleSubstationLeft())
+            .whileFalse(new SuperstructureHome());
     driverController.rightBumper()
             .whileTrue(new InstantCommand(swerve::zeroGyro));
 
@@ -156,24 +126,6 @@ public class RobotContainer {
     operatorController.y()
             .whileTrue(new InstantCommand(Superstructure.getInstance()::setDemandLEDs));
 
-//    operatorController.rightTrigger()
-//            .whileTrue(new RepeatCommand(new InstantCommand(Superstructure.getInstance()::exhaust)))
-//            .whileFalse(new InstantCommand(Superstructure.getInstance()::idle));
-//    operatorController.leftTrigger()
-//            .whileTrue(new RepeatCommand(new InstantCommand(Superstructure.getInstance()::manual)))
-//            .whileFalse(new RepeatCommand(new InstantCommand(Superstructure.getInstance()::idle)));
-//    operatorController.a()
-//            .whileTrue(new RepeatCommand(new InstantCommand(Superstructure.getInstance()::collectGround)))
-//            .whileFalse(new RepeatCommand(new InstantCommand(Superstructure.getInstance()::home)));
-//    operatorController.b()
-//            .whileTrue(new RepeatCommand(new InstantCommand(Superstructure.getInstance()::collectMid)))
-//            .whileFalse(new RepeatCommand(new InstantCommand(Superstructure.getInstance()::home)));
-//    operatorController.x()
-//            .whileTrue(new RepeatCommand(new InstantCommand(Superstructure.getInstance()::objective)))
-//            .whileFalse(new RepeatCommand(new InstantCommand(Superstructure.getInstance()::home)));
-//    operatorController.y()
-//            .whileTrue(new RepeatCommand(new InstantCommand(Superstructure.getInstance()::setDemandLEDs)));
-
     operatorController.povUp()
             .whileTrue(objectiveTracker.shiftNodeCommand(Direction.UP));
     operatorController.povRight()
@@ -182,10 +134,10 @@ public class RobotContainer {
             .whileTrue(objectiveTracker.shiftNodeCommand(Direction.DOWN));
     operatorController.povLeft()
             .whileTrue(objectiveTracker.shiftNodeCommand(Direction.LEFT));
-//    operatorController.rightBumper().
-//            whileTrue(new InstantCommand(objectiveTracker::toggleFilled));
-//    operatorController.leftBumper().
-//            whileTrue(new InstantCommand(objectiveTracker::toggleActive));
+    operatorController.rightBumper().
+            whileTrue(new InstantCommand(objectiveTracker::toggleFilled));
+    operatorController.leftBumper().
+            whileTrue(new InstantCommand(objectiveTracker::toggleActive));
   }
 
   public void autoConfig() {
@@ -206,74 +158,79 @@ public class RobotContainer {
     autoChooser.setDefaultOption("No auto", wait);
     canBalanceMap.put(wait, false);
     needPositionMap.put(wait, true);
+    canForwardBalance.put(wait, true);
 
     Command balance = new AutoSwerveBalance();
     autoChooser.addOption("Place and Balance Climb", balance);
     canBalanceMap.put(balance, true);
     needPositionMap.put(balance, true);
+    canForwardBalance.put(balance, false);
 
-//    Command threeTop = new AutoSwerveThree(true);
-//    autoChooser.addOption("3 Thing Top", threeTop);
-//    canBalanceMap.put(threeTop, true);
-//    needPositionMap.put(threeTop, false);
-//
-//    Command threeBottom = new AutoSwerveThree(false);
-//    autoChooser.addOption("3 Thing Bottom", threeBottom);
-//    canBalanceMap.put(threeBottom, true);
-//    needPositionMap.put(threeBottom, false);
-//
-//    Command twoTop = new AutoSwerveTwo(true);
-//    autoChooser.addOption("2 Thing Top", twoTop);
-//    canBalanceMap.put(twoTop, false);
-//    needPositionMap.put(twoTop, false);
-//
-//    Command twoBottom = new AutoSwerveTwo(false);
-//    autoChooser.addOption("2 Thing Bottom", twoBottom);
-//    canBalanceMap.put(twoBottom, false);
-//    needPositionMap.put(twoBottom, false);
+    Command threeTopBal = new AutoSwerveThreeBalance(true);
+    autoChooser.addOption("3 Thing Top + Balance", threeTopBal);
+    canBalanceMap.put(threeTopBal, true);
+    needPositionMap.put(threeTopBal, false);
+    canForwardBalance.put(threeTopBal, true);
 
-//    Command test = new AutoSwervePath(PathPlanner.loadPath("Top 3 Item", AutoConstants.SLOW_SPEED), new Objective(0, NodeLevel.HIGH));
-//    autoChooser.addOption("test", test);
+    Command threeBottom = new AutoSwerveThree(false);
+    autoChooser.addOption("3 Thing Bottom", threeBottom);
+    canBalanceMap.put(threeBottom, false);
+    needPositionMap.put(threeBottom, false);
+    canForwardBalance.put(threeBottom, false);
 
-    Command coneTop = new AutoSwervePath(Paths.TOP_CONE, new Objective(8, NodeLevel.HIGH));
-    autoChooser.addOption("1 Cone Top", coneTop);
-    canBalanceMap.put(coneTop, true);
-    needPositionMap.put(coneTop, false);
+    Command twoTop = new AutoSwerveTwo(true);
+    autoChooser.addOption("2 Thing Top", twoTop);
+    canBalanceMap.put(twoTop, false);
+    needPositionMap.put(twoTop, false);
+    canForwardBalance.put(twoTop, false);
 
-//    Command coneTopPlusOne = new AutoSwervePath(Paths.TOP_CONE_PLUS_ONE, new Objective(8, NodeLevel.HIGH));
-//    autoChooser.addOption("1 Cone Top + 1", coneTopPlusOne);
-//    canBalanceMap.put(coneTopPlusOne, true);
-//    needPositionMap.put(coneTopPlusOne, false);
+    Command twoBottom = new AutoSwerveTwo(false);
+    autoChooser.addOption("2 Thing Bottom", twoBottom);
+    canBalanceMap.put(twoBottom, false);
+    needPositionMap.put(twoBottom, false);
+    canForwardBalance.put(twoBottom, false);
 
-    Command cubeTop = new AutoSwervePath(Paths.TOP_CUBE, new Objective(7, NodeLevel.HIGH));
-    autoChooser.addOption("1 Cube Top", cubeTop);
-    canBalanceMap.put(cubeTop, true);
-    needPositionMap.put(cubeTop, false);
+//    Command coneTop = new AutoSwervePath(Paths.TOP_CONE, new Objective(8, NodeLevel.HIGH));
+//    autoChooser.addOption("1 Cone Top", coneTop);
+//    canBalanceMap.put(coneTop, true);
+//    needPositionMap.put(coneTop, false);
+//    canForwardBalance.put(coneTop, false);
 
-//    Command cubeTopPlusOne = new AutoSwervePath(Paths.TOP_CUBE_PLUS_ONE, new Objective(7, NodeLevel.HIGH));
-//    autoChooser.addOption("1 Cube Top + 1", cubeTopPlusOne);
-//    canBalanceMap.put(cubeTopPlusOne, true);
-//    needPositionMap.put(cubeTopPlusOne, false);
+    Command coneTopPlusOne = new AutoSwervePath(Paths.TOP_CONE_PLUS_ONE, new Objective(8, NodeLevel.HIGH));
+    autoChooser.addOption("1 Cone Top + 1", coneTopPlusOne);
+    canBalanceMap.put(coneTopPlusOne, true);
+    needPositionMap.put(coneTopPlusOne, false);
+    canForwardBalance.put(coneTopPlusOne, false);
 
-    Command coneBottom = new AutoSwervePath(Paths.BOTTOM_CONE, new Objective(0, NodeLevel.HIGH));
-    autoChooser.addOption("1 Cone Bottom", coneBottom);
-    canBalanceMap.put(coneBottom, true);
-    needPositionMap.put(coneBottom, false);
+//    Command cubeTop = new AutoSwervePath(Paths.TOP_CUBE, new Objective(7, NodeLevel.HIGH));
+//    autoChooser.addOption("1 Cube Top", cubeTop);
+//    canBalanceMap.put(cubeTop, true);
+//    needPositionMap.put(cubeTop, false);
+//    canForwardBalance.put(cubeTop, false);
 
-//    Command coneBottomPlusOne = new AutoSwervePath(Paths.BOTTOM_CONE_PLUS_ONE, new Objective(1, NodeLevel.HIGH));
-//    autoChooser.addOption("1 Cone Bottom + 1", coneBottomPlusOne);
-//    canBalanceMap.put(coneBottomPlusOne, true);
-//    needPositionMap.put(coneBottomPlusOne, false);
+    Command cubeTopPlusOne = new AutoSwervePath(Paths.TOP_CUBE_PLUS_ONE, new Objective(7, NodeLevel.HIGH));
+    autoChooser.addOption("1 Cube Top + 1", cubeTopPlusOne);
+    canBalanceMap.put(cubeTopPlusOne, true);
+    needPositionMap.put(cubeTopPlusOne, false);
+    canForwardBalance.put(cubeTopPlusOne, false);
 
-    Command cubeBottom = new AutoSwervePath(Paths.BOTTOM_CUBE, new Objective(1, NodeLevel.HIGH));
-    autoChooser.addOption("1 Cube Bottom", cubeBottom);
-    canBalanceMap.put(cubeBottom, true);
-    needPositionMap.put(cubeBottom, false);
+    Command coneBottomPlusOne = new AutoSwervePath(Paths.BOTTOM_CONE_PLUS_ONE, new Objective(0, NodeLevel.HIGH));
+    autoChooser.addOption("1 Cone Bottom + 1", coneBottomPlusOne);
+    canBalanceMap.put(coneBottomPlusOne, true);
+    needPositionMap.put(coneBottomPlusOne, false);
+    canForwardBalance.put(coneBottomPlusOne, false);
 
-//    Command cubeBottomPlusOne = new AutoSwervePath(Paths.BOTTOM_CUBE_PLUS_ONE, new Objective(1, NodeLevel.HIGH));
-//    autoChooser.addOption("1 Cube Bottom + 1", cubeBottomPlusOne);
-//    canBalanceMap.put(cubeBottomPlusOne, true);
-//    needPositionMap.put(cubeBottomPlusOne, false);
+//    Command cubeBottom = new AutoSwervePath(Paths.BOTTOM_CUBE, new Objective(1, NodeLevel.HIGH));
+//    autoChooser.addOption("1 Cube Bottom", cubeBottom);
+//    canBalanceMap.put(cubeBottom, true);
+//    needPositionMap.put(cubeBottom, false);
+//    canForwardBalance.put(cubeBottom, false);
+
+    Command cubeBottomPlusOne = new AutoSwervePath(Paths.BOTTOM_CUBE_PLUS_ONE, new Objective(1, NodeLevel.HIGH));
+    autoChooser.addOption("1 Cube Bottom + 1", cubeBottomPlusOne);
+    canBalanceMap.put(cubeBottomPlusOne, true);
+    needPositionMap.put(cubeBottomPlusOne, false);
+    canForwardBalance.put(cubeBottomPlusOne, false);
 
     SmartDashboard.putData("Auto Command", autoChooser);
     SmartDashboard.putData("Should Balance", balanceChooser);
@@ -314,6 +271,7 @@ public class RobotContainer {
     else {
       Paths.EVENT_MAP = Paths.EVENT_MAP_NO_BALANCE;
     }
+    balanceForward = canForwardBalance.get(autoChooser.getSelected());
     System.out.println(autoChooser.getSelected());
     System.out.println(positionChooser.getSelected());
     System.out.println(balanceChooser.getSelected());
