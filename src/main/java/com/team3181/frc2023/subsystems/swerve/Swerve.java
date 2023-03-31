@@ -5,14 +5,14 @@ import com.team3181.frc2023.Constants.SwerveConstants;
 import com.team3181.frc2023.Robot;
 import com.team3181.lib.commands.DisabledInstantCommand;
 import com.team3181.lib.math.BetterMath;
-import com.team3181.lib.math.GeomUtil;
 import com.team3181.lib.swerve.BetterSwerveKinematics;
 import com.team3181.lib.swerve.BetterSwerveModuleState;
 import com.team3181.lib.swerve.SwerveOptimizer;
 import com.team3181.lib.util.Alert;
 import com.team3181.lib.util.Alert.AlertType;
+import com.team3181.lib.util.PoseEstimator;
+import com.team3181.lib.util.PoseEstimator.TimestampedVisionUpdate;
 import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Twist2d;
@@ -20,8 +20,11 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
+
+import java.util.List;
 
 public class Swerve extends SubsystemBase {
     /*
@@ -38,8 +41,8 @@ public class Swerve extends SubsystemBase {
     private final SwerveModulePosition[] modulePositions = new SwerveModulePosition[4];
     private final BetterSwerveModuleState[] lastModuleStates = new BetterSwerveModuleState[4];
     private ChassisSpeeds actualRobotRelativeChassisSpeeds = new ChassisSpeeds();
-    private final SwerveDrivePoseEstimator poseEstimator;
-//    private final PoseEstimator poseEstimator;
+//    private final SwerveDrivePoseEstimator poseEstimator;
+    private final PoseEstimator poseEstimator;
 
     private Rotation2d lastRotation = new Rotation2d();
     private boolean isOpenLoop = false;
@@ -61,9 +64,9 @@ public class Swerve extends SubsystemBase {
             lastModuleStates[i] = new BetterSwerveModuleState(0, Rotation2d.fromRadians(moduleInputs[i].steerOffsetAbsolutePositionRad), 0);
         }
 
-        poseEstimator = new SwerveDrivePoseEstimator(SwerveConstants.DRIVE_KINEMATICS, getRobotRelativeAngle(), modulePositions, new Pose2d(), VecBuilder.fill(0.01, 0.01, 0.01), VecBuilder.fill(0.3, 0.3, 0.3));
+//        poseEstimator = new SwerveDrivePoseEstimator(SwerveConstants.DRIVE_KINEMATICS, getRobotRelativeAngle(), modulePositions, new Pose2d(), VecBuilder.fill(0.01, 0.01, 0.01), VecBuilder.fill(0.3, 0.3, 0.3));
 //        poseEstimator = new SwerveDrivePoseEstimator(SwerveConstants.DRIVE_KINEMATICS, getRobotRelativeAngle(), modulePositions, new Pose2d(), VecBuilder.fill(0.1, 0.1, 0.1), VecBuilder.fill(0.9, 0.9, 0.9));
-//        poseEstimator = new PoseEstimator(VecBuilder.fill(0.05, 0.05, 0.001));
+        poseEstimator = new PoseEstimator(VecBuilder.fill(0.003, 0.003, 0.0002));
 
         Robot.pitTab.add("Swerve Straight Wheels", new DisabledInstantCommand(this::forward));
         Robot.pitTab.add("Swerve Coast", new DisabledInstantCommand(this::setCoastMode));
@@ -94,7 +97,7 @@ public class Swerve extends SubsystemBase {
             twist = new Twist2d(twist.dx, twist.dy, gyroYaw.minus(lastRotation).getRadians());
         }
         lastRotation = getRobotRelativeAngle();
-//        poseEstimator.addDriveData(Timer.getFPGATimestamp(), twist);
+        poseEstimator.addDriveData(Timer.getFPGATimestamp(), twist);
 
         Logger.getInstance().processInputs("FL Swerve Module", moduleInputs[0]);
         Logger.getInstance().processInputs("FR Swerve Module", moduleInputs[1]);
@@ -105,8 +108,8 @@ public class Swerve extends SubsystemBase {
         Logger.getInstance().processInputs("Gyro", gyroInputs);
 
 //        old WPILib pose estimator
-        poseEstimator.update(getRobotRelativeAngle(), modulePositions);
-        lastRotation = getRobotRelativeAngle();
+//        poseEstimator.update(getRobotRelativeAngle(), modulePositions);
+//        lastRotation = getRobotRelativeAngle();
 
         Logger.getInstance().recordOutput("Swerve/Pose", getPose());
         Logger.getInstance().recordOutput("Swerve/Wanted States", wantedModuleStates);
@@ -186,33 +189,33 @@ public class Swerve extends SubsystemBase {
     }
 
     public void resetPose(Pose2d pose) {
-//        poseEstimator.resetPose(pose);
-        poseEstimator.resetPosition(getRobotRelativeAngle(), modulePositions, pose);
+        poseEstimator.resetPose(pose);
+//        poseEstimator.resetPosition(getRobotRelativeAngle(), modulePositions, pose);
     }
 
     public void zeroGyro() {
         gyroIO.zeroGyro();
         Pose2d pose = new Pose2d(getPose().getX(), getPose().getY(), new Rotation2d());
-//        poseEstimator.resetPose(pose);
-        poseEstimator.resetPosition(getRobotRelativeAngle(), modulePositions, pose);
+        poseEstimator.resetPose(pose);
+//        poseEstimator.resetPosition(getRobotRelativeAngle(), modulePositions, pose);
     }
 
-    public void addVisionData(Pose2d pose, double time, boolean stable) {
-        if (GeomUtil.distance(pose, getPose()) < 0.5 || stable) {
-            // remove rotation because its being funky
-//            Pose2d noRot = new Pose2d(pose.getTranslation(), getPose().getRotation());
-            Logger.getInstance().recordOutput("Swerve/Vision Updates", pose);
-            poseEstimator.addVisionMeasurement(pose, time);
-        }
-    }
-
-//    public void addVisionData(List<TimestampedVisionUpdate> visionData) {
-//        poseEstimator.addVisionData(visionData);
+//    public void addVisionData(Pose2d pose, double time, boolean stable) {
+//        if (GeomUtil.distance(pose, getPose()) < 0.5 || stable) {
+//            // remove rotation because its being funky
+////            Pose2d noRot = new Pose2d(pose.getTranslation(), getPose().getRotation());
+//            Logger.getInstance().recordOutput("Swerve/Vision Updates", pose);
+//            poseEstimator.addVisionMeasurement(pose, time);
+//        }
 //    }
+//
+    public void addVisionData(List<TimestampedVisionUpdate> visionData) {
+        poseEstimator.addVisionData(visionData);
+    }
 
     public Pose2d getPose() {
-//        return poseEstimator.getLatestPose();
-        return poseEstimator.getEstimatedPosition();
+        return poseEstimator.getLatestPose();
+//        return poseEstimator.getEstimatedPosition();
     }
 
     public ChassisSpeeds getChassisSpeeds() {

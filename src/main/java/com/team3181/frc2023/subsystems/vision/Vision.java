@@ -3,23 +3,20 @@ package com.team3181.frc2023.subsystems.vision;
 import com.team3181.frc2023.Constants.RobotConstants;
 import com.team3181.frc2023.Constants.VisionConstants;
 import com.team3181.frc2023.FieldConstants;
-import com.team3181.frc2023.subsystems.swerve.Swerve;
 import com.team3181.frc2023.subsystems.vision.VisionIO.CameraMode;
 import com.team3181.frc2023.subsystems.vision.VisionIO.Pipelines;
 import com.team3181.lib.math.GeomUtil;
 import com.team3181.lib.util.Alert;
 import com.team3181.lib.util.Alert.AlertType;
 import com.team3181.lib.util.PoseEstimator.TimestampedVisionUpdate;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class Vision extends SubsystemBase {
@@ -91,61 +88,17 @@ public class Vision extends SubsystemBase {
         Logger.getInstance().recordOutput("Vision/Camera", camera.toString());
         Logger.getInstance().recordOutput("Vision/Enabled", enabled);
 
-//        List<TimestampedVisionUpdate> visionUpdates = new ArrayList<>();
-//
-//        List<Pose2d> allRobotPoses = new ArrayList<>();
-////        Pose estimation
-//        for (int i = 0; i < io.length; i++) {
-////            exit if data is bad
-//            if (Arrays.equals(inputs[i].botXYZ, new double[]{0, 0, 0})) {
-//                continue;
-//            }
-//            Pose3d robotPose3d = new Pose3d(inputs[i].botXYZ[0], inputs[i].botXYZ[1], inputs[i].botXYZ[2], new Rotation3d(inputs[i].botRPY[0], inputs[i].botRPY[1], inputs[i].botRPY[2]));
-//
-////            exit if off the field
-//            if (robotPose3d.getX() < -VisionConstants.FIELD_BORDER_MARGIN
-//                    || robotPose3d.getX() > FieldConstants.fieldLength + VisionConstants.FIELD_BORDER_MARGIN
-//                    || robotPose3d.getY() < -VisionConstants.FIELD_BORDER_MARGIN
-//                    || robotPose3d.getY() > FieldConstants.fieldWidth + VisionConstants.FIELD_BORDER_MARGIN
-//                    || robotPose3d.getZ() < -VisionConstants.Z_MARGIN
-//                    || robotPose3d.getZ() > VisionConstants.Z_MARGIN) {
-//                continue;
-//            }
-//
-//            Pose2d robotPose = robotPose3d.toPose2d();
-//
-//            // Get tag poses and update last detection times
-//            List<Pose3d> tagPoses = new ArrayList<>();
-//            for (int z = 0; z < inputs[i].tagIDs.length; z++) {
-//                int tagId = (int) inputs[i].tagIDs[z];
-//                lastTagDetectionTimes.put(tagId, Timer.getFPGATimestamp());
-//                Optional<Pose3d> tagPose = FieldConstants.aprilTags.getTagPose((int) inputs[i].tagIDs[z]);
-//                tagPose.ifPresent(tagPoses::add);
-//            }
-//
-//            // Calculate average distance to tag
-//            double totalDistance = 0.0;
-//            for (Pose3d tagPose : tagPoses) {
-//                totalDistance += tagPose.getTranslation().getDistance(robotPose3d.getTranslation());
-//            }
-//            double avgDistance = totalDistance / tagPoses.size();
-//
-//            // Add to vision updates
-//            double xyStdDev = VisionConstants.XY_STD_DEV_COEF * Math.pow(avgDistance, 2.0) / tagPoses.size();
-//            double thetaStdDev = VisionConstants.THETA_STD_DEV_COEF * Math.pow(avgDistance, 2.0) / tagPoses.size();
-//            Logger.getInstance().recordOutput("XYstd", xyStdDev);
-//            Logger.getInstance().recordOutput("thetaStd", thetaStdDev);
-//            visionUpdates.add(
-//                    new TimestampedVisionUpdate(
-//                            inputs[i].captureTimestamp, robotPose, VecBuilder.fill(xyStdDev, xyStdDev, thetaStdDev)));
-//
-//            allRobotPoses.add(robotPose);
-//            visionConsumer.accept(visionUpdates);
-//        }
-//        Logger.getInstance().recordOutput("Vision/Poses", allRobotPoses.toArray(new Pose2d[0]));
-        if (getPose() != null) {
-            if ((!DriverStation.isAutonomous() && (!Objects.equals(getPose(), new Pose2d()) && inputsLimelight.botXYZ[0] < 0.075)) || enabled) {
-            Pose3d robotPose3d = new Pose3d(inputsLimelight.botXYZ[0], inputsLimelight.botXYZ[1], inputsLimelight.botXYZ[2], new Rotation3d(inputsLimelight.botRPY[0], inputsLimelight.botRPY[1], inputsLimelight.botRPY[2]));
+        List<TimestampedVisionUpdate> visionUpdates = new ArrayList<>();
+
+        List<Pose2d> allRobotPoses = new ArrayList<>();
+//        Pose estimation
+        for (int i = 0; i < io.length; i++) {
+//            exit if data is bad
+            if (Arrays.equals(inputs[i].botXYZ, new double[]{0, 0, 0}) || inputs[i].botXYZ.length == 0 || !inputs[i].connected) {
+                continue;
+            }
+            Pose3d robotPose3d = new Pose3d(inputs[i].botXYZ[0], inputs[i].botXYZ[1], inputs[i].botXYZ[2], new Rotation3d(inputs[i].botRPY[0], inputs[i].botRPY[1], inputs[i].botRPY[2]));
+
 //            exit if off the field
             if (robotPose3d.getX() < -VisionConstants.FIELD_BORDER_MARGIN
                     || robotPose3d.getX() > FieldConstants.fieldLength + VisionConstants.FIELD_BORDER_MARGIN
@@ -153,14 +106,69 @@ public class Vision extends SubsystemBase {
                     || robotPose3d.getY() > FieldConstants.fieldWidth + VisionConstants.FIELD_BORDER_MARGIN
                     || robotPose3d.getZ() < -VisionConstants.Z_MARGIN
                     || robotPose3d.getZ() > VisionConstants.Z_MARGIN) {
+                continue;
             }
-            else {
-                Swerve.getInstance().addVisionData(getPose(), getTime(), checkStable());
+
+            Pose2d robotPose = robotPose3d.toPose2d();
+            Logger.getInstance().recordOutput("Vision/Pose" + i, robotPose);
+
+            // Get tag poses and update last detection times
+            List<Pose3d> tagPoses = new ArrayList<>();
+            for (int z = 0; z < inputs[i].tagIDs.length; z++) {
+                int tagId = (int) inputs[i].tagIDs[z];
+                lastTagDetectionTimes.put(tagId, Timer.getFPGATimestamp());
+                Optional<Pose3d> tagPose = FieldConstants.aprilTags.getTagPose((int) inputs[i].tagIDs[z]);
+                tagPose.ifPresent(tagPoses::add);
             }
+
+            // Calculate average distance to tag
+            double totalDistance = 0.0;
+            Pose2d[] tagPoses2d = new Pose2d[tagPoses.size()];
+            int num = 0;
+            for (Pose3d tagPose : tagPoses) {
+                tagPose = FieldConstants.allianceFlipper(tagPose, DriverStation.getAlliance());
+                totalDistance += tagPose.getTranslation().getDistance(robotPose3d.getTranslation());
+                tagPoses2d[num] = tagPose.toPose2d();
+                num++;
             }
-            Logger.getInstance().recordOutput("Vision/Pose", getPose());
+            double avgDistance = totalDistance / tagPoses.size();
+
+            // Add to vision updates
+            double xyStdDev = VisionConstants.XY_STD_DEV_COEF * Math.pow(avgDistance, 2.0) / tagPoses.size();
+            double thetaStdDev = VisionConstants.THETA_STD_DEV_COEF * Math.pow(avgDistance, 2.0) / tagPoses.size();
+            Logger.getInstance().recordOutput("Vision/XYstd", xyStdDev);
+            Logger.getInstance().recordOutput("Vision/ThetaStd", thetaStdDev);
+            visionUpdates.add(
+                    new TimestampedVisionUpdate(
+                            inputs[i].captureTimestamp, robotPose, VecBuilder.fill(xyStdDev, xyStdDev, thetaStdDev)));
+
+
+            allRobotPoses.add(robotPose);
+            visionConsumer.accept(visionUpdates);
+            Logger.getInstance()
+                    .recordOutput(
+                            "Vision/TagPoses" + i,
+                            tagPoses2d);
         }
-        Logger.getInstance().recordOutput("Vision/Stable", checkStable());
+        Logger.getInstance().recordOutput("Vision/Poses", allRobotPoses.toArray(new Pose2d[0]));
+//        if (getPose() != null) {
+//            if ((!DriverStation.isAutonomous() && (!Objects.equals(getPose(), new Pose2d()) && inputsLimelight.botXYZ[0] < 0.075)) || enabled) {
+//            Pose3d robotPose3d = new Pose3d(inputsLimelight.botXYZ[0], inputsLimelight.botXYZ[1], inputsLimelight.botXYZ[2], new Rotation3d(inputsLimelight.botRPY[0], inputsLimelight.botRPY[1], inputsLimelight.botRPY[2]));
+////            exit if off the field
+//            if (robotPose3d.getX() < -VisionConstants.FIELD_BORDER_MARGIN
+//                    || robotPose3d.getX() > FieldConstants.fieldLength + VisionConstants.FIELD_BORDER_MARGIN
+//                    || robotPose3d.getY() < -VisionConstants.FIELD_BORDER_MARGIN
+//                    || robotPose3d.getY() > FieldConstants.fieldWidth + VisionConstants.FIELD_BORDER_MARGIN
+//                    || robotPose3d.getZ() < -VisionConstants.Z_MARGIN
+//                    || robotPose3d.getZ() > VisionConstants.Z_MARGIN) {
+//            }
+//            else {
+//                Swerve.getInstance().addVisionData(getPose(), getTime(), checkStable());
+//            }
+//            }
+//            Logger.getInstance().recordOutput("Vision/Pose", getPose());
+//        }
+//        Logger.getInstance().recordOutput("Vision/Stable", checkStable());
     }
 
 //    https://github.com/Mechanical-Advantage/RobotCode2023/blob/main/src/main/java/org/littletonrobotics/frc2023/subsystems/apriltagvision/AprilTagVision.java

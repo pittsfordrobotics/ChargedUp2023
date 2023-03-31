@@ -72,7 +72,6 @@ public class Superstructure extends SubsystemBase {
         EndEffector endEffector = EndEffector.getInstance();
         StructureState state;
 
-
         if (!disabled) {
             switch (wantedState) {
                 case OBJECTIVE:
@@ -85,18 +84,12 @@ public class Superstructure extends SubsystemBase {
                     break;
                 case INTAKE_GROUND:
                     state = StructureState.INTAKE_GROUND;
-//                if (endEffector.hasPiece()) {
-//                    state = StructureState.HOME;
-//                }
                     break;
                 case INTAKE_GROUND_FAR:
                     state = StructureState.INTAKE_GROUND_FAR;
                     break;
                 case INTAKE_MID:
                     state = StructureState.INTAKE_MID;
-//                if (endEffector.hasPiece()) {
-//                    state = StructureState.HOME;
-//                }
                     break;
                 case HOME:
                     // this checks for systemState, so the wantedState will have already been HOME
@@ -345,6 +338,10 @@ public class Superstructure extends SubsystemBase {
 
     public void objective() {
         wantedState = StructureState.OBJECTIVE;
+    }
+
+    public void zero() {
+        wantedState = StructureState.ZEROING;
     }
 
     public void objective(Objective objective) {

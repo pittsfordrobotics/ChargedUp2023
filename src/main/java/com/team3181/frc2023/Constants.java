@@ -217,13 +217,7 @@ public final class Constants {
         public static final double MODULE_STEER_P = 2;
         public static final double MODULE_STEER_I = 0;
         public static final double MODULE_STEER_D = 0;
-        // irl
-        //
-        //
-        // sim
-        // -0.65 for open loop
-        // -0.15 closed loop
-        public static final double MODULE_STEER_FF_OL = Robot.isReal() ? 0.6 : 0.5;
+        public static final double MODULE_STEER_FF_OL = Robot.isReal() ? 0.6 : 0.27;
         public static final double MODULE_STEER_FF_CL = Robot.isReal() ? 0.8 : 0.33;
 
         public static final double AUTO_ROTATE_P = 5;

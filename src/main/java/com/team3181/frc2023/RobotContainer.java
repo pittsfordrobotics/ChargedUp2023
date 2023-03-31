@@ -46,9 +46,9 @@ public class RobotContainer {
   private SendableChooser<Command> autoChooser = new SendableChooser<>();
   private SendableChooser<Integer> positionChooser = new SendableChooser<>();
   private SendableChooser<Boolean> balanceChooser = new SendableChooser<>();
-  private HashMap<Command, Boolean> canBalanceMap = new HashMap<>();
-  private HashMap<Command, Boolean> needPositionMap = new HashMap<>();
-  private HashMap<Command, Boolean> canForwardBalance = new HashMap<>();
+  private final HashMap<Command, Boolean> canBalanceMap = new HashMap<>();
+  private final HashMap<Command, Boolean> needPositionMap = new HashMap<>();
+  private final HashMap<Command, Boolean> canForwardBalance = new HashMap<>();
 
   public static boolean balanceForward = false;
 
@@ -57,7 +57,7 @@ public class RobotContainer {
     competitionButtons();
 //    testButtons();
 
-//    vision.setDataInterface(swerve::addVisionData);
+    vision.setDataInterface(swerve::addVisionData);
 
     if (!RobotConstants.IS_TANK) swerve.setDefaultCommand(new SwerveDriveFieldXbox());
     if (RobotConstants.IS_TANK) Tank.getInstance().setDefaultCommand(new TankXbox());
@@ -104,6 +104,8 @@ public class RobotContainer {
             .whileFalse(new SuperstructureHome());
     driverController.rightBumper()
             .whileTrue(new InstantCommand(swerve::zeroGyro));
+//    driverController.leftBumper()
+//            .whileTrue(new InstantCommand(superstructure::zero));
 
     /*
      OPERATOR
@@ -180,13 +182,13 @@ public class RobotContainer {
 
     Command twoTop = new AutoSwerveTwo(true);
     autoChooser.addOption("2 Thing Top", twoTop);
-    canBalanceMap.put(twoTop, false);
+    canBalanceMap.put(twoTop, true);
     needPositionMap.put(twoTop, false);
     canForwardBalance.put(twoTop, false);
 
     Command twoBottom = new AutoSwerveTwo(false);
     autoChooser.addOption("2 Thing Bottom", twoBottom);
-    canBalanceMap.put(twoBottom, false);
+    canBalanceMap.put(twoBottom, true);
     needPositionMap.put(twoBottom, false);
     canForwardBalance.put(twoBottom, false);
 

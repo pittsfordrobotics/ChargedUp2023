@@ -9,7 +9,6 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Contains various field dimensions and useful reference points. Dimensions are in meters, and sets
@@ -305,6 +304,27 @@ public final class FieldConstants {
             }
         }
     }
+
+    public static Pose2d allianceFlipper(Pose2d pose, Alliance alliance) {
+        if (alliance == Alliance.Blue) {
+            return pose;
+        }
+        Translation2d transformedTranslation =
+                new Translation2d(pose.getTranslation().getX(), FieldConstants.fieldWidth - pose.getTranslation().getY());
+        Rotation2d transformedHolonomicRotation = pose.getRotation().times(-1);
+        return new Pose2d(transformedTranslation, transformedHolonomicRotation);
+    }
+
+    public static Pose3d allianceFlipper(Pose3d pose, Alliance alliance) {
+        if (alliance == Alliance.Blue) {
+            return pose;
+        }
+        Translation3d transformedTranslation =
+                new Translation3d(pose.getTranslation().getX(), FieldConstants.fieldWidth - pose.getTranslation().getY(), pose.getTranslation().getZ());
+        Rotation3d transformedHolonomicRotation = pose.getRotation().times(-1);
+        return new Pose3d(transformedTranslation, transformedHolonomicRotation);
+    }
+
 
     // AprilTag constants
     public static final double aprilTagWidth = Units.inchesToMeters(6.0);

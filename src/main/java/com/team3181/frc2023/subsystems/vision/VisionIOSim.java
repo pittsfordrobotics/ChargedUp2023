@@ -9,5 +9,8 @@ public class VisionIOSim implements VisionIO {
         inputs.connected = true;
         inputs.vAngle = 0;
         inputs.hAngle = 0;
+        inputs.tagIDs = new double[]{1, 2, 5, 7};
+        inputs.botXYZ = new double[]{4, 4, 0};
+        inputs.botRPY = new double[]{0, 0, 1};
     }
 }
