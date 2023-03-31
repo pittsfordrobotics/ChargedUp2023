@@ -6,9 +6,7 @@ import com.team3181.frc2023.Constants.AutoConstants;
 import com.team3181.frc2023.commands.*;
 import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker.NodeLevel;
 import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker.Objective;
-import com.team3181.frc2023.subsystems.vision.Vision;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 import java.util.HashMap;
@@ -63,12 +61,6 @@ public class Paths {
 
         EVENT_MAP_BALANCE.put("exhaust", new SuperstructureExhaust());
         EVENT_MAP_NO_BALANCE.put("exhaust", new SuperstructureExhaust());
-
-        EVENT_MAP_BALANCE.put("visionOn", new InstantCommand(() -> Vision.getInstance().setEnabled(true)));
-        EVENT_MAP_NO_BALANCE.put("visionOn", new InstantCommand(() -> Vision.getInstance().setEnabled(true)));
-
-        EVENT_MAP_BALANCE.put("visionOff", new InstantCommand(() -> Vision.getInstance().setEnabled(false)));
-        EVENT_MAP_NO_BALANCE.put("visionOff", new InstantCommand(() -> Vision.getInstance().setEnabled(false)));
 
         EVENT_MAP_BALANCE.put("home", new SuperstructureHome());
         EVENT_MAP_NO_BALANCE.put("home", new SuperstructureHome());

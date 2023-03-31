@@ -16,7 +16,7 @@ public class SwerveResetPoseAprilTag extends CommandBase {
 
     @Override
     public void execute() {
-        Pose2d visionPose = vision.getPose();
+        Pose2d visionPose = swerve.getPose();
         if (visionPose != null) {
             swerve.resetPose(visionPose);
         }

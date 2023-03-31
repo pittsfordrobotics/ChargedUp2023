@@ -5,7 +5,6 @@ import com.team3181.lib.util.Alert.AlertType;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFieldLayout.OriginPosition;
 import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -18,8 +17,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class VisionIOPhotonVision implements VisionIO {
-    public Pose3d lastPose = new Pose3d();
-
     private AprilTagFieldLayout aprilTagFieldLayout;
     private Alliance lastAlliance = Alliance.Invalid;
 

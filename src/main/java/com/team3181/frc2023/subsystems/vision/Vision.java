@@ -5,12 +5,14 @@ import com.team3181.frc2023.Constants.VisionConstants;
 import com.team3181.frc2023.FieldConstants;
 import com.team3181.frc2023.subsystems.vision.VisionIO.CameraMode;
 import com.team3181.frc2023.subsystems.vision.VisionIO.Pipelines;
-import com.team3181.lib.math.GeomUtil;
 import com.team3181.lib.util.Alert;
 import com.team3181.lib.util.Alert.AlertType;
 import com.team3181.lib.util.PoseEstimator.TimestampedVisionUpdate;
+import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.geometry.*;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -20,28 +22,12 @@ import java.util.*;
 import java.util.function.Consumer;
 
 public class Vision extends SubsystemBase {
-    private final VisionIO ioLimelight;
-    private final VisionIO ioPhotonLeft;
-    private final VisionIO ioPhotonRight;
-    private final VisionIO ioPhotonFrontLeft;
-    private final VisionIO ioPhotonFrontRight;
-    private final VisionIOInputsAutoLogged inputsLimelight = new VisionIOInputsAutoLogged();
-    private final VisionIOInputsAutoLogged inputsPhotonFrontLeft = new VisionIOInputsAutoLogged();
-    private final VisionIOInputsAutoLogged inputsPhotonFrontRight = new VisionIOInputsAutoLogged();
-    private final VisionIOInputsAutoLogged inputsPhotonRight = new VisionIOInputsAutoLogged();
-    private final VisionIOInputsAutoLogged inputsPhotonLeft = new VisionIOInputsAutoLogged();
     private final VisionIO[] io;
-    private final VisionIOInputsAutoLogged[] inputs;
+    private final VisionIOInputsAutoLogged[] inputs = new VisionIOInputsAutoLogged[]{new VisionIOInputsAutoLogged(), new VisionIOInputsAutoLogged(), new VisionIOInputsAutoLogged(), new VisionIOInputsAutoLogged(), new VisionIOInputsAutoLogged()};
     private Consumer<List<TimestampedVisionUpdate>> visionConsumer = (x) -> {};
 
     private Pipelines pipeline = Pipelines.MID_RANGE;
-//    private LED led = LED.PIPELINE;
-    private CameraMode camera = CameraMode.VISION_PROCESSING;
-    private final Timer timer = new Timer();
-    private boolean timerStarted = false;
-    private boolean enabled = false;
-    private Pose2d lastPose = new Pose2d();
-    private Map<Integer, Double> lastTagDetectionTimes = new HashMap<>();
+    private final Map<Integer, Double> lastTagDetectionTimes = new HashMap<>();
 
     private final Alert limelightAlert = new Alert("Limelight not detected! Vision WILL be hindered!", AlertType.WARNING);
     private final Alert rightSideAlert = new Alert("Right Camera not detected! Vision WILL be hindered!", AlertType.WARNING);
@@ -56,13 +42,13 @@ public class Vision extends SubsystemBase {
 
     // right and left are relative to the robot from birds eye view facing forwards
     private Vision(VisionIO ioLimelight, VisionIO ioPhotonLeft, VisionIO ioPhotonRight, VisionIO ioPhotonFrontLeft, VisionIO ioPhotonFrontRight) {
-        this.ioLimelight = ioLimelight;
-        this.ioPhotonLeft = ioPhotonLeft;
-        this.ioPhotonRight = ioPhotonRight;
-        this.ioPhotonFrontLeft = ioPhotonFrontLeft;
-        this.ioPhotonFrontRight = ioPhotonFrontRight;
         io = new VisionIO[]{ioLimelight, ioPhotonLeft, ioPhotonRight, ioPhotonFrontLeft, ioPhotonFrontRight};
-        inputs = new VisionIOInputsAutoLogged[]{inputsLimelight, inputsPhotonLeft, inputsPhotonRight, inputsPhotonFrontLeft, inputsPhotonFrontRight};
+        FieldConstants.aprilTags
+                .getTags()
+                .forEach(
+                        (AprilTag tag) -> {
+                            lastTagDetectionTimes.put(tag.ID, 0.0);
+                        });
     }
 
     @Override
@@ -71,22 +57,32 @@ public class Vision extends SubsystemBase {
             io[i].updateInputs(inputs[i]);
             io[i].setPipeline(pipeline);
             io[i].setCameraModes(camera);
+            switch (i) {
+                case 1 -> {
+                    Logger.getInstance().processInputs("Limelight", inputs[i]);
+                    limelightAlert.set(!inputs[i].connected);
+                }
+                case 2 -> {
+                    Logger.getInstance().processInputs("Photon Left", inputs[i]);
+                    leftSideAlert.set(!inputs[i].connected);
+                }
+                case 3 -> {
+                    Logger.getInstance().processInputs("Photon Right", inputs[i]);
+                    rightSideAlert.set(!inputs[i].connected);
+                }
+                case 4 -> {
+                    Logger.getInstance().processInputs("Photon Front Left", inputs[i]);
+                    leftFrontAlert.set(!inputs[i].connected);
+                }
+                case 5 -> {
+                    Logger.getInstance().processInputs("Photon Front Right", inputs[i]);
+                    rightFrontAlert.set(!inputs[i].connected);
+                }
+            }
         }
-        Logger.getInstance().processInputs("Limelight", inputsLimelight);
-        Logger.getInstance().processInputs("Photon Left", inputsPhotonLeft);
-        Logger.getInstance().processInputs("Photon Right", inputsPhotonRight);
-        Logger.getInstance().processInputs("Photon Front Left", inputsPhotonFrontLeft);
-        Logger.getInstance().processInputs("Photon Front Right", inputsPhotonFrontRight);
-
-        limelightAlert.set(!inputsLimelight.connected);
-//        rightSideAlert.set(!inputsPhotonRight.connected);
-//        leftSideAlert.set(!inputsPhotonLeft.connected);
-//        rightFrontAlert.set(!inputsPhotonFrontRight.connected);
-//        leftFrontAlert.set(!inputsPhotonFrontLeft.connected);
 
         Logger.getInstance().recordOutput("Vision/Pipeline", pipeline.toString());
         Logger.getInstance().recordOutput("Vision/Camera", camera.toString());
-        Logger.getInstance().recordOutput("Vision/Enabled", enabled);
 
         List<TimestampedVisionUpdate> visionUpdates = new ArrayList<>();
 
@@ -171,106 +167,11 @@ public class Vision extends SubsystemBase {
 //        Logger.getInstance().recordOutput("Vision/Stable", checkStable());
     }
 
-//    https://github.com/Mechanical-Advantage/RobotCode2023/blob/main/src/main/java/org/littletonrobotics/frc2023/subsystems/apriltagvision/AprilTagVision.java
-//    private double calculateAvgDistance() {
-//        List<Pose3d> tagPoses = new ArrayList<>();
-//        for (int i = (values[0] == 1 ? 9 : 17); i < values.length; i++) {
-//            int tagId = (int) values[i];
-//            lastTagDetectionTimes.put(tagId, Timer.getFPGATimestamp());
-//            Optional<Pose3d> tagPose = FieldConstants.aprilTags.getTagPose((int) values[i]);
-//            if (tagPose.isPresent()) {
-//                tagPoses.add(tagPose.get());
-//            }
-//        }
-//
-//        // Calculate average distance to tag
-//        double totalDistance = 0.0;
-//        for (Pose3d tagPose : tagPoses) {
-//            totalDistance += tagPose.getTranslation().getDistance(cameraPose.getTranslation());
-//        }
-//        double avgDistance = totalDistance / tagPoses.size();
-//    }
-
     public void setDataInterface(Consumer<List<TimestampedVisionUpdate>> visionConsumer) {
         this.visionConsumer = visionConsumer;
     }
 
-    public boolean checkStable() {
-        if (getPose() != null && !getPose().equals(new Pose2d())) {
-            if (GeomUtil.distance(getPose(), lastPose) < 0.1) {
-                if (!timerStarted) {
-                    timerStarted = true;
-                    timer.restart();
-                }
-            }
-            else {
-                timerStarted = false;
-                timer.restart();
-                lastPose = getPose();
-            }
-        }
-        else {
-            timer.restart();
-        }
-        return timer.hasElapsed(0.2);
-    }
-
-    public boolean hasTarget() {
-        return inputsLimelight.hasTarget || inputsPhotonLeft.hasTarget || inputsPhotonRight.hasTarget || inputsPhotonFrontLeft.hasTarget || inputsPhotonFrontRight.hasTarget;
-    }
-
-    @Deprecated
-    public double getHorizontal() {
-        return inputsLimelight.hAngle;
-    }
-
-    @Deprecated
-    public double getVertical() {
-        return inputsLimelight.vAngle;
-    }
-
-    private boolean checkRightLimelightHasPose() {
-        return inputsLimelight.botXYZ.length != 0 && inputsLimelight.botRPY.length != 0;
-    }
-
-//    private boolean checkLeftLimelightHasPose() {
-//        return inputsLeft.botXYZ.length != 0 && inputsLeft.botRPY.length != 0;
-//    }
-
-    public Pose2d getPose() {
-//        if (checkRightLimelightHasPose() && checkLeftLimelightHasPose()) {
-//            return new Pose2d(new Translation2d((inputsRight.botXYZ[0] + inputsLeft.botXYZ[0]) / 2, (inputsRight.botXYZ[1] + inputsLeft.botXYZ[1]) / 2), Rotation2d.fromDegrees(inputsRight.botRPY[2]));
-//        }
-        /*else */if (checkRightLimelightHasPose()) {
-            return new Pose2d(new Translation2d(inputsLimelight.botXYZ[0], inputsLimelight.botXYZ[1]), Rotation2d.fromDegrees(inputsLimelight.botRPY[2]));
-        }
-//        else if (checkLeftLimelightHasPose()) {
-//            return new Pose2d(new Translation2d(inputsLeft.botXYZ[0], inputsLeft.botXYZ[1]), Rotation2d.fromDegrees(inputsLeft.botRPY[2]));
-//        }
-        return null;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    public double getTime() {
-        return inputsLimelight.captureTimestamp;
-    }
-
     public void setPipeline(Pipelines pipeline) {
         this.pipeline = pipeline;
-    }
-
-//    public void setLED(LED led) {
-//        this.led = led;
-//    }
-
-    public void setCamMode(CameraMode camera) {
-        this.camera = camera;
-    }
-
-    public boolean isConnected() {
-        return inputsLimelight.connected;
     }
 }
