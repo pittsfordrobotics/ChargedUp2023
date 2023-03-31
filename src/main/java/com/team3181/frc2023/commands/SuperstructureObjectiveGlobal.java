@@ -27,8 +27,6 @@ public class SuperstructureObjectiveGlobal extends CommandBase {
     public void execute() {
         if (superstructure.atSetpoint()) {
             timer.start();
-        }
-        if (timer.hasElapsed(0.001)) {
             superstructure.exhaust();
         }
     }

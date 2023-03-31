@@ -14,7 +14,6 @@ import com.team3181.frc2023.subsystems.swerve.Swerve;
 import com.team3181.lib.commands.DisabledInstantCommand;
 import com.team3181.lib.controller.BetterXboxController;
 import com.team3181.lib.controller.BetterXboxController.Humans;
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -102,11 +101,11 @@ public class Superstructure extends SubsystemBase {
                 case HOME:
                     // this checks for systemState, so the wantedState will have already been HOME
                     // this means the setpoint is at HOME, which is convoluted but works
-//                    if (systemState == StructureState.HOME && fourBar.atSetpoint() && !hasBeenZeroed && !DriverStation.isAutonomous()) {
-//                        state = StructureState.ZEROING;
-//                    } else {
+                    if (systemState == StructureState.HOME && fourBar.atSetpoint() && !hasBeenZeroed && !DriverStation.isAutonomous()) {
+                        state = StructureState.ZEROING;
+                    } else {
                         state = StructureState.HOME;
-//                    }
+                    }
                     break;
                 case EXHAUST:
                     state = StructureState.EXHAUST;
@@ -114,9 +113,9 @@ public class Superstructure extends SubsystemBase {
                 case MANUAL:
                     state = StructureState.MANUAL;
                     break;
-//                case ZEROING:
-//                    state = StructureState.ZEROING;
-//                    break;
+                case ZEROING:
+                    state = StructureState.ZEROING;
+                    break;
                 case IDLE:
                 default:
                     state = shouldAutoRetract ? StructureState.HOME : StructureState.IDLE;
@@ -173,9 +172,9 @@ public class Superstructure extends SubsystemBase {
                     hasBeenZeroed = false;
                 }
 
-//                if (state == StructureState.HOME && systemState == StructureState.ZEROING && !hasBeenZeroed) {
-//                    state = StructureState.ZEROING;
-//                }
+                if (state == StructureState.HOME && systemState == StructureState.ZEROING && !hasBeenZeroed) {
+                    state = StructureState.ZEROING;
+                }
                 if (state == StructureState.EXHAUST) {
                     if (objectiveLocal.nodeRow == 0 || objectiveLocal.nodeRow == 2 || objectiveLocal.nodeRow == 3 || objectiveLocal.nodeRow == 5 || objectiveLocal.nodeRow == 6 || objectiveLocal.nodeRow == 8) {
                         if (objectiveLocal.nodeLevel == NodeLevel.MID) {
@@ -287,21 +286,21 @@ public class Superstructure extends SubsystemBase {
                     fourBar.setArmVoltageWithFF(1, -5 * BetterXboxController.getController(Humans.OPERATOR).getRightY());
                     endEffector.intake();
                     break;
-//                case ZEROING:
-//                    boolean shoulderDone = fourBar.atShoulderLimit();
-//                    boolean elbowDone = fourBar.atElbowLimit();
-//                    if (!shoulderDone) {
-//                        fourBar.setArmVoltage(0, -1.5);
-//                    }
-//                    if (!elbowDone) {
-//                        fourBar.setArmVoltage(1, -0.5);
-//                    }
-//                    if (shoulderDone && elbowDone) {
-//                        fourBar.setArmVoltage(0, 0);
-//                        fourBar.setArmVoltage(1, 0);
-//                        hasBeenZeroed = true;
-//                    }
-//                    break;
+                case ZEROING:
+                    boolean shoulderDone = fourBar.atShoulderLimit();
+                    boolean elbowDone = fourBar.atElbowLimit();
+                    if (!shoulderDone) {
+                        fourBar.setArmVoltage(0, -1.5);
+                    }
+                    if (!elbowDone) {
+                        fourBar.setArmVoltage(1, -0.5);
+                    }
+                    if (shoulderDone && elbowDone) {
+                        fourBar.setArmVoltage(0, 0);
+                        fourBar.setArmVoltage(1, 0);
+                        hasBeenZeroed = true;
+                    }
+                    break;
                 case HOME:
                 default:
                     fourBar.setRotations(new Rotation2d[]{SuperstructureConstants.ArmPositions.STORAGE_SHOULDER, SuperstructureConstants.ArmPositions.STORAGE_ELBOW}, false);

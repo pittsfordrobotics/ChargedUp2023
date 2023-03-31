@@ -1,58 +1,79 @@
 package com.team3181.frc2023.subsystems.vision;
-import com.team3181.lib.util.LimelightHelpers;
+
+import com.team3181.lib.util.Alert;
+import com.team3181.lib.util.Alert.AlertType;
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFieldLayout.OriginPosition;
+import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import org.littletonrobotics.junction.Logger;
+import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonPoseEstimator;
+import org.photonvision.PhotonPoseEstimator.PoseStrategy;
+
+import java.io.IOException;
+import java.util.ArrayList;
 
 public class VisionIOPhotonVision implements VisionIO {
     public Pose3d lastPose = new Pose3d();
 
-    private final String limelightName = "limelight-left";
-    private final NetworkTable limelight = LimelightHelpers.getLimelightNTTable(limelightName);
+    private AprilTagFieldLayout aprilTagFieldLayout;
+    private Alliance lastAlliance = Alliance.Invalid;
 
-    public VisionIOPhotonVision() {
-        setLEDs(LED.OFF);
+    private final PhotonCamera cam;
+
+    // Construct PhotonPoseEstimator
+    private PhotonPoseEstimator poseEstimator;
+
+    public VisionIOPhotonVision(String camName, Transform3d transform3d) {
+        cam = new PhotonCamera(camName);
+        try {
+            aprilTagFieldLayout = AprilTagFields.k2023ChargedUp.loadAprilTagLayoutField();
+            poseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP, cam, transform3d);
+            poseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
+        }
+        catch (IOException ignored) {
+            new Alert("PhotonVision FAILED to load! Vision WILL be dead!", AlertType.ERROR);
+            aprilTagFieldLayout = null;
+            poseEstimator = null;
+        }
     }
 
     public void updateInputs(VisionIOInputs inputs) {
-        NetworkTableEntry heartbeatEntry = limelight.getEntry("hb");
-        NetworkTableEntry botposeEntry = DriverStation.getAlliance() == Alliance.Blue ? limelight.getEntry("botpose_wpiblue") : limelight.getEntry("botpose_wpired");
-
-        double pipelineLatency = LimelightHelpers.getLatency_Pipeline(limelightName);
-        double captureLatency = LimelightHelpers.getLatency_Capture(limelightName);
-        double totalLatency = pipelineLatency + captureLatency; // ms
-
-        if (!lastPose.equals(new Pose3d(botposeEntry.getDoubleArray(new double[7])[0], botposeEntry.getDoubleArray(new double[7])[1], botposeEntry.getDoubleArray(new double[7])[2], new Rotation3d(botposeEntry.getDoubleArray(new double[7])[3], botposeEntry.getDoubleArray(new double[7])[4], botposeEntry.getDoubleArray(new double[7])[5])))) {
-            inputs.captureTimestamp = (Logger.getInstance().getRealTimestamp() / 1000000.0) - Units.millisecondsToSeconds(totalLatency);
-            inputs.botXYZ = new double[]{botposeEntry.getDoubleArray(new double[7])[0], botposeEntry.getDoubleArray(new double[7])[1], botposeEntry.getDoubleArray(new double[7])[2]};
-            inputs.botRPY = new double[]{botposeEntry.getDoubleArray(new double[7])[3], botposeEntry.getDoubleArray(new double[7])[4], botposeEntry.getDoubleArray(new double[7])[5]};
-            lastPose = new Pose3d(botposeEntry.getDoubleArray(new double[7])[0], botposeEntry.getDoubleArray(new double[7])[1], botposeEntry.getDoubleArray(new double[7])[2], new Rotation3d(botposeEntry.getDoubleArray(new double[7])[3], botposeEntry.getDoubleArray(new double[7])[4], botposeEntry.getDoubleArray(new double[7])[5]));
+        if (DriverStation.getAlliance() != lastAlliance) {
+            lastAlliance = DriverStation.getAlliance();
+            if (lastAlliance == Alliance.Blue) {
+                aprilTagFieldLayout.setOrigin(OriginPosition.kBlueAllianceWallRightSide);
+            }
+            else if (lastAlliance == Alliance.Red) {
+                aprilTagFieldLayout.setOrigin(OriginPosition.kRedAllianceWallRightSide);
+            }
+            poseEstimator.setFieldTags(aprilTagFieldLayout);
         }
-        inputs.captureLatency = captureLatency;
-        inputs.pipelineLatency = pipelineLatency;
-        inputs.hasTarget = LimelightHelpers.getTV(limelightName);
-        inputs.connected = heartbeatEntry.getDouble(0.0) > 0.0;
-        inputs.vAngle = LimelightHelpers.getTY(limelightName);
-        inputs.hAngle = LimelightHelpers.getTX(limelightName);
+        if (poseEstimator.update().isPresent()) {
+            inputs.captureTimestamp = cam.getLatestResult().getTimestampSeconds();
+            inputs.botXYZ = new double[] {poseEstimator.update().get().estimatedPose.getX(), poseEstimator.update().get().estimatedPose.getY(), poseEstimator.update().get().estimatedPose.getZ()};
+            inputs.botRPY = new double[] {poseEstimator.update().get().estimatedPose.getRotation().getX(), poseEstimator.update().get().estimatedPose.getRotation().getY(), poseEstimator.update().get().estimatedPose.getRotation().getZ()};
+            ArrayList<Integer> tagIDs = new ArrayList<>();
+            for (int i = 0; i < cam.getLatestResult().targets.size(); i++) {
+                tagIDs.add(cam.getLatestResult().targets.get(i).getFiducialId());
+            }
+            inputs.tagIDs = tagIDs.stream().mapToDouble(i -> i).toArray();
+        }
+        else {
+            inputs.botXYZ = new double[] {0,0,0};
+            inputs.botRPY = new double[] {0,0,0};
+        }
+        inputs.pipelineLatency = Units.millisecondsToSeconds(cam.getLatestResult().getLatencyMillis());
+        inputs.hasTarget = cam.getLatestResult().hasTargets();
+        inputs.connected = cam.isConnected();
     }
 
     @Override
     public void setPipeline(Pipelines pipeline) {
-        limelight.getEntry("pipeline").setDouble(pipeline.getNum());
-    }
-
-    @Override
-    public void setCameraModes(CameraMode camera) {
-        limelight.getEntry("camMode").setDouble(camera.getNum());
-    }
-
-    @Override
-    public void setLEDs(LED led) {
-        limelight.getEntry("ledMode").setDouble(led.getNum());
+        cam.setPipelineIndex(pipeline.getNum());
     }
 }

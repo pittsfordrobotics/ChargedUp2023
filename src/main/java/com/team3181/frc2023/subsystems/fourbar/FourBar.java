@@ -12,12 +12,10 @@ import com.team3181.lib.util.Alert.AlertType;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.Vector;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.numbers.N2;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -32,6 +30,8 @@ public class FourBar extends SubsystemBase {
     private final Alert shoulderTooLow = new Alert("Shoulder needs to be moved forward! THIS WILL BREAK ALOT OF THINGS!", AlertType.ERROR);
     private Rotation2d[] dropStuff = new Rotation2d[]{};
     private Rotation2d waitPos = new Rotation2d();
+    public static Rotation2d mathOffsetElbow = FourBarConstants.ELBOW_MATH_OFFSET;
+    public static Rotation2d mathOffsetShoulder = FourBarConstants.SHOULDER_MATH_OFFSET;
 
     private final static FourBar INSTANCE = new FourBar(Constants.RobotConstants.SHOULDER, Constants.RobotConstants.ELBOW);
 
@@ -65,10 +65,10 @@ public class FourBar extends SubsystemBase {
         shoulderTooLow.set(DriverStation.isDisabled() && inputs[0].armOffsetPositionRad > 0);
 
 //        auto zeros when at setpoint
-//        if (atElbowLimit() && atShoulderLimit()) {
-//            zeroArms();
-//            Logger.getInstance().recordOutput("FourBar/Zeroing", true);
-//        }
+        if (atElbowLimit() && atShoulderLimit()) {
+            zeroArms();
+            Logger.getInstance().recordOutput("FourBar/Zeroing", true);
+        }
 
 //        System.out.println(Arrays.toString(
 //                solve(
@@ -142,7 +142,6 @@ public class FourBar extends SubsystemBase {
         dropStuff = new Rotation2d[]{Rotation2d.fromRadians(inputs[0].armOffsetPositionRad), Rotation2d.fromRadians(inputs[1].armOffsetPositionRad)};
     }
 
-
     public boolean atSetpoint() {
         return shoulderPID.atGoal() && elbowPID.atGoal();
     }
@@ -157,7 +156,9 @@ public class FourBar extends SubsystemBase {
 
     public void zeroArms() {
         armIO[0].zeroAbsoluteEncoder();
-        armIO[1].zeroAbsoluteEncoder();
+//        armIO[1].zeroAbsoluteEncoder();
+        mathOffsetShoulder = Rotation2d.fromRadians(0.5069229019995185);
+//        mathOffsetElbow = Rotation2d.fromRadians(3.229339663182394);
     }
 
     public void recordHigh(Rotation2d[] rotation2ds) {

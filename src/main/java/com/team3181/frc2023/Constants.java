@@ -20,12 +20,11 @@ import com.team3181.frc2023.subsystems.tank.TankIO;
 import com.team3181.frc2023.subsystems.tank.TankIOSim;
 import com.team3181.frc2023.subsystems.tank.TankIOSparkMax;
 import com.team3181.frc2023.subsystems.vision.VisionIO;
-import com.team3181.frc2023.subsystems.vision.VisionIOLimelightLeft;
-import com.team3181.frc2023.subsystems.vision.VisionIOLimelightRight;
+import com.team3181.frc2023.subsystems.vision.VisionIOLimelight;
+import com.team3181.frc2023.subsystems.vision.VisionIOPhotonVision;
 import com.team3181.frc2023.subsystems.vision.VisionIOSim;
 import com.team3181.lib.swerve.BetterSwerveKinematics;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -41,8 +40,11 @@ public final class Constants {
         public final static SwerveModuleIO BR_MODULE;
         public final static GyroIO GYRO;
         public final static TankIO TANK;
-        public final static VisionIO VISION_RIGHT;
-        public final static VisionIO VISION_LEFT;
+        public final static VisionIO LIMELIGHT;
+        public final static VisionIO PHOTON_LEFT;
+        public final static VisionIO PHOTON_FRONT_LEFT;
+        public final static VisionIO PHOTON_FRONT_RIGHT;
+        public final static VisionIO PHOTON_RIGHT;
         public final static LEDStripIO LEDS;
         public final static ArmIO SHOULDER;
         public final static ArmIO ELBOW;
@@ -82,8 +84,11 @@ public final class Constants {
                 BL_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSparkMax(SwerveConstants.CAN_BL_DRIVE, SwerveConstants.CAN_BL_STEER, SwerveConstants.BL_OFFSET);
                 BR_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSparkMax(SwerveConstants.CAN_BR_DRIVE, SwerveConstants.CAN_BR_STEER, SwerveConstants.BR_OFFSET);
                 GYRO = RobotConstants.IS_TANK ? new GyroIO(){} : new GyroIOPigeon();
-                VISION_RIGHT = RobotConstants.IS_TANK ? new VisionIO() {} : new VisionIOLimelightRight();
-                VISION_LEFT = RobotConstants.IS_TANK ? new VisionIO() {} : new VisionIOLimelightLeft();
+                LIMELIGHT = RobotConstants.IS_TANK ? new VisionIO() {} : new VisionIOLimelight();
+                PHOTON_LEFT = RobotConstants.IS_TANK ? new VisionIO() {} : new VisionIOPhotonVision(VisionConstants.PHOTON_LEFT_NAME, VisionConstants.PHOTON_LEFT_TRANSFORM);
+                PHOTON_FRONT_LEFT = RobotConstants.IS_TANK ? new VisionIO() {} : new VisionIOPhotonVision(VisionConstants.PHOTON_FRONT_LEFT_NAME, VisionConstants.PHOTON_FRONT_LEFT_TRANSFORM);
+                PHOTON_FRONT_RIGHT = RobotConstants.IS_TANK ? new VisionIO() {} : new VisionIOPhotonVision(VisionConstants.PHOTON_FRONT_RIGHT_NAME, VisionConstants.PHOTON_FRONT_RIGHT_TRANSFORM);
+                PHOTON_RIGHT = RobotConstants.IS_TANK ? new VisionIO() {} : new VisionIOPhotonVision(VisionConstants.PHOTON_RIGHT_NAME, VisionConstants.PHOTON_RIGHT_TRANSFORM);
                 LEDS = RobotConstants.IS_TANK ? new LEDStripIO(){} : new LEDStripIORio(LEDConstants.PWM_PORT, LEDConstants.NUMBER);
                 END_EFFECTOR = new EndEffectorIOSparkMax();
             }
@@ -96,8 +101,11 @@ public final class Constants {
                 BL_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSim();
                 BR_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSim();
                 GYRO = RobotConstants.IS_TANK ? new GyroIO(){} : new GyroIOSim();
-                VISION_RIGHT = new VisionIOSim();
-                VISION_LEFT = new VisionIOSim();
+                LIMELIGHT = new VisionIOSim();
+                PHOTON_LEFT = new VisionIOSim();
+                PHOTON_FRONT_LEFT = new VisionIOSim();
+                PHOTON_FRONT_RIGHT = new VisionIOSim();
+                PHOTON_RIGHT = new VisionIOSim();
                 LEDS = new LEDStripIO() {};
                 END_EFFECTOR = new EndEffectorIO() {};
             }
@@ -265,6 +273,18 @@ public final class Constants {
     }
 
     public static final class VisionConstants {
+        public static final String PHOTON_FRONT_LEFT_NAME = "frontLeft";
+        public static final String PHOTON_FRONT_RIGHT_NAME = "frontRight";
+        public static final String PHOTON_LEFT_NAME = "left";
+        public static final String PHOTON_RIGHT_NAME = "right";
+
+        public static final Transform3d PHOTON_FRONT_LEFT_TRANSFORM = new Transform3d(new Translation3d(0.0, 0.0, 0.0), new Rotation3d(0.0, 0.0, 0.0));
+        public static final Transform3d PHOTON_FRONT_RIGHT_TRANSFORM = new Transform3d(new Translation3d(0.0, 0.0, 0.0), new Rotation3d(0.0, 0.0, 0.0));
+        public static final Transform3d PHOTON_LEFT_TRANSFORM = new Transform3d(new Translation3d(0.0, 0.0, 0.0), new Rotation3d(0.0, 0.0, 0.0));
+        public static final Transform3d PHOTON_RIGHT_TRANSFORM = new Transform3d(new Translation3d(0.0, 0.0, 0.0), new Rotation3d(0.0, 0.0, 0.0));
+
+        public static final double FIELD_BORDER_MARGIN = 0.5;
+        public static final double Z_MARGIN = 0.75;
         public static final double XY_STD_DEV_COEF = 0.01;
         public static final double THETA_STD_DEV_COEF = 0.01;
     }
@@ -368,7 +388,7 @@ public final class Constants {
         public static final double AUTO_SCORE_POSITION_TOLERANCE = 0.1;
         public static final double AUTO_SCORE_ROTATION_TOLERANCE = 1;
 
-        public static final double EXHAUST_TIME = 0.5;
+        public static final double EXHAUST_TIME = 0.7;
 
         public static final class ArmPositions {
             public static Rotation2d STORAGE_SHOULDER = Rotation2d.fromRadians(-1.22);

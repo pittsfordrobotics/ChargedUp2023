@@ -59,7 +59,7 @@ public class EndEffector extends SubsystemBase {
                 case INTAKING:
                     if (DriverStation.isAutonomous()) {
                         // maximize power in auto to decrease time initially
-                        io.setVoltage(8);
+                        io.setVoltage(3);
                     }
                     else {
                         io.setVoltage(EndEffectorConstants.INTAKE_POWER);

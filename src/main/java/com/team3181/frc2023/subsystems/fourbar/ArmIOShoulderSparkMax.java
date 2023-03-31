@@ -9,8 +9,6 @@ import com.revrobotics.SparkMaxLimitSwitch;
 import com.revrobotics.SparkMaxLimitSwitch.Type;
 import com.team3181.frc2023.Constants.FourBarConstants;
 import com.team3181.lib.drivers.LazySparkMax;
-import com.team3181.lib.math.BetterMath;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import org.littletonrobotics.junction.Logger;
 
@@ -19,7 +17,6 @@ public class ArmIOShoulderSparkMax implements ArmIO {
     private final LazySparkMax followerMotor;
     private final AbsoluteEncoder absoluteEncoder;
     private final SparkMaxLimitSwitch limitSwitch;
-    private Rotation2d offset;
     private int counter = 0;
     private double lastPos = FourBarConstants.SHOULDER_MATH_OFFSET.getRadians();
     private double wraparoundOffset = 0;
@@ -40,34 +37,32 @@ public class ArmIOShoulderSparkMax implements ArmIO {
         mainMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
 
         mainMotor.burnFlash();
-
-        offset = FourBarConstants.SHOULDER_ABSOLUTE_OFFSET;
     }
 
     @Override
     public void updateInputs(ArmIOInputs inputs) {
-        double position = absoluteEncoder.getPosition() + FourBarConstants.SHOULDER_MATH_OFFSET.getRadians() + wraparoundOffset;
+        double position = absoluteEncoder.getPosition() + FourBar.mathOffsetShoulder.getRadians() + wraparoundOffset;
         double positionDiff = position - lastPos;
 
-        // Check if we've wrapped around the zero point.  If we've travelled more than a half circle in one update period,
-        // then assume we wrapped around.
-        if (positionDiff > oneEncoderRotation / 2) {
+//        // Check if we've wrapped around the zero point.  If we've travelled more than a half circle in one update period,
+//        // then assume we wrapped around.
+        if (positionDiff > oneEncoderRotation / 1.2) {
             // We went up by over a half rotation, which means we likely wrapped around the zero point going in the negative direction.
             position -= oneEncoderRotation;
             wraparoundOffset -= oneEncoderRotation;
         }
-        if (positionDiff < -1 * oneEncoderRotation / 2) {
+        if (positionDiff < -1 * oneEncoderRotation / 1.2) {
             // We went down by over a half rotation, which means we likely wrapped around the zero point going in the positive direction.
             position += oneEncoderRotation;
             wraparoundOffset += oneEncoderRotation;
         }
-        
-        // if (lastPos < FourBarConstants.SHOULDER_FLIP_MIN.getRadians() + 0.1 && (position) > FourBarConstants.SHOULDER_FLIP_MAX.getRadians() - 0.1 && counter == 1) {
-        //     counter--;
-        // } else if (lastPos > FourBarConstants.SHOULDER_FLIP_MAX.getRadians() - 0.1 && (position) < FourBarConstants.SHOULDER_FLIP_MIN.getRadians() + 0.1 && counter == 0) {
-        //     counter++;
-        // }
-        //inputs.armOffsetPositionRad = position + counter * (FourBarConstants.SHOULDER_FLIP_MIN.getRadians() * -1 + FourBarConstants.SHOULDER_FLIP_MAX.getRadians());
+//        
+//         if (lastPos < FourBarConstants.SHOULDER_FLIP_MIN.getRadians() + 0.1 && (position) > FourBarConstants.SHOULDER_FLIP_MAX.getRadians() - 0.1 && counter == 1) {
+//             counter--;
+//         } else if (lastPos > FourBarConstants.SHOULDER_FLIP_MAX.getRadians() - 0.1 && (position) < FourBarConstants.SHOULDER_FLIP_MIN.getRadians() + 0.1 && counter == 0) {
+//             counter++;
+//         }
+//        inputs.armOffsetPositionRad = position + counter * (FourBarConstants.SHOULDER_FLIP_MIN.getRadians() * -1 + FourBarConstants.SHOULDER_FLIP_MAX.getRadians());
 
         inputs.armPositionRawRad = absoluteEncoder.getPosition();
         inputs.armOffsetPositionRad = position;
@@ -97,7 +92,7 @@ public class ArmIOShoulderSparkMax implements ArmIO {
 
     @Override
     public void zeroAbsoluteEncoder() {
-        currentOffset = BetterMath.clampCustom(absoluteEncoder.getPosition() - offset.getRadians() - 0.1, 0,2 * Math.PI * FourBarConstants.CHAIN_RATIO);
+        currentOffset = absoluteEncoder.getPosition() - currentOffset - 0.1;
         absoluteEncoder.setZeroOffset(currentOffset);
     }
 

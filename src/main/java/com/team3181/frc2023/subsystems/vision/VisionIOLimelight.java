@@ -9,13 +9,13 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import org.littletonrobotics.junction.Logger;
 
-public class VisionIOLimelightRight implements VisionIO {
+public class VisionIOLimelight implements VisionIO {
     public Pose3d lastPose = new Pose3d();
 
     private final String limelightName = "";
     private final NetworkTable limelight = LimelightHelpers.getLimelightNTTable(limelightName);
 
-    public VisionIOLimelightRight() {
+    public VisionIOLimelight() {
         setLEDs(LED.OFF);
     }
 
@@ -31,6 +31,7 @@ public class VisionIOLimelightRight implements VisionIO {
             inputs.captureTimestamp = (Logger.getInstance().getRealTimestamp() / 1000000.0) - Units.millisecondsToSeconds(totalLatency);
             inputs.botXYZ = new double[]{botposeEntry.getDoubleArray(new double[7])[0], botposeEntry.getDoubleArray(new double[7])[1], botposeEntry.getDoubleArray(new double[7])[2]};
             inputs.botRPY = new double[]{botposeEntry.getDoubleArray(new double[7])[3], botposeEntry.getDoubleArray(new double[7])[4], botposeEntry.getDoubleArray(new double[7])[5]};
+            inputs.tagIDs = new double[]{(int) LimelightHelpers.getFiducialID(limelightName)};
             lastPose = new Pose3d(botposeEntry.getDoubleArray(new double[7])[0], botposeEntry.getDoubleArray(new double[7])[1], botposeEntry.getDoubleArray(new double[7])[2], new Rotation3d(botposeEntry.getDoubleArray(new double[7])[3], botposeEntry.getDoubleArray(new double[7])[4], botposeEntry.getDoubleArray(new double[7])[5]));
         }
         inputs.captureLatency = captureLatency;
