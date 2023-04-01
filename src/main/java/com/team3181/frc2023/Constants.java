@@ -340,11 +340,13 @@ public final class Constants {
 
         // This should be when shoulder is all the way back
         // then fudge the number by subtracting an extra 0.1
-        public static final Rotation2d SHOULDER_ABSOLUTE_OFFSET = Rotation2d.fromRadians(1.5980665922164917);
-        public static final Rotation2d SHOULDER_MATH_OFFSET = Rotation2d.fromRadians(-1.5609228610992432); // zero needs to be at shoulder parallel to ground
+        //2.0351590527410957
+        //1.5282361507415771
+        public static final Rotation2d SHOULDER_ABSOLUTE_OFFSET = Rotation2d.fromRadians(0);
+        public static final Rotation2d SHOULDER_MATH_OFFSET = Rotation2d.fromRadians(-1.5551074743270874); // zero needs to be at shoulder parallel to ground
         // This should be when claw is pointing at the ground
-        public static final Rotation2d ELBOW_ABSOLUTE_OFFSET = Rotation2d.fromRadians(3.7);
-        public static final Rotation2d ELBOW_MATH_OFFSET = Rotation2d.fromRadians(-1.952480435371399); // zero is in line with shoulder parallel to ground
+        public static final Rotation2d ELBOW_ABSOLUTE_OFFSET = Rotation2d.fromRadians(1.340791130065918);
+        public static final Rotation2d ELBOW_MATH_OFFSET = Rotation2d.fromRadians(-4.826531410217285); // zero is in line with shoulder parallel to ground
 
         public static final Rotation2d ELBOW_MIN = Rotation2d.fromDegrees(-140);
         public static final Rotation2d ELBOW_MAX = Rotation2d.fromDegrees(140);

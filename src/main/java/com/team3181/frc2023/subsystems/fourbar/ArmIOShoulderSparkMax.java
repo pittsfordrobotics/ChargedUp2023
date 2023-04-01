@@ -43,7 +43,7 @@ public class ArmIOShoulderSparkMax implements ArmIO {
 
     @Override
     public void updateInputs(ArmIOInputs inputs) {
-        double position = absoluteEncoder.getPosition() + FourBar.mathOffsetShoulder.getRadians() + wraparoundOffset;
+        double position = absoluteEncoder.getPosition() + FourBarConstants.SHOULDER_MATH_OFFSET.getRadians() + wraparoundOffset;
 
         if (isFirstPositionUpdate) {
             // This is the first time running and we don't yet have a "last position".
