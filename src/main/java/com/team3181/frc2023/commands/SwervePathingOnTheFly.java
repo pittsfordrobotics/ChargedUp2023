@@ -12,7 +12,6 @@ import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker;
 import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker.NodeLevel;
 import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker.Objective;
 import com.team3181.frc2023.subsystems.swerve.Swerve;
-import com.team3181.frc2023.subsystems.vision.Vision;
 import com.team3181.lib.math.GeomUtil;
 import com.team3181.lib.swerve.BetterPathPoint;
 import edu.wpi.first.math.controller.HolonomicDriveController;
@@ -94,7 +93,6 @@ public class SwervePathingOnTheFly extends CommandBase {
 
     @Override
     public void initialize() {
-        Vision.getInstance().setEnabled(false);
         ArrayList<PathPoint> adjustedPathPoints = new ArrayList<>();
         // adds path points and flips for correct alliance
         BetterPathPoint robotPoint = new BetterPathPoint(Swerve.getInstance().getPose().getTranslation(), Swerve.getInstance().getPose().getRotation(), Swerve.getInstance().getPose().getRotation());
@@ -287,7 +285,6 @@ public class SwervePathingOnTheFly extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        Vision.getInstance().setEnabled(true);
         timer.stop();
         swerve.stopMotors();
     }

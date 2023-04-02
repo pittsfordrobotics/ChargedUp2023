@@ -147,7 +147,6 @@ public class Robot extends LoggedRobot {
   public void disabledInit() {
     disabledTimer.restart();
     robotContainer.autoConfig();
-    Vision.getInstance().setEnabled(true);
   }
 
   @Override
@@ -164,7 +163,6 @@ public class Robot extends LoggedRobot {
     lowBatteryAlert.set(false);
     Swerve.getInstance().setBrakeMode();
     FourBar.getInstance().brake();
-    Vision.getInstance().setEnabled(false);
     autonomousCommand = robotContainer.getAutonomousCommand();
 
     if (autonomousCommand != null) {
@@ -180,7 +178,6 @@ public class Robot extends LoggedRobot {
     lowBatteryAlert.set(false);
     Swerve.getInstance().setBrakeMode();
     FourBar.getInstance().brake();
-    Vision.getInstance().setEnabled(true);
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
       autonomousCommand = null;

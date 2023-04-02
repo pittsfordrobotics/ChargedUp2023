@@ -18,10 +18,12 @@ public class ArmIOShoulderSparkMax implements ArmIO {
     private final AbsoluteEncoder absoluteEncoder;
     private final SparkMaxLimitSwitch limitSwitch;
     private int counter = 0;
-    private double lastPos = FourBarConstants.SHOULDER_MATH_OFFSET.getRadians();
+    private double lastPos = 0;
     private double wraparoundOffset = 0;
     private double oneEncoderRotation = 2 * Math.PI * FourBarConstants.CHAIN_RATIO;
     private double currentOffset = FourBarConstants.SHOULDER_ABSOLUTE_OFFSET.getRadians();
+    // Indicates if we have run at least one periodic iteration so we have a "last position" to be able to tell if we wrapped around the encoder.
+    private boolean isFirstPositionUpdate = true;
 
     public ArmIOShoulderSparkMax() {
         mainMotor = new LazySparkMax(FourBarConstants.CAN_SHOULDER_MASTER, IdleMode.kBrake, 80, true, false);
@@ -41,20 +43,27 @@ public class ArmIOShoulderSparkMax implements ArmIO {
 
     @Override
     public void updateInputs(ArmIOInputs inputs) {
-        double position = absoluteEncoder.getPosition() + FourBar.mathOffsetShoulder.getRadians() + wraparoundOffset;
-        double positionDiff = position - lastPos;
+        double position = absoluteEncoder.getPosition() + FourBarConstants.SHOULDER_MATH_OFFSET.getRadians() + wraparoundOffset;
 
-//        // Check if we've wrapped around the zero point.  If we've travelled more than a half circle in one update period,
-//        // then assume we wrapped around.
-        if (positionDiff > oneEncoderRotation / 1.2) {
-            // We went up by over a half rotation, which means we likely wrapped around the zero point going in the negative direction.
-            position -= oneEncoderRotation;
-            wraparoundOffset -= oneEncoderRotation;
-        }
-        if (positionDiff < -1 * oneEncoderRotation / 1.2) {
-            // We went down by over a half rotation, which means we likely wrapped around the zero point going in the positive direction.
-            position += oneEncoderRotation;
-            wraparoundOffset += oneEncoderRotation;
+        if (isFirstPositionUpdate) {
+            // This is the first time running and we don't yet have a "last position".
+            lastPos = position;
+            isFirstPositionUpdate = false;
+        } else {
+            double positionDiff = position - lastPos;
+
+            // Check if we've wrapped around the zero point.  If we've travelled more than a half circle in one update period,
+            // then assume we wrapped around.
+            if (positionDiff > oneEncoderRotation / 1.2) {
+                // We went up by over a half rotation, which means we likely wrapped around the zero point going in the negative direction.
+                position -= oneEncoderRotation;
+                wraparoundOffset -= oneEncoderRotation;
+            }
+            if (positionDiff < -1 * oneEncoderRotation / 1.2) {
+                // We went down by over a half rotation, which means we likely wrapped around the zero point going in the positive direction.
+                position += oneEncoderRotation;
+                wraparoundOffset += oneEncoderRotation;
+            }
         }
 //        
 //         if (lastPos < FourBarConstants.SHOULDER_FLIP_MIN.getRadians() + 0.1 && (position) > FourBarConstants.SHOULDER_FLIP_MAX.getRadians() - 0.1 && counter == 1) {
@@ -94,6 +103,11 @@ public class ArmIOShoulderSparkMax implements ArmIO {
     public void zeroAbsoluteEncoder() {
         currentOffset = absoluteEncoder.getPosition() - currentOffset - 0.1;
         absoluteEncoder.setZeroOffset(currentOffset);
+        
+        // We had to force the zero point to get here, so we likely have bad wraparounds.
+        // Rest the wraparound offset value and treat the last known position as invalid.
+        wraparoundOffset = 0;
+        isFirstPositionUpdate = true; 
     }
 
     @Override

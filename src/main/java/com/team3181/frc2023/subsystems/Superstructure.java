@@ -84,6 +84,9 @@ public class Superstructure extends SubsystemBase {
                     break;
                 case INTAKE_GROUND:
                     state = StructureState.INTAKE_GROUND;
+//                if (endEffector.hasPiece()) {
+//                    state = StructureState.HOME;
+//                }
                     break;
                 case INTAKE_GROUND_FAR:
                     state = StructureState.INTAKE_GROUND_FAR;
