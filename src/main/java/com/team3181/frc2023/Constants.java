@@ -240,8 +240,8 @@ public final class Constants {
         public static final int CAN_PIGEON = 0;
         public static final int CAN_RIGHT_LEADER = 3;
         public static final int CAN_RIGHT_FOLLOWER = 4;
-        public static final int CAN_LEFT_LEADER = 1;
-        public static final int CAN_LEFT_FOLLOWER = 2;
+        public static final int CAN_LEFT_LEADER = 2;
+        public static final int CAN_LEFT_FOLLOWER = 1;
 
         public static final double WEIGHT_KILO = Units.lbsToKilograms(125);
 

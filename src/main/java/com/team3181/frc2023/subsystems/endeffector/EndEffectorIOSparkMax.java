@@ -9,7 +9,7 @@ import edu.wpi.first.math.util.Units;
 import org.littletonrobotics.junction.Logger;
 
 public class EndEffectorIOSparkMax implements EndEffectorIO {
-    private final LazySparkMax motorLeft = new LazySparkMax(Constants.EndEffectorConstants.CAN_LEFT, IdleMode.kBrake, 30, true, false);
+    private final LazySparkMax motorLeft = new LazySparkMax(Constants.EndEffectorConstants.CAN_LEFT, IdleMode.kBrake, 30, false, false);
     private final LazySparkMax motorRight = new LazySparkMax(Constants.EndEffectorConstants.CAN_RIGHT, IdleMode.kBrake, 30, motorLeft, true, false);
     private final RelativeEncoder encoder = motorLeft.getEncoder();
 
