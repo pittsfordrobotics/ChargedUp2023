@@ -3,7 +3,6 @@ package com.team3181.frc2023.subsystems.vision;
 import com.team3181.frc2023.Constants.RobotConstants;
 import com.team3181.frc2023.Constants.VisionConstants;
 import com.team3181.frc2023.FieldConstants;
-import com.team3181.frc2023.subsystems.vision.VisionIO.CameraMode;
 import com.team3181.frc2023.subsystems.vision.VisionIO.Pipelines;
 import com.team3181.lib.util.Alert;
 import com.team3181.lib.util.Alert.AlertType;
@@ -46,9 +45,7 @@ public class Vision extends SubsystemBase {
         FieldConstants.aprilTags
                 .getTags()
                 .forEach(
-                        (AprilTag tag) -> {
-                            lastTagDetectionTimes.put(tag.ID, 0.0);
-                        });
+                        (AprilTag tag) -> lastTagDetectionTimes.put(tag.ID, 0.0));
     }
 
     @Override
@@ -56,7 +53,6 @@ public class Vision extends SubsystemBase {
         for (int i = 0; i < io.length; i++) {
             io[i].updateInputs(inputs[i]);
             io[i].setPipeline(pipeline);
-            io[i].setCameraModes(camera);
             switch (i) {
                 case 1 -> {
                     Logger.getInstance().processInputs("Limelight", inputs[i]);
@@ -82,7 +78,6 @@ public class Vision extends SubsystemBase {
         }
 
         Logger.getInstance().recordOutput("Vision/Pipeline", pipeline.toString());
-        Logger.getInstance().recordOutput("Vision/Camera", camera.toString());
 
         List<TimestampedVisionUpdate> visionUpdates = new ArrayList<>();
 
@@ -140,6 +135,17 @@ public class Vision extends SubsystemBase {
 
 
             allRobotPoses.add(robotPose);
+
+            List<Pose3d> allTagPoses = new ArrayList<>();
+            for (Map.Entry<Integer, Double> detectionEntry : lastTagDetectionTimes.entrySet()) {
+                if (Timer.getFPGATimestamp() - detectionEntry.getValue() < VisionConstants.TARGET_LOG_SECONDS) {
+                    allTagPoses.add(FieldConstants.aprilTags.getTagPose(detectionEntry.getKey()).get());
+                }
+            }
+            Logger.getInstance()
+                    .recordOutput(
+                            "AprilTagVision/TagPoses", allTagPoses.toArray(new Pose3d[0]));
+
             visionConsumer.accept(visionUpdates);
             Logger.getInstance()
                     .recordOutput(
@@ -147,24 +153,6 @@ public class Vision extends SubsystemBase {
                             tagPoses2d);
         }
         Logger.getInstance().recordOutput("Vision/Poses", allRobotPoses.toArray(new Pose2d[0]));
-//        if (getPose() != null) {
-//            if ((!DriverStation.isAutonomous() && (!Objects.equals(getPose(), new Pose2d()) && inputsLimelight.botXYZ[0] < 0.075)) || enabled) {
-//            Pose3d robotPose3d = new Pose3d(inputsLimelight.botXYZ[0], inputsLimelight.botXYZ[1], inputsLimelight.botXYZ[2], new Rotation3d(inputsLimelight.botRPY[0], inputsLimelight.botRPY[1], inputsLimelight.botRPY[2]));
-////            exit if off the field
-//            if (robotPose3d.getX() < -VisionConstants.FIELD_BORDER_MARGIN
-//                    || robotPose3d.getX() > FieldConstants.fieldLength + VisionConstants.FIELD_BORDER_MARGIN
-//                    || robotPose3d.getY() < -VisionConstants.FIELD_BORDER_MARGIN
-//                    || robotPose3d.getY() > FieldConstants.fieldWidth + VisionConstants.FIELD_BORDER_MARGIN
-//                    || robotPose3d.getZ() < -VisionConstants.Z_MARGIN
-//                    || robotPose3d.getZ() > VisionConstants.Z_MARGIN) {
-//            }
-//            else {
-//                Swerve.getInstance().addVisionData(getPose(), getTime(), checkStable());
-//            }
-//            }
-//            Logger.getInstance().recordOutput("Vision/Pose", getPose());
-//        }
-//        Logger.getInstance().recordOutput("Vision/Stable", checkStable());
     }
 
     public void setDataInterface(Consumer<List<TimestampedVisionUpdate>> visionConsumer) {

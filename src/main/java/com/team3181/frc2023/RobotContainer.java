@@ -104,8 +104,8 @@ public class RobotContainer {
             .whileFalse(new SuperstructureHome());
     driverController.rightBumper()
             .whileTrue(new InstantCommand(swerve::zeroGyro));
-//    driverController.leftBumper()
-//            .whileTrue(new InstantCommand(superstructure::zero));
+    driverController.leftBumper()
+            .whileTrue(new InstantCommand(superstructure::zero));
 
     /*
      OPERATOR
