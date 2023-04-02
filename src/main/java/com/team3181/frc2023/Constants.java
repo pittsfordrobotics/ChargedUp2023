@@ -175,7 +175,7 @@ public final class Constants {
 
         public static final HashMap<Integer, Rotation2d> MODULE_HASHMAP = new HashMap<>();
         static {
-            MODULE_HASHMAP.put(0, Rotation2d.fromRadians(5.088028907775879));  // Front left
+            MODULE_HASHMAP.put(0, Rotation2d.fromRadians(6.246822834014893));  // Front left
             MODULE_HASHMAP.put(1, Rotation2d.fromRadians(3.1017396450042725)); // Front right
             MODULE_HASHMAP.put(2, Rotation2d.fromRadians(2.114952564239502));    // Back left
             MODULE_HASHMAP.put(3, Rotation2d.fromRadians(2.851421594619751));  // Back right
@@ -232,7 +232,7 @@ public final class Constants {
         public static final double AUTO_ROTATE_TOLERANCE = 0.05;
 
         public static final double DIRECTION_RATE_LIMIT = 15; // radians per second
-        public static final double MAGNITUDE_RATE_LIMIT = 8.7; // percent per second (1 = 100%)
+        public static final double MAGNITUDE_RATE_LIMIT = 7; // percent per second (1 = 100%)
         public static final double ROTATION_RATE_LIMIT = 16.0; // percent per second (1 = 100%)
     }
 

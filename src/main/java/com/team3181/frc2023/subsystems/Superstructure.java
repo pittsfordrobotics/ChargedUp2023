@@ -101,11 +101,11 @@ public class Superstructure extends SubsystemBase {
                 case HOME:
                     // this checks for systemState, so the wantedState will have already been HOME
                     // this means the setpoint is at HOME, which is convoluted but works
-                    if (systemState == StructureState.HOME && fourBar.atSetpoint() && !hasBeenZeroed && !DriverStation.isAutonomous()) {
-                        state = StructureState.ZEROING;
-                    } else {
+//                    if (systemState == StructureState.HOME && fourBar.atSetpoint() && !hasBeenZeroed && !DriverStation.isAutonomous()) {
+//                        state = StructureState.ZEROING;
+//                    } else {
                         state = StructureState.HOME;
-                    }
+//                    }
                     break;
                 case EXHAUST:
                     state = StructureState.EXHAUST;
@@ -168,13 +168,13 @@ public class Superstructure extends SubsystemBase {
                 if (systemState == StructureState.EXHAUST || systemState == StructureState.OBJECTIVE) {
                     LEDs.getInstance().setLEDMode(LEDModes.IDLE);
                 }
-                if (systemState == StructureState.HOME) {
-                    hasBeenZeroed = false;
-                }
+//                if (systemState == StructureState.HOME) {
+//                    hasBeenZeroed = false;
+//                }
 
-                if (state == StructureState.HOME && systemState == StructureState.ZEROING && !hasBeenZeroed) {
-                    state = StructureState.ZEROING;
-                }
+//                if (state == StructureState.HOME && systemState == StructureState.ZEROING && !hasBeenZeroed) {
+//                    state = StructureState.ZEROING;
+//                }
                 if (state == StructureState.EXHAUST) {
                     if (objectiveLocal.nodeRow == 0 || objectiveLocal.nodeRow == 2 || objectiveLocal.nodeRow == 3 || objectiveLocal.nodeRow == 5 || objectiveLocal.nodeRow == 6 || objectiveLocal.nodeRow == 8) {
                         if (objectiveLocal.nodeLevel == NodeLevel.MID) {
@@ -381,6 +381,10 @@ public class Superstructure extends SubsystemBase {
 
     public void home() {
         wantedState = StructureState.HOME;
+    }
+
+    public boolean isStable() {
+        return systemState == StructureState.HOME || systemState == StructureState.ZEROING;
     }
 
     private boolean shouldAutoRetract() {
