@@ -175,7 +175,7 @@ public final class Constants {
 
         public static final HashMap<Integer, Rotation2d> MODULE_HASHMAP = new HashMap<>();
         static {
-            MODULE_HASHMAP.put(0, Rotation2d.fromRadians(5.088028907775879));  // Front left
+            MODULE_HASHMAP.put(0, Rotation2d.fromRadians(6.246822834014893));  // Front left
             MODULE_HASHMAP.put(1, Rotation2d.fromRadians(3.1017396450042725)); // Front right
             MODULE_HASHMAP.put(2, Rotation2d.fromRadians(2.114952564239502));    // Back left
             MODULE_HASHMAP.put(3, Rotation2d.fromRadians(2.851421594619751));  // Back right
@@ -226,7 +226,7 @@ public final class Constants {
         public static final double AUTO_ROTATE_TOLERANCE = 0.05;
 
         public static final double DIRECTION_RATE_LIMIT = 15; // radians per second
-        public static final double MAGNITUDE_RATE_LIMIT = 8.7; // percent per second (1 = 100%)
+        public static final double MAGNITUDE_RATE_LIMIT = 7; // percent per second (1 = 100%)
         public static final double ROTATION_RATE_LIMIT = 16.0; // percent per second (1 = 100%)
     }
 
@@ -234,8 +234,8 @@ public final class Constants {
         public static final int CAN_PIGEON = 0;
         public static final int CAN_RIGHT_LEADER = 3;
         public static final int CAN_RIGHT_FOLLOWER = 4;
-        public static final int CAN_LEFT_LEADER = 1;
-        public static final int CAN_LEFT_FOLLOWER = 2;
+        public static final int CAN_LEFT_LEADER = 2;
+        public static final int CAN_LEFT_FOLLOWER = 1;
 
         public static final double WEIGHT_KILO = Units.lbsToKilograms(125);
 
@@ -335,13 +335,11 @@ public final class Constants {
 
         // This should be when shoulder is all the way back
         // then fudge the number by subtracting an extra 0.1
-        //2.0351590527410957
-        //1.5282361507415771
         public static final Rotation2d SHOULDER_ABSOLUTE_OFFSET = Rotation2d.fromRadians(0);
         public static final Rotation2d SHOULDER_MATH_OFFSET = Rotation2d.fromRadians(-1.5551074743270874); // zero needs to be at shoulder parallel to ground
         // This should be when claw is pointing at the ground
-        public static final Rotation2d ELBOW_ABSOLUTE_OFFSET = Rotation2d.fromRadians(1.340791130065918);
-        public static final Rotation2d ELBOW_MATH_OFFSET = Rotation2d.fromRadians(-4.826531410217285); // zero is in line with shoulder parallel to ground
+        public static final Rotation2d ELBOW_ABSOLUTE_OFFSET = Rotation2d.fromRadians(4.352361679077148);
+        public static final Rotation2d ELBOW_MATH_OFFSET = Rotation2d.fromRadians(-1.8333731889724731); // zero is in line with shoulder parallel to ground
 
         public static final Rotation2d ELBOW_MIN = Rotation2d.fromDegrees(-140);
         public static final Rotation2d ELBOW_MAX = Rotation2d.fromDegrees(140);

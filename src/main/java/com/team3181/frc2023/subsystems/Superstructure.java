@@ -386,6 +386,10 @@ public class Superstructure extends SubsystemBase {
         wantedState = StructureState.HOME;
     }
 
+    public boolean isStable() {
+        return systemState == StructureState.HOME || systemState == StructureState.ZEROING;
+    }
+
     private boolean shouldAutoRetract() {
 //        check if in center of field
         return Swerve.getInstance().getPose().getX() > 5.3 && Swerve.getInstance().getPose().getX() < 11.25;
