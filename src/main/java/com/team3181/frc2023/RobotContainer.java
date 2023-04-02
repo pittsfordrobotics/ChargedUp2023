@@ -104,8 +104,6 @@ public class RobotContainer {
             .whileFalse(new SuperstructureHome());
     driverController.rightBumper()
             .whileTrue(new InstantCommand(swerve::zeroGyro));
-    driverController.leftBumper()
-            .whileTrue(new InstantCommand(superstructure::zero));
 
     /*
      OPERATOR
@@ -136,10 +134,12 @@ public class RobotContainer {
             .whileTrue(objectiveTracker.shiftNodeCommand(Direction.DOWN));
     operatorController.povLeft()
             .whileTrue(objectiveTracker.shiftNodeCommand(Direction.LEFT));
-    operatorController.rightBumper().
-            whileTrue(new InstantCommand(objectiveTracker::toggleFilled));
-    operatorController.leftBumper().
-            whileTrue(new InstantCommand(objectiveTracker::toggleActive));
+    operatorController.leftBumper()
+            .whileTrue(new InstantCommand(superstructure::zero));
+//    operatorController.rightBumper().
+//            whileTrue(new InstantCommand(objectiveTracker::toggleFilled));
+//    operatorController.leftBumper().
+//            whileTrue(new InstantCommand(objectiveTracker::toggleActive));
   }
 
   public void autoConfig() {
