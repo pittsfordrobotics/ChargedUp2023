@@ -259,36 +259,6 @@
       "names": [
         "home"
       ]
-    },
-    {
-      "position": 0.0,
-      "names": [
-        "visionOn"
-      ]
-    },
-    {
-      "position": 3.2794833096590894,
-      "names": [
-        "visionOn"
-      ]
-    },
-    {
-      "position": 0.9243785511363637,
-      "names": [
-        "visionOff"
-      ]
-    },
-    {
-      "position": 3.9744318181818152,
-      "names": [
-        "visionOff"
-      ]
-    },
-    {
-      "position": 7.2254705255681815,
-      "names": [
-        "visionOn"
-      ]
     }
   ]
 }

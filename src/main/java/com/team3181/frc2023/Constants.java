@@ -85,10 +85,10 @@ public final class Constants {
                 BR_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSparkMax(SwerveConstants.CAN_BR_DRIVE, SwerveConstants.CAN_BR_STEER, SwerveConstants.BR_OFFSET);
                 GYRO = RobotConstants.IS_TANK ? new GyroIO(){} : new GyroIOPigeon();
                 LIMELIGHT = RobotConstants.IS_TANK ? new VisionIO() {} : new VisionIOLimelight();
-                PHOTON_LEFT = RobotConstants.IS_TANK ? new VisionIO() {} : new VisionIOPhotonVision(VisionConstants.PHOTON_LEFT_NAME, VisionConstants.PHOTON_LEFT_TRANSFORM);
-                PHOTON_FRONT_LEFT = RobotConstants.IS_TANK ? new VisionIO() {} : new VisionIOPhotonVision(VisionConstants.PHOTON_FRONT_LEFT_NAME, VisionConstants.PHOTON_FRONT_LEFT_TRANSFORM);
-                PHOTON_FRONT_RIGHT = RobotConstants.IS_TANK ? new VisionIO() {} : new VisionIOPhotonVision(VisionConstants.PHOTON_FRONT_RIGHT_NAME, VisionConstants.PHOTON_FRONT_RIGHT_TRANSFORM);
-                PHOTON_RIGHT = RobotConstants.IS_TANK ? new VisionIO() {} : new VisionIOPhotonVision(VisionConstants.PHOTON_RIGHT_NAME, VisionConstants.PHOTON_RIGHT_TRANSFORM);
+                PHOTON_LEFT = true ? new VisionIO() {} : new VisionIOPhotonVision(VisionConstants.PHOTON_LEFT_NAME, VisionConstants.PHOTON_LEFT_TRANSFORM);
+                PHOTON_FRONT_LEFT = true ? new VisionIO() {} : new VisionIOPhotonVision(VisionConstants.PHOTON_FRONT_LEFT_NAME, VisionConstants.PHOTON_FRONT_LEFT_TRANSFORM);
+                PHOTON_FRONT_RIGHT = true ? new VisionIO() {} : new VisionIOPhotonVision(VisionConstants.PHOTON_FRONT_RIGHT_NAME, VisionConstants.PHOTON_FRONT_RIGHT_TRANSFORM);
+                PHOTON_RIGHT = true ? new VisionIO() {} : new VisionIOPhotonVision(VisionConstants.PHOTON_RIGHT_NAME, VisionConstants.PHOTON_RIGHT_TRANSFORM);
                 LEDS = RobotConstants.IS_TANK ? new LEDStripIO(){} : new LEDStripIORio(LEDConstants.PWM_PORT, LEDConstants.NUMBER);
                 END_EFFECTOR = new EndEffectorIOSparkMax();
             }
@@ -295,7 +295,7 @@ public final class Constants {
 
         //        numbers from 1678
         public static final double SLOW_LINEAR_VELOCITY_METERS_PER_SECOND = 2.0;
-        public static final double SLOW_LINEAR_ACCELERATION_METERS_PER_SECOND_SQUARED = 2.0;
+        public static final double SLOW_LINEAR_ACCELERATION_METERS_PER_SECOND_SQUARED = 1.0;
 
         public static final double MAX_LINEAR_VELOCITY_METERS_PER_SECOND = 2.0;
         public static final double MAX_LINEAR_ACCELERATION_METERS_PER_SECOND_SQUARED = 2.0;
@@ -387,7 +387,7 @@ public final class Constants {
 
         public static final class ArmPositions {
             public static Rotation2d STORAGE_SHOULDER = Rotation2d.fromRadians(-1.22);
-            public static Rotation2d STORAGE_ELBOW = Rotation2d.fromRadians(1.5538270854949951);
+            public static Rotation2d STORAGE_ELBOW = Rotation2d.fromRadians(1.6538270854949951);
 
             public static Rotation2d HYBRID_SHOULDER = Rotation2d.fromRadians(-1.233066338300705);
             public static Rotation2d HYBRID_ELBOW = Rotation2d.fromRadians(0.23718323707580566);
@@ -431,6 +431,7 @@ public final class Constants {
 
     public static final class EndEffectorConstants {
         public static final double EXHAUST_CONE_POWER = -3;
+        public static final double EXHAUST_CUBE_POWER = -2;
         public static final double INTAKE_IDLE_POWER = 1.5;
         public static final double INTAKE_POWER = 4.0;
         public static final double GEARING = 4;

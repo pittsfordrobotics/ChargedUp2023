@@ -5,7 +5,6 @@ import com.team3181.frc2023.Constants.SwerveConstants;
 import com.team3181.frc2023.Robot;
 import com.team3181.lib.commands.DisabledInstantCommand;
 import com.team3181.lib.math.BetterMath;
-import com.team3181.lib.math.GeomUtil;
 import com.team3181.lib.swerve.BetterSwerveKinematics;
 import com.team3181.lib.swerve.BetterSwerveModuleState;
 import com.team3181.lib.swerve.SwerveOptimizer;
@@ -14,7 +13,6 @@ import com.team3181.lib.util.Alert.AlertType;
 import com.team3181.lib.util.PoseEstimator;
 import com.team3181.lib.util.PoseEstimator.TimestampedVisionUpdate;
 import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Twist2d;
@@ -94,7 +92,7 @@ public class Swerve extends SubsystemBase {
         actualRobotRelativeChassisSpeeds = SwerveConstants.DRIVE_KINEMATICS.toChassisSpeeds(actualStates);
 
         var twist = SwerveConstants.DRIVE_KINEMATICS.toTwist2d(wheelDeltas);
-        var gyroYaw = new Rotation2d(gyroInputs.yawPositionRad);
+        var gyroYaw = getRobotRelativeAngle();
         if (gyroInputs.connected) {
             twist = new Twist2d(twist.dx, twist.dy, gyroYaw.minus(lastRotation).getRadians());
         }
@@ -211,6 +209,7 @@ public class Swerve extends SubsystemBase {
 //        }
 //    }
 //
+
     public void addVisionData(List<TimestampedVisionUpdate> visionData) {
         poseEstimator.addVisionData(visionData);
     }

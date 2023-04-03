@@ -1,4 +1,5 @@
 package com.team3181.frc2023.subsystems.vision;
+
 import com.team3181.lib.util.LimelightHelpers;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
@@ -7,7 +8,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import org.littletonrobotics.junction.Logger;
+import edu.wpi.first.wpilibj.Timer;
 
 public class VisionIOLimelight implements VisionIO {
     public Pose3d lastPose = new Pose3d();
@@ -28,7 +29,7 @@ public class VisionIOLimelight implements VisionIO {
         double totalLatency = pipelineLatency + captureLatency; // ms
 
         if (!lastPose.equals(new Pose3d(botposeEntry.getDoubleArray(new double[7])[0], botposeEntry.getDoubleArray(new double[7])[1], botposeEntry.getDoubleArray(new double[7])[2], new Rotation3d(botposeEntry.getDoubleArray(new double[7])[3], botposeEntry.getDoubleArray(new double[7])[4], botposeEntry.getDoubleArray(new double[7])[5])))) {
-            inputs.captureTimestamp = (Logger.getInstance().getRealTimestamp() / 1000000.0) - Units.millisecondsToSeconds(totalLatency);
+            inputs.captureTimestamp = Timer.getFPGATimestamp() - Units.millisecondsToSeconds(totalLatency);
             inputs.botXYZ = new double[]{botposeEntry.getDoubleArray(new double[7])[0], botposeEntry.getDoubleArray(new double[7])[1], botposeEntry.getDoubleArray(new double[7])[2]};
             inputs.botRPY = new double[]{botposeEntry.getDoubleArray(new double[7])[3], botposeEntry.getDoubleArray(new double[7])[4], botposeEntry.getDoubleArray(new double[7])[5]};
             inputs.tagIDs = new double[]{(int) LimelightHelpers.getFiducialID(limelightName)};

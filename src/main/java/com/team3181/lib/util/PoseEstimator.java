@@ -120,7 +120,7 @@ public class PoseEstimator {
      * Represents a sequential update to a pose estimate, with a twist (drive movement) and list of
      * vision updates.
      */
-    private static record PoseUpdate(Twist2d twist, ArrayList<VisionUpdate> visionUpdates) {
+    private record PoseUpdate(Twist2d twist, ArrayList<VisionUpdate> visionUpdates) {
         public Pose2d apply(Pose2d lastPose, Matrix<N3, N1> q) {
             // Apply drive twist
             var pose = lastPose.exp(twist);

@@ -126,6 +126,12 @@
       "names": [
         "maybeStop"
       ]
+    },
+    {
+      "position": 0.0,
+      "names": [
+        "visionOff"
+      ]
     }
   ]
 }
