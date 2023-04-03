@@ -33,6 +33,8 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import java.util.HashMap;
 
+import static edu.wpi.first.wpilibj2.command.Commands.parallel;
+
 public class RobotContainer {
   private final Swerve swerve = Swerve.getInstance();
   private final FourBar fourBar = FourBar.getInstance();
@@ -97,13 +99,13 @@ public class RobotContainer {
 //    driverController.b().whileTrue(new SwerveAutoBalance(false));
     driverController.y()
             .whileTrue(new SwerveAutoScore())
-            .whileFalse(new SuperstructureHome());
+            .whileFalse(parallel(new InstantCommand(() -> Superstructure.getInstance().setAutoPlace(false)), new SuperstructureHome()));
     driverController.b()
             .whileTrue(new SwerveAutoDoubleSubstationRight())
-            .whileFalse(new SuperstructureHome());
+            .whileFalse(parallel(new InstantCommand(() -> Superstructure.getInstance().setAutoSubstation(false)), new SuperstructureHome()));
     driverController.a()
             .whileTrue(new SwerveAutoDoubleSubstationLeft())
-            .whileFalse(new SuperstructureHome());
+            .whileFalse(parallel(new InstantCommand(() -> Superstructure.getInstance().setAutoSubstation(false)), new SuperstructureHome()));
     driverController.rightBumper()
             .whileTrue(new InstantCommand(swerve::zeroGyro));
     driverController.leftBumper()
@@ -141,13 +143,16 @@ public class RobotContainer {
             .whileTrue(objectiveTracker.shiftNodeCommand(Direction.LEFT));
     operatorController.leftBumper()
             .whileTrue(new InstantCommand(superstructure::zero));
+    operatorController.rightBumper()
+            .whileTrue(new InstantCommand(() -> endEffector.setForced(true)))
+            .whileFalse(new InstantCommand(() -> endEffector.setForced(false)));
 //    operatorController.rightBumper().
 //            whileTrue(new InstantCommand(objectiveTracker::toggleFilled));
 //    operatorController.leftBumper().
 //            whileTrue(new InstantCommand(objectiveTracker::toggleActive));
   }
 
-  public void autoConfig() {
+  private void autoConfig() {
     balanceChooser.addOption("No Balance", false);
     balanceChooser.addDefaultOption("Yes Balance", true);
 

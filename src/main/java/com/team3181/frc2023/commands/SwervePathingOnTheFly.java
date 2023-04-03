@@ -191,7 +191,7 @@ public class SwervePathingOnTheFly extends CommandBase {
                     adjustedPathPoints.add(AutoDrivePoints.pathPointFlipper(AutoDrivePoints.leavingCommunity(AutoDrivePoints.LOADING_STATION_TOP_INNER), DriverStation.getAlliance()));
                 }
                 else {
-                    BetterPathPoint entrance = AutoDrivePoints.pathPointFlipper(AutoDrivePoints.leavingCommunity(AutoDrivePoints.COMMUNITY_BOTTOM_EXIT), DriverStation.getAlliance());;
+                    BetterPathPoint entrance = AutoDrivePoints.pathPointFlipper(AutoDrivePoints.leavingCommunity(AutoDrivePoints.COMMUNITY_BOTTOM_EXIT), DriverStation.getAlliance());
                     if (robotPointBlue.getPosition().getX() < 2 && robotPointBlue.getPosition().getY() < 5.5) {
                         double distanceTop = GeomUtil.distance(new Pose2d(AutoDrivePoints.leavingCommunity(AutoDrivePoints.COMMUNITY_TOP_INNER).getPosition(), new Rotation2d()), new Pose2d(robotPointBlue.getPosition(), new Rotation2d()));
                         double distanceBottom = GeomUtil.distance(new Pose2d(AutoDrivePoints.leavingCommunity(AutoDrivePoints.COMMUNITY_BOTTOM_INNER).getPosition(), new Rotation2d()), new Pose2d(robotPointBlue.getPosition(), new Rotation2d()));

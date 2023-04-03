@@ -164,6 +164,7 @@ public class Robot extends LoggedRobot {
     lowBatteryAlert.set(false);
     Swerve.getInstance().setBrakeMode();
     FourBar.getInstance().brake();
+    Vision.getInstance().setVisionEnabled(false);
     autonomousCommand = robotContainer.getAutonomousCommand();
 
     if (autonomousCommand != null) {

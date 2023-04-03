@@ -20,7 +20,7 @@ public class ArmIOShoulderSparkMax implements ArmIO {
     private int counter = 0;
     private double lastPos = 0;
     private double wraparoundOffset = 0;
-    private double oneEncoderRotation = 2 * Math.PI * FourBarConstants.CHAIN_RATIO;
+    private final double oneEncoderRotation = 2 * Math.PI * FourBarConstants.CHAIN_RATIO;
     private double currentOffset = FourBarConstants.SHOULDER_ABSOLUTE_OFFSET.getRadians();
     // Indicates if we have run at least one periodic iteration so we have a "last position" to be able to tell if we wrapped around the encoder.
     private boolean isFirstPositionUpdate = true;
@@ -54,12 +54,12 @@ public class ArmIOShoulderSparkMax implements ArmIO {
 
             // Check if we've wrapped around the zero point.  If we've travelled more than a half circle in one update period,
             // then assume we wrapped around.
-            if (positionDiff > oneEncoderRotation / 2) {
+            if (positionDiff > oneEncoderRotation / 2.0) {
                 // We went up by over a half rotation, which means we likely wrapped around the zero point going in the negative direction.
                 position -= oneEncoderRotation;
                 wraparoundOffset -= oneEncoderRotation;
             }
-            if (positionDiff < -1 * oneEncoderRotation / 2) {
+            else if (positionDiff < -1 * oneEncoderRotation / 2.0) {
                 // We went down by over a half rotation, which means we likely wrapped around the zero point going in the positive direction.
                 position += oneEncoderRotation;
                 wraparoundOffset += oneEncoderRotation;
@@ -82,7 +82,8 @@ public class ArmIOShoulderSparkMax implements ArmIO {
         inputs.armAtLimit = limitSwitch.isPressed();
         lastPos = position;
 
-        Logger.getInstance().recordOutput("Shoulder/Counter", counter);
+        Logger.getInstance().recordOutput("Shoulder/Wraparound Offset", wraparoundOffset);
+        Logger.getInstance().recordOutput("Shoulder/Wraparound Offset", wraparoundOffset);
 
         Logger.getInstance().recordOutput("Shoulder/followerArmAppliedVolts", followerMotor.getAppliedOutput() * followerMotor.getBusVoltage());
         Logger.getInstance().recordOutput("Shoulder/followerArmCurrentAmps", followerMotor.getOutputCurrent());

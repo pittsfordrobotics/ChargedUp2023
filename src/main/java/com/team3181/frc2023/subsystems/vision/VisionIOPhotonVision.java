@@ -39,7 +39,6 @@ public class VisionIOPhotonVision implements VisionIO {
             aprilTagFieldLayout = null;
             poseEstimator = null;
         }
-        cam.setDriverMode(false);
     }
 
     public void updateInputs(VisionIOInputs inputs) {
@@ -67,5 +66,7 @@ public class VisionIOPhotonVision implements VisionIO {
         inputs.pipelineLatency = Units.millisecondsToSeconds(cam.getLatestResult().getLatencyMillis());
         inputs.hasTarget = cam.getLatestResult().hasTargets();
         inputs.connected = cam.isConnected();
+        cam.setDriverMode(false);
+        cam.setPipelineIndex(0);
     }
 }

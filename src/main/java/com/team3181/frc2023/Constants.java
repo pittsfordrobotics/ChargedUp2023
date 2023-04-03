@@ -7,6 +7,7 @@ package com.team3181.frc2023;
 import com.ctre.phoenix.sensors.Pigeon2Configuration;
 import com.pathplanner.lib.PathConstraints;
 import com.team3181.frc2023.subsystems.endeffector.EndEffectorIO;
+import com.team3181.frc2023.subsystems.endeffector.EndEffectorIOSparkMax;
 import com.team3181.frc2023.subsystems.fourbar.ArmIO;
 import com.team3181.frc2023.subsystems.fourbar.ArmIOElbowSparkMax;
 import com.team3181.frc2023.subsystems.fourbar.ArmIOShoulderSparkMax;
@@ -89,8 +90,8 @@ public final class Constants {
                 PHOTON_FRONT_RIGHT = RobotConstants.IS_TANK ? new VisionIO() {} : new VisionIOPhotonVision(VisionConstants.PHOTON_FRONT_RIGHT_NAME, VisionConstants.PHOTON_FRONT_RIGHT_TRANSFORM);
                 PHOTON_RIGHT = RobotConstants.IS_TANK ? new VisionIO() {} : new VisionIOPhotonVision(VisionConstants.PHOTON_RIGHT_NAME, VisionConstants.PHOTON_RIGHT_TRANSFORM);
                 LEDS = RobotConstants.IS_TANK ? new LEDStripIO(){} : new LEDStripIORio(LEDConstants.PWM_PORT, LEDConstants.NUMBER);
-//                END_EFFECTOR = new EndEffectorIOSparkMax();
-                END_EFFECTOR = new EndEffectorIO() {};
+                END_EFFECTOR = new EndEffectorIOSparkMax();
+//                END_EFFECTOR = new EndEffectorIO() {};
             }
             else {
                 SHOULDER = new ArmIO(){};
@@ -272,8 +273,8 @@ public final class Constants {
         public static final String PHOTON_LEFT_NAME = "left";
         public static final String PHOTON_RIGHT_NAME = "right";
 
-        public static final Transform3d PHOTON_FRONT_LEFT_TRANSFORM = new Transform3d(new Translation3d(0.31, 0.14, 0.45), new Rotation3d(3.14, -0.37, -0.79));
-        public static final Transform3d PHOTON_FRONT_RIGHT_TRANSFORM = new Transform3d(new Translation3d(0.31, -0.14, 0.45), new Rotation3d(3.14, -0.37, 0.79));
+        public static final Transform3d PHOTON_FRONT_LEFT_TRANSFORM = new Transform3d(new Translation3d(0.31, 0.14, 0.45), new Rotation3d(0, -0.37, -0.79));
+        public static final Transform3d PHOTON_FRONT_RIGHT_TRANSFORM = new Transform3d(new Translation3d(0.31, -0.14, 0.45), new Rotation3d(0, -0.37, 0.79));
         public static final Transform3d PHOTON_LEFT_TRANSFORM = new Transform3d(new Translation3d(0.0051, 0.19, 0.5), new Rotation3d(0.0, 0.0, 1.57));
         public static final Transform3d PHOTON_RIGHT_TRANSFORM = new Transform3d(new Translation3d(-0.0051, -0.19, 0.52), new Rotation3d(0.0, 0.0, -1.57));
 
@@ -406,7 +407,7 @@ public final class Constants {
             public static Rotation2d MID_CONE_ELBOW = Rotation2d.fromRadians(0.8577836751937866);
 
             public static Rotation2d HIGH_CUBE_SHOULDER = Rotation2d.fromRadians(-0.815398097038269);
-            public static Rotation2d HIGH_CUBE_ELBOW = Rotation2d.fromRadians(1.060633897781372);
+            public static Rotation2d HIGH_CUBE_ELBOW = Rotation2d.fromRadians(0.860633897781372);
 
             public static Rotation2d HIGH_CONE_SHOULDER = Rotation2d.fromRadians(0.29303767681121822);
             public static Rotation2d HIGH_CONE_ELBOW = Rotation2d.fromRadians(0.3829857921600342); //0.4229857921600342

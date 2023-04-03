@@ -26,6 +26,7 @@ public class EndEffector extends SubsystemBase {
     private ActualState actualState = ActualState.IDLE;
     private final Vector<Double> intakeCurrents = new Vector<>();
     private final int currentCycles = 20; // TODO: try increasing this
+    private boolean forced = false;
 
     private final static EndEffector INSTANCE = new EndEffector(Constants.RobotConstants.END_EFFECTOR);
     public static EndEffector getInstance() {
@@ -33,10 +34,10 @@ public class EndEffector extends SubsystemBase {
     }
 
     public enum WantedState {
-        IDLE, INTAKING, EXHAUSTING
+        IDLE, INTAKING, EXHAUSTING, STOP
     }
     public enum ActualState {
-        IDLE, INTAKING, OBTAINED, EXHAUSTING
+        IDLE, INTAKING, OBTAINED, EXHAUSTING, STOP
     }
     private EndEffector(EndEffectorIO io) {
         this.io = io;
@@ -74,6 +75,9 @@ public class EndEffector extends SubsystemBase {
                     else {
                         io.setVoltage(EndEffectorConstants.EXHAUST_CUBE_POWER);
                     }
+                    if (forced) {
+                        io.setVoltage(-12);
+                    }
                     break;
                 case OBTAINED:
                 case IDLE:
@@ -92,6 +96,11 @@ public class EndEffector extends SubsystemBase {
 
     public void addGamePiece() {
         actualState = ActualState.OBTAINED;
+    }
+
+    public void setForced(boolean forced) {
+        this.forced = forced;
+        wantedState = WantedState.EXHAUSTING;
     }
 
     public void intake() {

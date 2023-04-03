@@ -64,12 +64,6 @@ public class FourBar extends SubsystemBase {
 
         shoulderTooLow.set(DriverStation.isDisabled() && inputs[0].armOffsetPositionRad > 0);
 
-//        auto zeros when at setpoint
-        if (atElbowLimit() && atShoulderLimit()) {
-            zeroArms();
-            Logger.getInstance().recordOutput("FourBar/Zeroing", true);
-        }
-
 //        System.out.println(Arrays.toString(
 //                solve(
 //                        new Translation2d(

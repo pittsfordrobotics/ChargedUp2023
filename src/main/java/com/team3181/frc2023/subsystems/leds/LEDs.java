@@ -84,7 +84,7 @@ public class LEDs extends SubsystemBase {
             setColorBack(color);
         }
         else if (timer.get() < 0.2) {
-            setOff();
+            setOffBack();
         }
         else {
             timer.restart();
@@ -103,6 +103,15 @@ public class LEDs extends SubsystemBase {
         }
         for (int i = 20; i < 30; i++) {
             leds.setRGB(i, (int)(color.red * 255), (int)(color.green * 255), (int)(color.blue * 255));
+        }
+    }
+
+    private void setOffBack() {
+        for (int i = 0; i < 10; i++) {
+            leds.setRGB(i,0, 0,0);
+        }
+        for (int i = 20; i < 30; i++) {
+            leds.setRGB(i,0, 0,0);
         }
     }
 

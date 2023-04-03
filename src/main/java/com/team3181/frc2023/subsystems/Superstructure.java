@@ -47,7 +47,6 @@ public class Superstructure extends SubsystemBase {
     private boolean autoNode = false;
     private boolean autoSubstation = false;
     private boolean demandLEDs = false;
-    private boolean hasBeenZeroed = true;
 
     private final static Superstructure INSTANCE = new Superstructure();
 
@@ -162,7 +161,7 @@ public class Superstructure extends SubsystemBase {
                     endEffector.idle();
                 }
                 if (systemState == StructureState.EXHAUST) {
-                    ObjectiveTracker.getInstance().setFilled();
+//                    ObjectiveTracker.getInstance().setFilled();
                 }
                 if (systemState == StructureState.EXHAUST || systemState == StructureState.OBJECTIVE) {
                     LEDs.getInstance().setLEDMode(LEDModes.IDLE);
@@ -291,19 +290,24 @@ public class Superstructure extends SubsystemBase {
                     if (!shoulderDone) {
                         fourBar.setArmVoltage(0, -1.5);
                     }
-                    if (!elbowDone) {
+                    else if (!elbowDone) {
                         fourBar.setArmVoltage(1, -0.5);
                     }
                     if (shoulderDone && elbowDone) {
                         fourBar.setArmVoltage(0, 0);
                         fourBar.setArmVoltage(1, 0);
-                        hasBeenZeroed = true;
+                        FourBar.getInstance().zeroArms();
                     }
                     break;
                 case HOME:
                 default:
+                    if (!fourBar.atSetpoint()) {
+                        endEffector.exhaust();
+                    }
+                    else {
+                        endEffector.idle();
+                    }
                     fourBar.setRotations(new Rotation2d[]{SuperstructureConstants.ArmPositions.STORAGE_SHOULDER, SuperstructureConstants.ArmPositions.STORAGE_ELBOW}, false);
-                    endEffector.idle();
                     break;
             }
         }
