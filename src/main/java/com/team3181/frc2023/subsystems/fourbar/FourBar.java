@@ -113,17 +113,20 @@ public class FourBar extends SubsystemBase {
         setArmVoltage(index, voltage + ff.get(index, 0));
     }
 
+    public void setRotationsNoFF(Rotation2d[] rotations, boolean mathElbow) {
+        shoulderPID.setGoal(rotations[0].getRadians());
+        armIO[0].setVoltage(MathUtil.clamp(shoulderPID.calculate(inputs[0].armOffsetPositionRad), -FourBarConstants.PID_CLAMP_VOLTAGE, FourBarConstants.PID_CLAMP_VOLTAGE));
+        elbowPID.setGoal(rotations[1].getRadians());
+        armIO[1].setVoltage(MathUtil.clamp(elbowPID.calculate(mathElbow ? inputs[1].armOffsetPositionRad - inputs[0].armOffsetPositionRad : inputs[1].armOffsetPositionRad), -FourBarConstants.PID_CLAMP_VOLTAGE, FourBarConstants.PID_CLAMP_VOLTAGE));
+    }
+
     public void setRotations(Rotation2d[] rotations, boolean mathElbow) {
-        Boolean[] illegal = checkIllegal(rotations);
         Vector<N2> pos = new Vector<>(VecBuilder.fill(inputs[0].armOffsetPositionRad, inputs[1].armOffsetPositionRad));
         Vector<N2> ff = ArmDynamics.getInstance().feedforward(pos);
-//        if (!illegal[0]) {
-            shoulderPID.setGoal(rotations[0].getRadians());
-            armIO[0].setVoltage(MathUtil.clamp(shoulderPID.calculate(inputs[0].armOffsetPositionRad), -FourBarConstants.PID_CLAMP_VOLTAGE, FourBarConstants.PID_CLAMP_VOLTAGE) + ff.get(0, 0));
-//        if (!illegal[1]) {
-            elbowPID.setGoal(rotations[1].getRadians());
-            armIO[1].setVoltage(MathUtil.clamp(elbowPID.calculate(mathElbow ? inputs[1].armOffsetPositionRad - inputs[0].armOffsetPositionRad : inputs[1].armOffsetPositionRad), -FourBarConstants.PID_CLAMP_VOLTAGE, FourBarConstants.PID_CLAMP_VOLTAGE) + ff.get(1, 0));
-//        }
+        shoulderPID.setGoal(rotations[0].getRadians());
+        armIO[0].setVoltage(MathUtil.clamp(shoulderPID.calculate(inputs[0].armOffsetPositionRad), -FourBarConstants.PID_CLAMP_VOLTAGE, FourBarConstants.PID_CLAMP_VOLTAGE) + ff.get(0, 0));
+        elbowPID.setGoal(rotations[1].getRadians());
+        armIO[1].setVoltage(MathUtil.clamp(elbowPID.calculate(mathElbow ? inputs[1].armOffsetPositionRad - inputs[0].armOffsetPositionRad : inputs[1].armOffsetPositionRad), -FourBarConstants.PID_CLAMP_VOLTAGE, FourBarConstants.PID_CLAMP_VOLTAGE) + ff.get(1, 0));
     }
 
     public void dropElbow() {

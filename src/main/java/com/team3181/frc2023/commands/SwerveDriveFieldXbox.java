@@ -50,16 +50,16 @@ public class SwerveDriveFieldXbox extends CommandBase {
                 double rotCommanded = rotLimiter.calculate(rot);
 
                 swerve.driveFieldOrientated(
-                        xSpeedCommanded,
-                        ySpeedCommanded,
-                        rotCommanded
+                        swerve.isSlowMode() ? xSpeedCommanded / 2 : xSpeedCommanded,
+                        swerve.isSlowMode() ? ySpeedCommanded / 2 : ySpeedCommanded,
+                        swerve.isSlowMode() ? rotCommanded / 2 : rotCommanded
                 );
             } else {
                 wasRateLimiting = false;
                 swerve.driveFieldOrientated(
-                        BetterXboxController.getController(Humans.DRIVER).getSwerveTranslation().getX(),
-                        BetterXboxController.getController(Humans.DRIVER).getSwerveTranslation().getY(),
-                        BetterXboxController.getController(Humans.DRIVER).getSwerveRotation()
+                        swerve.isSlowMode() ? BetterXboxController.getController(Humans.DRIVER).getSwerveTranslation().getX() / 2 : BetterXboxController.getController(Humans.DRIVER).getSwerveTranslation().getX(),
+                        swerve.isSlowMode() ? BetterXboxController.getController(Humans.DRIVER).getSwerveTranslation().getY() / 2 : BetterXboxController.getController(Humans.DRIVER).getSwerveTranslation().getY(),
+                        swerve.isSlowMode() ? BetterXboxController.getController(Humans.DRIVER).getSwerveRotation() / 2 : BetterXboxController.getController(Humans.DRIVER).getSwerveRotation()
                 );
             }
         }

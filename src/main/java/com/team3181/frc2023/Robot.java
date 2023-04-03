@@ -146,7 +146,6 @@ public class Robot extends LoggedRobot {
   @Override
   public void disabledInit() {
     disabledTimer.restart();
-    robotContainer.autoConfig();
     stopped = false;
   }
 
@@ -185,7 +184,6 @@ public class Robot extends LoggedRobot {
       autonomousCommand.cancel();
       autonomousCommand = null;
     }
-    robotContainer.killAuto();
   }
 
   @Override

@@ -18,6 +18,7 @@ public class VisionIOLimelight implements VisionIO {
 
     public VisionIOLimelight() {
         setLEDs(LED.OFF);
+        setPipeline(Pipelines.MID_RANGE);
     }
 
     public void updateInputs(VisionIOInputs inputs) {

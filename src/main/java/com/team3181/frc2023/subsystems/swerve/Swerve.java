@@ -46,6 +46,7 @@ public class Swerve extends SubsystemBase {
 
     private Rotation2d lastRotation = new Rotation2d();
     private boolean isOpenLoop = false;
+    private boolean slowMode = false;
 
     private final Alert pigeonAlert = new Alert("Pigeon not detected! Falling back to estimated angle!", AlertType.ERROR);
     private final static Swerve INSTANCE = new Swerve(RobotConstants.FL_MODULE, RobotConstants.FR_MODULE, RobotConstants.BL_MODULE, RobotConstants.BR_MODULE, RobotConstants.GYRO);
@@ -118,6 +119,7 @@ public class Swerve extends SubsystemBase {
         Logger.getInstance().recordOutput("Swerve/Chassis Speeds X", actualRobotRelativeChassisSpeeds.vxMetersPerSecond);
         Logger.getInstance().recordOutput("Swerve/Chassis Speeds Y", actualRobotRelativeChassisSpeeds.vyMetersPerSecond);
         Logger.getInstance().recordOutput("Swerve/Chassis Speeds Rot", actualRobotRelativeChassisSpeeds.omegaRadiansPerSecond);
+        Logger.getInstance().recordOutput("Swerve/Slow Mode", slowMode);
 
         pigeonAlert.set(!gyroInputs.connected);
     }
@@ -198,6 +200,14 @@ public class Swerve extends SubsystemBase {
         Pose2d pose = new Pose2d(getPose().getX(), getPose().getY(), new Rotation2d());
         poseEstimator.resetPose(pose);
 //        poseEstimator.resetPosition(getRobotRelativeAngle(), modulePositions, pose);
+    }
+
+    public void setSlowMode(boolean slowMode) {
+        this.slowMode = slowMode;
+    }
+
+    public boolean isSlowMode() {
+        return slowMode;
     }
 
 //    public void addVisionData(Pose2d pose, double time, boolean stable) {

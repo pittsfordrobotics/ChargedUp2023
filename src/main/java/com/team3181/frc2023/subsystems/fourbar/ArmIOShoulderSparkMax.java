@@ -54,12 +54,12 @@ public class ArmIOShoulderSparkMax implements ArmIO {
 
             // Check if we've wrapped around the zero point.  If we've travelled more than a half circle in one update period,
             // then assume we wrapped around.
-            if (positionDiff > oneEncoderRotation / 1.2) {
+            if (positionDiff > oneEncoderRotation / 2) {
                 // We went up by over a half rotation, which means we likely wrapped around the zero point going in the negative direction.
                 position -= oneEncoderRotation;
                 wraparoundOffset -= oneEncoderRotation;
             }
-            if (positionDiff < -1 * oneEncoderRotation / 1.2) {
+            if (positionDiff < -1 * oneEncoderRotation / 2) {
                 // We went down by over a half rotation, which means we likely wrapped around the zero point going in the positive direction.
                 position += oneEncoderRotation;
                 wraparoundOffset += oneEncoderRotation;

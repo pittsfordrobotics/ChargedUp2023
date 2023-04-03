@@ -84,7 +84,7 @@ public class Vision extends SubsystemBase {
 
         List<Pose2d> allRobotPoses = new ArrayList<>();
 //        Pose estimation
-        if (!visionEnabled) {
+        if (visionEnabled) {
             for (int i = 0; i < io.length; i++) {
 //            exit if data is bad
                 if (Arrays.equals(inputs[i].botXYZ, new double[]{0.0, 0.0, 0.0}) || inputs[i].botXYZ.length == 0 || !inputs[i].connected) {

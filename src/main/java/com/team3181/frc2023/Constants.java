@@ -7,7 +7,6 @@ package com.team3181.frc2023;
 import com.ctre.phoenix.sensors.Pigeon2Configuration;
 import com.pathplanner.lib.PathConstraints;
 import com.team3181.frc2023.subsystems.endeffector.EndEffectorIO;
-import com.team3181.frc2023.subsystems.endeffector.EndEffectorIOSparkMax;
 import com.team3181.frc2023.subsystems.fourbar.ArmIO;
 import com.team3181.frc2023.subsystems.fourbar.ArmIOElbowSparkMax;
 import com.team3181.frc2023.subsystems.fourbar.ArmIOShoulderSparkMax;
@@ -52,7 +51,7 @@ public final class Constants {
 
         public final static boolean IS_TANK = false;
         public static final boolean LOGGING_ENABLED = true;
-        public static final boolean REPLAY_ENABLED = false;
+        public static final boolean REPLAY_ENABLED = true;
         public static final String LOGGING_PATH = "/media/sda2/";
         public static final boolean PID_TUNER_ENABLED = false;
         public static final double LOOP_TIME_SECONDS = 0.02;
@@ -85,12 +84,13 @@ public final class Constants {
                 BR_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSparkMax(SwerveConstants.CAN_BR_DRIVE, SwerveConstants.CAN_BR_STEER, SwerveConstants.BR_OFFSET);
                 GYRO = RobotConstants.IS_TANK ? new GyroIO(){} : new GyroIOPigeon();
                 LIMELIGHT = RobotConstants.IS_TANK ? new VisionIO() {} : new VisionIOLimelight();
-                PHOTON_LEFT = true ? new VisionIO() {} : new VisionIOPhotonVision(VisionConstants.PHOTON_LEFT_NAME, VisionConstants.PHOTON_LEFT_TRANSFORM);
-                PHOTON_FRONT_LEFT = true ? new VisionIO() {} : new VisionIOPhotonVision(VisionConstants.PHOTON_FRONT_LEFT_NAME, VisionConstants.PHOTON_FRONT_LEFT_TRANSFORM);
-                PHOTON_FRONT_RIGHT = true ? new VisionIO() {} : new VisionIOPhotonVision(VisionConstants.PHOTON_FRONT_RIGHT_NAME, VisionConstants.PHOTON_FRONT_RIGHT_TRANSFORM);
-                PHOTON_RIGHT = true ? new VisionIO() {} : new VisionIOPhotonVision(VisionConstants.PHOTON_RIGHT_NAME, VisionConstants.PHOTON_RIGHT_TRANSFORM);
+                PHOTON_LEFT = RobotConstants.IS_TANK ? new VisionIO() {} : new VisionIOPhotonVision(VisionConstants.PHOTON_LEFT_NAME, VisionConstants.PHOTON_LEFT_TRANSFORM);
+                PHOTON_FRONT_LEFT = RobotConstants.IS_TANK ? new VisionIO() {} : new VisionIOPhotonVision(VisionConstants.PHOTON_FRONT_LEFT_NAME, VisionConstants.PHOTON_FRONT_LEFT_TRANSFORM);
+                PHOTON_FRONT_RIGHT = RobotConstants.IS_TANK ? new VisionIO() {} : new VisionIOPhotonVision(VisionConstants.PHOTON_FRONT_RIGHT_NAME, VisionConstants.PHOTON_FRONT_RIGHT_TRANSFORM);
+                PHOTON_RIGHT = RobotConstants.IS_TANK ? new VisionIO() {} : new VisionIOPhotonVision(VisionConstants.PHOTON_RIGHT_NAME, VisionConstants.PHOTON_RIGHT_TRANSFORM);
                 LEDS = RobotConstants.IS_TANK ? new LEDStripIO(){} : new LEDStripIORio(LEDConstants.PWM_PORT, LEDConstants.NUMBER);
-                END_EFFECTOR = new EndEffectorIOSparkMax();
+//                END_EFFECTOR = new EndEffectorIOSparkMax();
+                END_EFFECTOR = new EndEffectorIO() {};
             }
             else {
                 SHOULDER = new ArmIO(){};
@@ -272,10 +272,10 @@ public final class Constants {
         public static final String PHOTON_LEFT_NAME = "left";
         public static final String PHOTON_RIGHT_NAME = "right";
 
-        public static final Transform3d PHOTON_FRONT_LEFT_TRANSFORM = new Transform3d(new Translation3d(0.0, 0.0, 0.0), new Rotation3d(0.0, 0.0, 0.0));
-        public static final Transform3d PHOTON_FRONT_RIGHT_TRANSFORM = new Transform3d(new Translation3d(0.0, 0.0, 0.0), new Rotation3d(0.0, 0.0, 0.0));
-        public static final Transform3d PHOTON_LEFT_TRANSFORM = new Transform3d(new Translation3d(0.0, 0.0, 0.0), new Rotation3d(0.0, 0.0, 0.0));
-        public static final Transform3d PHOTON_RIGHT_TRANSFORM = new Transform3d(new Translation3d(0.0, 0.0, 0.0), new Rotation3d(0.0, 0.0, 0.0));
+        public static final Transform3d PHOTON_FRONT_LEFT_TRANSFORM = new Transform3d(new Translation3d(0.31, 0.14, 0.45), new Rotation3d(3.14, -0.37, -0.79));
+        public static final Transform3d PHOTON_FRONT_RIGHT_TRANSFORM = new Transform3d(new Translation3d(0.31, -0.14, 0.45), new Rotation3d(3.14, -0.37, 0.79));
+        public static final Transform3d PHOTON_LEFT_TRANSFORM = new Transform3d(new Translation3d(0.0051, 0.19, 0.5), new Rotation3d(0.0, 0.0, 1.57));
+        public static final Transform3d PHOTON_RIGHT_TRANSFORM = new Transform3d(new Translation3d(-0.0051, -0.19, 0.52), new Rotation3d(0.0, 0.0, -1.57));
 
         public static final double FIELD_BORDER_MARGIN = 0.5;
         public static final double Z_MARGIN = 0.75;
