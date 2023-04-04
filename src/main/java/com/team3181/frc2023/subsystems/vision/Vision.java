@@ -167,24 +167,23 @@ public class Vision extends SubsystemBase {
         Logger.getInstance().recordOutput("Vision/Poses", allRobotPoses.toArray(new Pose2d[0]));
     }
 
-    public Pose2d resetPose() {
-        for (int i = 3; i < 4; i++) {
-            if (Arrays.equals(inputs[i].botXYZ, new double[]{0.0, 0.0, 0.0}) || inputs[i].botXYZ.length == 0 || !inputs[i].connected) {
-                continue;
-            }
-            Pose3d robotPose3d = new Pose3d(inputs[i].botXYZ[0], inputs[i].botXYZ[1], inputs[i].botXYZ[2], new Rotation3d(inputs[i].botRPY[0], inputs[i].botRPY[1], inputs[i].botRPY[2]));
+//    public Pose2d resetPose() {
+//        for (int i = 3; i < 4; i++) {
+//            if (Arrays.equals(inputs[i].botXYZ, new double[]{0.0, 0.0, 0.0}) || inputs[i].botXYZ.length == 0 || !inputs[i].connected) {
+//                continue;
+//            }
+//            Pose3d robotPose3d = new Pose3d(inputs[i].botXYZ[0], inputs[i].botXYZ[1], inputs[i].botXYZ[2], new Rotation3d(inputs[i].botRPY[0], inputs[i].botRPY[1], inputs[i].botRPY[2]));
+//
+//            return robotPose3d.toPose2d();
+//        }
+//        return null;
+//    }
 
-            return robotPose3d.toPose2d();
-        }
-        return null;
+//    public void setDataInterface(Consumer<List<TimestampedVisionUpdate>> visionConsumer) {
+//        this.visionConsumer = visionConsumer;
+//    }
 
-    }
-
-    public void setDataInterface(Consumer<List<TimestampedVisionUpdate>> visionConsumer) {
-        this.visionConsumer = visionConsumer;
-    }
-
-    public void setPipeline(Pipelines pipeline) {
-        this.pipeline = pipeline;
-    }
+//    public void setPipeline(Pipelines pipeline) {
+//        this.pipeline = pipeline;
+//    }
 }
