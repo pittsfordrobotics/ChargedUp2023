@@ -10,8 +10,7 @@ public class SwerveAutoDoubleSubstationRight extends ParallelDeadlineGroup {
         super(
                 new SuperstructureDoubleSubstation(),
                 new InstantCommand(() -> Superstructure.getInstance().setAutoSubstation(true)),
-                new SwervePathingOnTheFly(false, true),
-                new InstantCommand(() -> Superstructure.getInstance().setAutoSubstation(false))
+                new SwervePathingOnTheFly(false, true)
         );
     }
 }

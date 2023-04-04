@@ -27,7 +27,6 @@ public class Vision extends SubsystemBase {
 
     private Pipelines pipeline = Pipelines.MID_RANGE;
     private final Map<Integer, Double> lastTagDetectionTimes = new HashMap<>();
-    private boolean visionEnabled = true;
 
     private final Alert limelightAlert = new Alert("Limelight not detected! Vision WILL be hindered!", AlertType.WARNING);
     private final Alert rightSideAlert = new Alert("Right Camera not detected! Vision WILL be hindered!", AlertType.WARNING);
@@ -84,8 +83,11 @@ public class Vision extends SubsystemBase {
 
         List<Pose2d> allRobotPoses = new ArrayList<>();
 //        Pose estimation
-        if (visionEnabled) {
+        {
             for (int i = 0; i < io.length; i++) {
+                if (i != 3 && i != 4) {
+                    continue;
+                }
 //            exit if data is bad
                 if (Arrays.equals(inputs[i].botXYZ, new double[]{0.0, 0.0, 0.0}) || inputs[i].botXYZ.length == 0 || !inputs[i].connected) {
                     continue;
@@ -131,6 +133,10 @@ public class Vision extends SubsystemBase {
                 double thetaStdDev = VisionConstants.THETA_STD_DEV_COEF * Math.pow(avgDistance, 2.0) / tagPoses.size();
                 Logger.getInstance().recordOutput("Vision/XYstd", xyStdDev);
                 Logger.getInstance().recordOutput("Vision/ThetaStd", thetaStdDev);
+//                if (i != 3 && i != 4) {
+//                    xyStdDev /= 10;
+//                    thetaStdDev /= 10;
+//                }
                 visionUpdates.add(
                         new TimestampedVisionUpdate(
                                 inputs[i].captureTimestamp, robotPose, VecBuilder.fill(xyStdDev, xyStdDev, thetaStdDev)));
@@ -156,17 +162,25 @@ public class Vision extends SubsystemBase {
             }
         }
         Logger.getInstance().recordOutput("Vision/Poses", allRobotPoses.toArray(new Pose2d[0]));
-        Logger.getInstance().recordOutput("Vision/Enabled", visionEnabled);
+    }
+
+    public Pose2d resetPose() {
+        for (int i = 3; i < 4; i++) {
+            if (Arrays.equals(inputs[i].botXYZ, new double[]{0.0, 0.0, 0.0}) || inputs[i].botXYZ.length == 0 || !inputs[i].connected) {
+                continue;
+            }
+            Pose3d robotPose3d = new Pose3d(inputs[i].botXYZ[0], inputs[i].botXYZ[1], inputs[i].botXYZ[2], new Rotation3d(inputs[i].botRPY[0], inputs[i].botRPY[1], inputs[i].botRPY[2]));
+
+            return robotPose3d.toPose2d();
+        }
+        return null;
+
     }
 
     public void setDataInterface(Consumer<List<TimestampedVisionUpdate>> visionConsumer) {
         this.visionConsumer = visionConsumer;
     }
-    
-    public void setVisionEnabled(boolean enabled) {
-        visionEnabled = enabled;
-    }
-    
+
     public void setPipeline(Pipelines pipeline) {
         this.pipeline = pipeline;
     }

@@ -12,12 +12,10 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import java.util.HashMap;
 
 public class Paths {
-//    public static final PathPlannerTrajectory TOP_THREE = PathPlanner.loadPath("Top 3 Item", AutoConstants.MAX_SPEED);
-    public static final PathPlannerTrajectory TOP_THREE_BALANCE = PathPlanner.loadPath("Top 3 Item + Balance", AutoConstants.SLOW_SPEED);
-    public static final PathPlannerTrajectory BOTTOM_THREE = PathPlanner.loadPath("Bottom 3 Item", AutoConstants.SLOW_SPEED);
-//    public static final PathPlannerTrajectory BOTTOM_THREE_BALANCE = PathPlanner.loadPath("Bottom 3 Item + Balance", AutoConstants.MAX_SPEED);
-//    public static final PathPlannerTrajectory TOP_TWO_PLUS_ONE = PathPlanner.loadPath("Top 2 Item + 1", AutoConstants.MAX_SPEED);
-//    public static final PathPlannerTrajectory BOTTOM_TWO_PLUS_ONE = PathPlanner.loadPath("Bottom 2 Item + 1", AutoConstants.MAX_SPEED);
+    public static final PathPlannerTrajectory TOP_THREE = PathPlanner.loadPath("Top 3", AutoConstants.MAX_SPEED);
+    public static final PathPlannerTrajectory BOTTOM_THREE = PathPlanner.loadPath("Bottom 3", AutoConstants.MAX_SPEED);
+    public static final PathPlannerTrajectory TOP_TWO_PLUS_ONE = PathPlanner.loadPath("Top 2 + 1", AutoConstants.MAX_SPEED);
+    public static final PathPlannerTrajectory BOTTOM_TWO_PLUS_ONE = PathPlanner.loadPath("Bottom 2 + 1", AutoConstants.MAX_SPEED);
     public static final PathPlannerTrajectory BOTTOM_CUBE_PLUS_ONE = PathPlanner.loadPath("Bottom Cube + 1", AutoConstants.SLOW_SPEED);
     public static final PathPlannerTrajectory BOTTOM_CONE_PLUS_ONE = PathPlanner.loadPath("Bottom Cone + 1", AutoConstants.SLOW_SPEED);
     public static final PathPlannerTrajectory TOP_CUBE_PLUS_ONE = PathPlanner.loadPath("Top Cube + 1", AutoConstants.SLOW_SPEED);
@@ -51,12 +49,6 @@ public class Paths {
 
         EVENT_MAP_BALANCE.put("objectiveCubeBottom", new SuperstructureObjectiveGlobal(new Objective(1, NodeLevel.HIGH)));
         EVENT_MAP_NO_BALANCE.put("objectiveCubeBottom", new SuperstructureObjectiveGlobal(new Objective(1, NodeLevel.HIGH)));
-
-        EVENT_MAP_BALANCE.put("exhaust", new SuperstructureExhaust());
-        EVENT_MAP_NO_BALANCE.put("exhaust", new SuperstructureExhaust());
-
-        EVENT_MAP_BALANCE.put("exhaust", new SuperstructureExhaust());
-        EVENT_MAP_NO_BALANCE.put("exhaust", new SuperstructureExhaust());
 
         EVENT_MAP_BALANCE.put("home", new SuperstructureHome());
         EVENT_MAP_NO_BALANCE.put("home", new SuperstructureHome());

@@ -4,6 +4,7 @@ import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.PathPlannerTrajectory.PathPlannerState;
 import com.team3181.frc2023.Constants.AutoConstants;
 import com.team3181.frc2023.subsystems.swerve.Swerve;
+import com.team3181.frc2023.subsystems.vision.Vision;
 import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -39,7 +40,12 @@ public class SwervePathing extends CommandBase {
         // adjusts because the field is flipped instead of rotated by 180
         PathPlannerState adjustedState = PathPlannerTrajectory.transformStateForAlliance(trajectory.getInitialState(), DriverStation.getAlliance());
         if (reset) {
-            swerve.resetPose(new Pose2d(adjustedState.poseMeters.getTranslation(), adjustedState.holonomicRotation));
+            if (Vision.getInstance().resetPose() != null) {
+                swerve.resetPose(Vision.getInstance().resetPose());
+            }
+            else {
+                swerve.resetPose(new Pose2d(adjustedState.poseMeters.getTranslation(), adjustedState.holonomicRotation));
+            }
         }
         xController.reset();
         yController.reset();

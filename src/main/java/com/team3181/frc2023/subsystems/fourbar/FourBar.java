@@ -81,7 +81,7 @@ public class FourBar extends SubsystemBase {
     }
 
     public void hold() {
-        Vector<N2> pos = new Vector<N2>(VecBuilder.fill(inputs[0].armOffsetPositionRad, inputs[1].armOffsetPositionRad));
+        Vector<N2> pos = new Vector<>(VecBuilder.fill(inputs[0].armOffsetPositionRad, inputs[1].armOffsetPositionRad));
         Vector<N2> ff = ArmDynamics. getInstance().feedforward(pos);
         setArmVoltage(0, ff.get(0, 0));
         setArmVoltage(1, ff.get(1, 0));

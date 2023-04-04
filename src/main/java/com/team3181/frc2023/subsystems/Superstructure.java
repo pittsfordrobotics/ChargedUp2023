@@ -160,7 +160,9 @@ public class Superstructure extends SubsystemBase {
                 if (systemState == StructureState.OBJECTIVE || systemState == StructureState.INTAKE_GROUND || systemState == StructureState.INTAKE_MID || systemState == StructureState.EXHAUST) {
                     endEffector.idle();
                 }
-                if (systemState == StructureState.EXHAUST) {
+                if (systemState == StructureState.EXHAUST || state == StructureState.HOME) {
+                    autoNode = false;
+                    autoSubstation = false;
 //                    ObjectiveTracker.getInstance().setFilled();
                 }
                 if (systemState == StructureState.EXHAUST || systemState == StructureState.OBJECTIVE) {

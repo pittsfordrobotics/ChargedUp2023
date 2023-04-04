@@ -168,13 +168,27 @@ public class SwervePathingOnTheFly extends CommandBase {
                     // inside node
                     if (robotPointBlue.getPosition().getX() > 1.7) {
                         BetterPathPoint updatedNode;
-                        if (adjustedPathPoints.size() == 0 && robotPointBlue.getPosition().getY() < 5.5) {
-                            BetterPathPoint headingCorrection = AutoDrivePoints.updateHeading(robotPoint, node);
-                            adjustedPathPoints.add(headingCorrection);
-                            updatedNode = new BetterPathPoint(node.getPosition(), headingCorrection.getHeading(), node.getHolonomicRotation());
+                        if ((inner.getPosition().getY() > 2.78 && node.getPosition().getY() < 2.78) || (inner.getPosition().getY() < 2.78 && node.getPosition().getY() > 2.78)) {
+                            BetterPathPoint mid = AutoDrivePoints.COMMUNITY_MID_INNER;
+                            if (adjustedPathPoints.size() == 0 && robotPointBlue.getPosition().getY() < 5.5) {
+                                BetterPathPoint headingCorrection = AutoDrivePoints.updateHeading(robotPoint, mid);
+                                adjustedPathPoints.add(headingCorrection);
+                                adjustedPathPoints.add(mid);
+                                updatedNode = new BetterPathPoint(node.getPosition(), headingCorrection.getHeading(), node.getHolonomicRotation());
+                            } else {
+                                adjustedPathPoints.add(mid);
+                                updatedNode = new BetterPathPoint(node.getPosition(), AutoDrivePoints.updateHeading(inner, node).getHeading(), node.getHolonomicRotation());
+                            }
+                            adjustedPathPoints.add(updatedNode);
                         }
                         else {
-                            updatedNode = new BetterPathPoint(node.getPosition(),  AutoDrivePoints.updateHeading(inner, node).getHeading(), node.getHolonomicRotation());
+                            if (adjustedPathPoints.size() == 0 && robotPointBlue.getPosition().getY() < 5.5) {
+                                BetterPathPoint headingCorrection = AutoDrivePoints.updateHeading(robotPoint, node);
+                                adjustedPathPoints.add(headingCorrection);
+                                updatedNode = new BetterPathPoint(node.getPosition(), headingCorrection.getHeading(), node.getHolonomicRotation());
+                            } else {
+                                updatedNode = new BetterPathPoint(node.getPosition(), AutoDrivePoints.updateHeading(inner, node).getHeading(), node.getHolonomicRotation());
+                            }
                         }
                         adjustedPathPoints.add(updatedNode);
                     }
