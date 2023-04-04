@@ -3,6 +3,7 @@ package com.team3181.frc2023.subsystems.vision;
 import com.team3181.frc2023.Constants.RobotConstants;
 import com.team3181.frc2023.Constants.VisionConstants;
 import com.team3181.frc2023.FieldConstants;
+import com.team3181.frc2023.subsystems.swerve.Swerve;
 import com.team3181.frc2023.subsystems.vision.VisionIO.Pipelines;
 import com.team3181.lib.util.Alert;
 import com.team3181.lib.util.Alert.AlertType;
@@ -83,8 +84,9 @@ public class Vision extends SubsystemBase {
 
         List<Pose2d> allRobotPoses = new ArrayList<>();
 //        Pose estimation
-        {
+//       if (!DriverStation.isAutonomous()) {
             for (int i = 0; i < io.length; i++) {
+                // rejecting all other cameras because they look bad
                 if (i != 3 && i != 4) {
                     continue;
                 }
@@ -137,9 +139,10 @@ public class Vision extends SubsystemBase {
 //                    xyStdDev /= 10;
 //                    thetaStdDev /= 10;
 //                }
-                visionUpdates.add(
-                        new TimestampedVisionUpdate(
-                                inputs[i].captureTimestamp, robotPose, VecBuilder.fill(xyStdDev, xyStdDev, thetaStdDev)));
+                Swerve.getInstance().addVisionData(robotPose, inputs[i].captureTimestamp, VecBuilder.fill(xyStdDev, xyStdDev, thetaStdDev));
+//                visionUpdates.add(
+//                        new TimestampedVisionUpdate(
+//                                inputs[i].captureTimestamp, robotPose, VecBuilder.fill(xyStdDev, xyStdDev, thetaStdDev)));
 
 
                 allRobotPoses.add(robotPose);
@@ -160,7 +163,7 @@ public class Vision extends SubsystemBase {
                                 "Vision/TagPoses" + i,
                                 tagPoses2d);
             }
-        }
+//        }
         Logger.getInstance().recordOutput("Vision/Poses", allRobotPoses.toArray(new Pose2d[0]));
     }
 

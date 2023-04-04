@@ -163,7 +163,7 @@ public final class Constants {
 //        NOT CHASSIS LENGTH
         public static final double X_LENGTH_METERS = Units.inchesToMeters(24.5);
         public static final double Y_LENGTH_METERS = Units.inchesToMeters(24.5);
-        public static final double BUMPER_WIDTH = Units.inchesToMeters(9);
+        public static final double BUMPER_WIDTH = Units.inchesToMeters(4);
         public static final double WHEEL_DIAMETER_METERS = Units.inchesToMeters(3);
 
         public static final Translation2d[] MODULE_OFFSETS = {
@@ -296,10 +296,10 @@ public final class Constants {
 
         //        numbers from 1678
         public static final double SLOW_LINEAR_VELOCITY_METERS_PER_SECOND = 2.0;
-        public static final double SLOW_LINEAR_ACCELERATION_METERS_PER_SECOND_SQUARED = 1.0;
+        public static final double SLOW_LINEAR_ACCELERATION_METERS_PER_SECOND_SQUARED = 1.5;
 
-        public static final double MAX_LINEAR_VELOCITY_METERS_PER_SECOND = 2.0;
-        public static final double MAX_LINEAR_ACCELERATION_METERS_PER_SECOND_SQUARED = 2.0;
+        public static final double MAX_LINEAR_VELOCITY_METERS_PER_SECOND = 2.2;
+        public static final double MAX_LINEAR_ACCELERATION_METERS_PER_SECOND_SQUARED = 2.3;
 
         public static final double SLOW_ANGULAR_VELOCITY_METERS_PER_SECOND = 0.8 * Math.PI;
         public static final double SLOW_ANGULAR_ACCELERATION_METERS_PER_SECOND_SQUARED = Math.pow(SLOW_ANGULAR_VELOCITY_METERS_PER_SECOND, 2);
@@ -324,7 +324,7 @@ public final class Constants {
 
         public static final double PID_CLAMP_VOLTAGE = 10;
 
-        public static final double ELBOW_P = -20.0;
+        public static final double ELBOW_P = -10.0;
         public static final double ELBOW_I = 0.0;
         public static final double ELBOW_D = 0.0;
 
@@ -396,8 +396,8 @@ public final class Constants {
             public static Rotation2d GROUND_PICKUP_CLOSE_SHOULDER = Rotation2d.fromRadians(-1.3148015022277832);
             public static Rotation2d GROUND_PICKUP_CLOSE_ELBOW = Rotation2d.fromRadians(-0.07468705177307129);
 
-            public static Rotation2d GROUND_PICKUP_FAR_SHOULDER = Rotation2d.fromRadians(-1.3148015022277832);
-            public static Rotation2d GROUND_PICKUP_FAR_ELBOW = Rotation2d.fromRadians(-0.07468705177307129);
+            public static Rotation2d GROUND_PICKUP_FAR_SHOULDER = Rotation2d.fromRadians(-0.4108006954193115);
+            public static Rotation2d GROUND_PICKUP_FAR_ELBOW = Rotation2d.fromRadians(-0.4658130407333374);
 
             public static Rotation2d MID_PICKUP_SHOULDER = Rotation2d.fromRadians(0.4);
             public static Rotation2d MID_PICKUP_ELBOW = Rotation2d.fromRadians(0);

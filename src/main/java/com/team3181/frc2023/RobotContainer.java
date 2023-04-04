@@ -59,7 +59,7 @@ public class RobotContainer {
     competitionButtons();
 //    testButtons();
 
-    vision.setDataInterface(swerve::addVisionData);
+//    vision.setDataInterface(swerve::addVisionData);
 
     if (!RobotConstants.IS_TANK) swerve.setDefaultCommand(new SwerveDriveFieldXbox());
     if (RobotConstants.IS_TANK) Tank.getInstance().setDefaultCommand(new TankXbox());
@@ -180,9 +180,14 @@ public class RobotContainer {
     needPositionMap.put(threeTopBal, false);
 
     Command threeBotBal = new AutoSwerveThree(false);
-    autoChooser.addOption("3 Thing Top", threeBotBal);
+    autoChooser.addOption("3 Thing Bottom", threeBotBal);
     canBalanceMap.put(threeBotBal, false);
     needPositionMap.put(threeBotBal, false);
+
+    Command newPath = new AutoSwervePath(Paths.NEW_PATH, new Objective(8, NodeLevel.HIGH));
+    autoChooser.addOption("New Path", newPath);
+    canBalanceMap.put(newPath, false);
+    needPositionMap.put(newPath, false);
 
     Command twoTop = new AutoSwerveTwo(true);
     autoChooser.addOption("2 Thing Top + 1", twoTop);

@@ -25,8 +25,8 @@ public class FourBar extends SubsystemBase {
     private final ArmIO[] armIO;
     private final ArmIOInputsAutoLogged[] inputs = new ArmIOInputsAutoLogged[]{new ArmIOInputsAutoLogged(), new ArmIOInputsAutoLogged()};
 
-    private final ProfiledPIDController shoulderPID = new ProfiledPIDController(FourBarConstants.SHOULDER_P, FourBarConstants.SHOULDER_I, FourBarConstants.SHOULDER_D, new Constraints(100000, 10));
-    private final ProfiledPIDController elbowPID = new ProfiledPIDController(FourBarConstants.ELBOW_P, FourBarConstants.ELBOW_I, FourBarConstants.ELBOW_D, new Constraints(400000, 20));
+    private final ProfiledPIDController shoulderPID = new ProfiledPIDController(FourBarConstants.SHOULDER_P, FourBarConstants.SHOULDER_I, FourBarConstants.SHOULDER_D, new Constraints(100000, 30));
+    private final ProfiledPIDController elbowPID = new ProfiledPIDController(FourBarConstants.ELBOW_P, FourBarConstants.ELBOW_I, FourBarConstants.ELBOW_D, new Constraints(400000, 30));
     private final Alert shoulderTooLow = new Alert("Shoulder needs to be moved forward! THIS WILL BREAK ALOT OF THINGS!", AlertType.ERROR);
     private Rotation2d[] dropStuff = new Rotation2d[]{};
     private Rotation2d waitPos = new Rotation2d();

@@ -46,6 +46,7 @@ public class Superstructure extends SubsystemBase {
     private boolean disabled = false;
     private boolean autoNode = false;
     private boolean autoSubstation = false;
+    private boolean wasObjective = false;
     private boolean demandLEDs = false;
 
     private final static Superstructure INSTANCE = new Superstructure();
@@ -167,6 +168,9 @@ public class Superstructure extends SubsystemBase {
                 }
                 if (systemState == StructureState.EXHAUST || systemState == StructureState.OBJECTIVE) {
                     LEDs.getInstance().setLEDMode(LEDModes.IDLE);
+                }
+                if (state == StructureState.HOME && systemState == StructureState.EXHAUST) {
+                    wasObjective = true;
                 }
 //                if (systemState == StructureState.HOME) {
 //                    hasBeenZeroed = false;
@@ -303,8 +307,11 @@ public class Superstructure extends SubsystemBase {
                     break;
                 case HOME:
                 default:
-                    if (!fourBar.atSetpoint()) {
+                    if (wasObjective) {
                         endEffector.exhaust();
+                        if (atSetpoint()) {
+                            wasObjective = false;
+                        }
                     }
                     else {
                         endEffector.idle();
