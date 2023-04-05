@@ -17,7 +17,6 @@ public class ArmIOShoulderSparkMax implements ArmIO {
     private final LazySparkMax followerMotor;
     private final AbsoluteEncoder absoluteEncoder;
     private final SparkMaxLimitSwitch limitSwitch;
-    private int counter = 0;
     private double lastPos = 0;
     private double wraparoundOffset = 0;
     private final double oneEncoderRotation = 2 * Math.PI * FourBarConstants.CHAIN_RATIO;
@@ -80,7 +79,6 @@ public class ArmIOShoulderSparkMax implements ArmIO {
         inputs.armCurrentAmps = mainMotor.getOutputCurrent();
         inputs.armTempCelsius = mainMotor.getMotorTemperature();
         inputs.armAtLimit = limitSwitch.isPressed();
-        lastPos = position;
 
         Logger.getInstance().recordOutput("Shoulder/Wraparound Offset", wraparoundOffset);
         Logger.getInstance().recordOutput("Shoulder/Wraparound Offset", wraparoundOffset);

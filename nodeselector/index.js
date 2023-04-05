@@ -82,7 +82,7 @@ function setFilled(index) {
 
 let client = new NT4_Client(
   //window.location.hostname,
-  "10.31.81.2",
+  "10.31.82.2",
   "NodeSelector",
   (topic) => {
     // Topic announce

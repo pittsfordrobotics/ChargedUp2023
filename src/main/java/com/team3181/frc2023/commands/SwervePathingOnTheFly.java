@@ -166,18 +166,20 @@ public class SwervePathingOnTheFly extends CommandBase {
                         adjustedPathPoints.add(inner);
                     }
                     // inside node
-                    if (robotPointBlue.getPosition().getX() > 1.7) {
+                    if (robotPointBlue.getPosition().getX() > 1) {
                         BetterPathPoint updatedNode;
-                        if ((inner.getPosition().getY() > 2.78 && node.getPosition().getY() < 2.78) || (inner.getPosition().getY() < 2.78 && node.getPosition().getY() > 2.78)) {
-                            BetterPathPoint mid = AutoDrivePoints.COMMUNITY_MID_INNER;
+                        BetterPathPoint nodeBlue = AutoDrivePoints.pathPointFlipper(node, DriverStation.getAlliance());
+                        if ((robotPointBlue.getPosition().getY() > 2.78 && nodeBlue.getPosition().getY() < 2.78) || (robotPointBlue.getPosition().getY() < 2.78 && nodeBlue.getPosition().getY() > 2.78)) {
+                            System.out.println("Going mid");
+                            BetterPathPoint mid = AutoDrivePoints.pathPointFlipper(AutoDrivePoints.COMMUNITY_MID_INNER, DriverStation.getAlliance());
                             if (adjustedPathPoints.size() == 0 && robotPointBlue.getPosition().getY() < 5.5) {
                                 BetterPathPoint headingCorrection = AutoDrivePoints.updateHeading(robotPoint, mid);
                                 adjustedPathPoints.add(headingCorrection);
-                                adjustedPathPoints.add(mid);
-                                updatedNode = new BetterPathPoint(node.getPosition(), headingCorrection.getHeading(), node.getHolonomicRotation());
+                                adjustedPathPoints.add(new BetterPathPoint(mid.getPosition(), AutoDrivePoints.updateHeading(mid, node).getHeading(), mid.getHolonomicRotation()));
+                                updatedNode = new BetterPathPoint(node.getPosition(), AutoDrivePoints.updateHeading(mid, node).getHeading(), node.getHolonomicRotation());
                             } else {
-                                adjustedPathPoints.add(mid);
-                                updatedNode = new BetterPathPoint(node.getPosition(), AutoDrivePoints.updateHeading(inner, node).getHeading(), node.getHolonomicRotation());
+                                adjustedPathPoints.add(new BetterPathPoint(mid.getPosition(), AutoDrivePoints.updateHeading(mid, node).getHeading(), mid.getHolonomicRotation()));
+                                updatedNode = new BetterPathPoint(node.getPosition(), AutoDrivePoints.updateHeading(mid, node).getHeading(), node.getHolonomicRotation());
                             }
                             adjustedPathPoints.add(updatedNode);
                         }
@@ -192,7 +194,6 @@ public class SwervePathingOnTheFly extends CommandBase {
                         }
                         adjustedPathPoints.add(updatedNode);
                     }
-
                 }
                 break;
             case SINGLE_SUBSTATION:

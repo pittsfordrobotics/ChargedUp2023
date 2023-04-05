@@ -15,7 +15,6 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
@@ -78,24 +77,24 @@ public class Swerve extends SubsystemBase {
     public void periodic() {
         SwerveModuleState[] wantedModuleStates = new SwerveModuleState[4];
         SwerveModuleState[] actualStates = new SwerveModuleState[4];
-        SwerveModulePosition[] wheelDeltas = new SwerveModulePosition[4];
+//        SwerveModulePosition[] wheelDeltas = new SwerveModulePosition[4];
         for (int i = 0; i < 4; i++) {
             moduleIO[i].updateInputs(moduleInputs[i]);
-            wheelDeltas[i] =
-                    new SwerveModulePosition(
-                            (moduleInputs[i].drivePositionMeters - modulePositions[i].distanceMeters),
-                            Rotation2d.fromRadians(moduleInputs[i].steerOffsetAbsolutePositionRad));
+//            wheelDeltas[i] =
+//                    new SwerveModulePosition(
+//                            (moduleInputs[i].drivePositionMeters - modulePositions[i].distanceMeters),
+//                            Rotation2d.fromRadians(moduleInputs[i].steerOffsetAbsolutePositionRad));
             actualStates[i] = new SwerveModuleState(moduleInputs[i].driveVelocityMetersPerSec, Rotation2d.fromRadians(moduleInputs[i].steerOffsetAbsolutePositionRad));
             modulePositions[i] = new SwerveModulePosition(moduleInputs[i].drivePositionMeters, Rotation2d.fromRadians(moduleInputs[i].steerOffsetAbsolutePositionRad));
             wantedModuleStates[i] = new SwerveModuleState(lastModuleStates[i].speedMetersPerSecond, Rotation2d.fromRadians(lastModuleStates[i].angle.getRadians() + lastModuleStates[i].omegaRadPerSecond * (isOpenLoop ? SwerveConstants.MODULE_STEER_FF_OL : SwerveConstants.MODULE_STEER_FF_CL) * 0.065));
         }
         actualRobotRelativeChassisSpeeds = SwerveConstants.DRIVE_KINEMATICS.toChassisSpeeds(actualStates);
 
-        var twist = SwerveConstants.DRIVE_KINEMATICS.toTwist2d(wheelDeltas);
-        var gyroYaw = getRobotRelativeAngle();
-        if (gyroInputs.connected) {
-            twist = new Twist2d(twist.dx, twist.dy, gyroYaw.minus(lastRotation).getRadians());
-        }
+//        var twist = SwerveConstants.DRIVE_KINEMATICS.toTwist2d(wheelDeltas);
+//        var gyroYaw = getRobotRelativeAngle();
+//        if (gyroInputs.connected) {
+//            twist = new Twist2d(twist.dx, twist.dy, gyroYaw.minus(lastRotation).getRadians());
+//        }
         lastRotation = getRobotRelativeAngle();
 //        poseEstimator.addDriveData(Timer.getFPGATimestamp(), twist);
 
