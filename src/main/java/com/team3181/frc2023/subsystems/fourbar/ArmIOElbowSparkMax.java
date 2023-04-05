@@ -31,6 +31,8 @@ public class ArmIOElbowSparkMax implements ArmIO {
         absoluteEncoder.setVelocityConversionFactor(2 * Math.PI / 60.0);
         absoluteEncoder.setZeroOffset(FourBarConstants.ELBOW_ABSOLUTE_OFFSET.getRadians());
         motor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
+        motor.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 65535);
+        motor.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 65535);
 
         motor.burnFlash();
     }

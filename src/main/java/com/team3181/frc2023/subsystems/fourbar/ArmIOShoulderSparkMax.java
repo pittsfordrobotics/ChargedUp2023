@@ -35,6 +35,8 @@ public class ArmIOShoulderSparkMax implements ArmIO {
         absoluteEncoder.setPositionConversionFactor(2 * Math.PI * FourBarConstants.CHAIN_RATIO);
         absoluteEncoder.setVelocityConversionFactor(2 * Math.PI * FourBarConstants.CHAIN_RATIO / 60.0);
         absoluteEncoder.setZeroOffset(FourBarConstants.SHOULDER_ABSOLUTE_OFFSET.getRadians());
+        mainMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 65535);
+        mainMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 65535);
         mainMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20);
 
         mainMotor.burnFlash();

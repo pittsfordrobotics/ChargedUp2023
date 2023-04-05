@@ -57,6 +57,12 @@ public class SwerveModuleIOSparkMax implements SwerveModuleIO {
         steerPID.setPositionPIDWrappingEnabled(true);
         steerPID.setPositionPIDWrappingMinInput(0);
         steerPID.setPositionPIDWrappingMaxInput(2 * Math.PI);
+        driveMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 65535);
+        driveMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 65535);
+        driveMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 65535);
+        driveMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 65535);
+        steerMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 65535);
+        steerMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 65535);
         steerMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 20); // trying to get more position readings
 
         drivePID.setP(SwerveConstants.MODULE_DRIVE_P);

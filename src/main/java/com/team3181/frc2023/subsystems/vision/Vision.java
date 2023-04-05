@@ -56,16 +56,16 @@ public class Vision extends SubsystemBase {
             io[i].setPipeline(pipeline);
             switch (i) {
                 case 0 -> {
-                    Logger.getInstance().processInputs("Limelight", inputs[i]);
-                    limelightAlert.set(!inputs[i].connected);
+//                    Logger.getInstance().processInputs("Limelight", inputs[i]);
+//                    limelightAlert.set(!inputs[i].connected);
                 }
                 case 1 -> {
-                    Logger.getInstance().processInputs("Photon Left", inputs[i]);
-                    leftSideAlert.set(!inputs[i].connected);
+//                    Logger.getInstance().processInputs("Photon Left", inputs[i]);
+//                    leftSideAlert.set(!inputs[i].connected);
                 }
                 case 2 -> {
-                    Logger.getInstance().processInputs("Photon Right", inputs[i]);
-                    rightSideAlert.set(!inputs[i].connected);
+//                    Logger.getInstance().processInputs("Photon Right", inputs[i]);
+//                    rightSideAlert.set(!inputs[i].connected);
                 }
                 case 3 -> {
                     Logger.getInstance().processInputs("Photon Front Left", inputs[i]);
