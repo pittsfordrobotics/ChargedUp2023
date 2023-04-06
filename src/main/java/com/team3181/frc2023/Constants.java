@@ -20,7 +20,6 @@ import com.team3181.frc2023.subsystems.tank.TankIO;
 import com.team3181.frc2023.subsystems.tank.TankIOSim;
 import com.team3181.frc2023.subsystems.tank.TankIOSparkMax;
 import com.team3181.frc2023.subsystems.vision.VisionIO;
-import com.team3181.frc2023.subsystems.vision.VisionIOLimelight;
 import com.team3181.frc2023.subsystems.vision.VisionIOPhotonVision;
 import com.team3181.frc2023.subsystems.vision.VisionIOSim;
 import com.team3181.lib.swerve.BetterSwerveKinematics;
@@ -84,13 +83,17 @@ public final class Constants {
                 BL_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSparkMax(SwerveConstants.CAN_BL_DRIVE, SwerveConstants.CAN_BL_STEER, SwerveConstants.BL_OFFSET);
                 BR_MODULE = RobotConstants.IS_TANK ? new SwerveModuleIO(){} : new SwerveModuleIOSparkMax(SwerveConstants.CAN_BR_DRIVE, SwerveConstants.CAN_BR_STEER, SwerveConstants.BR_OFFSET);
                 GYRO = RobotConstants.IS_TANK ? new GyroIO(){} : new GyroIOPigeon();
-                LIMELIGHT = RobotConstants.IS_TANK ? new VisionIO() {} : new VisionIOLimelight();
-                PHOTON_LEFT = RobotConstants.IS_TANK ? new VisionIO() {} : new VisionIOPhotonVision(VisionConstants.PHOTON_LEFT_NAME, VisionConstants.PHOTON_LEFT_TRANSFORM);
+                LIMELIGHT = new VisionIO() {};
+                PHOTON_LEFT = new VisionIO() {};
+                PHOTON_RIGHT = new VisionIO() {};
+//                LIMELIGHT = RobotConstants.IS_TANK ? new VisionIO() {} : new VisionIOLimelight();
+//                PHOTON_LEFT = RobotConstants.IS_TANK ? new VisionIO() {} : new VisionIOPhotonVision(VisionConstants.PHOTON_LEFT_NAME, VisionConstants.PHOTON_LEFT_TRANSFORM);
                 PHOTON_FRONT_LEFT = RobotConstants.IS_TANK ? new VisionIO() {} : new VisionIOPhotonVision(VisionConstants.PHOTON_FRONT_LEFT_NAME, VisionConstants.PHOTON_FRONT_LEFT_TRANSFORM);
                 PHOTON_FRONT_RIGHT = RobotConstants.IS_TANK ? new VisionIO() {} : new VisionIOPhotonVision(VisionConstants.PHOTON_FRONT_RIGHT_NAME, VisionConstants.PHOTON_FRONT_RIGHT_TRANSFORM);
-                PHOTON_RIGHT = RobotConstants.IS_TANK ? new VisionIO() {} : new VisionIOPhotonVision(VisionConstants.PHOTON_RIGHT_NAME, VisionConstants.PHOTON_RIGHT_TRANSFORM);
+//                PHOTON_RIGHT = RobotConstants.IS_TANK ? new VisionIO() {} : new VisionIOPhotonVision(VisionConstants.PHOTON_RIGHT_NAME, VisionConstants.PHOTON_RIGHT_TRANSFORM);
                 LEDS = RobotConstants.IS_TANK ? new LEDStripIO(){} : new LEDStripIORio(LEDConstants.PWM_PORT, LEDConstants.NUMBER);
                 END_EFFECTOR = new EndEffectorIOSparkMax();
+//                END_EFFECTOR = new EndEffectorIO() {};
             }
             else {
                 SHOULDER = new ArmIO(){};
@@ -162,7 +165,7 @@ public final class Constants {
 //        NOT CHASSIS LENGTH
         public static final double X_LENGTH_METERS = Units.inchesToMeters(24.5);
         public static final double Y_LENGTH_METERS = Units.inchesToMeters(24.5);
-        public static final double BUMPER_WIDTH = Units.inchesToMeters(9);
+        public static final double BUMPER_WIDTH = Units.inchesToMeters(4);
         public static final double WHEEL_DIAMETER_METERS = Units.inchesToMeters(3);
 
         public static final Translation2d[] MODULE_OFFSETS = {
@@ -175,7 +178,7 @@ public final class Constants {
 
         public static final HashMap<Integer, Rotation2d> MODULE_HASHMAP = new HashMap<>();
         static {
-            MODULE_HASHMAP.put(0, Rotation2d.fromRadians(5.088028907775879));  // Front left
+            MODULE_HASHMAP.put(0, Rotation2d.fromRadians(6.246822834014893));  // Front left
             MODULE_HASHMAP.put(1, Rotation2d.fromRadians(3.1017396450042725)); // Front right
             MODULE_HASHMAP.put(2, Rotation2d.fromRadians(2.114952564239502));    // Back left
             MODULE_HASHMAP.put(3, Rotation2d.fromRadians(2.851421594619751));  // Back right
@@ -217,13 +220,7 @@ public final class Constants {
         public static final double MODULE_STEER_P = 2;
         public static final double MODULE_STEER_I = 0;
         public static final double MODULE_STEER_D = 0;
-        // irl
-        //
-        //
-        // sim
-        // -0.65 for open loop
-        // -0.15 closed loop
-        public static final double MODULE_STEER_FF_OL = Robot.isReal() ? 0.6 : 0.5;
+        public static final double MODULE_STEER_FF_OL = Robot.isReal() ? 0.6 : 0.27;
         public static final double MODULE_STEER_FF_CL = Robot.isReal() ? 0.8 : 0.33;
 
         public static final double AUTO_ROTATE_P = 5;
@@ -232,7 +229,7 @@ public final class Constants {
         public static final double AUTO_ROTATE_TOLERANCE = 0.05;
 
         public static final double DIRECTION_RATE_LIMIT = 15; // radians per second
-        public static final double MAGNITUDE_RATE_LIMIT = 8.7; // percent per second (1 = 100%)
+        public static final double MAGNITUDE_RATE_LIMIT = 7; // percent per second (1 = 100%)
         public static final double ROTATION_RATE_LIMIT = 16.0; // percent per second (1 = 100%)
     }
 
@@ -278,15 +275,16 @@ public final class Constants {
         public static final String PHOTON_LEFT_NAME = "left";
         public static final String PHOTON_RIGHT_NAME = "right";
 
-        public static final Transform3d PHOTON_FRONT_LEFT_TRANSFORM = new Transform3d(new Translation3d(0.0, 0.0, 0.0), new Rotation3d(0.0, 0.0, 0.0));
-        public static final Transform3d PHOTON_FRONT_RIGHT_TRANSFORM = new Transform3d(new Translation3d(0.0, 0.0, 0.0), new Rotation3d(0.0, 0.0, 0.0));
-        public static final Transform3d PHOTON_LEFT_TRANSFORM = new Transform3d(new Translation3d(0.0, 0.0, 0.0), new Rotation3d(0.0, 0.0, 0.0));
-        public static final Transform3d PHOTON_RIGHT_TRANSFORM = new Transform3d(new Translation3d(0.0, 0.0, 0.0), new Rotation3d(0.0, 0.0, 0.0));
+        public static final Transform3d PHOTON_FRONT_LEFT_TRANSFORM = new Transform3d(new Translation3d(0.31, 0.14, 0.45), new Rotation3d(0, -0.37, -0.79));
+        public static final Transform3d PHOTON_FRONT_RIGHT_TRANSFORM = new Transform3d(new Translation3d(0.31, -0.14, 0.45), new Rotation3d(0, -0.37, 0.79));
+        public static final Transform3d PHOTON_LEFT_TRANSFORM = new Transform3d(new Translation3d(0.0051, 0.19, 0.5), new Rotation3d(0.0, 0.0, 1.57));
+        public static final Transform3d PHOTON_RIGHT_TRANSFORM = new Transform3d(new Translation3d(-0.0051, -0.19, 0.52), new Rotation3d(0.0, 0.0, -1.57));
 
         public static final double FIELD_BORDER_MARGIN = 0.5;
         public static final double Z_MARGIN = 0.75;
         public static final double XY_STD_DEV_COEF = 0.01;
         public static final double THETA_STD_DEV_COEF = 0.01;
+        public static final double TARGET_LOG_SECONDS = 0.1;
     }
 
     public static final class AutoConstants {
@@ -300,10 +298,10 @@ public final class Constants {
 
         //        numbers from 1678
         public static final double SLOW_LINEAR_VELOCITY_METERS_PER_SECOND = 2.0;
-        public static final double SLOW_LINEAR_ACCELERATION_METERS_PER_SECOND_SQUARED = 2.0;
+        public static final double SLOW_LINEAR_ACCELERATION_METERS_PER_SECOND_SQUARED = 1.5;
 
-        public static final double MAX_LINEAR_VELOCITY_METERS_PER_SECOND = 2.0;
-        public static final double MAX_LINEAR_ACCELERATION_METERS_PER_SECOND_SQUARED = 2.0;
+        public static final double MAX_LINEAR_VELOCITY_METERS_PER_SECOND = 2.2;
+        public static final double MAX_LINEAR_ACCELERATION_METERS_PER_SECOND_SQUARED = 2.3;
 
         public static final double SLOW_ANGULAR_VELOCITY_METERS_PER_SECOND = 0.8 * Math.PI;
         public static final double SLOW_ANGULAR_ACCELERATION_METERS_PER_SECOND_SQUARED = Math.pow(SLOW_ANGULAR_VELOCITY_METERS_PER_SECOND, 2);
@@ -328,7 +326,7 @@ public final class Constants {
 
         public static final double PID_CLAMP_VOLTAGE = 10;
 
-        public static final double ELBOW_P = -20.0;
+        public static final double ELBOW_P = -10.0;
         public static final double ELBOW_I = 0.0;
         public static final double ELBOW_D = 0.0;
 
@@ -392,7 +390,7 @@ public final class Constants {
 
         public static final class ArmPositions {
             public static Rotation2d STORAGE_SHOULDER = Rotation2d.fromRadians(-1.22);
-            public static Rotation2d STORAGE_ELBOW = Rotation2d.fromRadians(1.5538270854949951);
+            public static Rotation2d STORAGE_ELBOW = Rotation2d.fromRadians(1.6538270854949951);
 
             public static Rotation2d HYBRID_SHOULDER = Rotation2d.fromRadians(-1.233066338300705);
             public static Rotation2d HYBRID_ELBOW = Rotation2d.fromRadians(0.23718323707580566);
@@ -400,8 +398,8 @@ public final class Constants {
             public static Rotation2d GROUND_PICKUP_CLOSE_SHOULDER = Rotation2d.fromRadians(-1.3148015022277832);
             public static Rotation2d GROUND_PICKUP_CLOSE_ELBOW = Rotation2d.fromRadians(-0.07468705177307129);
 
-            public static Rotation2d GROUND_PICKUP_FAR_SHOULDER = Rotation2d.fromRadians(-1.3148015022277832);
-            public static Rotation2d GROUND_PICKUP_FAR_ELBOW = Rotation2d.fromRadians(-0.07468705177307129);
+            public static Rotation2d GROUND_PICKUP_FAR_SHOULDER = Rotation2d.fromRadians(-0.4108006954193115);
+            public static Rotation2d GROUND_PICKUP_FAR_ELBOW = Rotation2d.fromRadians(-0.4658130407333374);
 
             public static Rotation2d MID_PICKUP_SHOULDER = Rotation2d.fromRadians(0.4);
             public static Rotation2d MID_PICKUP_ELBOW = Rotation2d.fromRadians(0);
@@ -411,7 +409,7 @@ public final class Constants {
             public static Rotation2d MID_CONE_ELBOW = Rotation2d.fromRadians(0.8577836751937866);
 
             public static Rotation2d HIGH_CUBE_SHOULDER = Rotation2d.fromRadians(-0.815398097038269);
-            public static Rotation2d HIGH_CUBE_ELBOW = Rotation2d.fromRadians(1.060633897781372);
+            public static Rotation2d HIGH_CUBE_ELBOW = Rotation2d.fromRadians(0.860633897781372);
 
             public static Rotation2d HIGH_CONE_SHOULDER = Rotation2d.fromRadians(0.29303767681121822);
             public static Rotation2d HIGH_CONE_ELBOW = Rotation2d.fromRadians(0.3829857921600342); //0.4229857921600342
@@ -436,6 +434,7 @@ public final class Constants {
 
     public static final class EndEffectorConstants {
         public static final double EXHAUST_CONE_POWER = -3;
+        public static final double EXHAUST_CUBE_POWER = -2;
         public static final double INTAKE_IDLE_POWER = 1.5;
         public static final double INTAKE_POWER = 4.0;
         public static final double GEARING = 4;

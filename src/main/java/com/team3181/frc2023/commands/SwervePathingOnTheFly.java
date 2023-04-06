@@ -12,7 +12,6 @@ import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker;
 import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker.NodeLevel;
 import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker.Objective;
 import com.team3181.frc2023.subsystems.swerve.Swerve;
-import com.team3181.frc2023.subsystems.vision.Vision;
 import com.team3181.lib.math.GeomUtil;
 import com.team3181.lib.swerve.BetterPathPoint;
 import edu.wpi.first.math.controller.HolonomicDriveController;
@@ -94,7 +93,6 @@ public class SwervePathingOnTheFly extends CommandBase {
 
     @Override
     public void initialize() {
-        Vision.getInstance().setEnabled(false);
         ArrayList<PathPoint> adjustedPathPoints = new ArrayList<>();
         // adds path points and flips for correct alliance
         BetterPathPoint robotPoint = new BetterPathPoint(Swerve.getInstance().getPose().getTranslation(), Swerve.getInstance().getPose().getRotation(), Swerve.getInstance().getPose().getRotation());
@@ -168,19 +166,34 @@ public class SwervePathingOnTheFly extends CommandBase {
                         adjustedPathPoints.add(inner);
                     }
                     // inside node
-                    if (robotPointBlue.getPosition().getX() > 1.7) {
+                    if (robotPointBlue.getPosition().getX() > 1) {
                         BetterPathPoint updatedNode;
-                        if (adjustedPathPoints.size() == 0 && robotPointBlue.getPosition().getY() < 5.5) {
-                            BetterPathPoint headingCorrection = AutoDrivePoints.updateHeading(robotPoint, node);
-                            adjustedPathPoints.add(headingCorrection);
-                            updatedNode = new BetterPathPoint(node.getPosition(), headingCorrection.getHeading(), node.getHolonomicRotation());
+                        BetterPathPoint nodeBlue = AutoDrivePoints.pathPointFlipper(node, DriverStation.getAlliance());
+                        if ((robotPointBlue.getPosition().getY() > 2.78 && nodeBlue.getPosition().getY() < 2.78) || (robotPointBlue.getPosition().getY() < 2.78 && nodeBlue.getPosition().getY() > 2.78)) {
+                            System.out.println("Going mid");
+                            BetterPathPoint mid = AutoDrivePoints.pathPointFlipper(AutoDrivePoints.COMMUNITY_MID_INNER, DriverStation.getAlliance());
+                            if (adjustedPathPoints.size() == 0 && robotPointBlue.getPosition().getY() < 5.5) {
+                                BetterPathPoint headingCorrection = AutoDrivePoints.updateHeading(robotPoint, mid);
+                                adjustedPathPoints.add(headingCorrection);
+                                adjustedPathPoints.add(new BetterPathPoint(mid.getPosition(), AutoDrivePoints.updateHeading(mid, node).getHeading(), mid.getHolonomicRotation()));
+                                updatedNode = new BetterPathPoint(node.getPosition(), AutoDrivePoints.updateHeading(mid, node).getHeading(), node.getHolonomicRotation());
+                            } else {
+                                adjustedPathPoints.add(new BetterPathPoint(mid.getPosition(), AutoDrivePoints.updateHeading(mid, node).getHeading(), mid.getHolonomicRotation()));
+                                updatedNode = new BetterPathPoint(node.getPosition(), AutoDrivePoints.updateHeading(mid, node).getHeading(), node.getHolonomicRotation());
+                            }
+                            adjustedPathPoints.add(updatedNode);
                         }
                         else {
-                            updatedNode = new BetterPathPoint(node.getPosition(),  AutoDrivePoints.updateHeading(inner, node).getHeading(), node.getHolonomicRotation());
+                            if (adjustedPathPoints.size() == 0 && robotPointBlue.getPosition().getY() < 5.5) {
+                                BetterPathPoint headingCorrection = AutoDrivePoints.updateHeading(robotPoint, node);
+                                adjustedPathPoints.add(headingCorrection);
+                                updatedNode = new BetterPathPoint(node.getPosition(), headingCorrection.getHeading(), node.getHolonomicRotation());
+                            } else {
+                                updatedNode = new BetterPathPoint(node.getPosition(), AutoDrivePoints.updateHeading(inner, node).getHeading(), node.getHolonomicRotation());
+                            }
                         }
                         adjustedPathPoints.add(updatedNode);
                     }
-
                 }
                 break;
             case SINGLE_SUBSTATION:
@@ -193,7 +206,7 @@ public class SwervePathingOnTheFly extends CommandBase {
                     adjustedPathPoints.add(AutoDrivePoints.pathPointFlipper(AutoDrivePoints.leavingCommunity(AutoDrivePoints.LOADING_STATION_TOP_INNER), DriverStation.getAlliance()));
                 }
                 else {
-                    BetterPathPoint entrance = AutoDrivePoints.pathPointFlipper(AutoDrivePoints.leavingCommunity(AutoDrivePoints.COMMUNITY_BOTTOM_EXIT), DriverStation.getAlliance());;
+                    BetterPathPoint entrance = AutoDrivePoints.pathPointFlipper(AutoDrivePoints.leavingCommunity(AutoDrivePoints.COMMUNITY_BOTTOM_EXIT), DriverStation.getAlliance());
                     if (robotPointBlue.getPosition().getX() < 2 && robotPointBlue.getPosition().getY() < 5.5) {
                         double distanceTop = GeomUtil.distance(new Pose2d(AutoDrivePoints.leavingCommunity(AutoDrivePoints.COMMUNITY_TOP_INNER).getPosition(), new Rotation2d()), new Pose2d(robotPointBlue.getPosition(), new Rotation2d()));
                         double distanceBottom = GeomUtil.distance(new Pose2d(AutoDrivePoints.leavingCommunity(AutoDrivePoints.COMMUNITY_BOTTOM_INNER).getPosition(), new Rotation2d()), new Pose2d(robotPointBlue.getPosition(), new Rotation2d()));
@@ -287,7 +300,6 @@ public class SwervePathingOnTheFly extends CommandBase {
 
     @Override
     public void end(boolean interrupted) {
-        Vision.getInstance().setEnabled(true);
         timer.stop();
         swerve.stopMotors();
     }

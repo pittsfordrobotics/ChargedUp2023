@@ -39,7 +39,12 @@ public class SwervePathing extends CommandBase {
         // adjusts because the field is flipped instead of rotated by 180
         PathPlannerState adjustedState = PathPlannerTrajectory.transformStateForAlliance(trajectory.getInitialState(), DriverStation.getAlliance());
         if (reset) {
-            swerve.resetPose(new Pose2d(adjustedState.poseMeters.getTranslation(), adjustedState.holonomicRotation));
+//            if (Vision.getInstance().resetPose() != null) {
+//                swerve.resetPose(Vision.getInstance().resetPose());
+//            }
+//            else {
+                swerve.resetPose(new Pose2d(adjustedState.poseMeters.getTranslation(), adjustedState.holonomicRotation));
+//            }
         }
         xController.reset();
         yController.reset();

@@ -2,7 +2,6 @@ package com.team3181.frc2023.commands.autos;
 
 
 import com.pathplanner.lib.PathPlannerTrajectory;
-import com.team3181.frc2023.RobotContainer;
 import com.team3181.frc2023.commands.EndEffectorRun;
 import com.team3181.frc2023.commands.SuperstructureObjectiveGlobal;
 import com.team3181.frc2023.commands.SwerveAutoBalance;
@@ -20,7 +19,7 @@ public class AutoSwervePath extends SequentialCommandGroup {
                         new SwervePathing(path, true),
                         path.getMarkers()
                 ),
-                new SwerveAutoBalance(RobotContainer.balanceForward)
+                new SwerveAutoBalance(false)
         );
     }
 }

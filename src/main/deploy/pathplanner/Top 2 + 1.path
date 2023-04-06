@@ -24,18 +24,18 @@
     },
     {
       "anchorPoint": {
-        "x": 3.5,
-        "y": 4.77
+        "x": 3.980354138334145,
+        "y": 4.7553740479252875
       },
       "prevControl": {
-        "x": 2.745223564690569,
-        "y": 4.733593621837444
+        "x": 3.28494583477132,
+        "y": 4.789327812502416
       },
       "nextControl": {
-        "x": 4.518516722608133,
-        "y": 4.819127798952755
+        "x": 4.67576244189697,
+        "y": 4.721420283348159
       },
-      "holonomicAngle": 179.0,
+      "holonomicAngle": 0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
@@ -49,16 +49,16 @@
     },
     {
       "anchorPoint": {
-        "x": 6.751894275761209,
-        "y": 4.616125920986108
+        "x": 6.3077617474408125,
+        "y": 4.668807079489701
       },
       "prevControl": {
-        "x": 6.20707266015073,
-        "y": 4.616125920986108
+        "x": 5.209978931269711,
+        "y": 4.891138366762953
       },
       "nextControl": {
-        "x": 6.20707266015073,
-        "y": 4.616125920986108
+        "x": 5.209978931269711,
+        "y": 4.891138366762953
       },
       "holonomicAngle": 0.0,
       "isReversal": true,
@@ -74,19 +74,19 @@
     },
     {
       "anchorPoint": {
-        "x": 3.974589772367479,
-        "y": 4.7
+        "x": 1.8766967094752334,
+        "y": 4.2753582961593
       },
       "prevControl": {
-        "x": 4.866577490625158,
-        "y": 4.739206401611789
+        "x": 2.858120974376698,
+        "y": 4.857156620462057
       },
       "nextControl": {
-        "x": 3.312308248013306,
-        "y": 4.6708900975961685
+        "x": 2.858120974376698,
+        "y": 4.857156620462057
       },
-      "holonomicAngle": -180.0,
-      "isReversal": false,
+      "holonomicAngle": 179.81527816313815,
+      "isReversal": true,
       "velOverride": null,
       "isLocked": false,
       "isStopPoint": false,
@@ -99,19 +99,19 @@
     },
     {
       "anchorPoint": {
-        "x": 2.4615275565702217,
-        "y": 4.992068251691332
+        "x": 4.072123539989898,
+        "y": 4.7492772209649745
       },
       "prevControl": {
-        "x": 2.8199148748964813,
-        "y": 4.80173044116162
+        "x": 3.2544405576865723,
+        "y": 4.7173562856967095
       },
       "nextControl": {
-        "x": 2.8199148748964813,
-        "y": 4.80173044116162
+        "x": 4.7438086213614765,
+        "y": 4.775498649644736
       },
-      "holonomicAngle": 179.81527816313815,
-      "isReversal": true,
+      "holonomicAngle": 0,
+      "isReversal": false,
       "velOverride": null,
       "isLocked": false,
       "isStopPoint": false,
@@ -128,64 +128,14 @@
         "y": 4.086170754101491
       },
       "prevControl": {
-        "x": 5.117239689595689,
-        "y": 4.768102513994573
+        "x": 5.97833212851213,
+        "y": 4.50952184611075
       },
       "nextControl": {
-        "x": 5.117239689595689,
-        "y": 4.768102513994573
+        "x": 7.897029229092761,
+        "y": 3.1568464552573707
       },
       "holonomicAngle": -37.91389162775941,
-      "isReversal": true,
-      "velOverride": null,
-      "isLocked": false,
-      "isStopPoint": false,
-      "stopEvent": {
-        "names": [],
-        "executionBehavior": "parallel",
-        "waitBehavior": "none",
-        "waitTime": 0
-      }
-    },
-    {
-      "anchorPoint": {
-        "x": 3.999395482718375,
-        "y": 4.744844249264236
-      },
-      "prevControl": {
-        "x": 4.603852712716224,
-        "y": 4.694933485101181
-      },
-      "nextControl": {
-        "x": 3.1646313793372234,
-        "y": 4.813771730362922
-      },
-      "holonomicAngle": -180.0,
-      "isReversal": false,
-      "velOverride": null,
-      "isLocked": false,
-      "isStopPoint": false,
-      "stopEvent": {
-        "names": [],
-        "executionBehavior": "parallel",
-        "waitBehavior": "none",
-        "waitTime": 0
-      }
-    },
-    {
-      "anchorPoint": {
-        "x": 1.8776770684780522,
-        "y": 4.278658626721008
-      },
-      "prevControl": {
-        "x": 1.8536429771829328,
-        "y": 4.792266166066979
-      },
-      "nextControl": {
-        "x": 1.9020528524455487,
-        "y": 3.7577491290643383
-      },
-      "holonomicAngle": -180.0,
       "isReversal": false,
       "velOverride": null,
       "isLocked": false,
@@ -203,8 +153,8 @@
         "y": 2.8210129306543332
       },
       "prevControl": {
-        "x": 2.2942018899445786,
-        "y": 2.8018524391269706
+        "x": 5.318027720162425,
+        "y": 2.8210129306543332
       },
       "nextControl": null,
       "holonomicAngle": 180.0,
@@ -220,80 +170,38 @@
       }
     }
   ],
-  "maxVelocity": 2.3,
+  "maxVelocity": 2.2,
   "maxAcceleration": 2.3,
   "isReversed": null,
   "markers": [
     {
-      "position": 1.0,
+      "position": 1.0718661221590906,
       "names": [
         "intakeGround"
       ]
     },
     {
-      "position": 2.465394176136365,
+      "position": 2.093354936079547,
       "names": [
         "home"
       ]
     },
     {
-      "position": 3.0780007102272697,
-      "names": [
-        "objectiveHybridTop"
-      ]
-    },
-    {
-      "position": 4.022283380681819,
-      "names": [
-        "exhaust"
-      ]
-    },
-    {
-      "position": 4.6,
-      "names": [
-        "intakeGround"
-      ]
-    },
-    {
-      "position": 5.208558238636364,
-      "names": [
-        "home"
-      ]
-    },
-    {
-      "position": 6.450648082386363,
+      "position": 2.5508988813920475,
       "names": [
         "objectiveCubeTop"
       ]
     },
     {
-      "position": 7.244504616477274,
+      "position": 4.121784002130685,
       "names": [
-        "maybeStop"
+        "intakeGround"
       ]
     },
     {
-      "position": 4.193235085227275,
+      "position": 5.567964311079547,
       "names": [
         "home"
-      ]
-    },
-    {
-      "position": 7.0076704545454565,
-      "names": [
-        "event"
-      ]
-    },
-    {
-      "position": 0.0,
-      "names": [
-        "visionOn"
-      ]
-    },
-    {
-      "position": 1.0163174715909091,
-      "names": [
-        "visionOff"
       ]
     }
   ]

@@ -2,6 +2,7 @@ package com.team3181.frc2023.subsystems.endeffector;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
 import com.revrobotics.RelativeEncoder;
 import com.team3181.frc2023.Constants;
 import com.team3181.lib.drivers.LazySparkMax;
@@ -9,13 +10,24 @@ import edu.wpi.first.math.util.Units;
 import org.littletonrobotics.junction.Logger;
 
 public class EndEffectorIOSparkMax implements EndEffectorIO {
-    private final LazySparkMax motorLeft = new LazySparkMax(Constants.EndEffectorConstants.CAN_LEFT, IdleMode.kBrake, 30, false, false);
-    private final LazySparkMax motorRight = new LazySparkMax(Constants.EndEffectorConstants.CAN_RIGHT, IdleMode.kBrake, 30, motorLeft, true, false);
+    private final LazySparkMax motorLeft = new LazySparkMax(Constants.EndEffectorConstants.CAN_LEFT, IdleMode.kCoast, 30, false, false);
+    private final LazySparkMax motorRight = new LazySparkMax(Constants.EndEffectorConstants.CAN_RIGHT, IdleMode.kCoast, 30, motorLeft, true, false);
     private final RelativeEncoder encoder = motorLeft.getEncoder();
 
     public EndEffectorIOSparkMax() {
         encoder.setPositionConversionFactor(Constants.EndEffectorConstants.GEARING);
         encoder.setVelocityConversionFactor(Constants.EndEffectorConstants.GEARING / 60.0);
+
+        motorLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 65535);
+        motorLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 65535);
+        motorLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 65535);
+        motorLeft.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 65535);
+
+        motorRight.setPeriodicFramePeriod(PeriodicFrame.kStatus3, 65535);
+        motorRight.setPeriodicFramePeriod(PeriodicFrame.kStatus4, 65535);
+        motorRight.setPeriodicFramePeriod(PeriodicFrame.kStatus5, 65535);
+        motorRight.setPeriodicFramePeriod(PeriodicFrame.kStatus6, 65535);
+
         motorLeft.burnFlash();
     }
 

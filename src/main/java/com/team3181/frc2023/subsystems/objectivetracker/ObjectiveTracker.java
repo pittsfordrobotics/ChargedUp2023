@@ -367,6 +367,12 @@ public class ObjectiveTracker extends VirtualSubsystem {
     filled[selected] = !filled[selected];
   }
 
+  /** Set filled */
+  public void setFilled() {
+    int selected = objectiveToSelected();
+    filled[selected] = true;
+  }
+
   private int objectiveToSelected() {
     int selected;
     if (DriverStation.getAlliance() == Alliance.Blue) {

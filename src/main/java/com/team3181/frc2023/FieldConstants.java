@@ -9,7 +9,6 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Contains various field dimensions and useful reference points. Dimensions are in meters, and sets
@@ -38,6 +37,8 @@ public final class FieldConstants {
         // inner is toward the outside of the arena closer to the nodes
         public static final BetterPathPoint COMMUNITY_TOP_INNER = new BetterPathPoint(new Translation2d(Grids.outerX + 1.12, Community.leftY - 0.8), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(-180));
         public static final BetterPathPoint COMMUNITY_BOTTOM_INNER = new BetterPathPoint(new Translation2d(Grids.outerX + 1.12, 0.8), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(-180));
+
+        public static final BetterPathPoint COMMUNITY_MID_INNER = new BetterPathPoint(new Translation2d(2.25, 2.78), Rotation2d.fromDegrees(-90), Rotation2d.fromDegrees(-180));
 
         public static final BetterPathPoint LOADING_STATION_TOP_EXIT = new BetterPathPoint(new Translation2d(0.5 * LoadingZone.midX + LoadingZone.outerX * 0.5, LoadingZone.midY + Units.inchesToMeters(50.5) / 2), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(-180));
         public static final BetterPathPoint LOADING_STATION_BOTTOM_EXIT = new BetterPathPoint(new Translation2d(0.5 * LoadingZone.midX + LoadingZone.outerX * 0.5, LoadingZone.midY - Units.inchesToMeters(50.5)/ 2), Rotation2d.fromDegrees(-180), Rotation2d.fromDegrees(-180));
@@ -305,6 +306,27 @@ public final class FieldConstants {
             }
         }
     }
+
+    public static Pose2d allianceFlipper(Pose2d pose, Alliance alliance) {
+        if (alliance == Alliance.Blue) {
+            return pose;
+        }
+        Translation2d transformedTranslation =
+                new Translation2d(pose.getTranslation().getX(), FieldConstants.fieldWidth - pose.getTranslation().getY());
+        Rotation2d transformedHolonomicRotation = pose.getRotation().times(-1);
+        return new Pose2d(transformedTranslation, transformedHolonomicRotation);
+    }
+
+    public static Pose3d allianceFlipper(Pose3d pose, Alliance alliance) {
+        if (alliance == Alliance.Blue) {
+            return pose;
+        }
+        Translation3d transformedTranslation =
+                new Translation3d(pose.getTranslation().getX(), FieldConstants.fieldWidth - pose.getTranslation().getY(), pose.getTranslation().getZ());
+        Rotation3d transformedHolonomicRotation = pose.getRotation().times(-1);
+        return new Pose3d(transformedTranslation, transformedHolonomicRotation);
+    }
+
 
     // AprilTag constants
     public static final double aprilTagWidth = Units.inchesToMeters(6.0);

@@ -4,6 +4,8 @@ package com.team3181.frc2023.subsystems.endeffector;
 import com.team3181.frc2023.Constants;
 import com.team3181.frc2023.Constants.EndEffectorConstants;
 import com.team3181.frc2023.Robot;
+import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker;
+import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker.Objective;
 import com.team3181.lib.commands.DisabledInstantCommand;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -24,6 +26,7 @@ public class EndEffector extends SubsystemBase {
     private ActualState actualState = ActualState.IDLE;
     private final Vector<Double> intakeCurrents = new Vector<>();
     private final int currentCycles = 20; // TODO: try increasing this
+    private boolean forced = false;
 
     private final static EndEffector INSTANCE = new EndEffector(Constants.RobotConstants.END_EFFECTOR);
     public static EndEffector getInstance() {
@@ -31,10 +34,10 @@ public class EndEffector extends SubsystemBase {
     }
 
     public enum WantedState {
-        IDLE, INTAKING, EXHAUSTING
+        IDLE, INTAKING, EXHAUSTING, STOP
     }
     public enum ActualState {
-        IDLE, INTAKING, OBTAINED, EXHAUSTING
+        IDLE, INTAKING, OBTAINED, EXHAUSTING, STOP
     }
     private EndEffector(EndEffectorIO io) {
         this.io = io;
@@ -60,13 +63,21 @@ public class EndEffector extends SubsystemBase {
                     if (DriverStation.isAutonomous()) {
                         // maximize power in auto to decrease time initially
                         io.setVoltage(3);
-                    }
-                    else {
+                    } else {
                         io.setVoltage(EndEffectorConstants.INTAKE_POWER);
                     }
                     break;
                 case EXHAUSTING: // may need to be 2 different values if we need to shoot cone and cube at different speeds
-                    io.setVoltage(EndEffectorConstants.EXHAUST_CONE_POWER);
+                    Objective objective = ObjectiveTracker.getInstance().getObjective();
+                    if (objective.nodeRow == 0 || objective.nodeRow == 2 || objective.nodeRow == 3 || objective.nodeRow == 5 || objective.nodeRow == 6 || objective.nodeRow == 8) {
+                        io.setVoltage(EndEffectorConstants.EXHAUST_CONE_POWER);
+                    }
+                    else {
+                        io.setVoltage(EndEffectorConstants.EXHAUST_CUBE_POWER);
+                    }
+                    if (forced) {
+                        io.setVoltage(-12);
+                    }
                     break;
                 case OBTAINED:
                 case IDLE:
@@ -85,6 +96,11 @@ public class EndEffector extends SubsystemBase {
 
     public void addGamePiece() {
         actualState = ActualState.OBTAINED;
+    }
+
+    public void setForced(boolean forced) {
+        this.forced = forced;
+        wantedState = WantedState.EXHAUSTING;
     }
 
     public void intake() {

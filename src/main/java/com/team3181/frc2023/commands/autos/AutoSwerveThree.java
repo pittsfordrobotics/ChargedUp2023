@@ -3,7 +3,6 @@ package com.team3181.frc2023.commands.autos;
 
 import com.team3181.frc2023.Paths;
 import com.team3181.frc2023.commands.EndEffectorRun;
-import com.team3181.frc2023.commands.SuperstructureExhaust;
 import com.team3181.frc2023.commands.SuperstructureObjectiveGlobal;
 import com.team3181.frc2023.commands.SwervePathing;
 import com.team3181.frc2023.subsystems.objectivetracker.ObjectiveTracker.NodeLevel;
@@ -22,8 +21,7 @@ public class AutoSwerveThree extends SequentialCommandGroup {
                 new FollowPathWithLiveEvents(
                         new SwervePathing((top ? Paths.TOP_THREE : Paths.BOTTOM_THREE), true),
                         (top ? Paths.TOP_THREE : Paths.BOTTOM_THREE).getMarkers()
-                ),
-                new SuperstructureExhaust()
+                )
         );
     }
 }

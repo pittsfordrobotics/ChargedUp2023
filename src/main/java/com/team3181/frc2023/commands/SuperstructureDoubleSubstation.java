@@ -17,9 +17,6 @@ public class SuperstructureDoubleSubstation extends CommandBase {
     }
 
     @Override
-    public void execute() {}
-
-    @Override
     public boolean isFinished() {
         return superstructure.hasGamePiece();
     }
@@ -27,5 +24,6 @@ public class SuperstructureDoubleSubstation extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         superstructure.home();
+        Superstructure.getInstance().setAutoSubstation(true);
     }
 }

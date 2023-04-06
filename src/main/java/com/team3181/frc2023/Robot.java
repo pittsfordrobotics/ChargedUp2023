@@ -7,7 +7,6 @@ package com.team3181.frc2023;
 import com.team3181.frc2023.Constants.RobotConstants;
 import com.team3181.frc2023.subsystems.fourbar.FourBar;
 import com.team3181.frc2023.subsystems.swerve.Swerve;
-import com.team3181.frc2023.subsystems.vision.Vision;
 import com.team3181.lib.controller.BetterXboxController;
 import com.team3181.lib.drivers.LazySparkMax;
 import com.team3181.lib.util.Alert;
@@ -125,9 +124,9 @@ public class Robot extends LoggedRobot {
 
     logReceiverQueueAlert.set(Logger.getInstance().getReceiverQueueFault());
     // in MBs
-    Logger.getInstance().recordOutput("Memory Usage", (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024.0 / 1024.0);
-    Logger.getInstance().recordOutput("Memory Free", (Runtime.getRuntime().freeMemory()) / 1024.0 / 1024.0);
-    Logger.getInstance().recordOutput("Memory Total", (Runtime.getRuntime().totalMemory()) / 1024.0 / 1024.0);
+    Logger.getInstance().recordOutput("Memory/Usage", (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024.0 / 1024.0);
+    Logger.getInstance().recordOutput("Memory/Free", (Runtime.getRuntime().freeMemory()) / 1024.0 / 1024.0);
+    Logger.getInstance().recordOutput("Memory/Total", (Runtime.getRuntime().totalMemory()) / 1024.0 / 1024.0);
 
     driverControllerAlert.set(!DriverStation.isJoystickConnected(0));
     operatorControllerAlert.set(!DriverStation.isJoystickConnected(1));
@@ -146,8 +145,7 @@ public class Robot extends LoggedRobot {
   @Override
   public void disabledInit() {
     disabledTimer.restart();
-    robotContainer.autoConfig();
-    Vision.getInstance().setEnabled(true);
+    stopped = false;
   }
 
   @Override
@@ -155,6 +153,7 @@ public class Robot extends LoggedRobot {
     lowBatteryAlert.set(RobotController.getBatteryVoltage() < 12.2);
     if (disabledTimer.hasElapsed(5) && !stopped) {
       Swerve.getInstance().setCoastMode();
+      disabledTimer.stop();
       stopped = true;
     }
   }
@@ -164,7 +163,6 @@ public class Robot extends LoggedRobot {
     lowBatteryAlert.set(false);
     Swerve.getInstance().setBrakeMode();
     FourBar.getInstance().brake();
-    Vision.getInstance().setEnabled(false);
     autonomousCommand = robotContainer.getAutonomousCommand();
 
     if (autonomousCommand != null) {
@@ -180,12 +178,10 @@ public class Robot extends LoggedRobot {
     lowBatteryAlert.set(false);
     Swerve.getInstance().setBrakeMode();
     FourBar.getInstance().brake();
-    Vision.getInstance().setEnabled(true);
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
       autonomousCommand = null;
     }
-    robotContainer.killAuto();
   }
 
   @Override

@@ -5,21 +5,20 @@ import com.team3181.lib.util.Alert.AlertType;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFieldLayout.OriginPosition;
 import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Optional;
 
 public class VisionIOPhotonVision implements VisionIO {
-    public Pose3d lastPose = new Pose3d();
-
     private AprilTagFieldLayout aprilTagFieldLayout;
     private Alliance lastAlliance = Alliance.Invalid;
 
@@ -53,27 +52,21 @@ public class VisionIOPhotonVision implements VisionIO {
             }
             poseEstimator.setFieldTags(aprilTagFieldLayout);
         }
-        if (poseEstimator.update().isPresent()) {
+        Optional<EstimatedRobotPose> update = poseEstimator.update();
+        if (update.isPresent()) {
             inputs.captureTimestamp = cam.getLatestResult().getTimestampSeconds();
-            inputs.botXYZ = new double[] {poseEstimator.update().get().estimatedPose.getX(), poseEstimator.update().get().estimatedPose.getY(), poseEstimator.update().get().estimatedPose.getZ()};
-            inputs.botRPY = new double[] {poseEstimator.update().get().estimatedPose.getRotation().getX(), poseEstimator.update().get().estimatedPose.getRotation().getY(), poseEstimator.update().get().estimatedPose.getRotation().getZ()};
+            inputs.botXYZ = new double[] {update.get().estimatedPose.getX(), update.get().estimatedPose.getY(), update.get().estimatedPose.getZ()};
+            inputs.botRPY = new double[] {update.get().estimatedPose.getRotation().getX(), update.get().estimatedPose.getRotation().getY(), update.get().estimatedPose.getRotation().getZ()};
             ArrayList<Integer> tagIDs = new ArrayList<>();
             for (int i = 0; i < cam.getLatestResult().targets.size(); i++) {
                 tagIDs.add(cam.getLatestResult().targets.get(i).getFiducialId());
             }
             inputs.tagIDs = tagIDs.stream().mapToDouble(i -> i).toArray();
         }
-        else {
-            inputs.botXYZ = new double[] {0,0,0};
-            inputs.botRPY = new double[] {0,0,0};
-        }
         inputs.pipelineLatency = Units.millisecondsToSeconds(cam.getLatestResult().getLatencyMillis());
         inputs.hasTarget = cam.getLatestResult().hasTargets();
         inputs.connected = cam.isConnected();
-    }
-
-    @Override
-    public void setPipeline(Pipelines pipeline) {
-        cam.setPipelineIndex(pipeline.getNum());
+        cam.setDriverMode(false);
+        cam.setPipelineIndex(0);
     }
 }

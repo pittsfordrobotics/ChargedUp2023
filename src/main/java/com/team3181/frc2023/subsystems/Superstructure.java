@@ -46,8 +46,8 @@ public class Superstructure extends SubsystemBase {
     private boolean disabled = false;
     private boolean autoNode = false;
     private boolean autoSubstation = false;
+    private boolean wasObjective = false;
     private boolean demandLEDs = false;
-    private boolean hasBeenZeroed = true;
 
     private final static Superstructure INSTANCE = new Superstructure();
 
@@ -72,7 +72,6 @@ public class Superstructure extends SubsystemBase {
         EndEffector endEffector = EndEffector.getInstance();
         StructureState state;
 
-
         if (!disabled) {
             switch (wantedState) {
                 case OBJECTIVE:
@@ -94,18 +93,15 @@ public class Superstructure extends SubsystemBase {
                     break;
                 case INTAKE_MID:
                     state = StructureState.INTAKE_MID;
-//                if (endEffector.hasPiece()) {
-//                    state = StructureState.HOME;
-//                }
                     break;
                 case HOME:
                     // this checks for systemState, so the wantedState will have already been HOME
                     // this means the setpoint is at HOME, which is convoluted but works
-                    if (systemState == StructureState.HOME && fourBar.atSetpoint() && !hasBeenZeroed && !DriverStation.isAutonomous()) {
-                        state = StructureState.ZEROING;
-                    } else {
+//                    if (systemState == StructureState.HOME && fourBar.atSetpoint() && !hasBeenZeroed && !DriverStation.isAutonomous()) {
+//                        state = StructureState.ZEROING;
+//                    } else {
                         state = StructureState.HOME;
-                    }
+//                    }
                     break;
                 case EXHAUST:
                     state = StructureState.EXHAUST;
@@ -165,16 +161,24 @@ public class Superstructure extends SubsystemBase {
                 if (systemState == StructureState.OBJECTIVE || systemState == StructureState.INTAKE_GROUND || systemState == StructureState.INTAKE_MID || systemState == StructureState.EXHAUST) {
                     endEffector.idle();
                 }
+                if (systemState == StructureState.EXHAUST || state == StructureState.HOME) {
+                    autoNode = false;
+                    autoSubstation = false;
+//                    ObjectiveTracker.getInstance().setFilled();
+                }
                 if (systemState == StructureState.EXHAUST || systemState == StructureState.OBJECTIVE) {
                     LEDs.getInstance().setLEDMode(LEDModes.IDLE);
                 }
-                if (systemState == StructureState.HOME) {
-                    hasBeenZeroed = false;
+                if (state == StructureState.HOME && systemState == StructureState.EXHAUST) {
+                    wasObjective = true;
                 }
+//                if (systemState == StructureState.HOME) {
+//                    hasBeenZeroed = false;
+//                }
 
-                if (state == StructureState.HOME && systemState == StructureState.ZEROING && !hasBeenZeroed) {
-                    state = StructureState.ZEROING;
-                }
+//                if (state == StructureState.HOME && systemState == StructureState.ZEROING && !hasBeenZeroed) {
+//                    state = StructureState.ZEROING;
+//                }
                 if (state == StructureState.EXHAUST) {
                     if (objectiveLocal.nodeRow == 0 || objectiveLocal.nodeRow == 2 || objectiveLocal.nodeRow == 3 || objectiveLocal.nodeRow == 5 || objectiveLocal.nodeRow == 6 || objectiveLocal.nodeRow == 8) {
                         if (objectiveLocal.nodeLevel == NodeLevel.MID) {
@@ -212,9 +216,9 @@ public class Superstructure extends SubsystemBase {
                             break;
                         case MID:
                             if (objectiveLocal.nodeRow == 1 || objectiveLocal.nodeRow == 4 || objectiveLocal.nodeRow == 7) {
-                                fourBar.setRotations(new Rotation2d[]{ArmPositions.MID_CUBE_SHOULDER, ArmPositions.MID_CUBE_ELBOW}, false);
+                                fourBar.setRotationsNoFF(new Rotation2d[]{ArmPositions.MID_CUBE_SHOULDER, ArmPositions.MID_CUBE_ELBOW}, false);
                             } else {
-                                fourBar.setRotations(new Rotation2d[]{ArmPositions.MID_CONE_SHOULDER, ArmPositions.MID_CONE_ELBOW}, false);
+                                fourBar.setRotationsNoFF(new Rotation2d[]{ArmPositions.MID_CONE_SHOULDER, ArmPositions.MID_CONE_ELBOW}, false);
                             }
 //                        if (gamePieceLocal == GamePiece.CONE) {
 //                            fourBar.setRotations(new Rotation2d[]{ArmPositions.MID_CONE_SHOULDER, ArmPositions.MID_CONE_ELBOW}, false);
@@ -292,19 +296,27 @@ public class Superstructure extends SubsystemBase {
                     if (!shoulderDone) {
                         fourBar.setArmVoltage(0, -1.5);
                     }
-                    if (!elbowDone) {
+                    else if (!elbowDone) {
                         fourBar.setArmVoltage(1, -0.5);
                     }
                     if (shoulderDone && elbowDone) {
                         fourBar.setArmVoltage(0, 0);
                         fourBar.setArmVoltage(1, 0);
-                        hasBeenZeroed = true;
+                        FourBar.getInstance().zeroArms();
                     }
                     break;
                 case HOME:
                 default:
+                    if (wasObjective) {
+                        endEffector.exhaust();
+                        if (atSetpoint()) {
+                            wasObjective = false;
+                        }
+                    }
+                    else {
+                        endEffector.idle();
+                    }
                     fourBar.setRotations(new Rotation2d[]{SuperstructureConstants.ArmPositions.STORAGE_SHOULDER, SuperstructureConstants.ArmPositions.STORAGE_ELBOW}, false);
-                    endEffector.idle();
                     break;
             }
         }
@@ -347,6 +359,10 @@ public class Superstructure extends SubsystemBase {
         wantedState = StructureState.OBJECTIVE;
     }
 
+    public void zero() {
+        wantedState = StructureState.ZEROING;
+    }
+
     public void objective(Objective objective) {
         objectiveGlobal = objective;
         wantedState = StructureState.OBJECTIVE_GLOBAL;
@@ -381,6 +397,10 @@ public class Superstructure extends SubsystemBase {
 
     public void home() {
         wantedState = StructureState.HOME;
+    }
+
+    public boolean isStable() {
+        return systemState == StructureState.HOME || systemState == StructureState.ZEROING;
     }
 
     private boolean shouldAutoRetract() {
