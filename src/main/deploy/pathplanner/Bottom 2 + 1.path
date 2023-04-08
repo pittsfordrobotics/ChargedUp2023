@@ -178,6 +178,12 @@
       "names": [
         "home"
       ]
+    },
+    {
+      "position": 4.534113103693182,
+      "names": [
+        "maybeStop"
+      ]
     }
   ]
 }

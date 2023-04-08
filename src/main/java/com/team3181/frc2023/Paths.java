@@ -13,7 +13,6 @@ import java.util.HashMap;
 
 public class Paths {
     public static final PathPlannerTrajectory TOP_THREE = PathPlanner.loadPath("Top 3", AutoConstants.MAX_SPEED);
-    public static final PathPlannerTrajectory NEW_PATH = PathPlanner.loadPath("New Path", AutoConstants.MAX_SPEED);
     public static final PathPlannerTrajectory BOTTOM_THREE = PathPlanner.loadPath("Bottom 3", AutoConstants.MAX_SPEED);
     public static final PathPlannerTrajectory TOP_TWO_PLUS_ONE = PathPlanner.loadPath("Top 2 + 1", AutoConstants.MAX_SPEED);
     public static final PathPlannerTrajectory BOTTOM_TWO_PLUS_ONE = PathPlanner.loadPath("Bottom 2 + 1", AutoConstants.MAX_SPEED);
@@ -30,8 +29,8 @@ public class Paths {
         EVENT_MAP_BALANCE.put("intakeGroundNo", new SuperstructureGround());
         EVENT_MAP_NO_BALANCE.put("intakeGroundNo", new SuperstructureGround());
 
-        EVENT_MAP_BALANCE.put("intakeGround", new SuperstructureGroundFar());
-        EVENT_MAP_NO_BALANCE.put("intakeGround", new SuperstructureGroundFar());
+        EVENT_MAP_BALANCE.put("intakeGround", new SuperstructureGround());
+        EVENT_MAP_NO_BALANCE.put("intakeGround", new SuperstructureGround());
 
         EVENT_MAP_BALANCE.put("objectiveHybridTop", new SuperstructureObjectiveGlobal(new Objective(8, NodeLevel.HYBRID)));
         EVENT_MAP_NO_BALANCE.put("objectiveHybridTop", new SuperstructureObjectiveGlobal(new Objective(8, NodeLevel.HYBRID)));

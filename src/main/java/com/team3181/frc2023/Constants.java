@@ -89,7 +89,8 @@ public final class Constants {
 //                LIMELIGHT = RobotConstants.IS_TANK ? new VisionIO() {} : new VisionIOLimelight();
 //                PHOTON_LEFT = RobotConstants.IS_TANK ? new VisionIO() {} : new VisionIOPhotonVision(VisionConstants.PHOTON_LEFT_NAME, VisionConstants.PHOTON_LEFT_TRANSFORM);
                 PHOTON_FRONT_LEFT = RobotConstants.IS_TANK ? new VisionIO() {} : new VisionIOPhotonVision(VisionConstants.PHOTON_FRONT_LEFT_NAME, VisionConstants.PHOTON_FRONT_LEFT_TRANSFORM);
-                PHOTON_FRONT_RIGHT = RobotConstants.IS_TANK ? new VisionIO() {} : new VisionIOPhotonVision(VisionConstants.PHOTON_FRONT_RIGHT_NAME, VisionConstants.PHOTON_FRONT_RIGHT_TRANSFORM);
+                PHOTON_FRONT_RIGHT = new VisionIO() {};
+//                PHOTON_FRONT_RIGHT = RobotConstants.IS_TANK ? new VisionIO() {} : new VisionIOPhotonVision(VisionConstants.PHOTON_FRONT_RIGHT_NAME, VisionConstants.PHOTON_FRONT_RIGHT_TRANSFORM);
 //                PHOTON_RIGHT = RobotConstants.IS_TANK ? new VisionIO() {} : new VisionIOPhotonVision(VisionConstants.PHOTON_RIGHT_NAME, VisionConstants.PHOTON_RIGHT_TRANSFORM);
                 LEDS = RobotConstants.IS_TANK ? new LEDStripIO(){} : new LEDStripIORio(LEDConstants.PWM_PORT, LEDConstants.NUMBER);
                 END_EFFECTOR = new EndEffectorIOSparkMax();
@@ -176,23 +177,11 @@ public final class Constants {
         };
         public static final BetterSwerveKinematics DRIVE_KINEMATICS = new BetterSwerveKinematics(MODULE_OFFSETS);
 
-        public static final HashMap<Integer, Rotation2d> MODULE_HASHMAP = new HashMap<>();
-        static {
-            MODULE_HASHMAP.put(0, Rotation2d.fromRadians(6.246822834014893));  // Front left
-            MODULE_HASHMAP.put(1, Rotation2d.fromRadians(3.1017396450042725)); // Front right
-            MODULE_HASHMAP.put(2, Rotation2d.fromRadians(2.114952564239502));    // Back left
-            MODULE_HASHMAP.put(3, Rotation2d.fromRadians(2.851421594619751));  // Back right
-            MODULE_HASHMAP.put(4, Rotation2d.fromRadians(0));
-            MODULE_HASHMAP.put(5, Rotation2d.fromRadians(0));
-            MODULE_HASHMAP.put(6, Rotation2d.fromRadians(0));
-            MODULE_HASHMAP.put(7, Rotation2d.fromRadians(0));
-        }
-
 //        true reading from advantage scope
-        public static final Rotation2d FL_PURE_OFFSET = MODULE_HASHMAP.get(0);
-        public static final Rotation2d FR_PURE_OFFSET = MODULE_HASHMAP.get(1);
-        public static final Rotation2d BL_PURE_OFFSET = MODULE_HASHMAP.get(2);
-        public static final Rotation2d BR_PURE_OFFSET = MODULE_HASHMAP.get(3);
+        public static final Rotation2d FL_PURE_OFFSET = Rotation2d.fromRadians(6.246822834014893);
+        public static final Rotation2d FR_PURE_OFFSET = Rotation2d.fromRadians(3.1017396450042725);
+        public static final Rotation2d BL_PURE_OFFSET = Rotation2d.fromRadians(2.114952564239502);
+        public static final Rotation2d BR_PURE_OFFSET = Rotation2d.fromRadians(2.851421594619751);
 
     //    public static final Rotation2d FL_OFFSET = FL_PURE_OFFSET.plus(Rotation2d.fromDegrees(0));
     //    public static final Rotation2d FR_OFFSET = FR_PURE_OFFSET.plus(Rotation2d.fromDegrees(0));
@@ -298,7 +287,7 @@ public final class Constants {
 
         //        numbers from 1678
         public static final double SLOW_LINEAR_VELOCITY_METERS_PER_SECOND = 2.0;
-        public static final double SLOW_LINEAR_ACCELERATION_METERS_PER_SECOND_SQUARED = 1.5;
+        public static final double SLOW_LINEAR_ACCELERATION_METERS_PER_SECOND_SQUARED = 2.0;
 
         public static final double MAX_LINEAR_VELOCITY_METERS_PER_SECOND = 2.2;
         public static final double MAX_LINEAR_ACCELERATION_METERS_PER_SECOND_SQUARED = 2.3;
@@ -338,11 +327,11 @@ public final class Constants {
 
         // This should be when shoulder is all the way back
         // then fudge the number by subtracting an extra 0.1
-        public static final Rotation2d SHOULDER_ABSOLUTE_OFFSET = Rotation2d.fromRadians(0);
-        public static final Rotation2d SHOULDER_MATH_OFFSET = Rotation2d.fromRadians(-1.5551074743270874); // zero needs to be at shoulder parallel to ground
+        public static final Rotation2d SHOULDER_ABSOLUTE_OFFSET = Rotation2d.fromRadians(2 - 0.2);
+        public static final Rotation2d SHOULDER_MATH_OFFSET = Rotation2d.fromRadians(-0.2 -1.5551074743270874 + 0.14514923095703125- 0.3312467336654663 + 0.3247469663619995 + 0.1); // zero needs to be at shoulder parallel to ground
         // This should be when claw is pointing at the ground
         public static final Rotation2d ELBOW_ABSOLUTE_OFFSET = Rotation2d.fromRadians(4.352361679077148);
-        public static final Rotation2d ELBOW_MATH_OFFSET = Rotation2d.fromRadians(-1.8333731889724731); // zero is in line with shoulder parallel to ground
+        public static final Rotation2d ELBOW_MATH_OFFSET = Rotation2d.fromRadians(-1.8333731889724731 - 0.33056509494781494 + 0.04); // zero is in line with shoulder parallel to ground
 
         public static final Rotation2d ELBOW_MIN = Rotation2d.fromDegrees(-140);
         public static final Rotation2d ELBOW_MAX = Rotation2d.fromDegrees(140);

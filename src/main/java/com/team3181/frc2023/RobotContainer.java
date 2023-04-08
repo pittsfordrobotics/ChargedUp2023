@@ -109,6 +109,8 @@ public class RobotContainer {
     driverController.leftBumper()
             .whileTrue(new InstantCommand(() -> swerve.setSlowMode(true)))
             .whileFalse(new InstantCommand(() -> swerve.setSlowMode(false)));
+    driverController.rightTrigger().whileTrue(new SwerveAutoBalance(true));
+    driverController.leftTrigger().whileTrue(new SwerveAutoBalance(false));
 
     /*
      OPERATOR
@@ -139,8 +141,8 @@ public class RobotContainer {
             .whileTrue(objectiveTracker.shiftNodeCommand(Direction.DOWN));
     operatorController.povLeft()
             .whileTrue(objectiveTracker.shiftNodeCommand(Direction.LEFT));
-    operatorController.leftBumper()
-            .whileTrue(new InstantCommand(superstructure::zero));
+//    operatorController.leftBumper()
+//            .whileTrue(new InstantCommand(superstructure::zero));
     operatorController.rightBumper()
             .whileTrue(new InstantCommand(() -> endEffector.setForced(true)))
             .whileFalse(new InstantCommand(() -> endEffector.setForced(false)));
@@ -183,11 +185,6 @@ public class RobotContainer {
     autoChooser.addOption("3 Thing Bottom", threeBotBal);
     canBalanceMap.put(threeBotBal, false);
     needPositionMap.put(threeBotBal, false);
-
-    Command newPath = new AutoSwervePath(Paths.NEW_PATH, new Objective(8, NodeLevel.HIGH));
-    autoChooser.addOption("New Path", newPath);
-    canBalanceMap.put(newPath, false);
-    needPositionMap.put(newPath, false);
 
     Command twoTop = new AutoSwerveTwo(true);
     autoChooser.addOption("2 Thing Top + 1", twoTop);

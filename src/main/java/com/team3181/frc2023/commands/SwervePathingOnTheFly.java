@@ -74,18 +74,18 @@ public class SwervePathingOnTheFly extends CommandBase {
         Alliance alliance = DriverStation.getAlliance();
         if (alliance == Alliance.Red) {
             if (leftSubstation) {
-                this.position = AutoDrivePosition.DOUBLE_SUBSTATION_LOW;
+                this.position = AutoDrivePosition.DOUBLE_SUBSTATION_HIGH;
             }
             else {
-                this.position = AutoDrivePosition.DOUBLE_SUBSTATION_HIGH;
+                this.position = AutoDrivePosition.DOUBLE_SUBSTATION_LOW;
             }
         }
         else {
             if (leftSubstation) {
-                this.position = AutoDrivePosition.DOUBLE_SUBSTATION_HIGH;
+                this.position = AutoDrivePosition.DOUBLE_SUBSTATION_LOW;
             }
             else {
-                this.position = AutoDrivePosition.DOUBLE_SUBSTATION_LOW;
+                this.position = AutoDrivePosition.DOUBLE_SUBSTATION_HIGH;
             }
         }
         rotController.enableContinuousInput(-Math.PI, Math.PI);

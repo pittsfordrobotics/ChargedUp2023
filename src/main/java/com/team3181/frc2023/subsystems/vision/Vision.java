@@ -84,7 +84,7 @@ public class Vision extends SubsystemBase {
 
         List<Pose2d> allRobotPoses = new ArrayList<>();
 //        Pose estimation
-//       if (!DriverStation.isAutonomous()) {
+       if (!DriverStation.isAutonomous()) {
             for (int i = 0; i < io.length; i++) {
                 // rejecting all other cameras because they look bad
                 if (i != 3 && i != 4) {
@@ -163,7 +163,7 @@ public class Vision extends SubsystemBase {
                                 "Vision/TagPoses" + i,
                                 tagPoses2d);
             }
-//        }
+        }
         Logger.getInstance().recordOutput("Vision/Poses", allRobotPoses.toArray(new Pose2d[0]));
     }
 

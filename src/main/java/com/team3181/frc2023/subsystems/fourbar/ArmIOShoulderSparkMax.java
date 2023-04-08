@@ -18,6 +18,7 @@ public class ArmIOShoulderSparkMax implements ArmIO {
     private final AbsoluteEncoder absoluteEncoder;
     private final SparkMaxLimitSwitch limitSwitch;
     private double lastPos = 0;
+    private int counter = 0;
     private double wraparoundOffset = 0;
     private final double oneEncoderRotation = 2 * Math.PI * FourBarConstants.CHAIN_RATIO;
     private double currentOffset = FourBarConstants.SHOULDER_ABSOLUTE_OFFSET.getRadians();
@@ -44,38 +45,40 @@ public class ArmIOShoulderSparkMax implements ArmIO {
 
     @Override
     public void updateInputs(ArmIOInputs inputs) {
-        double position = absoluteEncoder.getPosition() + FourBarConstants.SHOULDER_MATH_OFFSET.getRadians() + wraparoundOffset;
+//        double position = absoluteEncoder.getPosition() + FourBarConstants.SHOULDER_MATH_OFFSET.getRadians() + wraparoundOffset;
+//
+//        if (isFirstPositionUpdate) {
+//            // This is the first time running and we don't yet have a "last position".
+//            lastPos = absoluteEncoder.getPosition();
+//            isFirstPositionUpdate = false;
+//        } else {
+//            double positionDiff = absoluteEncoder.getPosition() - lastPos;
+//
+//            // Check if we've wrapped around the zero point.  If we've travelled more than a half circle in one update period,
+//            // then assume we wrapped around.
+//            if (positionDiff > oneEncoderRotation / 2.0) {
+//                // We went up by over a half rotation, which means we likely wrapped around the zero point going in the negative direction.
+//                position -= oneEncoderRotation;
+//                wraparoundOffset -= oneEncoderRotation;
+//            }
+//            else if (positionDiff < -1 * oneEncoderRotation / 2.0) {
+//                // We went down by over a half rotation, which means we likely wrapped around the zero point going in the positive direction.
+//                position += oneEncoderRotation;
+//                wraparoundOffset += oneEncoderRotation;
+//            }
+//        }
 
-        if (isFirstPositionUpdate) {
-            // This is the first time running and we don't yet have a "last position".
-            lastPos = position;
-            isFirstPositionUpdate = false;
-        } else {
-            double positionDiff = position - lastPos;
-
-            // Check if we've wrapped around the zero point.  If we've travelled more than a half circle in one update period,
-            // then assume we wrapped around.
-            if (positionDiff > oneEncoderRotation / 2.0) {
-                // We went up by over a half rotation, which means we likely wrapped around the zero point going in the negative direction.
-                position -= oneEncoderRotation;
-                wraparoundOffset -= oneEncoderRotation;
-            }
-            else if (positionDiff < -1 * oneEncoderRotation / 2.0) {
-                // We went down by over a half rotation, which means we likely wrapped around the zero point going in the positive direction.
-                position += oneEncoderRotation;
-                wraparoundOffset += oneEncoderRotation;
-            }
-        }
-//        
-//         if (lastPos < FourBarConstants.SHOULDER_FLIP_MIN.getRadians() + 0.1 && (position) > FourBarConstants.SHOULDER_FLIP_MAX.getRadians() - 0.1 && counter == 1) {
-//             counter--;
-//         } else if (lastPos > FourBarConstants.SHOULDER_FLIP_MAX.getRadians() - 0.1 && (position) < FourBarConstants.SHOULDER_FLIP_MIN.getRadians() + 0.1 && counter == 0) {
-//             counter++;
-//         }
-//        inputs.armOffsetPositionRad = position + counter * (FourBarConstants.SHOULDER_FLIP_MIN.getRadians() * -1 + FourBarConstants.SHOULDER_FLIP_MAX.getRadians());
+        double position = absoluteEncoder.getPosition() + FourBarConstants.SHOULDER_MATH_OFFSET.getRadians();
+         if (lastPos < FourBarConstants.SHOULDER_FLIP_MIN.getRadians() + 0.1 && (position) > FourBarConstants.SHOULDER_FLIP_MAX.getRadians() - 0.1 && counter == 1) {
+             counter--;
+         } else if (lastPos > FourBarConstants.SHOULDER_FLIP_MAX.getRadians() - 0.1 && (position) < FourBarConstants.SHOULDER_FLIP_MIN.getRadians() + 0.1 && counter == 0) {
+             counter++;
+         }
+        inputs.armOffsetPositionRad = position + counter * (FourBarConstants.SHOULDER_FLIP_MIN.getRadians() * -1 + FourBarConstants.SHOULDER_FLIP_MAX.getRadians());
+        lastPos = position;
 
         inputs.armPositionRawRad = absoluteEncoder.getPosition();
-        inputs.armOffsetPositionRad = position;
+//        inputs.armOffsetPositionRad = position;
         inputs.armVelocityRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(absoluteEncoder.getVelocity());
         inputs.armAppliedVolts = mainMotor.getAppliedOutput() * mainMotor.getBusVoltage();
         inputs.armCurrentAmps = mainMotor.getOutputCurrent();
@@ -83,8 +86,6 @@ public class ArmIOShoulderSparkMax implements ArmIO {
         inputs.armAtLimit = limitSwitch.isPressed();
 
         Logger.getInstance().recordOutput("Shoulder/Wraparound Offset", wraparoundOffset);
-        Logger.getInstance().recordOutput("Shoulder/Wraparound Offset", wraparoundOffset);
-
         Logger.getInstance().recordOutput("Shoulder/followerArmAppliedVolts", followerMotor.getAppliedOutput() * followerMotor.getBusVoltage());
         Logger.getInstance().recordOutput("Shoulder/followerArmCurrentAmps", followerMotor.getOutputCurrent());
         Logger.getInstance().recordOutput("Shoulder/followerArmTempCelsius", followerMotor.getMotorTemperature());
@@ -108,6 +109,7 @@ public class ArmIOShoulderSparkMax implements ArmIO {
         // We had to force the zero point to get here, so we likely have bad wraparounds.
         // Rest the wraparound offset value and treat the last known position as invalid.
         wraparoundOffset = 0;
+        counter = 0;
         isFirstPositionUpdate = true; 
     }
 
