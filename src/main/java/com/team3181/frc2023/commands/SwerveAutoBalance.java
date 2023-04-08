@@ -9,6 +9,7 @@ public class SwerveAutoBalance extends CommandBase {
     private final Swerve swerve = Swerve.getInstance();
     private final boolean forward;
     private final Timer timer;
+    private boolean stopped = false;
 
     public SwerveAutoBalance(boolean forward) {
         addRequirements(this.swerve);
@@ -20,6 +21,7 @@ public class SwerveAutoBalance extends CommandBase {
     public void initialize() {
         timer.restart();
         timer.stop();
+        stopped = false;
     }
 
     @Override
@@ -27,11 +29,18 @@ public class SwerveAutoBalance extends CommandBase {
         if (Math.abs(Swerve.getInstance().getPitch()) >= 0.22) {
             Swerve.getInstance().driveFieldOrientated(!forward ? -0.5 : 0.5, 0, 0);
         }
+        else if (Math.abs(Swerve.getInstance().getPitch()) < 0.22) {
+            timer.start();
+            Swerve.getInstance().driveFieldOrientated(!forward ? 0.3 : -0.3, 0, 0);
+            if (Math.abs(Swerve.getInstance().getPitch()) <= 0.1 && timer.hasElapsed(0.5)) {
+                stopped = true;
+            }
+        }
     }
 
     @Override
     public boolean isFinished() {
-        return Math.abs(Swerve.getInstance().getPitch()) <= 0.22;
+        return stopped;
     }
 
     @Override
