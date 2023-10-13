@@ -179,9 +179,9 @@ public final class Constants {
 
 //        true reading from advantage scope
         public static final Rotation2d FL_PURE_OFFSET = Rotation2d.fromRadians(6.246822834014893);
-        public static final Rotation2d FR_PURE_OFFSET = Rotation2d.fromRadians(3.1017396450042725);
-        public static final Rotation2d BL_PURE_OFFSET = Rotation2d.fromRadians(2.114952564239502);
-        public static final Rotation2d BR_PURE_OFFSET = Rotation2d.fromRadians(2.851421594619751);
+        public static final Rotation2d FR_PURE_OFFSET = Rotation2d.fromRadians(3.1013946533203125);
+        public static final Rotation2d BL_PURE_OFFSET = Rotation2d.fromRadians(2.1149656772613525);
+        public static final Rotation2d BR_PURE_OFFSET = Rotation2d.fromRadians(2.838555097579956);
 
     //    public static final Rotation2d FL_OFFSET = FL_PURE_OFFSET.plus(Rotation2d.fromDegrees(0));
     //    public static final Rotation2d FR_OFFSET = FR_PURE_OFFSET.plus(Rotation2d.fromDegrees(0));
